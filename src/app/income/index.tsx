@@ -1,22 +1,23 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
 
 import DataTable from "../../components/dataTable";
 // MUI
 import TextField from "@mui/material/TextField";
 import { db } from "@/commons/libraries/firebase/firebaseApp";
-import { Box, Button, Chip, FormHelperText, Snackbar } from "@mui/material";
+import { Box, Button, Chip, FormHelperText } from "@mui/material";
 
-// TYPE
-import { ExchangeRate, IncomeItemData } from "@/commons/types";
+import CurrencySelect from "@/components/currencySelect";
 import * as S from "./styles";
+// TYPE
+import { IExchangeRate, IIncomeItemData } from "@/commons/types";
 
 const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
 export default function ApiTest() {
-  const [rates, setRates] = useState<ExchangeRate>();
+  const [rates, setRates] = useState<IExchangeRate>();
   const [selectionItem, setSelectionItem] = useState<string[]>([]);
   console.log(selectionItem);
 
@@ -63,11 +64,11 @@ export default function ApiTest() {
     control,
     formState: { errors },
     reset,
-  } = useForm<IncomeItemData>({
+  } = useForm<IIncomeItemData>({
     defaultValues: {
       brandName: "",
       itemName: "",
-      JPY: "",
+      price: "",
     },
   });
   const [jpyValue, setJpyValue] = useState<string>("");
@@ -79,12 +80,12 @@ export default function ApiTest() {
   const handleJPYChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setJpyValue(value); // event.target.value는 입력 필드의 현재 값
-    setValue("JPY", value); // react-hook-form에도 업데이트
+    setValue("price", value); // react-hook-form에도 업데이트
   };
 
   // firestore
   // 등록
-  const handleFormSubmit = async (data: IncomeItemData) => {
+  const handleFormSubmit = async (data: IIncomeItemData) => {
     try {
       // 등록 시간 측정
       const now = new Date(); // 현재 시간을 Date 객체로 가져옴
@@ -103,7 +104,7 @@ export default function ApiTest() {
   };
 
   // 조회
-  const [incomeItemArray, setIncomeItemArray] = useState<IncomeItemData[]>([]);
+  const [incomeItemArray, setIncomeItemArray] = useState<IIncomeItemData[]>([]);
   const readData = async () => {
     const q = query(
       collection(db, "import"),
@@ -116,7 +117,7 @@ export default function ApiTest() {
       id: doc.id, // 문서의 ID
       ...doc.data(), // 문서의 데이터
     }));
-    setIncomeItemArray(dataArray as IncomeItemData[]);
+    setIncomeItemArray(dataArray as IIncomeItemData[]);
   };
 
   // 삭제
@@ -137,6 +138,10 @@ export default function ApiTest() {
   useEffect(() => {
     readData();
   }, []); // 의존성 배열이 비어있으므로 처음 한 번만 실행됨
+
+  // 통화 선택
+  // 통화 선택
+  const [currency, setCurrency] = useState("");
 
   return (
     <S.Container>
@@ -168,15 +173,17 @@ export default function ApiTest() {
               </Box>
             )}
           />
+
+          <CurrencySelect currency={currency} setCurrency={setCurrency} />
           <Controller
-            name="JPY"
+            name="price"
             control={control}
             rules={{ required: "매입 가격(엔화)을 입력해 주세요" }}
             render={({ field }) => (
               <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <TextField {...field} label="매입 가격(엔화)" error={!!errors.JPY} onChange={handleJPYChange} />
+                <TextField {...field} label="매입 가격(엔화)" error={!!errors.price} onChange={handleJPYChange} />
                 <Box sx={{ height: "1.25rem" }}>
-                  <FormHelperText error>{errors.JPY?.message}</FormHelperText>
+                  <FormHelperText error>{errors.price?.message}</FormHelperText>
                 </Box>
               </Box>
             )}

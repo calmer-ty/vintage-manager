@@ -1,6 +1,6 @@
 import { Timestamp } from "firebase/firestore";
 
-export interface ExchangeRate {
+export interface IExchangeRate {
   base: string;
   date: string;
   rates: {
@@ -8,10 +8,10 @@ export interface ExchangeRate {
     JPY: string;
   };
 }
-export interface IncomeItemData {
+export interface IIncomeItemData {
   id: string;
   brandName: string;
   itemName: string;
-  JPY: string;
+  price: string;
   createdAt: Timestamp;
 }

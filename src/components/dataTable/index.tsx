@@ -1,12 +1,12 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
-import type { IncomeItemData } from "@/commons/types";
-import { useState } from "react";
+import type { IIncomeItemData } from "@/commons/types";
+
 import { Box } from "@mui/material";
 
 interface IncomeItemTableProps {
-  incomeItemArray: IncomeItemData[];
+  incomeItemArray: IIncomeItemData[];
   setSelectionItem: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
@@ -14,7 +14,7 @@ const columns: GridColDef[] = [
   { field: "createdAt", headerName: "시트 생성 시간", width: 200 },
   { field: "brandName", headerName: "브랜드명", width: 200 },
   { field: "itemName", headerName: "제품명", width: 200 },
-  { field: "JPY", headerName: "매입 가격(엔화)", width: 130 },
+  { field: "price", headerName: "매입 가격", width: 130 },
   // { field: "lastName", headerName: "Last name", width: 130 },
   // {
   //   field: "age",
@@ -40,13 +40,10 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
     setSelectionItem(selectionItem);
   };
 
-  console.log("incomeItemArray: ", incomeItemArray);
-
   let priceSum = 0;
   incomeItemArray.forEach((el) => {
-    priceSum += Number(el.JPY);
+    priceSum += Number(el.price);
   });
-  console.log(priceSum);
 
   return (
     <Paper sx={{ height: 400, width: "100%", position: "relative" }}>
