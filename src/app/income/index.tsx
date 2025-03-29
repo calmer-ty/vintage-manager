@@ -1,18 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
 
 import DataTable from "../../components/dataTable";
 // MUI
-import TextField from "@mui/material/TextField";
-import { db } from "@/commons/libraries/firebase/firebaseApp";
-import { Box, Button, Chip, FormHelperText } from "@mui/material";
 
-import CurrencySelect from "@/components/currencySelect";
+import { db } from "@/commons/libraries/firebase/firebaseApp";
+import { Box, Button, Chip } from "@mui/material";
+
 import * as S from "./styles";
 // TYPE
 import { IExchangeRate, IIncomeItemData } from "@/commons/types";
+import ControllerInput from "@/components/controllerInput";
+import CurrencySelect from "@/components/currencySelect";
 
 const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
@@ -140,54 +141,19 @@ export default function ApiTest() {
   }, []); // 의존성 배열이 비어있으므로 처음 한 번만 실행됨
 
   // 통화 선택
-  // 통화 선택
   const [currency, setCurrency] = useState("");
+
+  console.log(errors.brandName);
 
   return (
     <S.Container>
       <S.Form onSubmit={handleSubmit(handleFormSubmit)}>
         <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-          <Controller
-            name="brandName"
-            control={control}
-            rules={{ required: "브랜드명을 입력해 주세요" }}
-            render={({ field }) => (
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <TextField {...field} error={!!errors.brandName} label="브랜드명" />
-                <Box sx={{ height: "1.25rem" }}>
-                  <FormHelperText error>{errors.brandName?.message}</FormHelperText>
-                </Box>
-              </Box>
-            )}
-          />
-          <Controller
-            name="itemName"
-            control={control}
-            rules={{ required: "제품명을 입력해 주세요" }}
-            render={({ field }) => (
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <TextField {...field} error={!!errors.itemName} label="제품명" />
-                <Box sx={{ height: "1.25rem" }}>
-                  <FormHelperText error>{errors.itemName?.message}</FormHelperText>
-                </Box>
-              </Box>
-            )}
-          />
-
+          <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
+          <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
           <CurrencySelect currency={currency} setCurrency={setCurrency} />
-          <Controller
-            name="price"
-            control={control}
-            rules={{ required: "매입 가격(엔화)을 입력해 주세요" }}
-            render={({ field }) => (
-              <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <TextField {...field} label="매입 가격(엔화)" error={!!errors.price} onChange={handleJPYChange} />
-                <Box sx={{ height: "1.25rem" }}>
-                  <FormHelperText error>{errors.price?.message}</FormHelperText>
-                </Box>
-              </Box>
-            )}
-          />
+          <ControllerInput name="price" control={control} required="매입 가격을 입력해 주세요" label="매입 가격" error={errors.price?.message} />
+
           <Chip label={`원화: ${Math.round(calculateKRW(Number(jpyValue)))}`} variant="outlined" />
 
           <Button variant="contained" type="submit">
