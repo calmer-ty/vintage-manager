@@ -1,6 +1,6 @@
 "use client";
 
-import ApiTest from "@/components/apiTest";
+import ApiTest from "@/app/income";
 
 export default function Home() {
   return <ApiTest />;

@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { addDoc, collection, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
+import { Controller, useForm } from "react-hook-form";
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, serverTimestamp } from "firebase/firestore";
 
+import DataTable from "../../components/dataTable";
 // MUI
 import TextField from "@mui/material/TextField";
 import { db } from "@/commons/libraries/firebase/firebaseApp";
@@ -9,15 +11,14 @@ import { Box, Button, Chip, FormHelperText, Snackbar } from "@mui/material";
 
 // TYPE
 import { ExchangeRate, IncomeItemData } from "@/commons/types";
-import IncomeItemTable from "../incomeItemTable";
-import { Controller, useForm } from "react-hook-form";
-
 import * as S from "./styles";
 
 const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
 export default function ApiTest() {
   const [rates, setRates] = useState<ExchangeRate>();
+  const [selectionItem, setSelectionItem] = useState<string[]>([]);
+  console.log(selectionItem);
 
   useEffect(() => {
     const fetchExchangeRate = async () => {
@@ -55,12 +56,13 @@ export default function ApiTest() {
   // 엔화 대비 원화 계산 비율
   const JPYPerKrw = usdToKRW / usdToJPY;
 
-  // 입력하는 내용들
+  // React hook form - 입력하는 내용
   const {
     handleSubmit,
     setValue,
     control,
     formState: { errors },
+    reset,
   } = useForm<IncomeItemData>({
     defaultValues: {
       brandName: "",
@@ -92,6 +94,7 @@ export default function ApiTest() {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         createdAt, // 테이블 생성 시간
       });
+      reset();
       readData();
       console.log("문서 ID:", docRef.id); // Firestore에서 생성된 고유한 문서 ID
     } catch (error) {
@@ -114,6 +117,20 @@ export default function ApiTest() {
       ...doc.data(), // 문서의 데이터
     }));
     setIncomeItemArray(dataArray as IncomeItemData[]);
+  };
+
+  // 삭제
+  const handleFormDelete = async (selectionItem: string[]) => {
+    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
+    for (const id of selectionItem) {
+      try {
+        await deleteDoc(doc(db, "import", id));
+        console.log(`ID ${id} 삭제 성공`);
+        readData();
+      } catch (error) {
+        console.error(`ID ${id} 삭제 실패`, error);
+      }
+    }
   };
 
   // 처음 로드 시 데이터를 한 번만 조회
@@ -167,12 +184,22 @@ export default function ApiTest() {
           <Chip label={`원화: ${Math.round(calculateKRW(Number(jpyValue)))}`} variant="outlined" />
 
           <Button variant="contained" type="submit">
-            Contained
+            등록하기
+          </Button>
+
+          <Button
+            variant="contained"
+            onClick={() => {
+              // 바로 함수가 실행 되기 떄문에 함수 참조를 전달해야합니다.
+              handleFormDelete(selectionItem);
+            }}
+          >
+            삭제하기
           </Button>
         </Box>
       </S.Form>
 
-      <IncomeItemTable incomeItemArray={incomeItemArray} />
+      <DataTable incomeItemArray={incomeItemArray} setSelectionItem={setSelectionItem} />
     </S.Container>
   );
 }
