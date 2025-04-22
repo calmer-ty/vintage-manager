@@ -1,58 +1,23 @@
-// import axios from "axios";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
 
-import DataTable from "../../components/dataTable";
+import ControllerInput from "@/components/controllerInput";
+import CurrencySelect from "@/components/currencySelect";
+import DataTable from "@/components/dataTable";
 // MUI
 import { db } from "@/commons/libraries/firebase/firebaseApp";
 import { Box, Button } from "@mui/material";
 
 import * as S from "./styles";
 // TYPE
-import {
-  // IExchangeRate,
-  IIncomeItemData,
-} from "@/commons/types";
-import ControllerInput from "@/components/controllerInput";
-import CurrencySelect from "@/components/currencySelect";
+import { IIncomeItemData } from "@/commons/types";
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
 export default function ApiTest() {
   const [selectionItem, setSelectionItem] = useState<string[]>([]);
   console.log(selectionItem);
-
-  // 환율 가져오는 API
-  // const [rates, setRates] = useState<IExchangeRate>();
-  // useEffect(() => {
-  //   const fetchExchangeRate = async () => {
-  //     const cachedData = localStorage.getItem("exchangeRate");
-  //     const cachedTime = localStorage.getItem("exchangeRateTime");
-  //     const currentTime = new Date().getTime();
-
-  //     // 1시간 이내에 데이터가 있으면 로컬스토리지 데이터 사용
-  //     if (cachedData && cachedTime && currentTime - Number(cachedTime) < CACHE_EXPIRY) {
-  //       setRates(JSON.parse(cachedData)); // 로컬스토리지 데이터 사용
-  //       return;
-  //     }
-
-  //     // 캐시가 없거나 만료된 경우 새로 API 호출
-  //     // const url = `https://api.currencyfreaks.com/v2.0/rates/latest?apikey=${process.env.NEXT_PUBLIC_EXCHANGE_RATE_APIKEY}&symbols=JPY,KRW`;
-  //     // const url = `https://www.koreaexim.go.kr/site/program/financial/exchangeJSON?authkey=${process.env.NEXT_PUBLIC_GOVERNMENTDATA}&searchdate=20250325&data=AP01`;
-  //     try {
-  //       const response = await axios.get(url);
-  //       setRates(response.data);
-
-  //       // 새로운 데이터를 로컬스토리지에 저장
-  //       localStorage.setItem("exchangeRate", JSON.stringify(response.data));
-  //       localStorage.setItem("exchangeRateTime", currentTime.toString());
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchExchangeRate();
-  // }, []);
 
   // React hook form - 입력하는 내용
   const {

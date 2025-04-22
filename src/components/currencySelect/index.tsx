@@ -1,3 +1,4 @@
+import { useExchangeRate } from "@/commons/hooks/fetchExchangeRate";
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
 interface ICurrencySelectProps {
@@ -7,6 +8,9 @@ interface ICurrencySelectProps {
 }
 
 export default function CurrencySelect({ title, currency, setCurrency }: ICurrencySelectProps) {
+  // 환율 가져오는 Hooks
+  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
+
   const handleChange = (event: SelectChangeEvent) => {
     setCurrency(event.target.value as string);
   };
@@ -15,9 +19,9 @@ export default function CurrencySelect({ title, currency, setCurrency }: ICurren
     <FormControl sx={{ minWidth: 80 }}>
       <InputLabel id="select-label">{title}</InputLabel>
       <Select labelId="select-label" id="currency-select" value={currency} label="통화" onChange={handleChange} sx={{ backgroundColor: "#fff" }}>
-        <MenuItem value={1}>₩</MenuItem>
-        <MenuItem value={1425.23}>$</MenuItem>
-        <MenuItem value={10.14}>¥</MenuItem>
+        <MenuItem value={baseRate}>₩</MenuItem>
+        <MenuItem value={usdToKrw}>$</MenuItem>
+        <MenuItem value={jpyToKrw}>¥</MenuItem>
       </Select>
     </FormControl>
   );

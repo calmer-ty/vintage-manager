@@ -1,10 +1,10 @@
+import { useMemo } from "react";
+
+import { Box } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
 import type { IIncomeItemData } from "@/commons/types";
-
-import { Box } from "@mui/material";
-import { useMemo } from "react";
 
 interface IncomeItemTableProps {
   incomeItemArray: IIncomeItemData[];
@@ -36,15 +36,15 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
   // 해석 필요!
   const priceSum = useMemo(() => {
     // reduce()는 배열의 모든 요소를 하나의 값으로 줄이기 위해 사용하는 함수 >> sum은 누적된 값, el은 배열의 각 요소
-    return incomeItemArray.reduce((total, el) => {
+    return incomeItemArray.reduce((sum, el) => {
       // item.price를 숫자로 변환
       const price = Number(el.price);
 
       // 숫자가 아니면 무시하고 그대로 리턴
-      if (isNaN(price)) return total;
+      if (isNaN(price)) return sum;
 
-      // 숫자라면 total에 더해줌
-      return total + price;
+      // 숫자라면 sum에 더해줌
+      return sum + price;
     }, 0);
   }, [incomeItemArray]);
 
@@ -61,7 +61,7 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
       />
       <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", position: "absolute", bottom: "0.8rem", left: "11rem" }}>
         <span>
-          총 매입한 가격: <strong>{priceSum}</strong> 원
+          총 매입한 가격: <strong>{priceSum.toLocaleString()}</strong> 원
         </span>
         <span>
           총 매물 개수: <strong>{incomeItemArray.length}</strong> 개
