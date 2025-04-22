@@ -15,7 +15,7 @@ const columns: GridColDef[] = [
   { field: "createdAt", headerName: "시트 생성 시간", width: 200 },
   { field: "brandName", headerName: "브랜드명", width: 200 },
   { field: "itemName", headerName: "제품명", width: 200 },
-  { field: "price", headerName: "매입 가격", width: 130 },
+  { field: "price", headerName: "매입 가격(원)", width: 130 },
   // { field: "lastName", headerName: "Last name", width: 130 },
   // {
   //   field: "age",
@@ -41,21 +41,20 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
     setSelectionItem(selectionItem);
   };
 
-  // console.log("incomeItemArray: ", incomeItemArray);
-  // let priceSum = 0;
-  // incomeItemArray.forEach((el) => {
-  //   priceSum += Number(el.price);
-  // });
-
   // 해석 필요!
   const priceSum = useMemo(() => {
     // reduce()는 배열의 모든 요소를 하나의 값으로 줄이기 위해 사용하는 함수 >> sum은 누적된 값, el은 배열의 각 요소
-    return incomeItemArray.reduce((sum, el) => {
+    return incomeItemArray.reduce((total, el) => {
+      // item.price를 숫자로 변환
       const price = Number(el.price);
-      return isNaN(price) ? sum : sum + price;
+
+      // 숫자가 아니면 무시하고 그대로 리턴
+      if (isNaN(price)) return total;
+
+      // 숫자라면 total에 더해줌
+      return total + price;
     }, 0);
   }, [incomeItemArray]);
-  console.log("priceSum: ", priceSum);
 
   return (
     <Paper sx={{ height: 400, width: "100%", position: "relative" }}>
@@ -68,7 +67,7 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
         sx={{ border: 0 }}
         onRowSelectionModelChange={handleSelectionChange}
       />
-      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", position: "absolute", bottom: "1rem", left: "1rem" }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", position: "absolute", bottom: "0.8rem", left: "11rem" }}>
         <span>
           총 매입한 가격: <strong>{priceSum}</strong> 엔
         </span>
