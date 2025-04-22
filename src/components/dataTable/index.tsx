@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import type { IIncomeItemData } from "@/commons/types";
 
 import { Box } from "@mui/material";
+import { useMemo } from "react";
 
 interface IncomeItemTableProps {
   incomeItemArray: IIncomeItemData[];
@@ -40,10 +41,21 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
     setSelectionItem(selectionItem);
   };
 
-  let priceSum = 0;
-  incomeItemArray.forEach((el) => {
-    priceSum += Number(el.price);
-  });
+  // console.log("incomeItemArray: ", incomeItemArray);
+  // let priceSum = 0;
+  // incomeItemArray.forEach((el) => {
+  //   priceSum += Number(el.price);
+  // });
+
+  // 해석 필요!
+  const priceSum = useMemo(() => {
+    // reduce()는 배열의 모든 요소를 하나의 값으로 줄이기 위해 사용하는 함수 >> sum은 누적된 값, el은 배열의 각 요소
+    return incomeItemArray.reduce((sum, el) => {
+      const price = Number(el.price);
+      return isNaN(price) ? sum : sum + price;
+    }, 0);
+  }, [incomeItemArray]);
+  console.log("priceSum: ", priceSum);
 
   return (
     <Paper sx={{ height: 400, width: "100%", position: "relative" }}>

@@ -11,7 +11,7 @@ export default function CurrencySelect({ currency, setCurrency }: ICurrencySelec
   };
 
   return (
-    <FormControl>
+    <FormControl sx={{ minWidth: 80 }}>
       <InputLabel id="select-label">통화</InputLabel>
       <Select labelId="select-label" id="currency-select" value={currency} label="통화" onChange={handleChange} sx={{ backgroundColor: "#fff" }}>
         <MenuItem value={10}>₩</MenuItem>

@@ -148,13 +148,13 @@ export default function ApiTest() {
   return (
     <S.Container>
       <S.Form onSubmit={handleSubmit(handleFormSubmit)}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <Box sx={{ display: "flex", gap: "0.5rem" }}>
           <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
           <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
           <CurrencySelect currency={currency} setCurrency={setCurrency} />
           <ControllerInput name="price" control={control} required="매입 가격을 입력해 주세요" label="매입 가격" error={errors.price?.message} />
 
-          <Chip label={`원화: ${Math.round(calculateKRW(Number(jpyValue)))}`} variant="outlined" />
+          {/* <Chip label={`원화: ${Math.round(calculateKRW(Number(jpyValue)))}`} variant="outlined" /> */}
 
           <Button variant="contained" type="submit">
             등록하기
