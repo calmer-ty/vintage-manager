@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { Box } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
 import type { IIncomeItemData } from "@/commons/types";
@@ -30,8 +30,9 @@ const paginationModel = { page: 0, pageSize: 5 };
 
 export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeItemTableProps) {
   // 선택한 행 id들 가져오기
-  const handleSelectionChange = (selectionItem: any) => {
-    setSelectionItem(selectionItem);
+  const handleSelectionChange = (selectionItem: GridRowSelectionModel) => {
+    console.log("selectionItem:", selectionItem);
+    setSelectionItem(selectionItem as string[]);
   };
 
   // 해석 필요!
