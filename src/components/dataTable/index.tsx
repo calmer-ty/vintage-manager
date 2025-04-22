@@ -13,6 +13,7 @@ interface IncomeItemTableProps {
 
 const columns: GridColDef[] = [
   { field: "createdAt", headerName: "시트 생성 시간", width: 200 },
+  { field: "itemType", headerName: "타입", width: 120 },
   { field: "brandName", headerName: "브랜드명", width: 200 },
   { field: "itemName", headerName: "제품명", width: 200 },
   {

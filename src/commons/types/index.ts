@@ -14,6 +14,7 @@ export interface IExchangeRate {
 }
 export interface IIncomeItemData {
   id: string;
+  itemType: string;
   brandName: string;
   itemName: string;
   price: string;

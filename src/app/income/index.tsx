@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
 
 import ControllerInput from "@/components/controllerInput";
-import CurrencySelect from "@/components/currencySelect";
 import DataTable from "@/components/dataTable";
 // MUI
 import { db } from "@/commons/libraries/firebase/firebaseApp";
@@ -12,12 +11,13 @@ import { Box, Button } from "@mui/material";
 import * as S from "./styles";
 // TYPE
 import { IIncomeItemData } from "@/commons/types";
+import BasicSelect from "@/components/basicSelect";
+import { useExchangeRate } from "@/commons/hooks/fetchExchangeRate";
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
 export default function ApiTest() {
   const [selectionItem, setSelectionItem] = useState<string[]>([]);
-  console.log(selectionItem);
 
   // React hook form - 입력하는 내용
   const {
@@ -43,6 +43,7 @@ export default function ApiTest() {
 
       const docRef = await addDoc(collection(db, "income"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
+        itemType,
         price: Number(data.price) * Number(currency),
         createdAt, // 테이블 생성 시간
       });
@@ -90,19 +91,33 @@ export default function ApiTest() {
     readData();
   }, []); // 의존성 배열이 비어있으므로 처음 한 번만 실행됨
 
+  // 아이템 타입 선택
+  const [itemType, setItemType] = useState("");
+  const itemTypeOptions = [
+    { label: "상의", value: "상의" },
+    { label: "하의", value: "하의" },
+    { label: "아우터", value: "아우터" },
+  ];
+  console.log(itemType);
+
   // 통화 선택
   const [currency, setCurrency] = useState("");
-
-  // console.log(errors.brandName);
-  console.log(currency);
+  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
+  const currencyOptions = [
+    { label: "₩", value: baseRate },
+    { label: "$", value: usdToKrw },
+    { label: "¥", value: jpyToKrw },
+  ];
 
   return (
     <S.Container>
       <S.Form onSubmit={handleSubmit(handleFormSubmit)}>
         <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "baseline" }}>
+          {/* <CurrencySelect currency={currency} setCurrency={setCurrency} /> */}
+          <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
           <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
           <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
-          <CurrencySelect title="통화" currency={currency} setCurrency={setCurrency} />
+          <BasicSelect title="통화" value={currency} options={currencyOptions} setValue={setCurrency} />
           <ControllerInput name="price" control={control} required="매입 가격을 입력해 주세요" label="매입 가격" error={errors.price?.message} />
 
           <Button variant="contained" type="submit">

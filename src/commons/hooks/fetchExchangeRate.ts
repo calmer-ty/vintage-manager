@@ -16,11 +16,11 @@ export const useExchangeRate = () => {
     fetchExchangeRate();
   }, []);
 
-  const USD = rates?.data.conversion_rates.USD ?? 0;
+  // const USD = rates?.data.conversion_rates.USD ?? 0;
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
   const JPY = rates?.data.conversion_rates.JPY ?? 0;
 
-  const baseRate = USD; // 1 USD = 1400 KRW
+  const baseRate = 1;
   const usdToKrw = KRW; // 1 USD = 1400 KRW
   const jpyToKrw = KRW / JPY;
 
