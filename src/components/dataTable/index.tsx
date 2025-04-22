@@ -15,22 +15,14 @@ const columns: GridColDef[] = [
   { field: "createdAt", headerName: "시트 생성 시간", width: 200 },
   { field: "brandName", headerName: "브랜드명", width: 200 },
   { field: "itemName", headerName: "제품명", width: 200 },
-  { field: "price", headerName: "매입 가격(원)", width: 130 },
-  // { field: "lastName", headerName: "Last name", width: 130 },
-  // {
-  //   field: "age",
-  //   headerName: "Age",
-  //   type: "number",
-  //   width: 90,
-  // },
-  // {
-  //   field: "fullName",
-  //   headerName: "Full name",
-  //   description: "This column has a value getter and is not sortable.",
-  //   sortable: false,
-  //   width: 160,
-  //   valueGetter: (value, row) => `${row.firstName || ""} ${row.lastName || ""}`,
-  // },
+  {
+    field: "price",
+    headerName: "매입 가격(원)",
+    width: 130,
+    valueFormatter: (params: number) => {
+      return params.toLocaleString(); // 예: 1000 -> "1,000"
+    },
+  },
 ];
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -69,7 +61,7 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
       />
       <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", position: "absolute", bottom: "0.8rem", left: "11rem" }}>
         <span>
-          총 매입한 가격: <strong>{priceSum}</strong> 엔
+          총 매입한 가격: <strong>{priceSum}</strong> 원
         </span>
         <span>
           총 매물 개수: <strong>{incomeItemArray.length}</strong> 개
