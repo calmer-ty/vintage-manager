@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const response = await axios.get(`https://v6.exchangerate-api.com/v6/064044cfb119a60e03ecb65f/latest/USD`);
+    const response = await axios.get(`https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGERATE_API_KEY}/latest/USD`);
 
     cachedRate = response.data;
     lastFetchedTime = now;
