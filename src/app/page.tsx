@@ -1,7 +1,7 @@
 "use client";
 
-import ApiTest from "@/app/income";
+import Income from "@/app/income";
 
 export default function Home() {
-  return <ApiTest />;
+  return <Income />;
 }

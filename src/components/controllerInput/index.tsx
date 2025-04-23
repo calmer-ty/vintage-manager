@@ -7,7 +7,7 @@ import { IIncomeItemData } from "@/commons/types";
 
 interface IControllerInputProps {
   name: keyof IIncomeItemData;
-  control: Control<IIncomeItemData, any, IIncomeItemData>;
+  control: Control<IIncomeItemData, unknown, IIncomeItemData>;
   required: string;
   label: string;
   error: string | undefined;
