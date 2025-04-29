@@ -1,0 +1,11 @@
+1. Firebase 프로젝트 연결
+firebase use
+
+2. 클라우드 함수 준비 
+firebase emulators:start --only functions 명령어로 로컬에서 Firebase Functions 에뮬레이터를 실행하여 확인합니다.
+
+3. 배포 준비
+firebase deploy --only functions 명령어로 Firebase Functions를 배포합니다.
+
+4. 호스팅 배포
+firebase deploy --only hosting 명령어로 호스팅을 배포합니다.

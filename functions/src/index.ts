@@ -15,22 +15,14 @@ const isDev = process.env.NODE_ENV !== "production";
 const nextServer = next({
   dev: isDev,
   conf: {distDir: ".next"},
-  // 환경 변수를 통해 Cloud Run의 8080 포트로 설정
-  //   port: Number(process.env.PORT) || 8080,
 });
 
 const handle = nextServer.getRequestHandler();
 
-export const vintageManagerFunc = functions.https.onRequest(async (req, res) => {
+export const nextjsFunc = functions.https.onRequest(async (req, res) => {
   try {
-    // 서버 준비 상태 로그
-    console.log("Next.js server is preparing...");
-
     // Next.js 준비
     await nextServer.prepare();
-
-    // 준비가 완료되면 로그 출력
-    console.log("Next.js server is prepared.");
 
     return handle(req, res);
   } catch (error) {

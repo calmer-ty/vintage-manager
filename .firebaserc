@@ -1,7 +1,5 @@
 {
   "projects": {
     "default": "vintage-manager-67696"
-  },
-  "targets": {},
-  "etags": {}
+  }
 }
