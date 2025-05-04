@@ -4,11 +4,19 @@
       "source": "functions",
       "codebase": "default",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"],
-      "predeploy": ["yarn --cwd ./functions lint"]
+      "predeploy": ["yarn --cwd ./functions lint"],
+      "region": "asia-northeast1"
     }
   ],
   "hosting": {
     "public": "functions",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "vintageManagerFunc",
+        "region": "asia-northeast1"
+      }
+    ]
   }
 }
