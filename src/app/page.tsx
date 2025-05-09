@@ -1,7 +1,9 @@
 "use client";
 
-import Income from "@/app/income";
+import IntroPage from "./intro";
+
+// import Income from "@/app/income";
 
 export default function Home() {
-  return <Income />;
+  return <IntroPage />;
 }
