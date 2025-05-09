@@ -12,7 +12,7 @@ import * as S from "./styles";
 // TYPE
 import { IIncomeItemData } from "@/commons/types";
 import BasicSelect from "@/components/basicSelect";
-import { useExchangeRate } from "@/commons/hooks/fetchExchangeRate";
+import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
