@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  distDir: "functions/.next", // ✅ 빌드 결과를 functions 폴더 안으로 이동
+  // distDir: "functions/.next", // ✅ 빌드 결과를 functions 폴더 안으로 이동
   env: {
     FIREBASE_APIKEY: process.env.FIREBASE_APIKEY,
     FIREBASE_AUTHDOMAIN: process.env.FIREBASE_AUTHDOMAIN,

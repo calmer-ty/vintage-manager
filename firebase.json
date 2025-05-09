@@ -14,7 +14,7 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "vintageManagerFunc",
+        "function": "nextjsFunc",
         "region": "asia-northeast1"
       }
     ]
