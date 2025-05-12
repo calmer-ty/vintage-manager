@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://support.google.com/firebase/answer/7015592
@@ -20,4 +20,6 @@ const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 
 // Firebase 인증 인스턴스 가져오기
-export const auth = getAuth(app);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+export { auth, googleProvider };
