@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
-import type { IIncomeItemData } from "@/commons/types";
+import type { IIncomeItemData } from "@/src/commons/types";
 
 interface IncomeItemTableProps {
   incomeItemArray: IIncomeItemData[];
@@ -21,7 +21,8 @@ const columns: GridColDef[] = [
     headerName: "매입 가격(원)",
     width: 130,
     valueFormatter: (params: number) => {
-      return params.toLocaleString(); // 예: 1000 -> "1,000"
+      const value = Math.floor(params); // 버림
+      return value.toLocaleString(); // 예: 1000 -> "1,000"
     },
   },
 ];
@@ -63,7 +64,7 @@ export default function DataTable({ incomeItemArray, setSelectionItem }: IncomeI
       />
       <Box sx={{ display: "flex", justifyContent: "flex-end", gap: "1rem", position: "absolute", bottom: "0.8rem", left: "11rem" }}>
         <span>
-          총 매입한 가격: <strong>{priceSum.toLocaleString()}</strong> 원
+          총 매입한 가격: <strong>{Math.floor(priceSum).toLocaleString()}</strong> 원
         </span>
         <span>
           총 매물 개수: <strong>{incomeItemArray.length}</strong> 개
