@@ -6,7 +6,7 @@ import ControllerInput from "@/src/components/controllerInput";
 import DataTable from "@/src/components/dataTable";
 // MUI
 import { db } from "@/src/commons/libraries/firebase/firebaseApp";
-import { Box, Button } from "@mui/material";
+import { Button } from "@mui/material";
 
 import * as S from "./styles";
 // TYPE
@@ -112,7 +112,7 @@ export default function IncomePage() {
   return (
     <S.Container>
       <S.Form onSubmit={handleSubmit(handleFormSubmit)}>
-        <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "baseline" }}>
+        <div className="flex items-baseline gap-4">
           <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
           <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
           <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
@@ -131,7 +131,7 @@ export default function IncomePage() {
           >
             삭제하기
           </Button>
-        </Box>
+        </div>
       </S.Form>
 
       <DataTable incomeItemArray={incomeItemArray} setSelectionItem={setSelectionItem} />
