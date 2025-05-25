@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
 
-import ControllerInput from "@/components/controllerInput";
-import DataTable from "@/components/dataTable";
+import ControllerInput from "@/src/components/controllerInput";
+import DataTable from "@/src/components/dataTable";
 // MUI
-import { db } from "@/commons/libraries/firebase/firebaseApp";
-import { Box, Button } from "@mui/material";
+import { db } from "@/src/commons/libraries/firebase/firebaseApp";
+import { Button } from "@mui/material";
 
 import * as S from "./styles";
 // TYPE
-import { IIncomeItemData } from "@/commons/types";
-import BasicSelect from "@/components/basicSelect";
-import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
+import { IIncomeItemData } from "@/src/commons/types";
+import BasicSelect from "@/src/components/basicSelect";
+import { useExchangeRate } from "@/src/commons/hooks/useExchangeRate";
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
@@ -112,8 +112,7 @@ export default function IncomePage() {
   return (
     <S.Container>
       <S.Form onSubmit={handleSubmit(handleFormSubmit)}>
-        <Box sx={{ display: "flex", gap: "0.5rem", alignItems: "baseline" }}>
-          {/* <CurrencySelect currency={currency} setCurrency={setCurrency} /> */}
+        <div className="flex items-baseline gap-4">
           <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
           <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
           <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
@@ -132,7 +131,7 @@ export default function IncomePage() {
           >
             삭제하기
           </Button>
-        </Box>
+        </div>
       </S.Form>
 
       <DataTable incomeItemArray={incomeItemArray} setSelectionItem={setSelectionItem} />
