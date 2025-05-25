@@ -9,5 +9,6 @@ import { useAuth } from "@/src/commons/hooks/useAuth";
 
 export default function Home() {
   const { user } = useAuth();
-  return <>{user === null ? <IntroPage /> : <IncomePage />}</>;
+  console.log("user: ", user?.uid);
+  return <>{user === null ? <IntroPage /> : <IncomePage userId={user?.uid} />}</>;
 }

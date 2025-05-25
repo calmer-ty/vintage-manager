@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, where } from "firebase/firestore";
 
 import ControllerInput from "@/src/components/controllerInput";
 import DataTable from "@/src/components/dataTable";
@@ -16,7 +16,7 @@ import { useExchangeRate } from "@/src/commons/hooks/useExchangeRate";
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
-export default function IncomePage() {
+export default function IncomePage({ userId }: { userId: string }) {
   const [selectionItem, setSelectionItem] = useState<string[]>([]);
 
   // React hook form - 입력하는 내용
@@ -43,6 +43,7 @@ export default function IncomePage() {
 
       const docRef = await addDoc(collection(db, "income"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
+        userId,
         itemType,
         price: Number(data.price) * Number(currency),
         createdAt, // 테이블 생성 시간
@@ -57,9 +58,11 @@ export default function IncomePage() {
 
   // 조회
   const [incomeItemArray, setIncomeItemArray] = useState<IIncomeItemData[]>([]);
+  console.log("incomeItemArray: ", incomeItemArray);
   const readData = async () => {
     const q = query(
       collection(db, "income"),
+      where("userId", "==", userId),
       orderBy("createdAt", "desc") // createdAt 기준 내림차순 정렬
     );
 
