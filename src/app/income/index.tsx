@@ -8,7 +8,6 @@ import DataTable from "@/components/dataTable";
 import { db } from "@/commons/libraries/firebase/firebaseApp";
 import { Button } from "@mui/material";
 
-import * as S from "./styles";
 // TYPE
 import { IIncomeItemData } from "@/commons/types";
 import BasicSelect from "@/components/basicSelect";
@@ -58,7 +57,7 @@ export default function IncomePage({ userId }: { userId: string }) {
 
   // 조회
   const [incomeItemArray, setIncomeItemArray] = useState<IIncomeItemData[]>([]);
-  console.log("incomeItemArray: ", incomeItemArray);
+
   const readData = async () => {
     const q = query(
       collection(db, "income"),
@@ -113,8 +112,8 @@ export default function IncomePage({ userId }: { userId: string }) {
   ];
 
   return (
-    <S.Container>
-      <S.Form onSubmit={handleSubmit(handleFormSubmit)}>
+    <article className="flex flex-col gap-4 p-6 bg-gray-100 rounded-lg">
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="flex items-baseline gap-4">
           <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
           <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
@@ -135,9 +134,9 @@ export default function IncomePage({ userId }: { userId: string }) {
             삭제하기
           </Button>
         </div>
-      </S.Form>
+      </form>
 
       <DataTable incomeItemArray={incomeItemArray} setSelectionItem={setSelectionItem} />
-    </S.Container>
+    </article>
   );
 }

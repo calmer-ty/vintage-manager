@@ -2,7 +2,6 @@ import { Control, Controller } from "react-hook-form";
 
 // MUI
 import TextField from "@mui/material/TextField";
-import { Box, FormHelperText } from "@mui/material";
 import { IIncomeItemData } from "@/commons/types";
 
 interface IControllerInputProps {
@@ -20,12 +19,12 @@ export default function ControllerInput({ name, control, required, label, error 
       control={control}
       rules={{ required }}
       render={({ field }) => (
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <TextField {...field} label={label} error={!!error} />
-          <Box sx={{ height: "1.25rem" }}>
+        <div className="flex flex-col">
+          <TextField {...field} label={label} error={!!error} className="bg-white" />
+          {/* <Box sx={{ height: "1.25rem" }}>
             <FormHelperText error>{error}</FormHelperText>
-          </Box>
-        </Box>
+          </Box> */}
+        </div>
       )}
     />
   );
