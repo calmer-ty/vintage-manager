@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, where } from "firebase/firestore";
 
-import ControllerInput from "@/src/components/controllerInput";
-import DataTable from "@/src/components/dataTable";
+import ControllerInput from "@/components/controllerInput";
+import DataTable from "@/components/dataTable";
 // MUI
-import { db } from "@/src/commons/libraries/firebase/firebaseApp";
+import { db } from "@/commons/libraries/firebase/firebaseApp";
 import { Button } from "@mui/material";
 
 import * as S from "./styles";
 // TYPE
-import { IIncomeItemData } from "@/src/commons/types";
-import BasicSelect from "@/src/components/basicSelect";
-import { useExchangeRate } from "@/src/commons/hooks/useExchangeRate";
+import { IIncomeItemData } from "@/commons/types";
+import BasicSelect from "@/components/basicSelect";
+import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 

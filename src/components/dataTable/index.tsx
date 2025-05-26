@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import Paper from "@mui/material/Paper";
 
-import type { IIncomeItemData } from "@/src/commons/types";
+import type { IIncomeItemData } from "@/commons/types";
 
 interface IncomeItemTableProps {
   incomeItemArray: IIncomeItemData[];

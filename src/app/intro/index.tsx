@@ -1,6 +1,6 @@
 import { Button, Paper, Typography } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
-import { auth, googleProvider } from "@/src/commons/libraries/firebase/firebaseApp";
+import { auth, googleProvider } from "@/commons/libraries/firebase/firebaseApp";
 import { signInWithPopup } from "firebase/auth";
 
 export default function IntroPage() {

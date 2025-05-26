@@ -3,7 +3,7 @@
 import IncomePage from "./income";
 import IntroPage from "./intro";
 
-import { useAuth } from "@/src/commons/hooks/useAuth";
+import { useAuth } from "@/commons/hooks/useAuth";
 
 // import Income from "@/app/income";
 
