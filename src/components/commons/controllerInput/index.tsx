@@ -20,10 +20,7 @@ export default function ControllerInput({ name, control, required, label, error 
       rules={{ required }}
       render={({ field }) => (
         <div className="flex flex-col">
-          <TextField {...field} label={label} error={!!error} className="bg-white" />
-          {/* <Box sx={{ height: "1.25rem" }}>
-            <FormHelperText error>{error}</FormHelperText>
-          </Box> */}
+          <TextField {...field} label={label} error={!!error} sx={{ bgcolor: "#fff" }} />
         </div>
       )}
     />

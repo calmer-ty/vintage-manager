@@ -20,9 +20,9 @@ export const useExchangeRate = () => {
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
   const JPY = rates?.data.conversion_rates.JPY ?? 0;
 
-  const baseRate = 1;
-  const usdToKrw = KRW; // 1 USD = 1400 KRW
-  const jpyToKrw = KRW / JPY;
+  const baseRate = (1).toString();
+  const usdToKrw = KRW.toString(); // 1 USD = 1400 KRW
+  const jpyToKrw = (KRW / JPY).toString();
 
   //   console.log("usdToKrw", usdToKrw);
   //   console.log("jpyToKrw", jpyToKrw);

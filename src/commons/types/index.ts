@@ -19,5 +19,6 @@ export interface IIncomeItemData {
   brandName: string;
   itemName: string;
   price: string;
+  priceKRW: string;
   createdAt: Timestamp;
 }

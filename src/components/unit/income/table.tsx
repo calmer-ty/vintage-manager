@@ -1,24 +1,50 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, where } from "firebase/firestore";
 
-import ControllerInput from "@/components/controllerInput";
-import DataTable from "@/components/dataTable";
+import ControllerInput from "@/components/commons/controllerInput";
+import DataTable from "@/components/commons/dataTable";
+import BasicSelect from "@/components/commons/basicSelect";
 // MUI
 import { db } from "@/commons/libraries/firebase/firebaseApp";
 import { Button } from "@mui/material";
 
 // TYPE
 import { IIncomeItemData } from "@/commons/types";
-import BasicSelect from "@/components/basicSelect";
 import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
-export default function IncomePage({ userId }: { userId: string }) {
-  const [selectionItem, setSelectionItem] = useState<string[]>([]);
+export default function IncomeTable({ userId }: { userId: string }) {
+  // 📦 통화 정보
+  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
+  const currencyOptions = useMemo(
+    () => [
+      { label: "₩", value: baseRate },
+      { label: "$", value: usdToKrw },
+      { label: "¥", value: jpyToKrw },
+    ],
+    [baseRate, usdToKrw, jpyToKrw]
+  );
+  const [currency, setCurrency] = useState(baseRate); // 통화 선택
+  const [currencyUnit, setCurrencyUnit] = useState("₩"); // 통화 선택
 
-  // React hook form - 입력하는 내용
+  // 🏷️ 옵션
+  const itemTypeOptions = [
+    { label: "상의", value: "상의" },
+    { label: "하의", value: "하의" },
+    { label: "아우터", value: "아우터" },
+    { label: "가방", value: "가방" },
+    { label: "액세사리", value: "액세사리" },
+    { label: "기타", value: "기타" },
+  ];
+
+  // 🧠 상태
+  const [itemType, setItemType] = useState(""); // 아이템 타입 선택
+  const [selectionItem, setSelectionItem] = useState<string[]>([]);
+  const [incomeItemArray, setIncomeItemArray] = useState<IIncomeItemData[]>([]);
+
+  // ✍️ 폼 설정
   const {
     handleSubmit,
     control,
@@ -32,8 +58,9 @@ export default function IncomePage({ userId }: { userId: string }) {
     },
   });
 
-  // firestore
-  // 등록
+  // 🔥 Firestore 관련
+
+  // 📥 등록 함수
   const handleFormSubmit = async (data: IIncomeItemData) => {
     try {
       // 등록 시간 측정
@@ -44,7 +71,8 @@ export default function IncomePage({ userId }: { userId: string }) {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         userId,
         itemType,
-        price: Number(data.price) * Number(currency),
+        price: Number(data.price),
+        priceKRW: Number(data.price) * Number(currency),
         createdAt, // 테이블 생성 시간
       });
       reset();
@@ -55,26 +83,20 @@ export default function IncomePage({ userId }: { userId: string }) {
     }
   };
 
-  // 조회
-  const [incomeItemArray, setIncomeItemArray] = useState<IIncomeItemData[]>([]);
+  // 📄 조회 함수
+  const readData = useCallback(async () => {
+    const q = query(collection(db, "income"), where("userId", "==", userId), orderBy("createdAt", "desc"));
 
-  const readData = async () => {
-    const q = query(
-      collection(db, "income"),
-      where("userId", "==", userId),
-      orderBy("createdAt", "desc") // createdAt 기준 내림차순 정렬
-    );
-
-    // 위에서 데이터를 정렬하고 조회
     const querySnapshot = await getDocs(q);
     const dataArray = querySnapshot.docs.map((doc) => ({
-      id: doc.id, // 문서의 ID
-      ...doc.data(), // 문서의 데이터
+      id: doc.id,
+      ...doc.data(),
     }));
-    setIncomeItemArray(dataArray as IIncomeItemData[]);
-  };
 
-  // 삭제
+    setIncomeItemArray(dataArray as IIncomeItemData[]);
+  }, [userId]);
+
+  // 🗑️ 삭제 함수
   const handleFormDelete = async (selectionItem: string[]) => {
     // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
     for (const id of selectionItem) {
@@ -91,28 +113,17 @@ export default function IncomePage({ userId }: { userId: string }) {
   // 처음 로드 시 데이터를 한 번만 조회
   useEffect(() => {
     readData();
-  }, []); // 의존성 배열이 비어있으므로 처음 한 번만 실행됨
+  }, [readData]);
+
+  useEffect(() => {
+    const selectedOption = currencyOptions.find((opt) => opt.value === currency);
+    if (selectedOption) setCurrencyUnit(selectedOption.label);
+  }, [currency, currencyOptions]);
 
   // 아이템 타입 선택
-  const [itemType, setItemType] = useState("");
-  const itemTypeOptions = [
-    { label: "상의", value: "상의" },
-    { label: "하의", value: "하의" },
-    { label: "아우터", value: "아우터" },
-  ];
-  console.log(itemType);
-
-  // 통화 선택
-  const [currency, setCurrency] = useState("");
-  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
-  const currencyOptions = [
-    { label: "₩", value: baseRate },
-    { label: "$", value: usdToKrw },
-    { label: "¥", value: jpyToKrw },
-  ];
 
   return (
-    <article className="flex flex-col gap-4 p-6 bg-gray-100 rounded-lg">
+    <article className="flex flex-col gap-4 p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm">
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="flex items-baseline gap-4">
           <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
@@ -136,7 +147,7 @@ export default function IncomePage({ userId }: { userId: string }) {
         </div>
       </form>
 
-      <DataTable incomeItemArray={incomeItemArray} setSelectionItem={setSelectionItem} />
+      <DataTable incomeItemArray={incomeItemArray} currencyUnit={currencyUnit} setSelectionItem={setSelectionItem} />
     </article>
   );
 }

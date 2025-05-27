@@ -1,12 +1,13 @@
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
+interface IOption {
+  label: string;
+  value: string;
+}
 interface IBasicSelectProps {
   title: string;
   value: string;
-  options: {
-    label: string;
-    value: string | number;
-  }[];
+  options: IOption[];
   setValue: React.Dispatch<React.SetStateAction<string>>;
 }
 
