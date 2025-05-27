@@ -123,9 +123,9 @@ export default function IncomeTable({ userId }: { userId: string }) {
   // 아이템 타입 선택
 
   return (
-    <article className="flex flex-col gap-4 p-6 bg-gray-100 border border-gray-200 rounded-lg shadow-sm">
+    <section className="flex flex-col gap-4 bg-white border border-gray-200 rounded-lg shadow-sm">
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="flex items-baseline gap-4">
+        <div className="flex items-baseline gap-4 p-6 border-b border-gray-200">
           <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
           <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
           <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
@@ -148,6 +148,6 @@ export default function IncomeTable({ userId }: { userId: string }) {
       </form>
 
       <DataTable incomeItemArray={incomeItemArray} currencyUnit={currencyUnit} setSelectionItem={setSelectionItem} />
-    </article>
+    </section>
   );
 }

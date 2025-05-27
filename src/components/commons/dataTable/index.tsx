@@ -2,7 +2,6 @@ import { useMemo } from "react";
 
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
-import Paper from "@mui/material/Paper";
 
 import type { IIncomeItemData } from "@/commons/types";
 
@@ -61,7 +60,7 @@ export default function DataTable({ incomeItemArray, currencyUnit, setSelectionI
   }, [incomeItemArray]);
 
   return (
-    <Paper sx={{ height: 400, width: "100%", position: "relative" }}>
+    <div className="h-100 relative">
       <DataGrid
         rows={incomeItemArray}
         columns={columns}
@@ -79,6 +78,6 @@ export default function DataTable({ incomeItemArray, currencyUnit, setSelectionI
           총 매물 개수: <strong>{incomeItemArray.length}</strong> 개
         </span>
       </Box>
-    </Paper>
+    </div>
   );
 }
