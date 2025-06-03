@@ -3,15 +3,19 @@ import { useForm } from "react-hook-form";
 import { addDoc, collection, deleteDoc, doc, getDocs, orderBy, query, where } from "firebase/firestore";
 
 import ControllerInput from "@/components/commons/controllerInput";
-import DataTable from "@/components/commons/dataTable";
 import BasicSelect from "@/components/commons/basicSelect";
-// MUI
+
 import { db } from "@/commons/libraries/firebase/firebaseApp";
 import { Button } from "@mui/material";
+import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 
 // TYPE
 import { IIncomeItemData } from "@/commons/types";
 import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
+interface IncomeItemTableProps {
+  itemArray: IIncomeItemData[];
+  setSelectionItem: React.Dispatch<React.SetStateAction<string[]>>;
+}
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
@@ -54,7 +58,9 @@ export default function IncomeTable({ userId }: { userId: string }) {
     defaultValues: {
       brandName: "",
       itemName: "",
+      currencyUnit: "",
       price: "",
+      priceKRW: "",
     },
   });
 
@@ -71,7 +77,8 @@ export default function IncomeTable({ userId }: { userId: string }) {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         userId,
         itemType,
-        price: Number(data.price),
+        currencyUnit,
+        price: `${data.price} ${currencyUnit}`,
         priceKRW: Number(data.price) * Number(currency),
         createdAt, // 테이블 생성 시간
       });
@@ -123,14 +130,14 @@ export default function IncomeTable({ userId }: { userId: string }) {
   // 아이템 타입 선택
 
   return (
-    <section className="flex flex-col gap-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+    <section className="flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm">
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <div className="flex items-baseline gap-4 p-6 border-b border-gray-200">
+        <div className="flex items-baseline gap-4 p-6">
           <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
           <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
           <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
-          <BasicSelect title="통화" value={currency} options={currencyOptions} setValue={setCurrency} />
           <ControllerInput name="price" control={control} required="매입 가격을 입력해 주세요" label="매입 가격" error={errors.price?.message} />
+          <BasicSelect title="통화" value={currency} options={currencyOptions} setValue={setCurrency} />
 
           <Button variant="contained" type="submit">
             등록하기
@@ -147,7 +154,89 @@ export default function IncomeTable({ userId }: { userId: string }) {
         </div>
       </form>
 
-      <DataTable incomeItemArray={incomeItemArray} currencyUnit={currencyUnit} setSelectionItem={setSelectionItem} />
+      <DataTable itemArray={incomeItemArray} setSelectionItem={setSelectionItem} />
     </section>
+  );
+}
+
+// Data Table
+const paginationModel = { page: 0, pageSize: 5 };
+
+const columns = [
+  { field: "createdAt", headerName: "시트 생성 시간", width: 200 },
+  { field: "itemType", headerName: "타입", width: 120 },
+  { field: "brandName", headerName: "브랜드명", width: 200 },
+  { field: "itemName", headerName: "제품명", width: 200 },
+  {
+    field: "price",
+    headerName: "매입 가격(단위)",
+    width: 130,
+    valueFormatter: (params: string) => {
+      // const value = Math.floor(params); // 버림
+      const number = Number(params.split(" ")[0]);
+      const unit = params.split(" ")[1];
+      return `${number.toLocaleString()} ${unit}`;
+    },
+  },
+  {
+    field: "priceKRW",
+    headerName: "매입 가격(원)",
+    width: 130,
+    valueFormatter: (params: number) => {
+      const value = Math.floor(params); // 버림
+      return `${value.toLocaleString()} 원`;
+    },
+  },
+  {
+    field: "status",
+    headerName: "상태",
+    width: 130,
+    // valueFormatter: (params: number) => {
+    //   const value = Math.floor(params); // 버림
+    //   return `${value.toLocaleString()} 원`;
+    // },
+  },
+];
+
+function DataTable({ itemArray, setSelectionItem }: IncomeItemTableProps) {
+  // 선택한 행 id들 가져오기
+  const handleSelectionChange = (selectionItem: GridRowSelectionModel) => {
+    setSelectionItem(selectionItem as string[]);
+  };
+
+  // 해석 필요!
+  const priceSum = useMemo(() => {
+    // reduce()는 배열의 모든 요소를 하나의 값으로 줄이기 위해 사용하는 함수 >> sum은 누적된 값, el은 배열의 각 요소
+    return itemArray.reduce((sum, el) => {
+      const priceKRW = Number(el.priceKRW);
+      return isNaN(priceKRW) ? sum : sum + priceKRW;
+    }, 0);
+  }, [itemArray]);
+
+  return (
+    <div className="h-100 relative">
+      <DataGrid
+        rows={itemArray}
+        columns={columns}
+        initialState={{ pagination: { paginationModel } }}
+        pageSizeOptions={[5, 10]}
+        checkboxSelection
+        sx={{
+          "& .MuiDataGrid-container--top [role=row]": {
+            backgroundColor: "#f0f0f0", // slate-800 같은 느낌
+          },
+          border: 0,
+        }}
+        onRowSelectionModelChange={handleSelectionChange}
+      />
+      <div className="flex justify-end gap-2 absolute bottom-3 left-50">
+        <span>
+          총 매입한 가격: <strong>{Math.floor(priceSum).toLocaleString()}</strong> 원
+        </span>
+        <span>
+          총 매물 개수: <strong>{itemArray.length}</strong> 개
+        </span>
+      </div>
+    </div>
   );
 }
