@@ -12,7 +12,7 @@ export interface IExchangeRate {
   };
   time_last_update_utc: string;
 }
-export interface IIncomeItemData {
+export interface IItemData {
   id: string;
   userId: string;
   itemType: string;

@@ -1,6 +1,6 @@
 import { LineChart } from "@mui/x-charts/LineChart";
 
-export default function IncomeChart() {
+export default function ItemChart() {
   return (
     <section className="flex flex-col gap-4 p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
       <LineChart

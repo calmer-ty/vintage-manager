@@ -10,16 +10,16 @@ import { Button } from "@mui/material";
 import { DataGrid, GridRowSelectionModel } from "@mui/x-data-grid";
 
 // TYPE
-import { IIncomeItemData } from "@/commons/types";
+import { IItemData } from "@/commons/types";
 import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
 interface IncomeItemTableProps {
-  itemArray: IIncomeItemData[];
+  itemArray: IItemData[];
   setSelectionItem: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 // const CACHE_EXPIRY = 60 * 60 * 1000; // 캐시 만료 시간 1시간 (1시간 마다 새로 고침)
 
-export default function IncomeTable({ userId }: { userId: string }) {
+export default function ItemTable({ userId }: { userId: string }) {
   // 📦 통화 정보
   const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
   const currencyOptions = useMemo(
@@ -46,7 +46,7 @@ export default function IncomeTable({ userId }: { userId: string }) {
   // 🧠 상태
   const [itemType, setItemType] = useState(""); // 아이템 타입 선택
   const [selectionItem, setSelectionItem] = useState<string[]>([]);
-  const [incomeItemArray, setIncomeItemArray] = useState<IIncomeItemData[]>([]);
+  const [incomeItemArray, setIncomeItemArray] = useState<IItemData[]>([]);
 
   // ✍️ 폼 설정
   const {
@@ -54,7 +54,7 @@ export default function IncomeTable({ userId }: { userId: string }) {
     control,
     formState: { errors },
     reset,
-  } = useForm<IIncomeItemData>({
+  } = useForm<IItemData>({
     defaultValues: {
       brandName: "",
       itemName: "",
@@ -67,7 +67,7 @@ export default function IncomeTable({ userId }: { userId: string }) {
   // 🔥 Firestore 관련
 
   // 📥 등록 함수
-  const handleFormSubmit = async (data: IIncomeItemData) => {
+  const handleFormSubmit = async (data: IItemData) => {
     try {
       // 등록 시간 측정
       const now = new Date(); // 현재 시간을 Date 객체로 가져옴
@@ -100,7 +100,7 @@ export default function IncomeTable({ userId }: { userId: string }) {
       ...doc.data(),
     }));
 
-    setIncomeItemArray(dataArray as IIncomeItemData[]);
+    setIncomeItemArray(dataArray as IItemData[]);
   }, [userId]);
 
   // 🗑️ 삭제 함수
