@@ -20,10 +20,13 @@
   }
 }
 
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+}
 body {
   display: flex;
-  flex-direction: column;
-  height: 100vh;
   background: var(--background);
   color: var(--foreground);
   font-family: "Noto Sans KR", sans-serif;
@@ -37,5 +40,5 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  flex: 1;
 }
