@@ -7,21 +7,28 @@ import ItemTable from "./itemTable";
 import ItemInput from "./itemInput";
 // import WriteChart from "./chart";
 
-export default function ItemWrite({ userId }: { userId: string }) {
+export default function ItemWrite({ uid }: { uid: string }) {
   const [itemDataArray, setItemDataArray] = useState<IItemData[]>([]);
 
   // 📄 조회 함수
   const readData = useCallback(async () => {
-    const q = query(collection(db, "income"), where("userId", "==", userId), orderBy("createdAt", "desc"));
+    const q = query(
+      // 	Firestore에서 "income"이라는 이름의 컬렉션을 선택
+      collection(db, "income"),
+      // uid 필드가 uid 변수(로그인한 사용자 등)와 같은 문서만 필터
+      where("uid", "==", uid),
+      // 그 필터된 문서들을 createdAt(생성 시각) 기준으로 내림차순(최신순) 정렬
+      orderBy("createdAt", "desc")
+    );
 
     const querySnapshot = await getDocs(q);
     const dataArray = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
+      _id: doc.id,
       ...doc.data(),
     }));
 
     setItemDataArray(dataArray as IItemData[]);
-  }, [userId, setItemDataArray]);
+  }, [uid, setItemDataArray]);
   // 처음 로드 시 데이터를 한 번만 조회
   useEffect(() => {
     readData();
@@ -29,7 +36,7 @@ export default function ItemWrite({ userId }: { userId: string }) {
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-4 bg-gray-100">
-      <ItemInput userId={userId} readData={readData} />
+      <ItemInput uid={uid} readData={readData} />
       <ItemTable data={itemDataArray} />
       {/* <WriteChart /> */}
     </article>

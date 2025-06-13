@@ -13,13 +13,13 @@ export interface IExchangeRate {
   time_last_update_utc: string;
 }
 export interface IItemData {
-  id: string;
-  userId: string;
-  itemType: string;
+  _id: string;
+  uid: string;
+  category: string;
   brandName: string;
-  itemName: string;
-  currencyUnit: string;
+  name: string;
   price: string;
+  currency: string;
   priceKRW: string;
   createdAt: Timestamp;
 }

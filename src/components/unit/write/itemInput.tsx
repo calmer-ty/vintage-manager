@@ -1,67 +1,49 @@
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useMemo, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
-// Custom
-import { useForm } from "react-hook-form";
-import { IItemData } from "@/commons/types";
 import { db } from "@/commons/libraries/firebase/firebaseApp";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, updateDoc } from "firebase/firestore";
+
 import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
 
-import ControllerInput from "@/components/commons/controllerInput";
-import BasicSelect from "@/components/commons/basicSelect";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+
+import BasicSelect from "@/components/commons/select/basic";
+
+// Schema
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { categoryItems } from "./data";
+import { FormSchema } from "./schema";
 
 // 🏷️ 옵션
-const itemTypeOptions = [
-  { label: "상의", value: "상의" },
-  { label: "하의", value: "하의" },
-  { label: "아우터", value: "아우터" },
-  { label: "가방", value: "가방" },
-  { label: "액세사리", value: "액세사리" },
-  { label: "기타", value: "기타" },
-];
+
 interface IItemInputProps {
-  userId: string;
+  uid: string;
   readData: () => Promise<void>;
 }
-export default function ItemInput({ userId, readData }: IItemInputProps) {
-  // Custom
-  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
 
-  const currencyOptions = useMemo(
-    () => [
-      { label: "₩", value: baseRate },
-      { label: "$", value: usdToKrw },
-      { label: "¥", value: jpyToKrw },
-    ],
-    [baseRate, usdToKrw, jpyToKrw]
-  );
-
+export default function ItemInput({ uid, readData }: IItemInputProps) {
   // ✍️ 폼 설정
-  const {
-    handleSubmit: handleFormSubmit,
-    control,
-    formState: { errors },
-    reset,
-  } = useForm<IItemData>({
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
     defaultValues: {
+      category: "",
       brandName: "",
-      itemName: "",
-      currencyUnit: "",
+      name: "",
       price: "",
+      currencyValue: "",
       priceKRW: "",
     },
   });
 
-  // 🧠 상태
-  const [itemType, setItemType] = useState(""); // 아이템 타입 선택
+  const [currencyLabel, setCurrencyLabel] = useState("");
 
-  // 💰 통화
-  const [selectedCurrencyValue, setSelectedCurrencyValue] = useState(baseRate); // 통화 선택
-  const [selectedCurrencyLabel, setSelectedCurrencyLabel] = useState("₩"); // 통화 선택
-
-  // 🖊️ 등록 함수
-  const handleSubmit = async (data: IItemData) => {
+  // 📥 등록 함수
+  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       // 등록 시간 측정
       const now = new Date(); // 현재 시간을 Date 객체로 가져옴
@@ -69,48 +51,141 @@ export default function ItemInput({ userId, readData }: IItemInputProps) {
 
       const docRef = await addDoc(collection(db, "income"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
-        userId,
-        itemType,
-        selectedCurrencyLabel,
-        price: `${data.price} ${selectedCurrencyLabel}`,
-        priceKRW: Number(data.price) * Number(selectedCurrencyValue),
+        uid,
+        price: `${data.price} ${currencyLabel}`,
+        priceKRW: Number(data.price) * Number(data.currencyValue),
         createdAt, // 테이블 생성 시간
       });
-      reset();
+
+      // 문서 ID를 포함한 데이터로 업데이트
+      await updateDoc(docRef, {
+        _id: docRef.id,
+      });
+
+      form.reset();
       readData();
-      console.log("문서 ID:", docRef.id); // Firestore에서 생성된 고유한 문서 ID
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
   };
 
-  // 선택한 통화 값이 일치하면 통화 라벨을 업데이트 시키기 위함
-  useEffect(() => {
-    const selectedOption = currencyOptions.find((opt) => opt.value === selectedCurrencyValue);
-    if (selectedOption) setSelectedCurrencyLabel(selectedOption.label);
-  }, [selectedCurrencyValue, currencyOptions]);
+  // 통화 정보
+  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
+  // prettier-ignore
+  const currencyOptions = useMemo(() => [
+    { label: "₩", value: baseRate },
+    { label: "$", value: usdToKrw },
+    { label: "¥", value: jpyToKrw },
+  ],[baseRate, usdToKrw, jpyToKrw]);
 
   return (
-    <form onSubmit={handleFormSubmit(handleSubmit)}>
-      <div className="flex items-baseline gap-4 p-6">
-        <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
-        <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
-        <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
-        <ControllerInput name="price" control={control} required="매입 가격을 입력해 주세요" label="매입 가격" error={errors.price?.message} />
-        <BasicSelect title="통화" value={selectedCurrencyValue} options={currencyOptions} setValue={setSelectedCurrencyValue} />
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
+          <Controller
+            control={form.control}
+            name="category"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <BasicSelect title="카테고리" items={categoryItems} onChange={field.onChange} value={field.value} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <Button variant="outline" size="sm" type="submit">
-          등록하기
-        </Button>
-        {/* <button
-            onClick={() => {
-              // 바로 함수가 실행 되기 떄문에 함수 참조를 전달해야합니다.
-              handleFormDelete(selectionItem);
-            }}
-          >
-            삭제하기
-          </button> */}
-      </div>
-    </form>
+          <FormField
+            control={form.control}
+            name="brandName"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="브랜드명" {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="제품명" {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="매입 가격" {...field} className="bg-white" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="currencyValue"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <BasicSelect
+                    title="통화"
+                    items={currencyOptions}
+                    onChange={(selectedValue) => {
+                      const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+
+                      if (selected) {
+                        field.onChange(selected.value);
+                        setCurrencyLabel(selected.label);
+                      }
+                    }}
+                    value={field.value}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+    </>
+
+    // <form onSubmit={handleFormSubmit(handleSubmit)}>
+    //   <div className="flex items-baseline gap-4 p-6">
+    //     <BasicSelect title="상품 종류" items={items} />
+    //     <Input type="text" placeholder="브랜드명" className="bg-white" />
+    //     <Input type="text" placeholder="제품명" className="bg-white" />
+    //     <Input type="text" placeholder="매입 가격" className="bg-white" />
+    //     <BasicSelect title="통화" items={items} />
+
+    //     <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
+    //     <ControllerInput name="brandName" control={control} required="브랜드명을 입력해 주세요" label="브랜드명" error={errors.brandName?.message} />
+    //     <ControllerInput name="itemName" control={control} required="제품명을 입력해 주세요" label="제품명" error={errors.itemName?.message} />
+    //     <ControllerInput name="price" control={control} required="매입 가격을 입력해 주세요" label="매입 가격" error={errors.price?.message} />
+    //     <BasicSelect title="통화" value={selectedCurrencyValue} options={currencyOptions} setValue={setSelectedCurrencyValue} />
+
+    //     <Button variant="outline" size="sm" type="submit">
+    //       등록하기
+    //     </Button>
+    //     <button
+    //         onClick={() => {
+    //           // 바로 함수가 실행 되기 떄문에 함수 참조를 전달해야합니다.
+    //           handleFormDelete(selectionItem);
+    //         }}
+    //       >
+    //         삭제하기
+    //       </button>
+    //   </div>
+    // </form>
   );
 }

@@ -37,9 +37,9 @@ const columns: ColumnDef<IItemData>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "itemType",
-    header: "상품 타입",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("itemType")}</div>,
+    accessorKey: "category",
+    header: "상품 종류",
+    cell: ({ row }) => <div className="capitalize">{row.getValue("category")}</div>,
   },
   {
     accessorKey: "brandName",
@@ -47,9 +47,9 @@ const columns: ColumnDef<IItemData>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("brandName")}</div>,
   },
   {
-    accessorKey: "itemName",
+    accessorKey: "name",
     header: "상품명",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("itemName")}</div>,
+    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
     accessorKey: "price",
@@ -65,7 +65,7 @@ const columns: ColumnDef<IItemData>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const itemData = row.original;
 
       return (
         <DropdownMenu>
@@ -77,7 +77,7 @@ const columns: ColumnDef<IItemData>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>Copy payment ID</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(itemData._id)}>Copy payment ID</DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>
             <DropdownMenuItem>View payment details</DropdownMenuItem>
@@ -119,8 +119,8 @@ export default function ItemTable({ data }: { data: IItemData[] }) {
       <div className="flex items-center py-4">
         <Input
           placeholder="상품명을 입력해주세요."
-          value={(table.getColumn("itemName")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("itemName")?.setFilterValue(event.target.value)}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
           className="max-w-sm"
         />
         <DropdownMenu>
