@@ -130,7 +130,8 @@ export default function ItemTable({ userId }: { userId: string }) {
   // 아이템 타입 선택
 
   return (
-    <section className="flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm">
+    // <section className="flex flex-col gap-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+    <section className="flex flex-col gap-4">
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="flex items-baseline gap-4 p-6">
           <BasicSelect title="타입" value={itemType} options={itemTypeOptions} setValue={setItemType} />
@@ -214,7 +215,7 @@ function DataTable({ itemArray, setSelectionItem }: IncomeItemTableProps) {
   }, [itemArray]);
 
   return (
-    <div className="h-100 relative">
+    <div className="h-100 relative bg-white">
       <DataGrid
         rows={itemArray}
         columns={columns}
@@ -223,7 +224,8 @@ function DataTable({ itemArray, setSelectionItem }: IncomeItemTableProps) {
         checkboxSelection
         sx={{
           "& .MuiDataGrid-container--top [role=row]": {
-            backgroundColor: "#f0f0f0", // slate-800 같은 느낌
+            backgroundColor: "#9AA8B3",
+            color: "#FFFFFF",
           },
           border: 0,
         }}
