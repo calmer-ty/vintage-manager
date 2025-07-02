@@ -4,8 +4,6 @@ import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/commons/libraries/firebase/firebaseApp";
 
 import ItemTable from "./itemTable";
-import ItemInput from "./itemInput";
-// import WriteChart from "./chart";
 
 export default function ItemWrite({ uid }: { uid: string }) {
   const [itemDataArray, setItemDataArray] = useState<IItemData[]>([]);
@@ -36,9 +34,7 @@ export default function ItemWrite({ uid }: { uid: string }) {
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-4 bg-gray-100">
-      <ItemInput uid={uid} readData={readData} />
-      <ItemTable data={itemDataArray} />
-      {/* <WriteChart /> */}
+      <ItemTable data={itemDataArray} uid={uid} readData={readData} />
     </article>
   );
 }
