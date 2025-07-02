@@ -28,6 +28,8 @@ interface IItemDialogProps {
 }
 
 export default function ItemDialog({ uid, readData }: IItemDialogProps) {
+  const [currencyLabel, setCurrencyLabel] = useState("");
+
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -41,8 +43,6 @@ export default function ItemDialog({ uid, readData }: IItemDialogProps) {
     },
   });
 
-  const [currencyLabel, setCurrencyLabel] = useState("");
-
   // 📥 등록 함수
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
@@ -54,7 +54,7 @@ export default function ItemDialog({ uid, readData }: IItemDialogProps) {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
         price: `${data.price} ${currencyLabel}`,
-        priceKRW: Number(data.price) * Number(data.currencyValue),
+        priceKRW: Math.round(Number(data.price) * Number(data.currencyValue)),
         createdAt, // 테이블 생성 시간
       });
 
@@ -85,87 +85,95 @@ export default function ItemDialog({ uid, readData }: IItemDialogProps) {
         <DialogTrigger asChild>
           <Button variant="default">상품 등록</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="flex-col sm:max-w-[425px]">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
-              <DialogHeader>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="">
+              <DialogHeader className="mb-4">
                 <DialogTitle>상품 등록</DialogTitle>
                 <DialogDescription>원하는 상품의 옵션을 입력하고 생성하세요.</DialogDescription>
               </DialogHeader>
-              <Controller
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <BasicSelect title="카테고리" items={categoryItems} onChange={field.onChange} value={field.value} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
 
-              <FormField
-                control={form.control}
-                name="brandName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="브랜드명" {...field} className="bg-white" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="제품명" {...field} className="bg-white" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input placeholder="매입 가격" {...field} className="bg-white" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Controller
-                control={form.control}
-                name="currencyValue"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <BasicSelect
-                        title="통화"
-                        items={currencyOptions}
-                        onChange={(selectedValue) => {
-                          const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-2">
+                  <Controller
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <BasicSelect title="카테고리" items={categoryItems} onChange={field.onChange} value={field.value} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                          if (selected) {
-                            field.onChange(selected.value);
-                            setCurrencyLabel(selected.label);
-                          }
-                        }}
-                        value={field.value}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
+                  <FormField
+                    control={form.control}
+                    name="brandName"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Input placeholder="브랜드명" {...field} className="bg-white" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormControl>
+                        <Input placeholder="제품명" {...field} className="bg-white" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex gap-2">
+                  <Controller
+                    control={form.control}
+                    name="currencyValue"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormControl>
+                          <BasicSelect
+                            title="통화"
+                            items={currencyOptions}
+                            onChange={(selectedValue) => {
+                              const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+
+                              if (selected) {
+                                field.onChange(selected.value);
+                                setCurrencyLabel(selected.label);
+                              }
+                            }}
+                            value={field.value}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="price"
+                    render={({ field }) => (
+                      <FormItem className="w-full">
+                        <FormControl>
+                          <Input placeholder="매입 가격" {...field} className="bg-white" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              <DialogFooter className="mt-4">
                 <DialogClose asChild>
                   <Button variant="outline">Cancel</Button>
                 </DialogClose>

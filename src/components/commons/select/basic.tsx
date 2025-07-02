@@ -17,7 +17,7 @@ export default function BasicSelect({ title, items, onChange, defaultValue, valu
   return (
     <Select onValueChange={onChange} defaultValue={defaultValue} value={value}>
       <FormControl>
-        <SelectTrigger className="w-[180px] bg-white">
+        <SelectTrigger className="bg-white">
           <SelectValue placeholder={title} />
         </SelectTrigger>
       </FormControl>
