@@ -17,77 +17,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Custom
 import { IItemData } from "@/commons/types";
 import ItemDialog from "./itemDialog";
-
-const columns: ColumnDef<IItemData>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "category",
-    header: "상품 종류",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("category")}</div>,
-  },
-  {
-    accessorKey: "brandName",
-    header: "브랜드명",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("brandName")}</div>,
-  },
-  {
-    accessorKey: "name",
-    header: "상품명",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-  },
-  {
-    accessorKey: "price",
-    header: "가격(단위)",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("price")}</div>,
-  },
-  {
-    accessorKey: "priceKRW",
-    header: "가격(원)",
-    cell: ({ row }) => <div className="capitalize">{row.getValue("priceKRW")}</div>,
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const itemData = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(itemData._id)}>Copy payment ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
+import { deleteDoc, doc } from "firebase/firestore";
+import { db } from "@/commons/libraries/firebase/firebaseApp";
 
 const columnLabels: Record<string, string> = {
   category: "상품 종류",
@@ -103,6 +39,68 @@ export default function ItemTable({ data, uid, readData }: { data: IItemData[]; 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const columns: ColumnDef<IItemData>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
+      enableSorting: false,
+      enableHiding: false,
+    },
+    {
+      accessorKey: "category",
+      header: "상품 종류",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("category")}</div>,
+    },
+    {
+      accessorKey: "brandName",
+      header: "브랜드명",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("brandName")}</div>,
+    },
+    {
+      accessorKey: "name",
+      header: "상품명",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
+    },
+    {
+      accessorKey: "price",
+      header: "가격(단위)",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("price")}</div>,
+    },
+    {
+      accessorKey: "priceKRW",
+      header: "가격(원)",
+      cell: ({ row }) => <div className="capitalize">{row.getValue("priceKRW")}</div>,
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const itemData = row.original;
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onDelete([itemData._id])}>상품 삭제</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
 
   const table = useReactTable({
     data, // 데이터: row 값?
@@ -123,16 +121,37 @@ export default function ItemTable({ data, uid, readData }: { data: IItemData[]; 
     },
   });
 
+  const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
+
+  // 삭제 함수
+  const onDelete = async (selectionItem: string[]) => {
+    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
+    for (const id of selectionItem) {
+      try {
+        await deleteDoc(doc(db, "income", id));
+        console.log(`ID ${id} 삭제 성공`);
+        readData();
+      } catch (error) {
+        console.error(`ID ${id} 삭제 실패`, error);
+      }
+    }
+  };
+
   return (
     <div className="w-full bg-white px-6 rounded-lg">
       {/* Top */}
       <div className="flex justify-between items-center py-4">
-        <Input
-          placeholder="상품명을 입력해주세요."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-          className="max-w-sm"
-        />
+        <div className="flex items-center gap-2">
+          <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onDelete(selectedIds)}>
+            선택 삭제
+          </Button>
+          <Input
+            placeholder="상품명을 입력해주세요."
+            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+            onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+            className="max-w-sm"
+          />
+        </div>
         <div className="flex items-center gap-2">
           {/* ItemDialog */}
           <ItemDialog uid={uid} readData={readData} />
@@ -182,7 +201,7 @@ export default function ItemTable({ data, uid, readData }: { data: IItemData[]; 
             ) : (
               <TableRow>
                 <TableCell colSpan={columns.length} className="h-24 text-center">
-                  No results.
+                  등록된 상품 없음.
                 </TableCell>
               </TableRow>
             )}

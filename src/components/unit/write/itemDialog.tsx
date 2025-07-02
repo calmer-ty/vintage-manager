@@ -43,7 +43,7 @@ export default function ItemDialog({ uid, readData }: IItemDialogProps) {
     },
   });
 
-  // 📥 등록 함수
+  // 등록 함수
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       // 등록 시간 측정
