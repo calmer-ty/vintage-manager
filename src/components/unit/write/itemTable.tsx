@@ -89,6 +89,14 @@ const columns: ColumnDef<IItemData>[] = [
   },
 ];
 
+const columnLabels: Record<string, string> = {
+  category: "상품 종류",
+  brandName: "브랜드명",
+  name: "상품명",
+  price: "가격(단위)",
+  priceKRW: "가격(원)",
+};
+
 export default function ItemTable({ data, uid, readData }: { data: IItemData[]; uid: string; readData: () => Promise<void> }) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -132,7 +140,7 @@ export default function ItemTable({ data, uid, readData }: { data: IItemData[]; 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">
-                Columns <ChevronDown />
+                보기 설정 <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -142,7 +150,7 @@ export default function ItemTable({ data, uid, readData }: { data: IItemData[]; 
                 .map((column) => {
                   return (
                     <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
-                      {column.id}
+                      {columnLabels[column.id] ?? column.id}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
