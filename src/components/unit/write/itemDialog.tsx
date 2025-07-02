@@ -82,12 +82,12 @@ export default function ItemDialog({ uid, readData }: IItemDialogProps) {
   return (
     <>
       <Dialog>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex">
-            <DialogTrigger asChild>
-              <Button variant="default">Create</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+        <DialogTrigger asChild>
+          <Button variant="default">상품 등록</Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
               <DialogHeader>
                 <DialogTitle>상품 등록</DialogTitle>
                 <DialogDescription>원하는 상품의 옵션을 입력하고 생성하세요.</DialogDescription>
@@ -171,9 +171,9 @@ export default function ItemDialog({ uid, readData }: IItemDialogProps) {
                 </DialogClose>
                 <Button type="submit">Submit</Button>
               </DialogFooter>
-            </DialogContent>
-          </form>
-        </Form>
+            </form>
+          </Form>
+        </DialogContent>
       </Dialog>
     </>
   );
