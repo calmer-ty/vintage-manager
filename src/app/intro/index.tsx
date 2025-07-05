@@ -1,3 +1,5 @@
+"use client";
+
 import { Button, Paper, Typography } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
 import { auth, googleProvider } from "@/commons/libraries/firebase/firebaseApp";

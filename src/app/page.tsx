@@ -1,6 +1,5 @@
 "use client";
 
-// import { useAuth } from "@/commons/hooks/useAuth";
 import { useAuth } from "@/commons/contexts/authContext";
 
 import IntroPage from "./intro";
