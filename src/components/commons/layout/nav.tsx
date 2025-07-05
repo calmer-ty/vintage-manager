@@ -11,7 +11,7 @@ interface IMenu {
   href: string;
 }
 const mapsMenus: IMenu[] = [
-  { title: "대시보드", icon: "icon_table", href: "/" },
+  { title: "대시보드", icon: "icon_table", href: "/dashBoard" },
   { title: "상품등록", icon: "icon_plus", href: "/write" },
 ];
 
