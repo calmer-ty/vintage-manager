@@ -17,7 +17,7 @@ const mapsMenus: IMenu[] = [
 
 function SideNav() {
   return (
-    <nav className="flex flex-col items-center shrink-0 gap-8 w-30 h-full bg-[#4A4E69]">
+    <nav className="flex flex-col items-center shrink-0 gap-8 w-30 h-full py-6 bg-[#4A4E69]">
       {mapsMenus.map((menu) => (
         <MenuItem key={menu.title} menu={menu} />
       ))}
