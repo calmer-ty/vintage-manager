@@ -53,8 +53,8 @@ export default function ItemDialog({ uid, readData }: IItemDialogProps) {
       const docRef = await addDoc(collection(db, "income"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
-        price: `${data.price} ${currencyLabel}`,
-        priceKRW: Math.round(Number(data.price) * Number(data.currencyValue)),
+        price: `${Number(data.price).toLocaleString()} ${currencyLabel}`,
+        priceKRW: Math.round(Number(data.price) * Number(data.currencyValue)).toLocaleString(),
         createdAt, // 테이블 생성 시간
       });
 
