@@ -1,12 +1,15 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
+
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/commons/libraries/firebase/firebaseApp";
 
-import ItemTable from "./itemTable";
+import WriteTable from "./table";
 
 import { IItemData } from "@/commons/types";
 
-export default function ItemWrite({ uid }: { uid: string }) {
+export default function WriteUI({ uid }: { uid: string }) {
   const [itemDataArray, setItemDataArray] = useState<IItemData[]>([]);
 
   // 📄 조회 함수
@@ -35,7 +38,7 @@ export default function ItemWrite({ uid }: { uid: string }) {
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-4 bg-gray-100">
-      <ItemTable data={itemDataArray} uid={uid} readData={readData} />
+      <WriteTable data={itemDataArray} uid={uid} readData={readData} />
     </article>
   );
 }

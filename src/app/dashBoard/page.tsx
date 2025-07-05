@@ -1,11 +1,11 @@
 "use client";
 
-import DashBoardChart from "@/components/unit/dashBoard/chart";
+import DashBoardUI from "@/components/unit/dashBoard";
 
 export default function DashBoardPage() {
   return (
     <article className="w-full px-4">
-      <DashBoardChart />
+      <DashBoardUI />
     </article>
   );
 }

@@ -22,12 +22,12 @@ import { FormSchema } from "./schema";
 
 // 🏷️ 옵션
 
-interface IItemDialogProps {
+interface IWriteDialogProps {
   uid: string;
   readData: () => Promise<void>;
 }
 
-export default function ItemDialog({ uid, readData }: IItemDialogProps) {
+export default function WriteDialog({ uid, readData }: IWriteDialogProps) {
   const [currencyLabel, setCurrencyLabel] = useState("");
 
   // ✍️ 폼 설정
