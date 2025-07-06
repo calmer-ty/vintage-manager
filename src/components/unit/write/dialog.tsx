@@ -17,10 +17,23 @@ import BasicSelect from "@/components/commons/select/basic";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { categoryItems } from "./data";
-import { FormSchema } from "./schema";
+const categoryItems = [
+  { label: "상의", value: "상의" },
+  { label: "하의", value: "하의" },
+  { label: "아우터", value: "아우터" },
+  { label: "가방", value: "가방" },
+  { label: "액세사리", value: "액세사리" },
+  { label: "기타", value: "기타" },
+];
 
-// 🏷️ 옵션
+const FormSchema = z.object({
+  category: z.string().min(1, "카테고리를 선택해주세요."),
+  brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
+  name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
+  price: z.string().min(1, "가격을 입력해주세요."),
+  currencyValue: z.string().min(1, "통화를 선택해주세요."),
+  priceKRW: z.string().optional(), // 필요에 따라
+});
 
 interface IWriteDialogProps {
   uid: string;

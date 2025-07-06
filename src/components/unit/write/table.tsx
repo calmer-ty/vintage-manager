@@ -139,7 +139,7 @@ export default function WriteTable({ data, uid, readData }: { data: IItemData[];
   };
 
   return (
-    <div className="w-full bg-white px-6 rounded-lg">
+    <div className="w-full bg-white px-6 rounded-lg shadow-sm">
       {/* Top */}
       <div className="flex justify-between items-center py-4">
         <div className="flex items-center gap-2">

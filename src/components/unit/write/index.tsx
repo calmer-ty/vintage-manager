@@ -37,7 +37,7 @@ export default function WriteUI({ uid }: { uid: string }) {
   }, [readData]);
 
   return (
-    <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-4 bg-gray-100">
+    <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
       <WriteTable data={itemDataArray} uid={uid} readData={readData} />
     </article>
   );
