@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { db } from "@/commons/libraries/firebase/firebaseApp";
+import { db } from "@/lib/firebase/firebaseApp";
 
 import WriteTable from "./table";
 
-import { IItemData } from "@/commons/types";
+import { IItemData } from "@/types";
 
 export default function WriteUI({ uid }: { uid: string }) {
   const [itemDataArray, setItemDataArray] = useState<IItemData[]>([]);

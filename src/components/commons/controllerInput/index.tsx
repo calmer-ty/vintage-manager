@@ -2,7 +2,7 @@ import { Control, Controller } from "react-hook-form";
 
 // MUI
 import TextField from "@mui/material/TextField";
-import { IIncomeItemData } from "@/commons/types";
+import { IIncomeItemData } from "@/types";
 
 interface IControllerInputProps {
   name: keyof IIncomeItemData;

@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-import { db } from "@/commons/libraries/firebase/firebaseApp";
+import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 
-import { useExchangeRate } from "@/commons/hooks/useExchangeRate";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";

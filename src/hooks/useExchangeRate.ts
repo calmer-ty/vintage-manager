@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { IExchangeRate } from "../types";
+import { IExchangeRate } from "@/types";
 
 export const useExchangeRate = () => {
   const [rates, setRates] = useState<IExchangeRate>();

@@ -14,7 +14,7 @@ import {
 import { MoreHorizontal, ChevronDown } from "lucide-react";
 
 import { deleteDoc, doc } from "firebase/firestore";
-import { db } from "@/commons/libraries/firebase/firebaseApp";
+import { db } from "@/lib/firebase/firebaseApp";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -23,7 +23,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 // Custom
-import { IItemData } from "@/commons/types";
+import { IItemData } from "@/types";
 import WriteDialog from "./dialog";
 
 const columnLabels: Record<string, string> = {

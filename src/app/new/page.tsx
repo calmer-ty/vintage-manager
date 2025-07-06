@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/commons/contexts/authContext";
+import { useAuth } from "@/contexts/authContext";
 import WriteUI from "@/components/unit/write";
 
 export default function NewPage() {
