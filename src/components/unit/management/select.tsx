@@ -9,7 +9,7 @@ export default function ManagementSelect({ itemData, refetch }: { itemData: IIte
   // 판매상태 함수
   const onUpdate = async (id: string, value: boolean) => {
     try {
-      const docRef = doc(db, "products", id);
+      const docRef = doc(db, "items", id);
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {

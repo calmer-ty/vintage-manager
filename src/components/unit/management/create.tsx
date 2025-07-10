@@ -64,7 +64,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       const now = new Date(); // 현재 시간을 Date 객체로 가져옴
       const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
 
-      const docRef = await addDoc(collection(db, "products"), {
+      const docRef = await addDoc(collection(db, "items"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
         price: `${Number(data.price).toLocaleString()} ${currencyLabel}`,

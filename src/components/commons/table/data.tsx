@@ -104,7 +104,7 @@ export default function DataTable({ data, uid, refetch, columnConfig, renderStat
     // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
     for (const id of selectionItem) {
       try {
-        await deleteDoc(doc(db, "products", id));
+        await deleteDoc(doc(db, "items", id));
         console.log(`ID ${id} 삭제 성공`);
         refetch();
       } catch (error) {
