@@ -12,7 +12,7 @@ interface IMenu {
 }
 const mapsMenus: IMenu[] = [
   { title: "대시보드", icon: "icon_table", href: "/dashBoard" },
-  { title: "상품등록", icon: "icon_plus", href: "/new" },
+  { title: "상품관리", icon: "icon_plus", href: "/management" },
 ];
 
 function SideNav() {
