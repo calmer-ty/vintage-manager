@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 
-import type { User } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebaseApp";
+
+import type { User } from "firebase/auth";
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useAuth = (): {

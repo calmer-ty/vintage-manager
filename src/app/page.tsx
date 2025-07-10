@@ -7,5 +7,5 @@ import DashBoardUI from "@/components/unit/dashBoard";
 
 export default function Home() {
   const { user } = useAuth();
-  return <>{user === null ? <IntroPage /> : <DashBoardUI />}</>;
+  return <>{user === null ? <IntroPage /> : <DashBoardUI uid={user.uid} />}</>;
 }

@@ -24,3 +24,6 @@ export interface IItemData {
   createdAt: Timestamp;
   isSell: boolean;
 }
+export interface IUserID {
+  uid: string;
+}

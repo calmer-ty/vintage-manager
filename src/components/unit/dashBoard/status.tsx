@@ -2,31 +2,35 @@ import { motion } from "framer-motion";
 
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
+import { IItemData } from "@/types";
 
-const infoStatus = [
-  {
-    title: "총 매출",
-    value: "₩ 0",
-    icon: <DollarSign className="shrink-0 text-green-600" />,
-  },
-  {
-    title: "총 판매량",
-    value: "412개",
-    icon: <TrendingUp className="shrink-0 text-purple-600" />,
-  },
-  {
-    title: "가장 많이 팔린 품목",
-    value: "상의",
-    icon: <ShoppingCart className="shrink-0 text-blue-600" />,
-  },
-  {
-    title: "가장 적게 팔린 품목",
-    value: "하의",
-    icon: <ShoppingCart className="shrink-0 text-blue-600" />,
-  },
-];
+export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] }) {
+  const soldItemPrices = soldItems.map((item) => Number(item.priceKRW.replace(/,/g, "")));
+  const soldItemPriceSum = soldItemPrices.reduce((acc, cur) => acc + cur, 0);
 
-export default function DashBoardStatus() {
+  const infoStatus = [
+    {
+      title: "총 매출",
+      value: `₩ ${soldItemPriceSum.toLocaleString()}`,
+      icon: <DollarSign className="shrink-0 text-green-600" />,
+    },
+    {
+      title: "총 판매량",
+      value: "412개",
+      icon: <TrendingUp className="shrink-0 text-purple-600" />,
+    },
+    {
+      title: "가장 많이 팔린 품목",
+      value: "상의",
+      icon: <ShoppingCart className="shrink-0 text-blue-600" />,
+    },
+    {
+      title: "가장 적게 팔린 품목",
+      value: "하의",
+      icon: <ShoppingCart className="shrink-0 text-blue-600" />,
+    },
+  ];
+
   const MotionCard = motion(Card);
 
   return (
