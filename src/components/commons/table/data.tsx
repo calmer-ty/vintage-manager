@@ -11,20 +11,21 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { MoreHorizontal, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 import ManagementCreate from "@/components/unit/management/create";
 
 import { IItemData } from "@/types";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface IDataTableProps {
   data: IItemData[];
@@ -66,22 +67,52 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
     ...dynamicColumns,
     {
       id: "actions",
+      header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
         const itemData = row.original;
+        console.log("itemData: ", itemData._id);
+
+        // 등록 함수
+        const onUpdate = async (id: string, value: boolean) => {
+          try {
+            const docRef = doc(db, "products", id);
+
+            // 문서 ID를 포함한 데이터로 업데이트
+            await updateDoc(docRef, {
+              isSell: value,
+            });
+
+            console.log(`isSell 값을 false 로 업데이트했습니다`);
+            readData();
+          } catch (error) {
+            console.error("문서 추가 실패:", error);
+          }
+        };
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onDelete([itemData._id])}>상품 삭제</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Select
+            defaultValue={itemData.isSell ? "true" : "false"}
+            onValueChange={(value) => {
+              // 선택된 값이 'false'면 판매완료니까 업데이트 실행
+              if (value === "false") {
+                onUpdate(itemData._id, false);
+              } else {
+                onUpdate(itemData._id, true);
+              }
+            }}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="상태 선택" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>상태</SelectLabel>
+                <SelectItem value="true">판매중</SelectItem>
+                <SelectItem value="false">판매완료</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         );
       },
     },
@@ -106,14 +137,12 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
     },
   });
 
-  const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
-
   // 삭제 함수
   const onDelete = async (selectionItem: string[]) => {
     // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
     for (const id of selectionItem) {
       try {
-        await deleteDoc(doc(db, "income", id));
+        await deleteDoc(doc(db, "products", id));
         console.log(`ID ${id} 삭제 성공`);
         readData();
       } catch (error) {
@@ -121,6 +150,9 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
       }
     }
   };
+
+  //   선택한 체크박스
+  const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
 
   //   보기 설정용 객체 코드
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));

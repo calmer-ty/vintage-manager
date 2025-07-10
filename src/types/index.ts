@@ -13,7 +13,7 @@ export interface IExchangeRate {
   time_last_update_utc: string;
 }
 export interface IItemData {
-  _id: string;
+  _id: string; // 문서 id 값
   uid: string;
   category: string;
   brandName: string;
@@ -22,4 +22,5 @@ export interface IItemData {
   currency: string;
   priceKRW: string;
   createdAt: Timestamp;
+  isSell: boolean;
 }

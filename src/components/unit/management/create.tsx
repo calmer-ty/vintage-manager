@@ -32,15 +32,16 @@ const FormSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
   price: z.string().min(1, "가격을 입력해주세요."),
   currencyValue: z.string().min(1, "통화를 선택해주세요."),
-  priceKRW: z.string().optional(), // 필요에 따라
+  priceKRW: z.string().optional(),
+  isSell: z.boolean().optional(),
 });
 
-interface IWriteDialogProps {
+interface IManagementCreateProps {
   uid: string;
   readData: () => Promise<void>;
 }
 
-export default function ManagementCreate({ uid, readData }: IWriteDialogProps) {
+export default function ManagementCreate({ uid, readData }: IManagementCreateProps) {
   const [currencyLabel, setCurrencyLabel] = useState("");
 
   // ✍️ 폼 설정
@@ -63,12 +64,13 @@ export default function ManagementCreate({ uid, readData }: IWriteDialogProps) {
       const now = new Date(); // 현재 시간을 Date 객체로 가져옴
       const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
 
-      const docRef = await addDoc(collection(db, "income"), {
+      const docRef = await addDoc(collection(db, "products"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
         price: `${Number(data.price).toLocaleString()} ${currencyLabel}`,
         priceKRW: Math.round(Number(data.price) * Number(data.currencyValue)).toLocaleString(),
         createdAt, // 테이블 생성 시간
+        isSell: true,
       });
 
       // 문서 ID를 포함한 데이터로 업데이트
