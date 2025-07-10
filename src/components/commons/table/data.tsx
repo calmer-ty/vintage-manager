@@ -13,7 +13,7 @@ import {
 } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
 
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,6 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import ManagementCreate from "@/components/unit/management/create";
 
 import { IItemData } from "@/types";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface IDataTableProps {
   data: IItemData[];
@@ -35,9 +34,10 @@ interface IDataTableProps {
     key: string;
     label: string;
   }[];
+  renderStatusCell?: (itemData: IItemData) => React.ReactNode;
 }
 
-export default function DataTable({ data, uid, refetch, columnConfig }: IDataTableProps) {
+export default function DataTable({ data, uid, refetch, columnConfig, renderStatusCell }: IDataTableProps) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -65,55 +65,19 @@ export default function DataTable({ data, uid, refetch, columnConfig }: IDataTab
       enableHiding: false,
     },
     ...dynamicColumns,
-    {
-      id: "actions",
-      header: "상태",
-      enableHiding: false,
-      cell: ({ row }) => {
-        const itemData = row.original;
-
-        // 등록 함수
-        const onUpdate = async (id: string, value: boolean) => {
-          try {
-            const docRef = doc(db, "products", id);
-
-            // 문서 ID를 포함한 데이터로 업데이트
-            await updateDoc(docRef, {
-              isSell: value,
-            });
-            refetch();
-            console.log(`isSell 값을 ${value}로 업데이트했습니다`);
-          } catch (error) {
-            console.error("문서 추가 실패:", error);
-          }
-        };
-
-        return (
-          <Select
-            defaultValue={itemData.isSell ? "true" : "false"}
-            onValueChange={(value) => {
-              // 선택된 값이 'false'면 판매완료니까 업데이트 실행
-              if (value === "false") {
-                onUpdate(itemData._id, false);
-              } else {
-                onUpdate(itemData._id, true);
-              }
-            }}
-          >
-            <SelectTrigger className="w-26">
-              <SelectValue placeholder="상태 선택" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>상태</SelectLabel>
-                <SelectItem value="true">판매중</SelectItem>
-                <SelectItem value="false">판매완료</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        );
-      },
-    },
+    ...(renderStatusCell
+      ? [
+          {
+            id: "actions",
+            header: "상태",
+            enableHiding: false,
+            cell: ({ row }) => {
+              const itemData = row.original;
+              return renderStatusCell(itemData); // ✅ 여기서 호출
+            },
+          } as ColumnDef<IItemData>,
+        ]
+      : []),
   ];
 
   const table = useReactTable({
@@ -171,8 +135,9 @@ export default function DataTable({ data, uid, refetch, columnConfig }: IDataTab
           />
         </div>
         <div className="flex items-center gap-2">
-          {/* ItemDialog */}
+          {/* ManagementCreate */}
           <ManagementCreate uid={uid} refetch={refetch} />
+
           {/* DropdownMenu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

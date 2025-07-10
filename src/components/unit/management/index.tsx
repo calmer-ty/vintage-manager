@@ -6,6 +6,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 import DataTable from "@/components/commons/table/data";
 
 import { IItemData } from "@/types";
+import ManagementSelect from "./select";
 
 const columnConfig = [
   { key: "category", label: "상품 종류" },
@@ -44,7 +45,7 @@ export default function ManagementUI({ uid }: { uid: string }) {
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
-      <DataTable data={itemDataArray} uid={uid} refetch={refetch} columnConfig={columnConfig} />
+      <DataTable data={itemDataArray} uid={uid} refetch={refetch} columnConfig={columnConfig} renderStatusCell={(itemData) => <ManagementSelect itemData={itemData} refetch={refetch} />} />
     </article>
   );
 }
