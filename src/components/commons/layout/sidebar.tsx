@@ -33,8 +33,6 @@ export function AppSidebar() {
             <SidebarMenu>
               {items.map((item) => {
                 const isActive = pathname === item.url;
-                console.log("pathname: ", pathname);
-                console.log("isActive: ", isActive);
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild>

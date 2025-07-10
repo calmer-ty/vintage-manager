@@ -47,7 +47,14 @@ export default function DataTable({ data, uid, refetch, columnConfig, renderStat
   const dynamicColumns: ColumnDef<IItemData>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
-    cell: ({ row }) => <div className="capitalize">{row.getValue(key)}</div>,
+    cell: ({ row }) => {
+      // 숫자라면 toLocaleString으로 포맷 (예: 가격)
+      if (typeof row.getValue(key) === "number") {
+        return <div className="capitalize">{row.getValue(key)?.toLocaleString()}</div>;
+      }
+
+      return <div className="capitalize">{row.getValue(key)}</div>;
+    },
   }));
 
   const columns: ColumnDef<IItemData>[] = [
@@ -175,7 +182,7 @@ export default function DataTable({ data, uid, refetch, columnConfig, renderStat
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.isSell ? "" : "bg-gray-100"}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.isSold ? "bg-gray-100" : ""}>
                   {}
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>

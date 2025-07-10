@@ -13,10 +13,10 @@ export default function ManagementSelect({ itemData, refetch }: { itemData: IIte
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
-        isSell: value,
+        isSold: value,
       });
       refetch();
-      console.log(`isSell 값을 ${value}로 업데이트했습니다`);
+      console.log(`isSold 값을 ${value}로 업데이트했습니다`);
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
@@ -24,13 +24,13 @@ export default function ManagementSelect({ itemData, refetch }: { itemData: IIte
 
   return (
     <Select
-      defaultValue={itemData.isSell ? "true" : "false"}
+      defaultValue={itemData.isSold ? "true" : "false"}
       onValueChange={(value) => {
         // 선택된 값이 'false'면 판매완료니까 업데이트 실행
-        if (value === "false") {
-          onUpdate(itemData._id, false);
-        } else {
+        if (value === "true") {
           onUpdate(itemData._id, true);
+        } else {
+          onUpdate(itemData._id, false);
         }
       }}
     >
@@ -40,8 +40,8 @@ export default function ManagementSelect({ itemData, refetch }: { itemData: IIte
       <SelectContent>
         <SelectGroup>
           <SelectLabel>상태</SelectLabel>
-          <SelectItem value="true">판매중</SelectItem>
-          <SelectItem value="false">판매완료</SelectItem>
+          <SelectItem value="false">판매중</SelectItem>
+          <SelectItem value="true">판매완료</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>

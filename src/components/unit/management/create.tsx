@@ -30,7 +30,7 @@ const FormSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요."),
   brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
-  currencyValue: z.string().min(1, "통화를 선택해주세요."),
+  exchangeRate: z.string().min(1, "통화를 선택해주세요."),
   costPrice: z.string().min(1, "매입 가격을 입력해주세요."),
   costPriceKRW: z.string().optional(),
   sellingPrice: z.string().min(1, "판매 가격을 입력해주세요."),
@@ -51,7 +51,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       category: "",
       brandName: "",
       name: "",
-      currencyValue: "",
+      exchangeRate: "",
       costPrice: "",
       costPriceKRW: "",
       sellingPrice: "",
@@ -64,16 +64,17 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       // 등록 시간 측정
       const now = new Date(); // 현재 시간을 Date 객체로 가져옴
       const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
+      const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
 
       const docRef = await addDoc(collection(db, "items"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
         costPrice: `${Number(data.costPrice).toLocaleString()} ${currencyLabel}`,
-        costPriceKRW: Math.round(Number(data.costPrice) * Number(data.currencyValue)).toLocaleString(),
-        sellingPrice: Number(data.sellingPrice).toLocaleString(),
-        profit: (Number(data.sellingPrice) - Math.round(Number(data.costPrice) * Number(data.currencyValue))).toLocaleString(),
+        costPriceKRW,
+        sellingPrice: Number(data.sellingPrice),
+        profit: Number(data.sellingPrice) - costPriceKRW,
         createdAt, // 테이블 생성 시간
-        isSell: true,
+        isSold: false,
       });
 
       // 문서 ID를 포함한 데이터로 업데이트
@@ -156,7 +157,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                 <div className="flex gap-2">
                   <Controller
                     control={form.control}
-                    name="currencyValue"
+                    name="exchangeRate"
                     render={({ field }) => (
                       <FormItem>
                         <FormControl>
