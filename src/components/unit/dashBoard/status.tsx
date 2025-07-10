@@ -5,13 +5,20 @@ import { DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
 import { IItemData } from "@/types";
 
 export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] }) {
-  const soldItemPrices = soldItems.map((item) => Number(item.priceKRW.replace(/,/g, "")));
-  const soldItemPriceSum = soldItemPrices.reduce((acc, cur) => acc + cur, 0);
+  const soldItemPrices = soldItems.map((item) => Number(item.sellingPrice.replace(/,/g, "")));
+  const soldItemProfits = soldItems.map((item) => Number(item.profit.replace(/,/g, "")));
+  const totalSoldPrice = soldItemPrices.reduce((acc, cur) => acc + cur, 0);
+  const totalSoldProfit = soldItemProfits.reduce((acc, cur) => acc + cur, 0);
 
   const infoStatus = [
     {
       title: "총 매출",
-      value: `₩ ${soldItemPriceSum.toLocaleString()}`,
+      value: `₩ ${totalSoldPrice.toLocaleString()}`,
+      icon: <DollarSign className="shrink-0 text-green-600" />,
+    },
+    {
+      title: "총 예상 이익",
+      value: `₩ ${totalSoldProfit.toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-600" />,
     },
     {

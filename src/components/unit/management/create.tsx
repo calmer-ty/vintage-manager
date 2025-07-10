@@ -30,10 +30,10 @@ const FormSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요."),
   brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
-  price: z.string().min(1, "가격을 입력해주세요."),
   currencyValue: z.string().min(1, "통화를 선택해주세요."),
-  priceKRW: z.string().optional(),
-  isSell: z.boolean().optional(),
+  costPrice: z.string().min(1, "매입 가격을 입력해주세요."),
+  costPriceKRW: z.string().optional(),
+  sellingPrice: z.string().min(1, "판매 가격을 입력해주세요."),
 });
 
 interface IManagementCreateProps {
@@ -51,9 +51,10 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       category: "",
       brandName: "",
       name: "",
-      price: "",
       currencyValue: "",
-      priceKRW: "",
+      costPrice: "",
+      costPriceKRW: "",
+      sellingPrice: "",
     },
   });
 
@@ -67,8 +68,10 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       const docRef = await addDoc(collection(db, "items"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
-        price: `${Number(data.price).toLocaleString()} ${currencyLabel}`,
-        priceKRW: Math.round(Number(data.price) * Number(data.currencyValue)).toLocaleString(),
+        costPrice: `${Number(data.costPrice).toLocaleString()} ${currencyLabel}`,
+        costPriceKRW: Math.round(Number(data.costPrice) * Number(data.currencyValue)).toLocaleString(),
+        sellingPrice: Number(data.sellingPrice).toLocaleString(),
+        profit: (Number(data.sellingPrice) - Math.round(Number(data.costPrice) * Number(data.currencyValue))).toLocaleString(),
         createdAt, // 테이블 생성 시간
         isSell: true,
       });
@@ -148,6 +151,8 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     </FormItem>
                   )}
                 />
+
+                <p className="text-sm text-muted-foreground mt-1">상품을 매입했을 때 사용한 통화를 선택해주세요.</p>
                 <div className="flex gap-2">
                   <Controller
                     control={form.control}
@@ -175,7 +180,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                   />
                   <FormField
                     control={form.control}
-                    name="price"
+                    name="costPrice"
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
@@ -186,6 +191,18 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     )}
                   />
                 </div>
+                <FormField
+                  control={form.control}
+                  name="sellingPrice"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormControl>
+                        <Input placeholder="판매 가격" {...field} className="bg-white" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
 
               <DialogFooter className="mt-4">

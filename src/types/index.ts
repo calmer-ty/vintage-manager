@@ -18,11 +18,13 @@ export interface IItemData {
   category: string;
   brandName: string;
   name: string;
-  price: string;
-  currency: string;
-  priceKRW: string;
-  createdAt: Timestamp;
+  currencyValue: string;
+  costPrice: string;
+  costPriceKRW: string;
+  sellingPrice: string;
+  profit: string;
   isSell: boolean;
+  createdAt: Timestamp;
 }
 export interface IUserID {
   uid: string;
