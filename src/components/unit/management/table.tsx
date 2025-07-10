@@ -24,7 +24,7 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 
 // Custom
 import { IItemData } from "@/types";
-import WriteDialog from "./dialog";
+import ManagementCreate from "./create";
 
 const columnLabels: Record<string, string> = {
   category: "상품 종류",
@@ -34,7 +34,7 @@ const columnLabels: Record<string, string> = {
   priceKRW: "가격(원)",
 };
 
-export default function WriteTable({ data, uid, readData }: { data: IItemData[]; uid: string; readData: () => Promise<void> }) {
+export default function ManagementTable({ data, uid, readData }: { data: IItemData[]; uid: string; readData: () => Promise<void> }) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -155,7 +155,7 @@ export default function WriteTable({ data, uid, readData }: { data: IItemData[];
         </div>
         <div className="flex items-center gap-2">
           {/* ItemDialog */}
-          <WriteDialog uid={uid} readData={readData} />
+          <ManagementCreate uid={uid} readData={readData} />
           {/* DropdownMenu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

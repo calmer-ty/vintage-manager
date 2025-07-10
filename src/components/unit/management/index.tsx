@@ -1,5 +1,3 @@
-"use client";
-
 import { useCallback, useEffect, useState } from "react";
 
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
@@ -9,7 +7,7 @@ import WriteTable from "./table";
 
 import { IItemData } from "@/types";
 
-export default function WriteUI({ uid }: { uid: string }) {
+export default function ManagementUI({ uid }: { uid: string }) {
   const [itemDataArray, setItemDataArray] = useState<IItemData[]>([]);
 
   // 📄 조회 함수

@@ -40,7 +40,7 @@ interface IWriteDialogProps {
   readData: () => Promise<void>;
 }
 
-export default function WriteDialog({ uid, readData }: IWriteDialogProps) {
+export default function ManagementCreate({ uid, readData }: IWriteDialogProps) {
   const [currencyLabel, setCurrencyLabel] = useState("");
 
   // ✍️ 폼 설정
