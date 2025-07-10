@@ -19,7 +19,7 @@ export default function ManagementUI({ uid }: { uid: string }) {
   const [itemDataArray, setItemDataArray] = useState<IItemData[]>([]);
 
   // 📄 조회 함수
-  const readData = useCallback(async () => {
+  const refetch = useCallback(async () => {
     const q = query(
       // 	Firestore에서 "products"이라는 이름의 컬렉션을 선택
       collection(db, "products"),
@@ -39,12 +39,12 @@ export default function ManagementUI({ uid }: { uid: string }) {
   }, [uid, setItemDataArray]);
   // 처음 로드 시 데이터를 한 번만 조회
   useEffect(() => {
-    readData();
-  }, [readData]);
+    refetch();
+  }, [refetch]);
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
-      <DataTable data={itemDataArray} uid={uid} readData={readData} columnConfig={columnConfig} />
+      <DataTable data={itemDataArray} uid={uid} refetch={refetch} columnConfig={columnConfig} />
     </article>
   );
 }

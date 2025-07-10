@@ -38,10 +38,10 @@ const FormSchema = z.object({
 
 interface IManagementCreateProps {
   uid: string;
-  readData: () => Promise<void>;
+  refetch: () => Promise<void>;
 }
 
-export default function ManagementCreate({ uid, readData }: IManagementCreateProps) {
+export default function ManagementCreate({ uid, refetch }: IManagementCreateProps) {
   const [currencyLabel, setCurrencyLabel] = useState("");
 
   // ✍️ 폼 설정
@@ -79,7 +79,7 @@ export default function ManagementCreate({ uid, readData }: IManagementCreatePro
       });
 
       form.reset();
-      readData();
+      refetch();
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }

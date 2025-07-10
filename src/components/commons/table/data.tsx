@@ -30,14 +30,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 interface IDataTableProps {
   data: IItemData[];
   uid: string;
-  readData: () => Promise<void>;
+  refetch: () => Promise<void>;
   columnConfig: {
     key: string;
     label: string;
   }[];
 }
 
-export default function DataTable({ data, uid, readData, columnConfig }: IDataTableProps) {
+export default function DataTable({ data, uid, refetch, columnConfig }: IDataTableProps) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -71,7 +71,6 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
       enableHiding: false,
       cell: ({ row }) => {
         const itemData = row.original;
-        console.log("itemData: ", itemData._id);
 
         // 등록 함수
         const onUpdate = async (id: string, value: boolean) => {
@@ -82,9 +81,8 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
             await updateDoc(docRef, {
               isSell: value,
             });
-
-            console.log(`isSell 값을 false 로 업데이트했습니다`);
-            readData();
+            refetch();
+            console.log(`isSell 값을 ${value}로 업데이트했습니다`);
           } catch (error) {
             console.error("문서 추가 실패:", error);
           }
@@ -102,7 +100,7 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
               }
             }}
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-26">
               <SelectValue placeholder="상태 선택" />
             </SelectTrigger>
             <SelectContent>
@@ -144,7 +142,7 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
       try {
         await deleteDoc(doc(db, "products", id));
         console.log(`ID ${id} 삭제 성공`);
-        readData();
+        refetch();
       } catch (error) {
         console.error(`ID ${id} 삭제 실패`, error);
       }
@@ -174,7 +172,7 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
         </div>
         <div className="flex items-center gap-2">
           {/* ItemDialog */}
-          <ManagementCreate uid={uid} readData={readData} />
+          <ManagementCreate uid={uid} refetch={refetch} />
           {/* DropdownMenu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -212,7 +210,8 @@ export default function DataTable({ data, uid, readData, columnConfig }: IDataTa
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.isSell ? "" : "bg-gray-100"}>
+                  {}
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}
