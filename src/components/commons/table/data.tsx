@@ -22,24 +22,32 @@ import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-// Custom
+import ManagementCreate from "@/components/unit/management/create";
+
 import { IItemData } from "@/types";
-import ManagementCreate from "./create";
 
-const columnLabels: Record<string, string> = {
-  category: "상품 종류",
-  brandName: "브랜드명",
-  name: "상품명",
-  price: "가격(단위)",
-  priceKRW: "가격(원)",
-};
+interface IDataTableProps {
+  data: IItemData[];
+  uid: string;
+  readData: () => Promise<void>;
+  columnConfig: {
+    key: string;
+    label: string;
+  }[];
+}
 
-export default function ManagementTable({ data, uid, readData }: { data: IItemData[]; uid: string; readData: () => Promise<void> }) {
+export default function DataTable({ data, uid, readData, columnConfig }: IDataTableProps) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const dynamicColumns: ColumnDef<IItemData>[] = columnConfig.map(({ key, label }) => ({
+    accessorKey: key,
+    header: label,
+    cell: ({ row }) => <div className="capitalize">{row.getValue(key)}</div>,
+  }));
 
   const columns: ColumnDef<IItemData>[] = [
     {
@@ -55,31 +63,7 @@ export default function ManagementTable({ data, uid, readData }: { data: IItemDa
       enableSorting: false,
       enableHiding: false,
     },
-    {
-      accessorKey: "category",
-      header: "상품 종류",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("category")}</div>,
-    },
-    {
-      accessorKey: "brandName",
-      header: "브랜드명",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("brandName")}</div>,
-    },
-    {
-      accessorKey: "name",
-      header: "상품명",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
-    },
-    {
-      accessorKey: "price",
-      header: "가격(단위)",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("price")}</div>,
-    },
-    {
-      accessorKey: "priceKRW",
-      header: "가격(원)",
-      cell: ({ row }) => <div className="capitalize">{row.getValue("priceKRW")}</div>,
-    },
+    ...dynamicColumns,
     {
       id: "actions",
       enableHiding: false,
@@ -138,6 +122,9 @@ export default function ManagementTable({ data, uid, readData }: { data: IItemDa
     }
   };
 
+  //   보기 설정용 객체 코드
+  const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
+
   return (
     <div className="w-full bg-white px-6 rounded-lg shadow-sm">
       {/* Top */}
@@ -170,7 +157,7 @@ export default function ManagementTable({ data, uid, readData }: { data: IItemDa
                 .map((column) => {
                   return (
                     <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
-                      {columnLabels[column.id] ?? column.id}
+                      {columnLabelMap[column.id] ?? column.id}
                     </DropdownMenuCheckboxItem>
                   );
                 })}

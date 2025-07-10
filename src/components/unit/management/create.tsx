@@ -188,9 +188,9 @@ export default function ManagementCreate({ uid, readData }: IWriteDialogProps) {
 
               <DialogFooter className="mt-4">
                 <DialogClose asChild>
-                  <Button variant="outline">Cancel</Button>
+                  <Button variant="outline">취소</Button>
                 </DialogClose>
-                <Button type="submit">Submit</Button>
+                <Button type="submit">등록</Button>
               </DialogFooter>
             </form>
           </Form>

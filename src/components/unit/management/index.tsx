@@ -3,9 +3,17 @@ import { useCallback, useEffect, useState } from "react";
 import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
-import WriteTable from "./table";
+import DataTable from "@/components/commons/table/data";
 
 import { IItemData } from "@/types";
+
+const columnConfig = [
+  { key: "category", label: "상품 종류" },
+  { key: "brandName", label: "브랜드명" },
+  { key: "name", label: "상품명" },
+  { key: "price", label: "가격(단위)" },
+  { key: "priceKRW", label: "가격(원)" },
+];
 
 export default function ManagementUI({ uid }: { uid: string }) {
   const [itemDataArray, setItemDataArray] = useState<IItemData[]>([]);
@@ -36,7 +44,7 @@ export default function ManagementUI({ uid }: { uid: string }) {
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
-      <WriteTable data={itemDataArray} uid={uid} readData={readData} />
+      <DataTable data={itemDataArray} uid={uid} readData={readData} columnConfig={columnConfig} />
     </article>
   );
 }
