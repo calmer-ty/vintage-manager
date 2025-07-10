@@ -1,19 +1,44 @@
 import { motion } from "framer-motion";
 
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
+import { DollarSign, TrendingUp } from "lucide-react";
 import { IItemData } from "@/types";
 
 export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] }) {
-  const soldItemPrices = soldItems.map((item) => Number(item.sellingPrice.replace(/,/g, "")));
-  const soldItemProfits = soldItems.map((item) => Number(item.profit.replace(/,/g, "")));
-  const totalSoldPrice = soldItemPrices.reduce((acc, cur) => acc + cur, 0);
-  const totalSoldProfit = soldItemProfits.reduce((acc, cur) => acc + cur, 0);
+  // const soldItemCostPrices = soldItems.map((item) => item.costPriceKRW);
+  // const totalSoldItemCostPrices = soldItemCostPrices.reduce((acc, cur) => {
+  //   console.log("cur: ", cur);
+  //   console.log("cur-2: ", cur.costPriceKRW);
+  //   console.log("acc: ", acc);
+  //   return acc + cur;
+  // }, 0);
+
+  function sumField(items: IItemData[], field: keyof IItemData) {
+    let sum = 0;
+
+    for (const item of items) {
+      const value = item[field];
+
+      // undefined나 null일 경우 0으로 처리
+      if (value !== undefined && value !== null) {
+        sum += Number(value);
+      }
+    }
+    return sum;
+  }
+  const totalSoldItemCostPrices = sumField(soldItems, "costPriceKRW");
+  const totalSoldItemSellingPrices = sumField(soldItems, "sellingPrice");
+  const totalSoldProfit = sumField(soldItems, "profit");
 
   const infoStatus = [
     {
+      title: "총 매입",
+      value: `₩ ${totalSoldItemCostPrices.toLocaleString()}`,
+      icon: <DollarSign className="shrink-0 text-green-600" />,
+    },
+    {
       title: "총 매출",
-      value: `₩ ${totalSoldPrice.toLocaleString()}`,
+      value: `₩ ${totalSoldItemSellingPrices.toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-600" />,
     },
     {
@@ -23,18 +48,8 @@ export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] 
     },
     {
       title: "총 판매량",
-      value: "412개",
+      value: `${soldItems.length} 개`,
       icon: <TrendingUp className="shrink-0 text-purple-600" />,
-    },
-    {
-      title: "가장 많이 팔린 품목",
-      value: "상의",
-      icon: <ShoppingCart className="shrink-0 text-blue-600" />,
-    },
-    {
-      title: "가장 적게 팔린 품목",
-      value: "하의",
-      icon: <ShoppingCart className="shrink-0 text-blue-600" />,
     },
   ];
 
