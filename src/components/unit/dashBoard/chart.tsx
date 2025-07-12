@@ -8,78 +8,60 @@ import { IItemData } from "@/types";
 import { getDateString } from "@/lib/date";
 
 // export const description = "An interactive bar chart";
-const chartData = [
-  { date: "2024-04-01", desktop: 222, mobile: 150 },
-  { date: "2024-04-02", desktop: 97, mobile: 180 },
-  { date: "2024-04-03", desktop: 167, mobile: 120 },
-  { date: "2024-04-04", desktop: 242, mobile: 260 },
-  { date: "2024-04-05", desktop: 373, mobile: 290 },
-  { date: "2024-04-06", desktop: 301, mobile: 340 },
-  { date: "2024-04-07", desktop: 245, mobile: 180 },
-  { date: "2024-04-08", desktop: 409, mobile: 320 },
-  { date: "2024-04-09", desktop: 59, mobile: 110 },
-  { date: "2024-04-10", desktop: 261, mobile: 190 },
-  { date: "2024-04-11", desktop: 327, mobile: 350 },
-  { date: "2024-04-12", desktop: 292, mobile: 210 },
-  { date: "2024-04-13", desktop: 342, mobile: 380 },
-  { date: "2024-04-14", desktop: 137, mobile: 220 },
-  { date: "2024-04-15", desktop: 120, mobile: 170 },
-  { date: "2024-04-16", desktop: 138, mobile: 190 },
-  { date: "2024-04-17", desktop: 446, mobile: 360 },
-  { date: "2024-04-18", desktop: 364, mobile: 410 },
-  { date: "2024-04-19", desktop: 243, mobile: 180 },
-  { date: "2024-04-20", desktop: 89, mobile: 150 },
-  { date: "2024-04-21", desktop: 137, mobile: 200 },
-  { date: "2024-04-22", desktop: 224, mobile: 170 },
-  { date: "2024-04-23", desktop: 138, mobile: 230 },
-  { date: "2024-04-24", desktop: 387, mobile: 290 },
-  { date: "2024-04-25", desktop: 215, mobile: 250 },
-  { date: "2024-04-26", desktop: 75, mobile: 130 },
-  { date: "2024-04-27", desktop: 383, mobile: 420 },
-  { date: "2024-04-28", desktop: 122, mobile: 180 },
-  { date: "2024-04-29", desktop: 315, mobile: 240 },
-  { date: "2024-04-30", desktop: 454, mobile: 380 },
-];
+
 const chartConfig = {
-  views: {
-    label: "Page Views",
-  },
-  desktop: {
-    label: "Desktop",
+  // views: {
+  //   label: "Page Views",
+  // },
+  cost: {
+    label: "매입",
     color: "var(--chart-2)",
   },
-  mobile: {
-    label: "Mobile",
+  sold: {
+    label: "매출",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
 export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) {
-  const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("desktop");
-  // prettier-ignore
-  const total = useMemo(() => ({
-      desktop: chartData.reduce((acc, curr) => acc + curr.desktop, 0),
-      mobile: chartData.reduce((acc, curr) => acc + curr.mobile, 0),
-    }),[]
-  );
+  const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
 
-  const totalItemCreate = itemData.map((item) => {
+  const totalItemCost = itemData.map((item) => {
     const convertedDate = item.createdAt.toDate();
     return {
       date: getDateString(convertedDate),
     };
   });
+  const totalItemSold = itemData
+    .filter((item) => item.soldAt)
+    .map((item) => {
+      const convertedDate = item.soldAt.toDate();
+      return {
+        date: getDateString(convertedDate),
+      };
+    });
 
-  const countByDate = totalItemCreate.reduce<Record<string, number>>((acc, cur) => {
-    // acc: 누적값, cur: 현재값
-    if (acc[cur.date]) {
-      acc[cur.date] += 1;
-    } else {
-      acc[cur.date] = 1;
-    }
-    return acc;
-  }, {});
-  console.log("countByDate: ", countByDate);
+  // const countByDate = totalItemCreateAt.reduce<Record<string, number>>((acc, cur) => {
+  //   // acc: 누적값, cur: 현재값
+  //   if (acc[cur.date]) {
+  //     acc[cur.date] += 1;
+  //   } else {
+  //     acc[cur.date] = 1;
+  //   }
+  //   return acc;
+  // }, {});
+  const countByDate = (items: { date: string }[]) =>
+    items.reduce<Record<string, number>>((acc, cur) => {
+      // acc: 누적값, cur: 현재값
+      if (acc[cur.date]) {
+        acc[cur.date] += 1;
+      } else {
+        acc[cur.date] = 1;
+      }
+      return acc;
+    }, {});
+  const costDays = countByDate(totalItemCost);
+  const soldDays = countByDate(totalItemSold);
 
   // 현재 '월'에 대한 모든 '일' 생성
   const now = new Date();
@@ -96,9 +78,19 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
   //  모든 날짜에 카운트된 데이터 대입하여 덮기
   const mergedDateArray = daysArray.map((day) => ({
     ...day,
-    count: countByDate[day.date] ?? 0,
+    cost: costDays[day.date] ?? 0,
+    sold: soldDays[day.date] ?? 0,
   }));
+
   console.log("mergedDataArray ", mergedDateArray);
+
+  // prettier-ignore
+  const total = useMemo(() => ({
+      cost: mergedDateArray.reduce((acc, curr) => acc + curr.cost, 0),
+      sold: mergedDateArray.reduce((acc, curr) => acc + curr.sold, 0),
+    }),[mergedDateArray]
+  );
+
   return (
     <Card className="w-full py-0">
       <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
@@ -107,7 +99,7 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
           <CardDescription>Showing total visitors for the last 3 months</CardDescription>
         </div>
         <div className="flex">
-          {["desktop", "mobile"].map((key) => {
+          {["cost", "sold"].map((key) => {
             const chart = key as keyof typeof chartConfig;
             return (
               <button
@@ -127,7 +119,7 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
         <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={mergedDateArray}
             margin={{
               left: 12,
               right: 12,
