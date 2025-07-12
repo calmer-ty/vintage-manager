@@ -25,6 +25,7 @@ export interface IItemData {
   profit: number;
   isSold: boolean;
   createdAt: Timestamp;
+  soldAt: Timestamp;
 }
 export interface IUserID {
   uid: string;

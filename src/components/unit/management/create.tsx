@@ -73,8 +73,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
         purchasePriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - purchasePriceKRW,
-        createdAt: new Date(), // 테이블 생성 시간
         isSold: false,
+        createdAt: new Date(), // 테이블 생성 시간
+        soldAt: null,
       });
 
       // 문서 ID를 포함한 데이터로 업데이트

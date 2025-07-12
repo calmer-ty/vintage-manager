@@ -14,6 +14,7 @@ export default function ManagementSelect({ itemData, refetch }: { itemData: IIte
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
         isSold: value,
+        soldAt: value ? new Date() : null,
       });
       refetch();
       console.log(`isSold 값을 ${value}로 업데이트했습니다`);
@@ -24,7 +25,7 @@ export default function ManagementSelect({ itemData, refetch }: { itemData: IIte
 
   return (
     <Select
-      defaultValue={itemData.isSold ? "true" : "false"}
+      value={itemData.isSold ? "true" : "false"}
       onValueChange={(value) => {
         // 선택된 값이 'false'면 판매완료니까 업데이트 실행
         if (value === "true") {
