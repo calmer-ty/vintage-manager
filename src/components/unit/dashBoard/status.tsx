@@ -28,14 +28,14 @@ export default function DashBoardStatus({ itemData }: { itemData: IItemData[] })
 
     return sum;
   }
-  const totalPurchasePriceKRW = sumField(soldItems, "purchasePriceKRW");
+  const totalCostPriceKRW = sumField(soldItems, "costPriceKRW");
   const totalSalePrice = sumField(soldItems, "salePrice");
   const totalProfit = sumField(soldItems, "profit");
 
   const infoStatus = [
     {
       title: "총 매입",
-      value: `₩ ${totalPurchasePriceKRW.toLocaleString()}`,
+      value: `₩ ${totalCostPriceKRW.toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-600" />,
     },
     {

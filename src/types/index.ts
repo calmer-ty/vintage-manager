@@ -19,12 +19,12 @@ export interface IItemData {
   brandName: string;
   name: string;
   exchangeRate: number;
-  purchasePrice: string;
-  purchasePriceKRW: number;
+  costPrice: string;
+  costPriceKRW: number;
   salePrice: number;
   profit: number;
-  isSold: boolean;
   createdAt: Timestamp;
+  isSold: boolean;
   soldAt: Timestamp | null;
 }
 export interface IUserID {

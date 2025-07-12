@@ -30,11 +30,11 @@ const FormSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요."),
   brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
-  purchasePrice: z.string().min(1, "매입가격을 입력해주세요."),
+  costPrice: z.string().min(1, "매입가격을 입력해주세요."),
   // 하단 값들은 number 타입이지만, input은 string로 받기 때문에 타입 변경
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
   exchangeRate: z.string().min(1, "통화를 선택해주세요."),
-  // purchasePriceKRW: z.string().optional(),
+  // costPriceKRW: z.string().optional(),
 });
 
 interface IManagementCreateProps {
@@ -53,7 +53,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       category: "",
       brandName: "",
       name: "",
-      purchasePrice: "",
+      costPrice: "",
       salePrice: "",
       exchangeRate: "",
     },
@@ -63,16 +63,16 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       // 등록 시간 측정
-      const purchasePriceKRW = Math.round(Number(data.purchasePrice) * Number(data.exchangeRate));
+      const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
 
       const docRef = await addDoc(collection(db, "items"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
         exchangeRate: Number(data.exchangeRate),
-        purchasePrice: `${Number(data.purchasePrice).toLocaleString()} ${currencyLabel}`,
-        purchasePriceKRW,
+        costPrice: `${Number(data.costPrice).toLocaleString()} ${currencyLabel}`,
+        costPriceKRW,
         salePrice: Number(data.salePrice),
-        profit: Number(data.salePrice) - purchasePriceKRW,
+        profit: Number(data.salePrice) - costPriceKRW,
         isSold: false,
         createdAt: new Date(), // 테이블 생성 시간
         soldAt: null,
@@ -100,8 +100,8 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
   ],[baseRate, usdToKrw, jpyToKrw]);
 
   // 원화로 환산
-  const purchasePrice = form.watch("purchasePrice");
-  const purchasePriceKRW = Math.round(Number(purchasePrice) * currencyValue);
+  const costPrice = form.watch("costPrice");
+  const costPriceKRW = Math.round(Number(costPrice) * currencyValue);
 
   return (
     <>
@@ -192,7 +192,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                   <div className="grid gap-4 w-full">
                     <FormField
                       control={form.control}
-                      name="purchasePrice"
+                      name="costPrice"
                       render={({ field }) => (
                         <FormItem className="w-full">
                           <FormLabel>매입가격</FormLabel>
@@ -206,7 +206,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     <div className="w-full">
                       <FormItem className="w-full">
                         <FormLabel>원화 환산</FormLabel>
-                        <Input placeholder="예) 1000" className="bg-white" value={purchasePriceKRW.toLocaleString()} readOnly />
+                        <Input placeholder="예) 1000" className="bg-white" value={costPriceKRW.toLocaleString()} readOnly />
                       </FormItem>
                     </div>
                   </div>
