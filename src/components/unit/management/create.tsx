@@ -34,7 +34,6 @@ const FormSchema = z.object({
   // 하단 값들은 number 타입이지만, input은 string로 받기 때문에 타입 변경
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
   exchangeRate: z.string().min(1, "통화를 선택해주세요."),
-
   // purchasePriceKRW: z.string().optional(),
 });
 
@@ -45,6 +44,7 @@ interface IManagementCreateProps {
 
 export default function ManagementCreate({ uid, refetch }: IManagementCreateProps) {
   const [currencyLabel, setCurrencyLabel] = useState("");
+  const [currencyValue, setCurrencyValue] = useState(0);
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -70,6 +70,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       const docRef = await addDoc(collection(db, "items"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
+        exchangeRate: Number(data.exchangeRate),
         purchasePrice: `${Number(data.purchasePrice).toLocaleString()} ${currencyLabel}`,
         purchasePriceKRW,
         salePrice: Number(data.salePrice),
@@ -99,6 +100,10 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
     { label: "¥", value: jpyToKrw.toString() },
   ],[baseRate, usdToKrw, jpyToKrw]);
 
+  // 원화로 환산
+  const purchasePrice = form.watch("purchasePrice");
+  const purchasePriceKRW = Math.round(Number(purchasePrice) * currencyValue);
+
   return (
     <>
       <Dialog>
@@ -113,8 +118,8 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                 <DialogDescription>원하는 상품의 옵션을 입력하고 생성하세요.</DialogDescription>
               </DialogHeader>
 
-              <div className="flex flex-col gap-3">
-                <div className="flex gap-2">
+              <div className="flex flex-col gap-4">
+                <div className="flex gap-4">
                   <FormField
                     control={form.control}
                     name="category"
@@ -158,12 +163,12 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                 />
 
                 <p className="text-sm text-muted-foreground mt-1">상품을 매입했을 때 사용한 통화를 선택해주세요.</p>
-                <div className="flex gap-2">
+                <div className="flex gap-4">
                   <FormField
                     control={form.control}
                     name="exchangeRate"
                     render={({ field }) => (
-                      <FormItem>
+                      <FormItem className="self-start">
                         <FormLabel>통화</FormLabel>
                         <FormControl>
                           <BasicSelect
@@ -175,21 +180,45 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                               if (selected) {
                                 field.onChange(selected.value);
                                 setCurrencyLabel(selected.label);
+                                setCurrencyValue(Number(selected.value));
                               }
                             }}
-                            value={field.value?.toString()}
+                            value={field.value}
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+                  <div className="grid gap-4 w-full">
+                    <FormField
+                      control={form.control}
+                      name="purchasePrice"
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel>매입가격</FormLabel>
+                          <FormControl>
+                            <Input placeholder="예) 1000" {...field} className="bg-white" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <div className="w-full">
+                      <FormItem className="w-full">
+                        <FormLabel>원화 환산</FormLabel>
+                        <Input placeholder="예) 1000" className="bg-white" value={purchasePriceKRW.toLocaleString()} readOnly />
+                      </FormItem>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
                   <FormField
                     control={form.control}
-                    name="purchasePrice"
+                    name="salePrice"
                     render={({ field }) => (
                       <FormItem className="w-full">
-                        <FormLabel>매입가격</FormLabel>
+                        <FormLabel>판매가격</FormLabel>
                         <FormControl>
                           <Input placeholder="예) 1000" {...field} className="bg-white" />
                         </FormControl>
@@ -198,19 +227,6 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     )}
                   />
                 </div>
-                <FormField
-                  control={form.control}
-                  name="salePrice"
-                  render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>판매가격</FormLabel>
-                      <FormControl>
-                        <Input placeholder="예) 1000" {...field} className="bg-white" />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
               </div>
 
               <DialogFooter className="mt-4">
