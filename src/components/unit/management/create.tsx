@@ -73,7 +73,6 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
         costPriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,
-        isSold: false,
         createdAt: new Date(), // 테이블 생성 시간
         soldAt: null,
       });

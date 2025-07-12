@@ -12,7 +12,7 @@ export default function DashBoardStatus({ itemData }: { itemData: IItemData[] })
   //   console.log("acc: ", acc);
   //   return acc + cur;
   // }, 0);
-  const soldItems = itemData.filter((item) => item.isSold === true);
+  const soldItems = itemData.filter((item) => item.soldAt !== null);
 
   function sumField(items: IItemData[], field: keyof IItemData) {
     let sum = 0;

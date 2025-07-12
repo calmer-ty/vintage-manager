@@ -24,7 +24,6 @@ export interface IItemData {
   salePrice: number;
   profit: number;
   createdAt: Timestamp;
-  isSold: boolean;
   soldAt: Timestamp | null;
 }
 export interface IUserID {
