@@ -2,7 +2,7 @@ import { FormControl } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface IBasicSelectProps {
-  title: string;
+  placeholder: string;
   items: IItem[];
   onChange: (...event: unknown[]) => void;
   value?: string;
@@ -13,12 +13,12 @@ interface IItem {
   value: string;
 }
 
-export default function BasicSelect({ title, items, onChange, defaultValue, value }: IBasicSelectProps) {
+export default function BasicSelect({ placeholder, items, onChange, defaultValue, value }: IBasicSelectProps) {
   return (
     <Select onValueChange={onChange} defaultValue={defaultValue} value={value}>
       <FormControl>
         <SelectTrigger className="bg-white">
-          <SelectValue placeholder={title} />
+          <SelectValue placeholder={placeholder} />
         </SelectTrigger>
       </FormControl>
       <SelectContent>

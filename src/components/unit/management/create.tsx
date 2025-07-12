@@ -8,7 +8,7 @@ import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 import BasicSelect from "@/components/commons/select/basic";
@@ -30,7 +30,7 @@ const FormSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요."),
   brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
-  purchasePrice: z.string().min(1, "매입 가격을 입력해주세요."),
+  purchasePrice: z.number().min(1, "매입 가격을 입력해주세요."),
   salePrice: z.number().min(1, "판매 가격을 입력해주세요."),
   exchangeRate: z.number().min(1, "통화를 선택해주세요."),
   // purchasePriceKRW: z.string().optional(),
@@ -51,9 +51,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       category: "",
       brandName: "",
       name: "",
-      purchasePrice: "",
+      purchasePrice: 0,
       salePrice: 0,
-      exchangeRate: 0,
+      // exchangeRate: "",
     },
   });
 
@@ -92,9 +92,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
   const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
   // prettier-ignore
   const currencyOptions = useMemo(() => [
-    { label: "₩", value: baseRate },
-    { label: "$", value: usdToKrw },
-    { label: "¥", value: jpyToKrw },
+    { label: "₩", value: baseRate.toString() },
+    { label: "$", value: usdToKrw.toString() },
+    { label: "¥", value: jpyToKrw.toString() },
   ],[baseRate, usdToKrw, jpyToKrw]);
 
   return (
@@ -118,8 +118,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     name="category"
                     render={({ field }) => (
                       <FormItem>
+                        <FormLabel>카테고리</FormLabel>
                         <FormControl>
-                          <BasicSelect title="카테고리" items={categoryItems} onChange={field.onChange} value={field.value} />
+                          <BasicSelect placeholder="선택하세요" items={categoryItems} onChange={field.onChange} value={field.value} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -131,8 +132,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     name="brandName"
                     render={({ field }) => (
                       <FormItem className="w-full">
+                        <FormLabel>브랜드명</FormLabel>
                         <FormControl>
-                          <Input placeholder="브랜드명" {...field} className="bg-white" />
+                          <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -144,8 +146,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                   name="name"
                   render={({ field }) => (
                     <FormItem className="w-full">
+                      <FormLabel>제품명</FormLabel>
                       <FormControl>
-                        <Input placeholder="제품명" {...field} className="bg-white" />
+                        <Input placeholder="예) 1940s 복각 청남방" {...field} className="bg-white" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -159,9 +162,10 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     name="exchangeRate"
                     render={({ field }) => (
                       <FormItem>
+                        <FormLabel>통화</FormLabel>
                         <FormControl>
                           <BasicSelect
-                            title="통화"
+                            placeholder="선택하세요"
                             items={currencyOptions}
                             onChange={(selectedValue) => {
                               const selected = currencyOptions.find((opt) => opt.value === selectedValue);
@@ -171,7 +175,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                                 setCurrencyLabel(selected.label);
                               }
                             }}
-                            value={String(field.value)}
+                            value={field.value?.toString()}
                           />
                         </FormControl>
                         <FormMessage />
@@ -183,8 +187,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                     name="purchasePrice"
                     render={({ field }) => (
                       <FormItem className="w-full">
+                        <FormLabel>매입가격</FormLabel>
                         <FormControl>
-                          <Input placeholder="매입 가격" {...field} className="bg-white" />
+                          <Input placeholder="예) 1000" {...field} className="bg-white" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -196,8 +201,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                   name="salePrice"
                   render={({ field }) => (
                     <FormItem className="w-full">
+                      <FormLabel>판매가격</FormLabel>
                       <FormControl>
-                        <Input placeholder="판매 가격" {...field} className="bg-white" />
+                        <Input placeholder="예) 1000" {...field} className="bg-white" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
