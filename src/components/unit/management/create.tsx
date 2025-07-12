@@ -30,10 +30,10 @@ const FormSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요."),
   brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
-  exchangeRate: z.string().min(1, "통화를 선택해주세요."),
-  costPrice: z.string().min(1, "매입 가격을 입력해주세요."),
-  costPriceKRW: z.string().optional(),
-  sellingPrice: z.string().min(1, "판매 가격을 입력해주세요."),
+  purchasePrice: z.string().min(1, "매입 가격을 입력해주세요."),
+  salePrice: z.number().min(1, "판매 가격을 입력해주세요."),
+  exchangeRate: z.number().min(1, "통화를 선택해주세요."),
+  // purchasePriceKRW: z.string().optional(),
 });
 
 interface IManagementCreateProps {
@@ -51,10 +51,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       category: "",
       brandName: "",
       name: "",
-      exchangeRate: "",
-      costPrice: "",
-      costPriceKRW: "",
-      sellingPrice: "",
+      purchasePrice: "",
+      salePrice: 0,
+      exchangeRate: 0,
     },
   });
 
@@ -64,15 +63,15 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       // 등록 시간 측정
       const now = new Date(); // 현재 시간을 Date 객체로 가져옴
       const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
-      const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
+      const purchasePriceKRW = Math.round(Number(data.purchasePrice) * Number(data.exchangeRate));
 
       const docRef = await addDoc(collection(db, "items"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
-        costPrice: `${Number(data.costPrice).toLocaleString()} ${currencyLabel}`,
-        costPriceKRW,
-        sellingPrice: Number(data.sellingPrice),
-        profit: Number(data.sellingPrice) - costPriceKRW,
+        purchasePrice: `${Number(data.purchasePrice).toLocaleString()} ${currencyLabel}`,
+        purchasePriceKRW,
+        salePrice: Number(data.salePrice),
+        profit: Number(data.salePrice) - purchasePriceKRW,
         createdAt, // 테이블 생성 시간
         isSold: false,
       });
@@ -172,7 +171,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                                 setCurrencyLabel(selected.label);
                               }
                             }}
-                            value={field.value}
+                            value={String(field.value)}
                           />
                         </FormControl>
                         <FormMessage />
@@ -181,7 +180,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                   />
                   <FormField
                     control={form.control}
-                    name="costPrice"
+                    name="purchasePrice"
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
@@ -194,7 +193,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                 </div>
                 <FormField
                   control={form.control}
-                  name="sellingPrice"
+                  name="salePrice"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormControl>

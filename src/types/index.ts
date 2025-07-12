@@ -19,9 +19,9 @@ export interface IItemData {
   brandName: string;
   name: string;
   exchangeRate: number;
-  costPrice: string;
-  costPriceKRW: number;
-  sellingPrice: number;
+  purchasePrice: string;
+  purchasePriceKRW: number;
+  salePrice: number;
   profit: number;
   isSold: boolean;
   createdAt: Timestamp;

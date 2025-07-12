@@ -9,9 +9,9 @@ const columnConfig = [
   { key: "category", label: "상품 종류" },
   { key: "brandName", label: "브랜드명" },
   { key: "name", label: "상품명" },
-  { key: "costPrice", label: "매입가" },
-  { key: "costPriceKRW", label: "매입가(원화)" },
-  { key: "sellingPrice", label: "판매가" },
+  { key: "purchasePrice", label: "매입가" },
+  { key: "purchasePriceKRW", label: "매입가(원화)" },
+  { key: "salePrice", label: "판매가" },
   { key: "profit", label: "예상 이익" },
 ];
 

@@ -26,8 +26,8 @@ export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] 
     }
     return sum;
   }
-  const totalSoldItemCostPrices = sumField(soldItems, "costPriceKRW");
-  const totalSoldItemSellingPrices = sumField(soldItems, "sellingPrice");
+  const totalSoldItemCostPrices = sumField(soldItems, "purchasePriceKRW");
+  const totalSoldItemSellingPrices = sumField(soldItems, "salePrice");
   const totalSoldProfit = sumField(soldItems, "profit");
 
   const infoStatus = [
