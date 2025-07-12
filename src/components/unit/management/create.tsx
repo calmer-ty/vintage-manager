@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
@@ -30,9 +30,11 @@ const FormSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요."),
   brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
-  purchasePrice: z.number().min(1, "매입 가격을 입력해주세요."),
-  salePrice: z.number().min(1, "판매 가격을 입력해주세요."),
-  exchangeRate: z.number().min(1, "통화를 선택해주세요."),
+  purchasePrice: z.string().min(1, "매입가격을 입력해주세요."),
+  // 하단 값들은 number 타입이지만, input은 string로 받기 때문에 타입 변경
+  salePrice: z.string().min(1, "판매가격을 입력해주세요."),
+  exchangeRate: z.string().min(1, "통화를 선택해주세요."),
+
   // purchasePriceKRW: z.string().optional(),
 });
 
@@ -51,9 +53,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
       category: "",
       brandName: "",
       name: "",
-      purchasePrice: 0,
-      salePrice: 0,
-      // exchangeRate: "",
+      purchasePrice: "",
+      salePrice: "",
+      exchangeRate: "",
     },
   });
 
@@ -103,7 +105,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
         <DialogTrigger asChild>
           <Button variant="default">상품 등록</Button>
         </DialogTrigger>
-        <DialogContent className="flex-col sm:max-w-[425px]">
+        <DialogContent className="flex-col sm:max-w-120">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="">
               <DialogHeader className="mb-4">
@@ -113,14 +115,14 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
 
               <div className="flex flex-col gap-3">
                 <div className="flex gap-2">
-                  <Controller
+                  <FormField
                     control={form.control}
                     name="category"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>카테고리</FormLabel>
                         <FormControl>
-                          <BasicSelect placeholder="선택하세요" items={categoryItems} onChange={field.onChange} value={field.value} />
+                          <BasicSelect items={categoryItems} onChange={field.onChange} value={field.value} placeholder="카테고리를 선택해주세요." />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -157,7 +159,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
 
                 <p className="text-sm text-muted-foreground mt-1">상품을 매입했을 때 사용한 통화를 선택해주세요.</p>
                 <div className="flex gap-2">
-                  <Controller
+                  <FormField
                     control={form.control}
                     name="exchangeRate"
                     render={({ field }) => (
@@ -165,7 +167,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                         <FormLabel>통화</FormLabel>
                         <FormControl>
                           <BasicSelect
-                            placeholder="선택하세요"
+                            placeholder="통화를 선택해주세요."
                             items={currencyOptions}
                             onChange={(selectedValue) => {
                               const selected = currencyOptions.find((opt) => opt.value === selectedValue);
@@ -213,7 +215,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
 
               <DialogFooter className="mt-4">
                 <DialogClose asChild>
-                  <Button variant="outline">취소</Button>
+                  <Button variant="outline" onClick={() => form.reset()}>
+                    취소
+                  </Button>
                 </DialogClose>
                 <Button type="submit">등록</Button>
               </DialogFooter>
