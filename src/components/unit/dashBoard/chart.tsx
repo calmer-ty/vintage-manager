@@ -4,6 +4,9 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
+import { IItemData } from "@/types";
+import { getDateString } from "@/lib/date";
+
 // export const description = "An interactive bar chart";
 const chartData = [
   { date: "2024-04-01", desktop: 222, mobile: 150 },
@@ -51,7 +54,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart() {
+export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("desktop");
   // prettier-ignore
   const total = useMemo(() => ({
@@ -60,6 +63,42 @@ export default function DashBoardChart() {
     }),[]
   );
 
+  const totalItemCreate = itemData.map((item) => {
+    const convertedDate = item.createdAt.toDate();
+    return {
+      date: getDateString(convertedDate),
+    };
+  });
+
+  const countByDate = totalItemCreate.reduce<Record<string, number>>((acc, cur) => {
+    // acc: 누적값, cur: 현재값
+    if (acc[cur.date]) {
+      acc[cur.date] += 1;
+    } else {
+      acc[cur.date] = 1;
+    }
+    return acc;
+  }, {});
+  console.log("countByDate: ", countByDate);
+
+  // 현재 '월'에 대한 모든 '일' 생성
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+  // 이번 달 마지막 날짜 구하기
+  const lastDay = new Date(year, month, 0).getDate();
+  // 1일부터 마지막 날짜까지 배열 만들기
+  const daysArray = Array.from({ length: lastDay }, (_, i) => {
+    const day = i + 1;
+    return { date: `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}` };
+  });
+
+  //  모든 날짜에 카운트된 데이터 대입하여 덮기
+  const mergedDateArray = daysArray.map((day) => ({
+    ...day,
+    count: countByDate[day.date] ?? 0,
+  }));
+  console.log("mergedDataArray ", mergedDateArray);
   return (
     <Card className="w-full py-0">
       <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">

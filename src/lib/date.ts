@@ -1,3 +1,7 @@
-export const getNowString = () => {
-  return new Date().toISOString(); // 호출할 때마다 현재 시간 문자열 리턴
+export const getDateString = (date: Date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // 0부터 시작하므로 +1
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
 };

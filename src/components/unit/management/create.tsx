@@ -5,7 +5,6 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
-import { getNowString } from "@/lib/date";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -74,7 +73,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
         purchasePriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - purchasePriceKRW,
-        createdAt: getNowString(), // 테이블 생성 시간
+        createdAt: new Date(), // 테이블 생성 시간
         isSold: false,
       });
 

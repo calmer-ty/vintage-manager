@@ -4,7 +4,7 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp } from "lucide-react";
 import { IItemData } from "@/types";
 
-export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] }) {
+export default function DashBoardStatus({ itemData }: { itemData: IItemData[] }) {
   // const soldItemCostPrices = soldItems.map((item) => item.costPriceKRW);
   // const totalSoldItemCostPrices = soldItemCostPrices.reduce((acc, cur) => {
   //   console.log("cur: ", cur);
@@ -12,6 +12,7 @@ export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] 
   //   console.log("acc: ", acc);
   //   return acc + cur;
   // }, 0);
+  const soldItems = itemData.filter((item) => item.isSold === true);
 
   function sumField(items: IItemData[], field: keyof IItemData) {
     let sum = 0;
