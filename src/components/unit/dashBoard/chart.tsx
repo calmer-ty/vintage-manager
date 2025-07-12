@@ -33,23 +33,14 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
     };
   });
   const totalItemSold = itemData
-    .filter((item) => item.soldAt)
+    .filter((item) => item.soldAt != null)
     .map((item) => {
-      const convertedDate = item.soldAt.toDate();
+      const convertedDate = item.soldAt!.toDate();
       return {
         date: getDateString(convertedDate),
       };
     });
 
-  // const countByDate = totalItemCreateAt.reduce<Record<string, number>>((acc, cur) => {
-  //   // acc: 누적값, cur: 현재값
-  //   if (acc[cur.date]) {
-  //     acc[cur.date] += 1;
-  //   } else {
-  //     acc[cur.date] = 1;
-  //   }
-  //   return acc;
-  // }, {});
   const countByDate = (items: { date: string }[]) =>
     items.reduce<Record<string, number>>((acc, cur) => {
       // acc: 누적값, cur: 현재값
@@ -60,6 +51,7 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
       }
       return acc;
     }, {});
+
   const costDays = countByDate(totalItemCost);
   const soldDays = countByDate(totalItemSold);
 
@@ -81,8 +73,6 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
     cost: costDays[day.date] ?? 0,
     sold: soldDays[day.date] ?? 0,
   }));
-
-  console.log("mergedDataArray ", mergedDateArray);
 
   // prettier-ignore
   const total = useMemo(() => ({
