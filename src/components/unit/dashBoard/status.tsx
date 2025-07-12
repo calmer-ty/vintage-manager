@@ -24,26 +24,27 @@ export default function DashBoardStatus({ soldItems }: { soldItems: IItemData[] 
         sum += Number(value);
       }
     }
+
     return sum;
   }
-  const totalSoldItemCostPrices = sumField(soldItems, "purchasePriceKRW");
-  const totalSoldItemSellingPrices = sumField(soldItems, "salePrice");
-  const totalSoldProfit = sumField(soldItems, "profit");
+  const totalPurchasePriceKRW = sumField(soldItems, "purchasePriceKRW");
+  const totalSalePrice = sumField(soldItems, "salePrice");
+  const totalProfit = sumField(soldItems, "profit");
 
   const infoStatus = [
     {
       title: "총 매입",
-      value: `₩ ${totalSoldItemCostPrices.toLocaleString()}`,
+      value: `₩ ${totalPurchasePriceKRW.toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-600" />,
     },
     {
       title: "총 매출",
-      value: `₩ ${totalSoldItemSellingPrices.toLocaleString()}`,
+      value: `₩ ${totalSalePrice.toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-600" />,
     },
     {
       title: "총 예상 이익",
-      value: `₩ ${totalSoldProfit.toLocaleString()}`,
+      value: `₩ ${totalProfit.toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-600" />,
     },
     {
