@@ -5,6 +5,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { getNowString } from "@/lib/date";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -63,8 +64,6 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       // 등록 시간 측정
-      const now = new Date(); // 현재 시간을 Date 객체로 가져옴
-      const createdAt = now.toISOString(); // ISO 형식으로 문자열 변환
       const purchasePriceKRW = Math.round(Number(data.purchasePrice) * Number(data.exchangeRate));
 
       const docRef = await addDoc(collection(db, "items"), {
@@ -75,7 +74,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
         purchasePriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - purchasePriceKRW,
-        createdAt, // 테이블 생성 시간
+        createdAt: getNowString(), // 테이블 생성 시간
         isSold: false,
       });
 
