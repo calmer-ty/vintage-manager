@@ -1,21 +1,17 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { Dispatch, SetStateAction } from "react";
-
-const years = ["2025", "2024", "2023"];
-const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
-
-export default function DashboardSelect({
-  selectedYear,
-  setSelectedYear,
-  selectedMonth,
-  setSelectedMonth,
-}: {
+interface IDashboardSelectProps {
   selectedYear: number;
   setSelectedYear: Dispatch<SetStateAction<number>>;
   selectedMonth: number;
   setSelectedMonth: Dispatch<SetStateAction<number>>;
-}) {
+}
+
+const years = ["2025", "2024", "2023"];
+const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
+
+export default function DashboardSelect({ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }: IDashboardSelectProps) {
   return (
     <div className="flex gap-2">
       <Select value={String(selectedYear)} onValueChange={(value) => setSelectedYear(Number(value))}>
