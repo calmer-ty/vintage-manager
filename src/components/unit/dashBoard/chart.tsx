@@ -8,6 +8,14 @@ import { IItemData } from "@/types";
 import { getDateString } from "@/lib/date";
 
 // export const description = "An interactive bar chart";
+interface IDashBoardChartProps {
+  itemData: IItemData[];
+  totalDays: {
+    date: string;
+  }[];
+  selectedYear: number;
+  selectedMonth: number;
+}
 
 const chartConfig = {
   // views: {
@@ -23,7 +31,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) {
+export default function DashBoardChart({ itemData, totalDays, selectedYear, selectedMonth }: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
 
   const totalItemCost = itemData.map((item) => {
@@ -55,20 +63,8 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
   const costDays = countByDate(totalItemCost);
   const soldDays = countByDate(totalItemSold);
 
-  // 현재 '월'에 대한 모든 '일' 생성
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth() + 1;
-  // 이번 달 마지막 날짜 구하기
-  const lastDay = new Date(year, month, 0).getDate();
-  // 1일부터 마지막 날짜까지 배열 만들기
-  const daysArray = Array.from({ length: lastDay }, (_, i) => {
-    const day = i + 1;
-    return { date: `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}` };
-  });
-
   //  모든 날짜에 카운트된 데이터 대입하여 덮기
-  const mergedDateArray = daysArray.map((day) => ({
+  const mergedDateArray = totalDays.map((day) => ({
     ...day,
     cost: costDays[day.date] ?? 0,
     sold: soldDays[day.date] ?? 0,
@@ -85,8 +81,10 @@ export default function DashBoardChart({ itemData }: { itemData: IItemData[] }) 
     <Card className="w-full py-0">
       <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
-          <CardTitle>Bar Chart - Interactive</CardTitle>
-          <CardDescription>Showing total visitors for the last 3 months</CardDescription>
+          <CardTitle>
+            {selectedYear}년 {selectedMonth}월 거래 요약
+          </CardTitle>
+          <CardDescription>총 매입 및 매출 금액을 요약합니다.</CardDescription>
         </div>
         <div className="flex">
           {["cost", "sold"].map((key) => {
