@@ -30,8 +30,8 @@ export default function DashBoardUI({ uid }: IUserID) {
   return (
     <article className="grid gap-6 w-full px-20">
       <DashboardSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
-      <DashBoardStatus itemData={items} />
-      <DashBoardChart itemData={items} totalDays={totalDays} selectedYear={selectedYear} selectedMonth={selectedMonth} />
+      <DashBoardStatus items={items} />
+      <DashBoardChart items={items} totalDays={totalDays} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>
   );
 }

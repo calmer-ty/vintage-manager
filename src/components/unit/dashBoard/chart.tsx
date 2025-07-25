@@ -9,7 +9,7 @@ import { getDateString } from "@/lib/date";
 
 // export const description = "An interactive bar chart";
 interface IDashBoardChartProps {
-  itemData: IItemData[];
+  items: IItemData[];
   totalDays: {
     date: string;
   }[];
@@ -31,16 +31,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({ itemData, totalDays, selectedYear, selectedMonth }: IDashBoardChartProps) {
+export default function DashBoardChart({ items, totalDays, selectedYear, selectedMonth }: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
 
-  const totalItemCost = itemData.map((item) => {
+  const totalItemCost = items.map((item) => {
     const convertedDate = item.createdAt.toDate();
     return {
       date: getDateString(convertedDate),
     };
   });
-  const totalItemSold = itemData
+  const totalItemSold = items
     .filter((item) => item.soldAt != null)
     .map((item) => {
       const convertedDate = item.soldAt!.toDate();
