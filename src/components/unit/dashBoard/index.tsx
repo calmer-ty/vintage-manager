@@ -7,13 +7,10 @@ import DashBoardChart from "./chart";
 import DashBoardStatus from "./status";
 
 import { IUserID } from "@/types";
-
-// 현재 '월'에 대한 모든 '일' 생성
-const now = new Date();
-const year = now.getFullYear();
-const month = now.getMonth() + 1;
+import { getNowDate } from "@/lib/date";
 
 export default function DashBoardUI({ uid }: IUserID) {
+  const { year, month } = getNowDate();
   const [selectedYear, setSelectedYear] = useState(year);
   const [selectedMonth, setSelectedMonth] = useState(month);
 

@@ -5,3 +5,15 @@ export const getDateString = (date: Date) => {
 
   return `${year}-${month}-${day}`;
 };
+
+// 현재 '월'에 대한 모든 '일' 생성
+export const getNowDate = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
+
+  return {
+    year,
+    month,
+  };
+};
