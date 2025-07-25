@@ -1,6 +1,8 @@
 import { useUserItems } from "@/hooks/useUserItems";
+import { useDateSelector } from "@/hooks/useDateSelector";
 
 import DataTable from "@/components/commons/table/data";
+import YearMonthSelect from "@/components/commons/select/yearMonth";
 import ManagementSelect from "./select";
 
 import { IUserID } from "@/types";
@@ -16,10 +18,12 @@ const columnConfig = [
 ];
 
 export default function ManagementUI({ uid }: IUserID) {
-  const { items, fetchItems } = useUserItems({ uid });
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
+  const { items, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
+      <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
       <DataTable data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(itemData) => <ManagementSelect itemData={itemData} refetch={fetchItems} />} />
     </article>
   );
