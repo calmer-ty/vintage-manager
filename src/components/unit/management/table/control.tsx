@@ -24,7 +24,7 @@ export default function ControlTable({ table, columnConfig, onDelete }: IControl
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
 
   return (
-    <div className="flex justify-between items-center py-4">
+    <div className="flex justify-between items-center w-full py-4">
       <div className="flex items-center gap-2">
         <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onDelete(selectedIds)}>
           선택 삭제
@@ -36,30 +36,26 @@ export default function ControlTable({ table, columnConfig, onDelete }: IControl
           className="max-w-sm"
         />
       </div>
-      <div className="flex items-center gap-2">
-        {/* ManagementCreate */}
 
-        {/* DropdownMenu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              보기 설정 <ChevronDown />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
-                    {columnLabelMap[column.id] ?? column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">
+            보기 설정 <ChevronDown />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {table
+            .getAllColumns()
+            .filter((column) => column.getCanHide())
+            .map((column) => {
+              return (
+                <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
+                  {columnLabelMap[column.id] ?? column.id}
+                </DropdownMenuCheckboxItem>
+              );
+            })}
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

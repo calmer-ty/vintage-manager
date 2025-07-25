@@ -25,7 +25,7 @@ interface IDataTableProps {
   renderStatusCell?: (itemData: IItemData) => React.ReactNode;
 }
 
-export default function DataTable({ data, uid, refetch, columnConfig, renderStatusCell }: IDataTableProps) {
+export default function TableUI({ data, uid, refetch, columnConfig, renderStatusCell }: IDataTableProps) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -110,9 +110,11 @@ export default function DataTable({ data, uid, refetch, columnConfig, renderStat
 
   return (
     <div className="w-full bg-white px-6 rounded-lg shadow-sm">
-      <ControlTable table={table} onDelete={onDelete} columnConfig={columnConfig} />
-      <ManagementCreate uid={uid} refetch={refetch} />
-      {/* Table */}
+      <div className="flex items-center gap-2">
+        <ControlTable table={table} onDelete={onDelete} columnConfig={columnConfig} />
+        <ManagementCreate uid={uid} refetch={refetch} />
+      </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -144,7 +146,7 @@ export default function DataTable({ data, uid, refetch, columnConfig, renderStat
           </TableBody>
         </Table>
       </div>
-      {/* Bottom */}
+
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
           총 {table.getFilteredRowModel().rows.length}개 중 {table.getFilteredSelectedRowModel().rows.length}개 선택됨.

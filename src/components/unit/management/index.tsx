@@ -3,7 +3,7 @@ import { useDateSelector } from "@/hooks/useDateSelector";
 
 import YearMonthSelect from "@/components/commons/select/yearMonth";
 import ManagementSelect from "./select";
-import DataTable from "./table/data";
+import TableUI from "./table";
 
 import type { IUserID } from "@/types";
 
@@ -24,7 +24,7 @@ export default function ManagementUI({ uid }: IUserID) {
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
       <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
-      <DataTable data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(itemData) => <ManagementSelect itemData={itemData} refetch={fetchItems} />} />
+      <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(itemData) => <ManagementSelect itemData={itemData} refetch={fetchItems} />} />
     </article>
   );
 }
