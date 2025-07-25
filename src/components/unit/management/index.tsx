@@ -1,9 +1,9 @@
 import { useUserItems } from "@/hooks/useUserItems";
 import { useDateSelector } from "@/hooks/useDateSelector";
 
-import DataTable from "@/components/commons/table/data";
 import YearMonthSelect from "@/components/commons/select/yearMonth";
 import ManagementSelect from "./select";
+import DataTable from "./table/data";
 
 import type { IUserID } from "@/types";
 

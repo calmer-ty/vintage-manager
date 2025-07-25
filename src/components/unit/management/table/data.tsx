@@ -1,17 +1,15 @@
 import { useState } from "react";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
 
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 import ManagementCreate from "@/components/unit/management/create";
+import ControlTable from "./control";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IItemData } from "@/types";
@@ -110,53 +108,10 @@ export default function DataTable({ data, uid, refetch, columnConfig, renderStat
     }
   };
 
-  //   선택한 체크박스
-  const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
-
-  //   보기 설정용 객체 코드
-  const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
-
   return (
     <div className="w-full bg-white px-6 rounded-lg shadow-sm">
-      {/* Top */}
-      <div className="flex justify-between items-center py-4">
-        <div className="flex items-center gap-2">
-          <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onDelete(selectedIds)}>
-            선택 삭제
-          </Button>
-          <Input
-            placeholder="상품명을 입력해주세요."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-            className="max-w-sm"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          {/* ManagementCreate */}
-          <ManagementCreate uid={uid} refetch={refetch} />
-
-          {/* DropdownMenu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                보기 설정 <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
-                      {columnLabelMap[column.id] ?? column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+      <ControlTable table={table} onDelete={onDelete} columnConfig={columnConfig} />
+      <ManagementCreate uid={uid} refetch={refetch} />
       {/* Table */}
       <div className="rounded-md border">
         <Table>
