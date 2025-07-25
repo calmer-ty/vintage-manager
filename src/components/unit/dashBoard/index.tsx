@@ -14,10 +14,10 @@ const year = now.getFullYear();
 const month = now.getMonth() + 1;
 
 export default function DashBoardUI({ uid }: IUserID) {
-  const { items } = useUserItems({ uid });
-
   const [selectedYear, setSelectedYear] = useState(year);
   const [selectedMonth, setSelectedMonth] = useState(month);
+
+  const { items } = useUserItems({ uid, selectedYear, selectedMonth });
 
   // 이번 달 마지막 날짜 구하기
   const lastDay = new Date(selectedYear, selectedMonth, 0).getDate();

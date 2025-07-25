@@ -1,14 +1,22 @@
 import { useState, useEffect, useCallback } from "react";
 
 import { db } from "@/lib/firebase/firebaseApp";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, orderBy, query, Timestamp, where } from "firebase/firestore";
 
-import { IItemData, IUserID } from "@/types";
+import { IItemData } from "@/types";
+
+interface IUseUserItemsProps {
+  uid: string;
+  selectedYear: number;
+  selectedMonth: number;
+}
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
-export const useUserItems = ({ uid }: IUserID) => {
+export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItemsProps) => {
   const [items, setItems] = useState<IItemData[]>([]);
   const [loading, setLoading] = useState(false);
+  console.log("selectedYear: ", selectedYear);
+  console.log("selectedMonth: ", selectedMonth);
 
   // 📄 조회 함수
   const fetchItems = useCallback(async () => {
@@ -16,11 +24,16 @@ export const useUserItems = ({ uid }: IUserID) => {
     setLoading(true);
 
     try {
+      // 선택한 년/월 기준으로 필터링 데이터 정의
+      const start = Timestamp.fromDate(new Date(selectedYear, selectedMonth - 1, 1)); // JS는 월이 0-based
+      const end = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1)); // 다음 달 1일
+
       const q = query(
-        // 	Firestore에서 "items"이라는 이름의 컬렉션을 선택
         collection(db, "items"),
-        // uid 필드가 uid 변수(로그인한 사용자 등)와 같은 문서만 필터
+        // 특정 값 기준으로 필터링
         where("uid", "==", uid),
+        where("createdAt", ">=", start),
+        where("createdAt", "<", end),
         // 그 필터된 문서들을 createdAt(생성 시각) 기준으로 내림차순(최신순) 정렬
         orderBy("createdAt", "desc")
       );
@@ -37,7 +50,7 @@ export const useUserItems = ({ uid }: IUserID) => {
     } finally {
       setLoading(false);
     }
-  }, [uid]);
+  }, [uid, selectedYear, selectedMonth]);
 
   // 처음 로드 시 데이터를 한 번만 조회
   useEffect(() => {
