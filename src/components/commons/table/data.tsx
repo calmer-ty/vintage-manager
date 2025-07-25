@@ -1,16 +1,5 @@
 import { useState } from "react";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  useReactTable,
-  VisibilityState,
-} from "@tanstack/react-table";
+import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import { ChevronDown } from "lucide-react";
 
 import { deleteDoc, doc } from "firebase/firestore";
@@ -24,7 +13,8 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 
 import ManagementCreate from "@/components/unit/management/create";
 
-import { IItemData } from "@/types";
+import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
+import type { IItemData } from "@/types";
 
 interface IDataTableProps {
   data: IItemData[];

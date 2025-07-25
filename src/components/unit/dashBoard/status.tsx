@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp } from "lucide-react";
-import { IItemData } from "@/types";
+
+import type { IItemData } from "@/types";
 
 export default function DashBoardStatus({ items }: { items: IItemData[] }) {
   // soldAt null이 아닌 item 데이터들

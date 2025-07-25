@@ -2,10 +2,12 @@ import { useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
-import { IItemData } from "@/types";
 import { getDateString } from "@/lib/date";
+
+import type { IItemData } from "@/types";
+import type { ChartConfig } from "@/components/ui/chart";
 
 // export const description = "An interactive bar chart";
 interface IDashBoardChartProps {

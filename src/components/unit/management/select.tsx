@@ -3,7 +3,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { IItemData } from "@/types";
+import type { IItemData } from "@/types";
 
 export default function ManagementSelect({ itemData, refetch }: { itemData: IItemData; refetch: () => Promise<void> }) {
   // 판매상태 함수

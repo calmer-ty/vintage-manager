@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { collection, getDocs, orderBy, query, Timestamp, where } from "firebase/firestore";
 
-import { IItemData } from "@/types";
+import type { IItemData } from "@/types";
 
 interface IUseUserItemsProps {
   uid: string;

@@ -5,7 +5,7 @@ import DataTable from "@/components/commons/table/data";
 import YearMonthSelect from "@/components/commons/select/yearMonth";
 import ManagementSelect from "./select";
 
-import { IUserID } from "@/types";
+import type { IUserID } from "@/types";
 
 const columnConfig = [
   { key: "category", label: "상품 종류" },

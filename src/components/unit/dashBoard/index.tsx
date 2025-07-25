@@ -5,7 +5,7 @@ import YearMonthSelect from "@/components/commons/select/yearMonth";
 import DashBoardChart from "./chart";
 import DashBoardStatus from "./status";
 
-import { IUserID } from "@/types";
+import type { IUserID } from "@/types";
 
 export default function DashBoardUI({ uid }: IUserID) {
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
