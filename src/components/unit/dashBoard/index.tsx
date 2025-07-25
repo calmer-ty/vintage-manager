@@ -1,19 +1,14 @@
-import { useState } from "react";
-
 import { useUserItems } from "@/hooks/useUserItems";
+import { useDateSelector } from "@/hooks/useDateSelector";
 
-import DashboardSelect from "./select";
+import YearMonthSelect from "@/components/commons/select/yearMonth";
 import DashBoardChart from "./chart";
 import DashBoardStatus from "./status";
 
 import { IUserID } from "@/types";
-import { getNowDate } from "@/lib/date";
 
 export default function DashBoardUI({ uid }: IUserID) {
-  const { year, month } = getNowDate();
-  const [selectedYear, setSelectedYear] = useState(year);
-  const [selectedMonth, setSelectedMonth] = useState(month);
-
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
   const { items } = useUserItems({ uid, selectedYear, selectedMonth });
 
   // 이번 달 마지막 날짜 구하기
@@ -26,7 +21,7 @@ export default function DashBoardUI({ uid }: IUserID) {
 
   return (
     <article className="grid gap-6 w-full px-20">
-      <DashboardSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+      <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
       <DashBoardStatus items={items} />
       <DashBoardChart items={items} totalDays={totalDays} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>
