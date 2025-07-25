@@ -15,8 +15,6 @@ interface IUseUserItemsProps {
 export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItemsProps) => {
   const [items, setItems] = useState<IItemData[]>([]);
   const [loading, setLoading] = useState(false);
-  console.log("selectedYear: ", selectedYear);
-  console.log("selectedMonth: ", selectedMonth);
 
   // 📄 조회 함수
   const fetchItems = useCallback(async () => {
