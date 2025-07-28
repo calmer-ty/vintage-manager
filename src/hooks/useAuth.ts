@@ -8,8 +8,10 @@ import type { User } from "firebase/auth";
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useAuth = (): {
   user: User | null;
+  uid?: string;
 } => {
   const [user, setUser] = useState<User | null>(null);
+  const uid = user?.uid;
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
@@ -26,5 +28,5 @@ export const useAuth = (): {
     };
   }, []);
 
-  return { user };
+  return { user, uid };
 };

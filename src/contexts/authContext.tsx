@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 
 interface AuthContextType {
   user: User | null;
+  uid?: string;
   loading: boolean;
 }
 
