@@ -34,6 +34,7 @@ export default function RootLayout({
         <AuthProvider>
           <SidebarProvider>
             <Nav />
+
             <main>
               <SidebarTrigger />
               {children}

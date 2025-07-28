@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { DollarSign, TrendingUp } from "lucide-react";
+import { Boxes, DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
 
 import type { IItemData } from "@/types";
 
@@ -32,33 +32,33 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
     {
       title: "총 매입",
       value: `₩ ${totalCostPriceKRW.toLocaleString()}`,
-      icon: <DollarSign className="shrink-0 text-green-600" />,
+      icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
     {
       title: "총 매출",
       value: `₩ ${totalSalePrice.toLocaleString()}`,
-      icon: <DollarSign className="shrink-0 text-green-600" />,
+      icon: <DollarSign className="shrink-0 text-green-500" />,
     },
     {
       title: "총 예상 이익",
       value: `₩ ${totalProfit.toLocaleString()}`,
-      icon: <DollarSign className="shrink-0 text-green-600" />,
+      icon: <TrendingUp className="shrink-0 text-blue-500" />,
     },
     {
       title: "총 판매량",
       value: `${soldItems.length} 개`,
-      icon: <TrendingUp className="shrink-0 text-purple-600" />,
+      icon: <Boxes className="shrink-0 text-yellow-500" />,
     },
   ];
 
   const MotionCard = motion(Card);
 
   return (
-    <div className="flex gap-6">
+    <div className="grid grid-cols-2 gap-5 2xl:grid-cols-4">
       {infoStatus.map((el, index) => (
         <MotionCard
           key={el.title}
-          className="w-full hover:shadow-md"
+          className="w-full py-4 hover:shadow-md lg:py-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.4 }}
@@ -68,10 +68,10 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
         >
           {/* <CardHeader className="flex items-center gap-3"></CardHeader> */}
           <CardContent>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-col items-center gap-x-6 gap-y-2 lg:flex-row">
               <div className="p-3 bg-gray-100 rounded-lg">{el.icon}</div>
-              <CardTitle className="grid gap-1">
-                <p className="text-2xl text-right font-bold">{el.value}</p>
+              <CardTitle className="grid gap-1 w-full text-center sm:text-left">
+                <p className="text-xl font-bold">{el.value}</p>
                 <span className="text-muted-foreground text-sm">{el.title}</span>
               </CardTitle>
             </div>

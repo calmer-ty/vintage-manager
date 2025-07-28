@@ -20,7 +20,7 @@ export default function DashBoardUI({ uid }: IUserID) {
   });
 
   return (
-    <article className="grid gap-6 w-full px-20">
+    <article className="grid gap-5 w-full px-8 lg:px-18">
       <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
       <DashBoardStatus items={items} />
       <DashBoardChart items={items} totalDays={totalDays} selectedYear={selectedYear} selectedMonth={selectedMonth} />

@@ -155,6 +155,10 @@
   }
 }
 
+html {
+  /* font-size: calc((40 / 9) * 1vw); */
+  font-size: clamp(14px, 4vw, 18px);
+}
 html,
 body {
   width: 100vw;
@@ -174,7 +178,7 @@ main {
   justify-content: center;
   align-items: center;
   flex: 1;
-  background-color: #fafafa;
+  background-color: #f9fafb;
 }
 
 button {
