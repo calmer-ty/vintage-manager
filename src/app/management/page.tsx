@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/authContext";
 import ManagementUI from "@/components/unit/management";
 
 export default function ManagementPage() {
-  const { uid } = useAuth();
+  const { user } = useAuth();
 
-  return <> {!uid ? <>로딩중</> : <ManagementUI uid={uid} />}</>;
+  return <> {user === null ? <>로딩중</> : <ManagementUI uid={user.uid} />}</>;
 }

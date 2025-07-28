@@ -16,6 +16,7 @@ export const useAuth = (): {
   const uid = user?.uid;
 
   useEffect(() => {
+    console.log("useAuth mounted, setting up onAuthStateChanged listener");
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser !== null) {
         setUser(firebaseUser);

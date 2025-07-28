@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/contexts/authContext";
 
 import { Button } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
