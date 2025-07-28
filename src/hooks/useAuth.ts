@@ -8,7 +8,7 @@ import type { User } from "firebase/auth";
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useAuth = (): {
   user: User | null;
-  uid?: string;
+  uid: string | undefined;
   handleLogin: () => Promise<void>;
   handleLogout: () => Promise<void>;
 } => {
