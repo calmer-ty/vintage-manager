@@ -1,14 +1,13 @@
 import { useUserItems } from "@/hooks/useUserItems";
-import { useDateSelector } from "@/hooks/useDateSelector";
+import { useDateSelector } from "@/contexts/dateSelectorContext";
 
-import YearMonthSelect from "@/components/commons/select/yearMonth";
 import DashBoardChart from "./chart";
 import DashBoardStatus from "./status";
 
 import type { IUserID } from "@/types";
 
 export default function DashBoardUI({ uid }: IUserID) {
-  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
+  const { selectedYear, selectedMonth } = useDateSelector();
   const { items } = useUserItems({ uid, selectedYear, selectedMonth });
 
   // 이번 달 마지막 날짜 구하기
@@ -21,7 +20,6 @@ export default function DashBoardUI({ uid }: IUserID) {
 
   return (
     <article className="grid gap-5 w-full px-8 lg:px-18">
-      <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
       <DashBoardStatus items={items} />
       <DashBoardChart items={items} totalDays={totalDays} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>

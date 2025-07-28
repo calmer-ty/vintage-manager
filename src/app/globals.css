@@ -170,8 +170,7 @@ body {
 }
 
 header {
-  height: 100px;
-  background-color: #ccc;
+  height: 5rem;
 }
 main {
   display: flex;

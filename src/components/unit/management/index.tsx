@@ -1,7 +1,6 @@
 import { useUserItems } from "@/hooks/useUserItems";
-import { useDateSelector } from "@/hooks/useDateSelector";
+import { useDateSelector } from "@/contexts/dateSelectorContext";
 
-import YearMonthSelect from "@/components/commons/select/yearMonth";
 import ManagementSelect from "./select";
 import TableUI from "./table";
 
@@ -18,12 +17,11 @@ const columnConfig = [
 ];
 
 export default function ManagementUI({ uid }: IUserID) {
-  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
+  const { selectedYear, selectedMonth } = useDateSelector();
   const { items, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
 
   return (
     <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
-      <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
       <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(itemData) => <ManagementSelect itemData={itemData} refetch={fetchItems} />} />
     </article>
   );

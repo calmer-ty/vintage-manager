@@ -14,7 +14,7 @@ const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0
 
 export default function YearMonthSelect({ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }: IDashboardSelectProps) {
   return (
-    <div className="flex justify-end w-full gap-2 border-b border-gray-300 pb-3">
+    <div className="flex justify-end w-full gap-2">
       <Label className="text-gray-700 text-sm">조회 기간</Label>
       <div className="flex gap-2">
         <Select value={String(selectedYear)} onValueChange={(value) => setSelectedYear(Number(value))}>
