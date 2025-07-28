@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 
-import { auth } from "@/lib/firebase/firebaseApp";
+import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
 
 import type { User } from "firebase/auth";
 
@@ -9,6 +9,8 @@ import type { User } from "firebase/auth";
 export const useAuth = (): {
   user: User | null;
   uid?: string;
+  handleLogin: () => Promise<void>;
+  handleLogout: () => Promise<void>;
 } => {
   const [user, setUser] = useState<User | null>(null);
   const uid = user?.uid;
@@ -28,5 +30,26 @@ export const useAuth = (): {
     };
   }, []);
 
-  return { user, uid };
+  // Google 로그인 처리
+  const handleLogin = async (): Promise<void> => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      console.log(auth);
+    } catch (error) {
+      console.error("로그인 실패:", error);
+    }
+  };
+
+  // 로그아웃 처리
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await auth.signOut();
+      // setAlertOpen(true);
+      // setRouting("/");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+    }
+  };
+
+  return { user, uid, handleLogin, handleLogout };
 };

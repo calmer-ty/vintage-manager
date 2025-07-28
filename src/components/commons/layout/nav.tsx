@@ -25,7 +25,9 @@ const items = [
 
 export default function Nav() {
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, handleLogout } = useAuth();
+
+  // 로그아웃 처리
 
   return (
     <Sidebar>
@@ -62,15 +64,7 @@ export default function Nav() {
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                <DropdownMenuItem>
-                  <span>Account</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Billing</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <span>Sign out</span>
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>Sign out</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
