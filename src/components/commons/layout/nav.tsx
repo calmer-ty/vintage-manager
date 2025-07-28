@@ -1,44 +1,81 @@
 "use client";
 
-import { memo } from "react";
-import { motion } from "framer-motion";
+import { usePathname } from "next/navigation";
+// import { useAuth } from "@/hooks/useAuth";
+
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ChevronUp, Layout, Settings, User2 } from "lucide-react";
 
 import Link from "next/link";
 
-interface IMenu {
-  title: string;
-  icon: string;
-  href: string;
-}
-const mapsMenus: IMenu[] = [
-  { title: "대시보드", icon: "icon_table", href: "/dashBoard" },
-  { title: "상품관리", icon: "icon_plus", href: "/management" },
+// Menu items.
+const items = [
+  {
+    title: "대시보드",
+    url: "/",
+    icon: Layout,
+  },
+  {
+    title: "상품관리",
+    url: "/management",
+    icon: Settings,
+  },
 ];
 
-function SideNav() {
+export default function Nav() {
+  const pathname = usePathname();
+  // const { user } = useAuth();
+
   return (
-    <nav className="flex flex-col items-center shrink-0 gap-8 w-30 h-full py-6 bg-[#4A4E69]">
-      {mapsMenus.map((menu) => (
-        <MenuItem key={menu.title} menu={menu} />
-      ))}
-    </nav>
+    <Sidebar>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>상품 확인하기</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {items.map((item) => {
+                const isActive = pathname === item.url;
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <Link href={item.url} className={isActive ? "!bg-blue-100" : ""}>
+                        <item.icon className="text-blue-600" />
+                        <span className={isActive ? "font-bold" : ""}>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <SidebarMenuButton>
+                  <User2 /> Username
+                  <ChevronUp className="ml-auto" />
+                </SidebarMenuButton>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
+                <DropdownMenuItem>
+                  <span>Account</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Billing</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <span>Sign out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }
-
-function MenuItem({ menu }: { menu: IMenu }) {
-  return (
-    <Link href={menu.href}>
-      <motion.div whileHover={{ backgroundColor: "#5B637E" }} transition={{ duration: 0.2 }} className="flex flex-col items-center gap-2 p-4 cursor-pointer rounded-lg">
-        <i
-          className="block w-8 h-8 bg-no-repeat bg-contain"
-          style={{
-            backgroundImage: `url(/images/${menu.icon}.svg)`,
-          }}
-        />
-        <span className="text-white">{menu.title}</span>
-      </motion.div>
-    </Link>
-  );
-}
-
-export default memo(SideNav);
