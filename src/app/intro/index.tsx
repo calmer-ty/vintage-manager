@@ -1,28 +1,25 @@
 "use client";
 
-import { Button, Paper, Typography } from "@mui/material";
+import { useAuth } from "@/hooks/useAuth";
+
+import { Button } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
-import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
-import { signInWithPopup } from "firebase/auth";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function IntroPage() {
-  // Google 로그인 처리
-  const handleGoogleLogin = async (): Promise<void> => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (error) {
-      console.error("로그인 실패:", error);
-    }
-  };
+  const { handleLogin } = useAuth();
 
   return (
     <div className="flex justify-center items-center w-full h-full bg-blue-100">
-      <Paper elevation={3} sx={{ p: 4, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-        <Typography variant="h6">환영합니다!</Typography>
-        <Button variant="outlined" startIcon={<FcGoogle />} onClick={handleGoogleLogin}>
-          Google로 로그인
-        </Button>
-      </Paper>
+      <Card className="w-full max-w-sm mx-auto p-6 text-center shadow-md">
+        <CardContent className="space-y-6">
+          <h2 className="text-2xl font-semibold">로그인</h2>
+          <Button variant="outlined" className="w-full flex items-center justify-center gap-2" onClick={handleLogin}>
+            <FcGoogle size={20} />
+            Google 계정으로 로그인
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
