@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { AuthProvider } from "@/contexts/authContext";
 import { DateSelectorProvider } from "@/contexts/dateSelectorContext";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 import Header from "@/components/commons/layout/header";
 import Nav from "@/components/commons/layout/nav";
@@ -33,17 +33,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <DateSelectorProvider>
-          <AuthProvider>
+        <AuthProvider>
+          <DateSelectorProvider>
             <SidebarProvider>
               <Nav />
-              <SidebarInset>
+              <main>
                 <Header />
-                <main>{children}</main>
-              </SidebarInset>
+                <article>{children}</article>
+              </main>
             </SidebarProvider>
-          </AuthProvider>
-        </DateSelectorProvider>
+          </DateSelectorProvider>
+        </AuthProvider>
       </body>
     </html>
   );

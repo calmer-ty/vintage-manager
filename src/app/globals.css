@@ -165,19 +165,21 @@ body {
   height: 100vh;
 }
 body {
-  display: flex;
   font-family: "Noto Sans KR", sans-serif;
+  background-color: #fff;
 }
 
-header {
-  height: 5rem;
-}
 main {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  width: 100%;
   flex: 1;
-  background-color: #f9fafb;
+}
+main > article {
+  display: grid;
+  place-items: center;
+  height: 100%;
 }
 
 button {
