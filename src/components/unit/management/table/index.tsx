@@ -23,7 +23,7 @@ interface IDataTableProps {
     key: string;
     label: string;
   }[];
-  renderStatusCell?: (itemData: IItemData) => React.ReactNode;
+  renderStatusCell?: (item: IItemData) => React.ReactNode;
 }
 
 export default function TableUI({ data, uid, refetch, columnConfig, renderStatusCell }: IDataTableProps) {
@@ -76,8 +76,8 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
             header: "상태",
             enableHiding: false,
             cell: ({ row }) => {
-              const itemData = row.original;
-              return renderStatusCell(itemData); // ✅ 여기서 호출
+              const item = row.original;
+              return renderStatusCell(item); // ✅ 여기서 호출
             },
           } as ColumnDef<IItemData>,
         ]
@@ -120,7 +120,7 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
   return (
     <div
       className="overflow-auto px-6 border rounded-lg shadow-sm 
-        max-w-sm
+        max-w-xs
         sm:max-w-lg
         lg:max-w-xl
         xl:max-w-3xl

@@ -22,9 +22,5 @@ export default function ManagementUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { items, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
 
-  return (
-    <article className="flex flex-col justify-center items-center gap-4">
-      <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(itemData) => <ManagementSelect itemData={itemData} refetch={fetchItems} />} />
-    </article>
-  );
+  return <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(item) => <ManagementSelect item={item} refetch={fetchItems} />} />;
 }

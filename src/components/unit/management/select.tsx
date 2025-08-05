@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 import type { IItemData } from "@/types";
 
-export default function ManagementSelect({ itemData, refetch }: { itemData: IItemData; refetch: () => Promise<void> }) {
+export default function ManagementSelect({ item, refetch }: { item: IItemData; refetch: () => Promise<void> }) {
   // 판매상태 함수
   const onUpdate = async (id: string, value: boolean) => {
     try {
@@ -24,13 +24,13 @@ export default function ManagementSelect({ itemData, refetch }: { itemData: IIte
 
   return (
     <Select
-      value={itemData.soldAt ? "true" : "false"}
+      value={item.soldAt ? "true" : "false"}
       onValueChange={(value) => {
         // 선택된 값이 'false'면 판매완료니까 업데이트 실행
         if (value === "true") {
-          onUpdate(itemData._id, true);
+          onUpdate(item._id, true);
         } else {
-          onUpdate(itemData._id, false);
+          onUpdate(item._id, false);
         }
       }}
     >
