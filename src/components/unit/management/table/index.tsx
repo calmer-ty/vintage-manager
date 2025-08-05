@@ -47,7 +47,7 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
         return <div className="capitalize">{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
       }
       if (row.getValue(key) == null) {
-        return <div className="capitalize">처리되지 않음</div>;
+        return <div className="capitalize">-</div>;
       }
 
       return <div className="capitalize">{row.getValue(key)}</div>;
