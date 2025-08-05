@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
 
 import type { IItemData } from "@/types";
@@ -8,6 +8,7 @@ import type { IItemData } from "@/types";
 export default function DashBoardStatus({ items }: { items: IItemData[] }) {
   // soldAt null이 아닌 item 데이터들
   const soldItems = items.filter((item) => item.soldAt !== null);
+
   // items의 특정 키의 값들을 모두 더하여 합한 값을 계산하는 함수
   function sumField(items: IItemData[], field: keyof IItemData) {
     let sum = 0;
@@ -54,7 +55,7 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
   const MotionCard = motion(Card);
 
   return (
-    <div className="grid grid-cols-2 gap-5 2xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-5 w-full 2xl:grid-cols-4">
       {infoStatus.map((el, index) => (
         <MotionCard
           key={el.title}
@@ -64,16 +65,12 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
           transition={{ delay: index * 0.1, duration: 0.4 }}
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
-          layout
         >
-          {/* <CardHeader className="flex items-center gap-3"></CardHeader> */}
-          <CardContent>
-            <div className="flex flex-col items-center gap-x-6 gap-y-2 lg:flex-row">
-              <div className="p-3 bg-gray-100 rounded-lg">{el.icon}</div>
-              <CardTitle className="grid gap-1 w-full text-center sm:text-left">
-                <p className="text-xl font-bold">{el.value}</p>
-                <span className="text-muted-foreground text-sm">{el.title}</span>
-              </CardTitle>
+          <CardContent className="flex flex-col items-center gap-x-6 gap-y-2 lg:flex-row">
+            <div className="p-3 bg-gray-100 rounded-lg">{el.icon}</div>
+            <div className="grid gap-1 w-full text-center sm:text-left">
+              <CardTitle className="text-2xl">{el.value}</CardTitle>
+              <CardDescription>{el.title}</CardDescription>
             </div>
           </CardContent>
         </MotionCard>
