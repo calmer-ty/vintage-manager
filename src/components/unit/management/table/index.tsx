@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import ManagementCreate from "@/components/unit/management/create";
 import ControlTable from "./control";
+import ManagementCreate from "@/components/unit/management/create";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IItemData } from "@/types";
@@ -39,6 +39,12 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
       // 숫자라면 toLocaleString으로 포맷 (예: 가격)
       if (typeof row.getValue(key) === "number") {
         return <div className="capitalize">{row.getValue(key)?.toLocaleString()}</div>;
+      }
+
+      if (row.getValue(key) instanceof Timestamp) {
+        // Timestamp일 때만 처리
+        const timestamp = row.getValue(key) as Timestamp;
+        return <div className="capitalize">{timestamp.toDate().toLocaleDateString()}</div>;
       }
 
       return <div className="capitalize">{row.getValue(key)}</div>;
@@ -109,13 +115,19 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
   };
 
   return (
-    <div className="w-full bg-white px-6 rounded-lg shadow-sm">
+    <div
+      className="overflow-auto px-6 border rounded-lg shadow-sm 
+        max-w-xs
+        sm:max-w-md
+        lg:max-w-xl
+        2xl:max-w-max"
+    >
       <div className="flex items-center gap-2">
         <ControlTable table={table} onDelete={onDelete} columnConfig={columnConfig} />
         <ManagementCreate uid={uid} refetch={refetch} />
       </div>
 
-      <div className="rounded-md border">
+      <div className="border rounded-md">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -130,7 +142,6 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
-                  {}
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                   ))}

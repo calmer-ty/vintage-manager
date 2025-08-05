@@ -7,6 +7,7 @@ import TableUI from "./table";
 import type { IUserID } from "@/types";
 
 const columnConfig = [
+  { key: "createdAt", label: "등록 일자" },
   { key: "category", label: "상품 종류" },
   { key: "brandName", label: "브랜드명" },
   { key: "name", label: "상품명" },
@@ -21,7 +22,7 @@ export default function ManagementUI({ uid }: IUserID) {
   const { items, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
 
   return (
-    <article className="flex flex-col justify-center items-center gap-4 w-full h-full px-20">
+    <article className="flex flex-col justify-center items-center gap-4">
       <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(itemData) => <ManagementSelect itemData={itemData} refetch={fetchItems} />} />
     </article>
   );
