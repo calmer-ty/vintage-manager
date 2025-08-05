@@ -37,10 +37,10 @@ export default function RootLayout({
           <DateSelectorProvider>
             <SidebarProvider>
               <Nav />
-              <main>
+              <div className="flex flex-col w-full h-screen">
                 <Header />
-                <article>{children}</article>
-              </main>
+                <main>{children}</main>
+              </div>
             </SidebarProvider>
           </DateSelectorProvider>
         </AuthProvider>
