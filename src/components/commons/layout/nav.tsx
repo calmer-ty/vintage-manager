@@ -5,23 +5,11 @@ import { useAuth } from "@/contexts/authContext";
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ChevronUp, Layout, Settings, User2 } from "lucide-react";
+import { ChevronUp, User2 } from "lucide-react";
 
 import Link from "next/link";
 
-// Menu items.
-const items = [
-  {
-    title: "대시보드",
-    url: "/",
-    icon: Layout,
-  },
-  {
-    title: "상품관리",
-    url: "/management",
-    icon: Settings,
-  },
-];
+import { pages } from "@/lib/link";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -38,14 +26,14 @@ export default function Nav() {
               <SidebarGroupLabel>상품 확인하기</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {items.map((item) => {
-                    const isActive = pathname === item.url;
+                  {pages.map((page) => {
+                    const isActive = pathname === page.url;
                     return (
-                      <SidebarMenuItem key={item.title}>
+                      <SidebarMenuItem key={page.title}>
                         <SidebarMenuButton asChild>
-                          <Link href={item.url} className={isActive ? "!bg-blue-100" : ""}>
-                            <item.icon className="text-blue-600" />
-                            <span className={isActive ? "font-bold" : ""}>{item.title}</span>
+                          <Link href={page.url} className={isActive ? "!bg-blue-100" : ""}>
+                            <page.icon className="text-blue-600" />
+                            <span className={isActive ? "font-bold" : ""}>{page.title}</span>
                           </Link>
                         </SidebarMenuButton>
                       </SidebarMenuItem>
