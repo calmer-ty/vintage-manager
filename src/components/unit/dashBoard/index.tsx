@@ -19,7 +19,7 @@ export default function DashBoardUI({ uid }: IUserID) {
   });
 
   return (
-    <article className="flex flex-col gap-4 px-8 lg:px-18">
+    <article className="flex flex-col gap-5 w-full px-8 lg:px-18">
       <DashBoardStatus items={items} />
       <DashBoardChart items={items} totalDays={totalDays} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>

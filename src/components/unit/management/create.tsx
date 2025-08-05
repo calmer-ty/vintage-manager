@@ -195,7 +195,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
                       </FormItem>
                     )}
                   />
-                  <div className="grid gap-4 w-full">
+                  <div className="flex flex-col gap-4 w-full">
                     <FormField
                       control={form.control}
                       name="costPrice"
