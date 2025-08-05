@@ -38,7 +38,7 @@ export default function ControlTable({ table, columnConfig, onDelete }: IControl
           placeholder="상품명을 입력해주세요."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
-          className="max-w-sm"
+          className="max-w-sm text-sm"
         />
       </div>
 

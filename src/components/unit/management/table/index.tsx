@@ -118,8 +118,8 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
   return (
     <div
       className="overflow-auto px-6 border rounded-lg shadow-sm 
-        max-w-xs
-        sm:max-w-md
+        max-w-sm
+        sm:max-w-lg
         lg:max-w-xl
         2xl:max-w-max"
     >
@@ -134,17 +134,23 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
-                  return <TableHead key={header.id}>{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</TableHead>;
+                  return (
+                    <TableHead key={header.id}>
+                      <div className="px-4">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
+                    </TableHead>
+                  );
                 })}
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody className="min-h-[400px]">
+          <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                    <TableCell key={cell.id} className="text-center">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
               ))
@@ -155,9 +161,6 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
                     <PackageOpen className="w-8 h-8 mb-4" />
                     <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
                     <p className="text-sm text-gray-400">상품을 추가하면 이곳에 표시됩니다.</p>
-                    {/* <Button className="mt-4" onClick={() => setShowModal(true)}>
-                      상품 등록하기
-                    </Button> */}
                   </div>
                 </TableCell>
               </TableRow>
