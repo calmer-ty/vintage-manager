@@ -7,6 +7,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PackageOpen } from "lucide-react";
 
 import ControlTable from "./control";
 import ManagementCreate from "@/components/unit/management/create";
@@ -138,7 +139,7 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="min-h-[400px]">
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
@@ -149,8 +150,15 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
-                  등록된 상품 없음.
+                <TableCell colSpan={columns.length} className="text-center">
+                  <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                    <PackageOpen className="w-8 h-8 mb-4" />
+                    <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
+                    <p className="text-sm text-gray-400">상품을 추가하면 이곳에 표시됩니다.</p>
+                    {/* <Button className="mt-4" onClick={() => setShowModal(true)}>
+                      상품 등록하기
+                    </Button> */}
+                  </div>
                 </TableCell>
               </TableRow>
             )}

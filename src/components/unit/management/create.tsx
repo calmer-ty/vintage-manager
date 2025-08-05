@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Pencil } from "lucide-react";
 
 import BasicSelect from "@/components/commons/select/basic";
 
@@ -106,7 +107,13 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="default">상품 등록</Button>
+          <Button variant="default">
+            <span className="hidden sm:block">상품 등록</span>
+            <Pencil
+              className="w-4 h-4 
+              block sm:hidden"
+            />
+          </Button>
         </DialogTrigger>
         <DialogContent className="flex-col sm:max-w-120">
           <Form {...form}>
