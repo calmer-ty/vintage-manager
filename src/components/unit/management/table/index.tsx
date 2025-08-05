@@ -41,11 +41,13 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
       if (typeof row.getValue(key) === "number") {
         return <div className="capitalize">{row.getValue(key)?.toLocaleString()}</div>;
       }
-
       if (row.getValue(key) instanceof Timestamp) {
         // Timestamp일 때만 처리
         const timestamp = row.getValue(key) as Timestamp;
-        return <div className="capitalize">{timestamp.toDate().toLocaleDateString()}</div>;
+        return <div className="capitalize">{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
+      }
+      if (row.getValue(key) == null) {
+        return <div className="capitalize">처리되지 않음</div>;
       }
 
       return <div className="capitalize">{row.getValue(key)}</div>;
@@ -121,6 +123,7 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
         max-w-sm
         sm:max-w-lg
         lg:max-w-xl
+        xl:max-w-3xl
         2xl:max-w-max"
     >
       <div className="flex items-center gap-2">
