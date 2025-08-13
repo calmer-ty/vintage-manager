@@ -61,7 +61,6 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
       name: "",
       costPrice: "",
       salePrice: "",
-      exchangeRate: "",
     },
   });
 
@@ -79,7 +78,6 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
         name: updateTarget.name,
         costPrice: updateTarget.costPrice.replace(/[^\d]/g, ""),
         salePrice: updateTarget.salePrice?.toString(),
-        exchangeRate: updateTarget.currency.value?.toString(),
       });
     } else {
       form.reset({
@@ -88,7 +86,6 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
         name: "",
         costPrice: "",
         salePrice: "",
-        exchangeRate: "",
       });
     }
   }, [form, isOpen, isEdit, updateTarget]);
@@ -99,18 +96,21 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
       // 등록 시간 측정
       const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
 
-      const docRef = await addDoc(collection(db, "items"), {
+      // 저장할 마커 정보 준비
+      const items: IItemData = {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
+        _id: "",
         uid,
         currency: { label: currency.label, value: currency.value },
-        // exchangeRate: Number(data.exchangeRate),
-        costPrice: `${Number(data.costPrice).toLocaleString()} ${currency.label}`,
+        costPrice: `${data.costPrice.toLocaleString()} ${currency.label}`,
         costPriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,
         createdAt: new Date(), // 테이블 생성 시간
         soldAt: null,
-      });
+      };
+
+      const docRef = await addDoc(collection(db, "items"), items);
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
