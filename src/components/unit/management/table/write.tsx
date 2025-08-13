@@ -9,8 +9,7 @@ import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Pencil } from "lucide-react";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import BasicSelect from "@/components/commons/select/basic";
 
@@ -38,12 +37,15 @@ const FormSchema = z.object({
   // costPriceKRW: z.string().optional(),
 });
 
-interface IManagementCreateProps {
+interface IManagementWriteProps {
+  isEdit: boolean;
   uid: string;
   refetch: () => Promise<void>;
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function ManagementCreate({ uid, refetch }: IManagementCreateProps) {
+export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpen }: IManagementWriteProps) {
   const [currencyLabel, setCurrencyLabel] = useState("");
   const [currencyValue, setCurrencyValue] = useState(0);
 
@@ -61,7 +63,7 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
   });
 
   // 등록 함수
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       // 등록 시간 측정
       const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
@@ -105,19 +107,20 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
 
   return (
     <>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="default">
-            <span className="hidden sm:block">상품 등록</span>
-            <Pencil
-              className="w-4 h-4 
-              block sm:hidden"
-            />
-          </Button>
-        </DialogTrigger>
+      <Dialog
+        open={isOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            form.reset();
+            setIsOpen(false);
+          } else {
+            setIsOpen(true);
+          }
+        }}
+      >
         <DialogContent className="flex-col sm:max-w-120">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="">
+            <form onSubmit={form.handleSubmit(onClickSubmit)} className="">
               <DialogHeader className="mb-4">
                 <DialogTitle>상품 등록</DialogTitle>
                 <DialogDescription>원하는 상품의 옵션을 입력하고 생성하세요.</DialogDescription>
@@ -236,11 +239,9 @@ export default function ManagementCreate({ uid, refetch }: IManagementCreateProp
 
               <DialogFooter className="mt-4">
                 <DialogClose asChild>
-                  <Button variant="outline" onClick={() => form.reset()}>
-                    취소
-                  </Button>
+                  <Button variant="outline">취소</Button>
                 </DialogClose>
-                <Button type="submit">등록</Button>
+                <Button type="submit">{isEdit ? "수정" : "등록"}</Button>
               </DialogFooter>
             </form>
           </Form>

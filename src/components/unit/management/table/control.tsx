@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Pencil } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,20 +14,25 @@ interface IControlTableProps {
     key: string;
     label: string;
   }[];
-  onDelete: (selectionItem: string[]) => Promise<void>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onClickDelete: (selectionItem: string[]) => Promise<void>;
 }
 
-export default function ControlTable({ table, columnConfig, onDelete }: IControlTableProps) {
+export default function ControlTable({ table, columnConfig, setIsOpen, onClickDelete }: IControlTableProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
 
   //  보기 설정용 객체 코드
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
 
+  const onClickCreate = () => {
+    setIsOpen(true);
+  };
+
   return (
     <div className="flex justify-between items-center gap-2 w-full py-4">
       <div className="flex items-center gap-2">
-        <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onDelete(selectedIds)}>
+        <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickDelete(selectedIds)}>
           <span className="hidden sm:block">선택 삭제</span>
           <Trash
             className="w-4 h-4 
@@ -42,30 +47,40 @@ export default function ControlTable({ table, columnConfig, onDelete }: IControl
         />
       </div>
 
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline">
-            <span className="hidden sm:block">보기 설정</span>
-            <Settings
-              className="w-4 h-4 
+      <div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              <span className="hidden sm:block">보기 설정</span>
+              <Settings
+                className="w-4 h-4 
               block sm:hidden"
-            />
-            <ChevronDown />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {table
-            .getAllColumns()
-            .filter((column) => column.getCanHide())
-            .map((column) => {
-              return (
-                <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
-                  {columnLabelMap[column.id] ?? column.id}
-                </DropdownMenuCheckboxItem>
-              );
-            })}
-        </DropdownMenuContent>
-      </DropdownMenu>
+              />
+              <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
+                    {columnLabelMap[column.id] ?? column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button variant="default" onClick={onClickCreate}>
+          <span className="hidden sm:block">상품 등록</span>
+          <Pencil
+            className="w-4 h-4 
+              block sm:hidden"
+          />
+        </Button>
+      </div>
     </div>
   );
 }

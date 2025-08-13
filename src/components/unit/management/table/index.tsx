@@ -7,15 +7,15 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
 
 import ControlTable from "./control";
-import ManagementCreate from "@/components/unit/management/create";
+import ManagementSelect from "./select";
+import ManagementWrite from "@/components/unit/management/table/write";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IItemData } from "@/types";
-import ManagementSelect from "./select";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface IDataTableProps {
   data: IItemData[];
@@ -80,6 +80,7 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
     },
     {
       id: "actions",
+      header: "설정",
       enableHiding: false,
       cell: ({ row }) => {
         return (
@@ -91,8 +92,8 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onDelete([row.original._id])}>상품 수정</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickUpdate(row.original._id)}>상품 수정</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -119,9 +120,9 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
   });
 
   // 삭제 함수
-  const onDelete = async (selectionItem: string[]) => {
+  const onClickDelete = async (selectedItems: string[]) => {
     // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-    for (const id of selectionItem) {
+    for (const id of selectedItems) {
       try {
         await deleteDoc(doc(db, "items", id));
         console.log(`ID ${id} 삭제 성공`);
@@ -132,19 +133,21 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
     }
   };
 
-  // 클릭 함수
-  // const onClick = async (selectionItem: string[]) => {
-  //   // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-  //   for (const id of selectionItem) {
-  //     try {
-  //       await deleteDoc(doc(db, "items", id));
-  //       console.log(`ID ${id} 삭제 성공`);
-  //       refetch();
-  //     } catch (error) {
-  //       console.error(`ID ${id} 삭제 실패`, error);
-  //     }
-  //   }
-  // };
+  const [isEdit, setIsEdit] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onClickUpdate = async (selectedItem: string) => {
+    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
+    console.log(selectedItem);
+    setIsEdit(true);
+    // try {
+    //   await deleteDoc(doc(db, "items", id));
+    //   console.log(`ID ${id} 삭제 성공`);
+    //   refetch();
+    // } catch (error) {
+    //   console.error(`ID ${id} 삭제 실패`, error);
+    // }
+  };
 
   return (
     <div
@@ -156,8 +159,8 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
         2xl:max-w-max"
     >
       <div className="flex items-center gap-2">
-        <ControlTable table={table} onDelete={onDelete} columnConfig={columnConfig} />
-        <ManagementCreate uid={uid} refetch={refetch} />
+        <ControlTable table={table} setIsOpen={setIsOpen} onClickDelete={onClickDelete} columnConfig={columnConfig} />
+        <ManagementWrite isEdit={isEdit} isOpen={isOpen} setIsOpen={setIsOpen} uid={uid} refetch={refetch} />
       </div>
 
       <div className="border rounded-md">
