@@ -7,7 +7,7 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { PackageOpen } from "lucide-react";
+import { MoreHorizontal, PackageOpen } from "lucide-react";
 
 import ControlTable from "./control";
 import ManagementCreate from "@/components/unit/management/create";
@@ -15,6 +15,7 @@ import ManagementCreate from "@/components/unit/management/create";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IItemData } from "@/types";
 import ManagementSelect from "./select";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 interface IDataTableProps {
   data: IItemData[];
@@ -54,7 +55,6 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
       return <div className="capitalize">{row.getValue(key)}</div>;
     },
   }));
-
   const columns: ColumnDef<IItemData>[] = [
     {
       id: "select",
@@ -75,8 +75,27 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        const item = row.original;
-        return <ManagementSelect item={item} refetch={refetch} />;
+        return <ManagementSelect item={row.original} refetch={refetch} />;
+      },
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onDelete([row.original._id])}>상품 수정</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
       },
     },
   ];
