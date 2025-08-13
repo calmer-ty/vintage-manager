@@ -1,6 +1,3 @@
-import { useUserItems } from "@/hooks/useUserItems";
-import { useDateSelector } from "@/contexts/dateSelectorContext";
-
 import TableUI from "./table";
 
 import type { IUserID } from "@/types";
@@ -18,8 +15,5 @@ const columnConfig = [
 ];
 
 export default function ManagementUI({ uid }: IUserID) {
-  const { selectedYear, selectedMonth } = useDateSelector();
-  const { items, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
-
-  return <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} />;
+  return <TableUI uid={uid} columnConfig={columnConfig} />;
 }

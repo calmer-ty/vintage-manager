@@ -1,9 +1,6 @@
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
-import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, updateDoc } from "firebase/firestore";
-
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
@@ -17,7 +14,7 @@ import BasicSelect from "@/components/commons/select/basic";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IItemData } from "@/types";
+import type { IItemData, IUpdateItemParams } from "@/types";
 
 const categoryItems = [
   { label: "상의", value: "상의" },
@@ -41,14 +38,16 @@ const FormSchema = z.object({
 
 interface IManagementWriteProps {
   uid: string;
-  refetch: () => Promise<void>;
+  createItem: (itemData: IItemData) => Promise<void>;
+  updateItem: ({ targetId, itemData }: IUpdateItemParams) => Promise<void>;
+  fetchItems: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   updateTarget: IItemData | undefined;
   setUpdateTarget: React.Dispatch<React.SetStateAction<IItemData | undefined>>;
 }
 
-export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updateTarget, setUpdateTarget }: IManagementWriteProps) {
+export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, updateItem, fetchItems, updateTarget, setUpdateTarget }: IManagementWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
@@ -106,7 +105,6 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
       // 등록 시간 측정
       const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
       const currencyLabel = currencyOptions.find((opt) => opt.value === data.exchangeRate)?.label;
-      console.log("currencyLabel: ", currencyLabel);
 
       const items: IItemData = {
         ...data,
@@ -121,160 +119,123 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
         soldAt: null,
       };
 
-      const docRef = await addDoc(collection(db, "items"), items);
-
-      // 문서 ID를 포함한 데이터로 업데이트
-      await updateDoc(docRef, {
-        _id: docRef.id,
-      });
-
-      form.reset();
-      refetch();
+      await createItem(items);
+      await fetchItems();
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
   };
 
   // 수정 함수
-  // const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
-  //   const updateTargetId = updateTarget?._id;
-  //   if (!updateTargetId) return;
+  const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
+    const updateTargetId = updateTarget?._id;
+    if (!updateTargetId) return;
 
-  //   try {
-  //     const db = getFirestore(firebaseApp);
-  //     const docRef = doc(db, "items", updateTargetId);
-
-  //     await updateDoc(docRef, {
-  //       ...data,
-  //     });
-
-  //     form.reset();
-  //     refetch();
-  //   } catch (error) {
-  //     console.error("문서 추가 실패:", error);
-  //   }
-  // };
+    try {
+      await updateItem({ targetId: updateTargetId, itemData: data });
+      await fetchItems();
+    } catch (error) {
+      console.error("문서 추가 실패:", error);
+    }
+  };
 
   return (
-    <>
-      <Dialog
-        open={isOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            form.reset();
-            setIsOpen(false);
-            setUpdateTarget(undefined);
-          } else {
-            setIsOpen(true);
-          }
-        }}
-      >
-        <DialogContent className="flex-col sm:max-w-120">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onClickSubmit)} className="">
-              <DialogHeader className="mb-4">
-                <DialogTitle>상품 {isEdit ? "수정" : "등록"}</DialogTitle>
-                <DialogDescription>{isEdit ? "상품의 옵션 정보를 수정하세요." : "원하는 상품의 옵션을 입력하고 생성하세요."}</DialogDescription>
-              </DialogHeader>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) {
+          form.reset();
+          setIsOpen(false);
+          setUpdateTarget(undefined);
+        } else {
+          setIsOpen(true);
+        }
+      }}
+    >
+      <DialogContent className="flex-col sm:max-w-120">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickSubmit)} className="">
+            <DialogHeader className="mb-4">
+              <DialogTitle>상품 {isEdit ? "수정" : "등록"}</DialogTitle>
+              <DialogDescription>{isEdit ? "상품의 옵션 정보를 수정하세요." : "원하는 상품의 옵션을 입력하고 생성하세요."}</DialogDescription>
+            </DialogHeader>
 
-              <div className="flex flex-col gap-4">
-                <div className="flex gap-4">
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>카테고리</FormLabel>
-                        <FormControl>
-                          <BasicSelect items={categoryItems} onChange={field.onChange} value={field.value} placeholder="카테고리를 선택해주세요." />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="brandName"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormLabel>브랜드명</FormLabel>
-                        <FormControl>
-                          <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-4">
                 <FormField
                   control={form.control}
-                  name="name"
+                  name="category"
                   render={({ field }) => (
-                    <FormItem className="w-full">
-                      <FormLabel>제품명</FormLabel>
+                    <FormItem>
+                      <FormLabel>카테고리</FormLabel>
                       <FormControl>
-                        <Input placeholder="예) 1940s 복각 청남방" {...field} className="bg-white" />
+                        <BasicSelect items={categoryItems} onChange={field.onChange} value={field.value} placeholder="카테고리를 선택해주세요." />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <p className="text-sm text-muted-foreground mt-1">상품을 매입했을 때 사용한 통화를 선택해주세요.</p>
-                <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name="brandName"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>브랜드명</FormLabel>
+                      <FormControl>
+                        <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel>제품명</FormLabel>
+                    <FormControl>
+                      <Input placeholder="예) 1940s 복각 청남방" {...field} className="bg-white" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <p className="text-sm text-muted-foreground mt-1">상품을 매입했을 때 사용한 통화를 선택해주세요.</p>
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name="exchangeRate"
+                  render={({ field }) => (
+                    <FormItem className="self-start">
+                      <FormLabel>통화</FormLabel>
+                      <FormControl>
+                        <BasicSelect
+                          placeholder="통화를 선택해주세요."
+                          items={currencyOptions}
+                          onChange={(selectedValue) => {
+                            const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                            if (selected) {
+                              field.onChange(selected.value);
+                            }
+                          }}
+                          value={field.value}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex flex-col gap-4 w-full">
                   <FormField
                     control={form.control}
-                    name="exchangeRate"
-                    render={({ field }) => (
-                      <FormItem className="self-start">
-                        <FormLabel>통화</FormLabel>
-                        <FormControl>
-                          <BasicSelect
-                            placeholder="통화를 선택해주세요."
-                            items={currencyOptions}
-                            onChange={(selectedValue) => {
-                              const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-                              if (selected) {
-                                field.onChange(selected.value);
-                              }
-                            }}
-                            value={field.value}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex flex-col gap-4 w-full">
-                    <FormField
-                      control={form.control}
-                      name="costPrice"
-                      render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormLabel>매입가격</FormLabel>
-                          <FormControl>
-                            <Input placeholder="예) 1000" {...field} className="bg-white" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <div className="w-full">
-                      <FormItem className="w-full">
-                        <FormLabel>원화 환산</FormLabel>
-                        <Input placeholder="예) 1000" className="bg-white" value={(watchCostPrice * watchExchangeRate).toLocaleString()} readOnly />
-                      </FormItem>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-2">
-                  <FormField
-                    control={form.control}
-                    name="salePrice"
+                    name="costPrice"
                     render={({ field }) => (
                       <FormItem className="w-full">
-                        <FormLabel>판매가격</FormLabel>
+                        <FormLabel>매입가격</FormLabel>
                         <FormControl>
                           <Input placeholder="예) 1000" {...field} className="bg-white" />
                         </FormControl>
@@ -282,19 +243,40 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
                       </FormItem>
                     )}
                   />
+                  <div className="w-full">
+                    <FormItem className="w-full">
+                      <FormLabel>원화 환산</FormLabel>
+                      <Input placeholder="예) 1000" className="bg-white" value={(watchCostPrice * watchExchangeRate).toLocaleString()} readOnly />
+                    </FormItem>
+                  </div>
                 </div>
               </div>
+              <div className="flex gap-2">
+                <FormField
+                  control={form.control}
+                  name="salePrice"
+                  render={({ field }) => (
+                    <FormItem className="w-full">
+                      <FormLabel>판매가격</FormLabel>
+                      <FormControl>
+                        <Input placeholder="예) 1000" {...field} className="bg-white" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
 
-              <DialogFooter className="mt-4">
-                <DialogClose asChild>
-                  <Button variant="outline">취소</Button>
-                </DialogClose>
-                <Button type="submit">{updateTarget ? "수정" : "등록"}</Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </>
+            <DialogFooter className="mt-4">
+              <DialogClose asChild>
+                <Button variant="outline">취소</Button>
+              </DialogClose>
+              <Button type="submit">{updateTarget ? "수정" : "등록"}</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
 
 import { db } from "@/lib/firebase/firebaseApp";
-import { collection, getDocs, orderBy, query, Timestamp, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, orderBy, query, Timestamp, updateDoc, where } from "firebase/firestore";
 
-import type { IItemData } from "@/types";
+import type { IItemData, IUpdateItemParams } from "@/types";
 
 interface IUseUserItemsProps {
   uid: string;
@@ -16,7 +16,36 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
   const [items, setItems] = useState<IItemData[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 📄 조회 함수
+  // 등록 함수
+  const createItem = async (itemData: IItemData) => {
+    if (!uid) return;
+
+    try {
+      const docRef = await addDoc(collection(db, "items"), { ...itemData });
+
+      // 문서 ID를 포함한 데이터로 업데이트
+      await updateDoc(docRef, {
+        _id: docRef.id,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // ✅ [수정]
+  const updateItem = async ({ targetId, itemData }: IUpdateItemParams) => {
+    if (!uid) return;
+
+    try {
+      const docRef = doc(db, "items", targetId);
+
+      await updateDoc(docRef, { ...itemData });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 조회 함수
   const fetchItems = useCallback(async () => {
     if (!uid) return;
     setLoading(true);
@@ -55,5 +84,5 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
     fetchItems();
   }, [fetchItems]);
 
-  return { items, loading, fetchItems };
+  return { items, loading, createItem, updateItem, fetchItems };
 };

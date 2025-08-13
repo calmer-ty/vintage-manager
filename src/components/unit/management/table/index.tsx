@@ -10,6 +10,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
 
+import { useDateSelector } from "@/contexts/dateSelectorContext";
+import { useUserItems } from "@/hooks/useUserItems";
+
 import ControlTable from "./control";
 import ManagementSelect from "./select";
 import ManagementWrite from "@/components/unit/management/table/write";
@@ -18,9 +21,7 @@ import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } fro
 import type { IItemData } from "@/types";
 
 interface IDataTableProps {
-  data: IItemData[];
   uid: string;
-  refetch: () => Promise<void>;
   columnConfig: {
     key: string;
     label: string;
@@ -28,12 +29,15 @@ interface IDataTableProps {
   // renderStatusCell?: (item: IItemData) => React.ReactNode;
 }
 
-export default function TableUI({ data, uid, refetch, columnConfig }: IDataTableProps) {
+export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const { selectedYear, selectedMonth } = useDateSelector();
+  const { items, createItem, updateItem, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
 
   // 디이얼로그 온오프
   const [isOpen, setIsOpen] = useState(false);
@@ -78,7 +82,7 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        return <ManagementSelect item={row.original} refetch={refetch} />;
+        return <ManagementSelect item={row.original} refetch={fetchItems} />;
       },
     },
     {
@@ -104,7 +108,7 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
     },
   ];
   const table = useReactTable({
-    data, // 데이터: row 값?
+    data: items, // 데이터: row 값?
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -129,7 +133,7 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
       try {
         await deleteDoc(doc(db, "items", id));
         console.log(`ID ${id} 삭제 성공`);
-        refetch();
+        fetchItems();
       } catch (error) {
         console.error(`ID ${id} 삭제 실패`, error);
       }
@@ -139,7 +143,7 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
   const [updateTarget, setUpdateTarget] = useState<IItemData | undefined>(undefined);
   // 수정 함수
   const onClickMoveToUpdate = async (selectedItemId: string) => {
-    const selectedItem = data.find((el) => el._id === selectedItemId);
+    const selectedItem = items.find((item) => item._id === selectedItemId);
     setUpdateTarget(selectedItem);
     setIsOpen(true);
   };
@@ -154,7 +158,16 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
         2xl:max-w-max"
     >
       {/* 다이얼로그 창 */}
-      <ManagementWrite isOpen={isOpen} setIsOpen={setIsOpen} uid={uid} refetch={refetch} updateTarget={updateTarget} setUpdateTarget={setUpdateTarget} />
+      <ManagementWrite
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        uid={uid}
+        createItem={createItem}
+        updateItem={updateItem}
+        fetchItems={fetchItems}
+        updateTarget={updateTarget}
+        setUpdateTarget={setUpdateTarget}
+      />
 
       <ControlTable table={table} setIsOpen={setIsOpen} onClickDelete={onClickDelete} columnConfig={columnConfig} />
       <div className="border rounded-md">
@@ -162,13 +175,11 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      <div className="px-4">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    <div className="px-4">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>

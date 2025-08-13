@@ -26,6 +26,19 @@ export interface IItemData {
   createdAt: Date;
   soldAt: Date | null;
 }
+export interface IUpdateItemData {
+  category: string;
+  brandName: string;
+  name: string;
+  costPrice: string;
+  salePrice: string;
+  exchangeRate: string;
+}
+export interface IUpdateItemParams {
+  targetId: string;
+  itemData: IUpdateItemData;
+}
+
 export interface IUserID {
   uid: string;
 }
