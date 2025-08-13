@@ -14,6 +14,7 @@ import ManagementCreate from "@/components/unit/management/create";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IItemData } from "@/types";
+import ManagementSelect from "./select";
 
 interface IDataTableProps {
   data: IItemData[];
@@ -23,10 +24,10 @@ interface IDataTableProps {
     key: string;
     label: string;
   }[];
-  renderStatusCell?: (item: IItemData) => React.ReactNode;
+  // renderStatusCell?: (item: IItemData) => React.ReactNode;
 }
 
-export default function TableUI({ data, uid, refetch, columnConfig, renderStatusCell }: IDataTableProps) {
+export default function TableUI({ data, uid, refetch, columnConfig }: IDataTableProps) {
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -69,21 +70,16 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
       enableHiding: false,
     },
     ...dynamicColumns,
-    ...(renderStatusCell
-      ? [
-          {
-            id: "actions",
-            header: "상태",
-            enableHiding: false,
-            cell: ({ row }) => {
-              const item = row.original;
-              return renderStatusCell(item); // ✅ 여기서 호출
-            },
-          } as ColumnDef<IItemData>,
-        ]
-      : []),
+    {
+      id: "status",
+      header: "상태",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const item = row.original;
+        return <ManagementSelect item={item} refetch={refetch} />;
+      },
+    },
   ];
-
   const table = useReactTable({
     data, // 데이터: row 값?
     columns,
@@ -117,6 +113,20 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
     }
   };
 
+  // 클릭 함수
+  // const onClick = async (selectionItem: string[]) => {
+  //   // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
+  //   for (const id of selectionItem) {
+  //     try {
+  //       await deleteDoc(doc(db, "items", id));
+  //       console.log(`ID ${id} 삭제 성공`);
+  //       refetch();
+  //     } catch (error) {
+  //       console.error(`ID ${id} 삭제 실패`, error);
+  //     }
+  //   }
+  // };
+
   return (
     <div
       className="overflow-auto px-6 border rounded-lg shadow-sm 
@@ -149,7 +159,12 @@ export default function TableUI({ data, uid, refetch, columnConfig, renderStatus
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  // onClick={}
+                  className={row.original.soldAt ? "bg-gray-100" : ""}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -1,7 +1,6 @@
 import { useUserItems } from "@/hooks/useUserItems";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 
-import ManagementSelect from "./select";
 import TableUI from "./table";
 
 import type { IUserID } from "@/types";
@@ -22,5 +21,5 @@ export default function ManagementUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { items, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
 
-  return <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} renderStatusCell={(item) => <ManagementSelect item={item} refetch={fetchItems} />} />;
+  return <TableUI data={items} uid={uid} refetch={fetchItems} columnConfig={columnConfig} />;
 }
