@@ -18,7 +18,7 @@ export interface IItemData {
   category: string;
   brandName: string;
   name: string;
-  exchangeRate: number;
+  currency: { label: string; value: number };
   costPrice: string;
   costPriceKRW: number;
   salePrice: number;

@@ -35,6 +35,9 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  // 디이얼로그 온오프
+  const [isOpen, setIsOpen] = useState(false);
+
   const dynamicColumns: ColumnDef<IItemData>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
@@ -92,7 +95,7 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickUpdate(row.original._id)}>상품 수정</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 수정</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -133,20 +136,12 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
     }
   };
 
-  const [isEdit, setIsEdit] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const onClickUpdate = async (selectedItem: string) => {
-    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-    console.log(selectedItem);
-    setIsEdit(true);
-    // try {
-    //   await deleteDoc(doc(db, "items", id));
-    //   console.log(`ID ${id} 삭제 성공`);
-    //   refetch();
-    // } catch (error) {
-    //   console.error(`ID ${id} 삭제 실패`, error);
-    // }
+  const [updateTarget, setUpdateTarget] = useState<IItemData | undefined>(undefined);
+  // 수정 함수
+  const onClickMoveToUpdate = async (selectedItemId: string) => {
+    const selectedItem = data.find((el) => el._id === selectedItemId);
+    setUpdateTarget(selectedItem);
+    setIsOpen(true);
   };
 
   return (
@@ -158,11 +153,10 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
         xl:max-w-3xl
         2xl:max-w-max"
     >
-      <div className="flex items-center gap-2">
-        <ControlTable table={table} setIsOpen={setIsOpen} onClickDelete={onClickDelete} columnConfig={columnConfig} />
-        <ManagementWrite isEdit={isEdit} isOpen={isOpen} setIsOpen={setIsOpen} uid={uid} refetch={refetch} />
-      </div>
+      {/* 다이얼로그 창 */}
+      <ManagementWrite isOpen={isOpen} setIsOpen={setIsOpen} uid={uid} refetch={refetch} updateTarget={updateTarget} setUpdateTarget={setUpdateTarget} />
 
+      <ControlTable table={table} setIsOpen={setIsOpen} onClickDelete={onClickDelete} columnConfig={columnConfig} />
       <div className="border rounded-md">
         <Table>
           <TableHeader>
@@ -208,7 +202,6 @@ export default function TableUI({ data, uid, refetch, columnConfig }: IDataTable
           </TableBody>
         </Table>
       </div>
-
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="text-muted-foreground flex-1 text-sm">
           총 {table.getFilteredRowModel().rows.length}개 중 {table.getFilteredSelectedRowModel().rows.length}개 선택됨.

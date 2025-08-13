@@ -47,7 +47,7 @@ export default function ControlTable({ table, columnConfig, setIsOpen, onClickDe
         />
       </div>
 
-      <div>
+      <div className="flex gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">

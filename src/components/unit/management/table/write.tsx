@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { db } from "@/lib/firebase/firebaseApp";
@@ -17,6 +17,8 @@ import BasicSelect from "@/components/commons/select/basic";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import type { IItemData } from "@/types";
+
 const categoryItems = [
   { label: "상의", value: "상의" },
   { label: "하의", value: "하의" },
@@ -31,23 +33,24 @@ const FormSchema = z.object({
   brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
   costPrice: z.string().min(1, "매입가격을 입력해주세요."),
-  // 하단 값들은 number 타입이지만, input은 string로 받기 때문에 타입 변경
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
   exchangeRate: z.string().min(1, "통화를 선택해주세요."),
+  // 하단 값들은 number 타입이지만, input은 string로 받기 때문에 타입 변경
   // costPriceKRW: z.string().optional(),
 });
 
 interface IManagementWriteProps {
-  isEdit: boolean;
   uid: string;
   refetch: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  updateTarget: IItemData | undefined;
+  setUpdateTarget: React.Dispatch<React.SetStateAction<IItemData | undefined>>;
 }
 
-export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpen }: IManagementWriteProps) {
-  const [currencyLabel, setCurrencyLabel] = useState("");
-  const [currencyValue, setCurrencyValue] = useState(0);
+export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updateTarget, setUpdateTarget }: IManagementWriteProps) {
+  const isEdit = !!updateTarget;
+  const [currency, setCurrency] = useState({ label: isEdit ? updateTarget.currency.label : "", value: isEdit ? updateTarget.currency.value : 0 });
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -62,6 +65,34 @@ export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpe
     },
   });
 
+  // updateTarget 변경 시 form 값을 리셋
+  useEffect(() => {
+    // 수정시 값 초기화
+    if (isEdit) {
+      setCurrency({
+        label: updateTarget.currency.label,
+        value: updateTarget.currency.value,
+      });
+      form.reset({
+        category: updateTarget.category,
+        brandName: updateTarget.brandName,
+        name: updateTarget.name,
+        costPrice: updateTarget.costPrice.replace(/[^\d]/g, ""),
+        salePrice: updateTarget.salePrice?.toString(),
+        exchangeRate: updateTarget.currency.value?.toString(),
+      });
+    } else {
+      form.reset({
+        category: "",
+        brandName: "",
+        name: "",
+        costPrice: "",
+        salePrice: "",
+        exchangeRate: "",
+      });
+    }
+  }, [form, isOpen, isEdit, updateTarget]);
+
   // 등록 함수
   const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
@@ -71,8 +102,9 @@ export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpe
       const docRef = await addDoc(collection(db, "items"), {
         ...data, // IncomeItemData 타입에 있는 모든 데이터
         uid,
-        exchangeRate: Number(data.exchangeRate),
-        costPrice: `${Number(data.costPrice).toLocaleString()} ${currencyLabel}`,
+        currency: { label: currency.label, value: currency.value },
+        // exchangeRate: Number(data.exchangeRate),
+        costPrice: `${Number(data.costPrice).toLocaleString()} ${currency.label}`,
         costPriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,
@@ -103,7 +135,7 @@ export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpe
 
   // 원화로 환산
   const costPrice = form.watch("costPrice");
-  const costPriceKRW = Math.round(Number(costPrice) * currencyValue);
+  const costPriceKRW = Math.round(Number(costPrice) * currency.value);
 
   return (
     <>
@@ -113,6 +145,7 @@ export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpe
           if (!open) {
             form.reset();
             setIsOpen(false);
+            setUpdateTarget(undefined);
           } else {
             setIsOpen(true);
           }
@@ -122,8 +155,8 @@ export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpe
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onClickSubmit)} className="">
               <DialogHeader className="mb-4">
-                <DialogTitle>상품 등록</DialogTitle>
-                <DialogDescription>원하는 상품의 옵션을 입력하고 생성하세요.</DialogDescription>
+                <DialogTitle>상품 {isEdit ? "수정" : "등록"}</DialogTitle>
+                <DialogDescription>{isEdit ? "상품의 옵션 정보를 수정하세요." : "원하는 상품의 옵션을 입력하고 생성하세요."}</DialogDescription>
               </DialogHeader>
 
               <div className="flex flex-col gap-4">
@@ -187,8 +220,7 @@ export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpe
 
                               if (selected) {
                                 field.onChange(selected.value);
-                                setCurrencyLabel(selected.label);
-                                setCurrencyValue(Number(selected.value));
+                                setCurrency({ label: selected.label, value: Number(selected.value) });
                               }
                             }}
                             value={field.value}
@@ -241,7 +273,7 @@ export default function ManagementWrite({ isEdit, uid, refetch, isOpen, setIsOpe
                 <DialogClose asChild>
                   <Button variant="outline">취소</Button>
                 </DialogClose>
-                <Button type="submit">{isEdit ? "수정" : "등록"}</Button>
+                <Button type="submit">{updateTarget ? "수정" : "등록"}</Button>
               </DialogFooter>
             </form>
           </Form>
