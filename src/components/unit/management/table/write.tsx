@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import { db } from "@/lib/firebase/firebaseApp";
@@ -50,7 +50,6 @@ interface IManagementWriteProps {
 
 export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updateTarget, setUpdateTarget }: IManagementWriteProps) {
   const isEdit = !!updateTarget;
-  const [currency, setCurrency] = useState({ label: isEdit ? updateTarget.currency.label : "", value: isEdit ? updateTarget.currency.value : 0 });
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -61,23 +60,20 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
       name: "",
       costPrice: "",
       salePrice: "",
+      exchangeRate: "",
     },
   });
 
   // updateTarget 변경 시 form 값을 리셋
   useEffect(() => {
-    // 수정시 값 초기화
     if (isEdit) {
-      setCurrency({
-        label: updateTarget.currency.label,
-        value: updateTarget.currency.value,
-      });
       form.reset({
         category: updateTarget.category,
         brandName: updateTarget.brandName,
         name: updateTarget.name,
         costPrice: updateTarget.costPrice.replace(/[^\d]/g, ""),
         salePrice: updateTarget.salePrice?.toString(),
+        exchangeRate: updateTarget.exchangeRate?.toString(),
       });
     } else {
       form.reset({
@@ -86,26 +82,41 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
         name: "",
         costPrice: "",
         salePrice: "",
+        exchangeRate: "",
       });
     }
   }, [form, isOpen, isEdit, updateTarget]);
+
+  // 통화 정보
+  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
+  // prettier-ignore
+  const currencyOptions = useMemo(() => [
+    { label: "₩", value: baseRate.toString() },
+    { label: "$", value: usdToKrw.toString() },
+    { label: "¥", value: jpyToKrw.toString() },
+  ],[baseRate, usdToKrw, jpyToKrw]);
+
+  // 원화로 환산
+  const watchCostPrice = Number(form.watch("costPrice"));
+  const watchExchangeRate = Number(form.watch("exchangeRate"));
 
   // 등록 함수
   const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       // 등록 시간 측정
       const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
+      const currencyLabel = currencyOptions.find((opt) => opt.value === data.exchangeRate)?.label;
+      console.log("currencyLabel: ", currencyLabel);
 
-      // 저장할 마커 정보 준비
       const items: IItemData = {
-        ...data, // IncomeItemData 타입에 있는 모든 데이터
+        ...data,
         _id: "",
         uid,
-        currency: { label: currency.label, value: currency.value },
-        costPrice: `${data.costPrice.toLocaleString()} ${currency.label}`,
+        costPrice: `${data.costPrice.toLocaleString()} ${currencyLabel}`,
         costPriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,
+        exchangeRate: Number(data.exchangeRate),
         createdAt: new Date(), // 테이블 생성 시간
         soldAt: null,
       };
@@ -124,18 +135,25 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
     }
   };
 
-  // 통화 정보
-  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
-  // prettier-ignore
-  const currencyOptions = useMemo(() => [
-    { label: "₩", value: baseRate.toString() },
-    { label: "$", value: usdToKrw.toString() },
-    { label: "¥", value: jpyToKrw.toString() },
-  ],[baseRate, usdToKrw, jpyToKrw]);
+  // 수정 함수
+  // const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
+  //   const updateTargetId = updateTarget?._id;
+  //   if (!updateTargetId) return;
 
-  // 원화로 환산
-  const costPrice = form.watch("costPrice");
-  const costPriceKRW = Math.round(Number(costPrice) * currency.value);
+  //   try {
+  //     const db = getFirestore(firebaseApp);
+  //     const docRef = doc(db, "items", updateTargetId);
+
+  //     await updateDoc(docRef, {
+  //       ...data,
+  //     });
+
+  //     form.reset();
+  //     refetch();
+  //   } catch (error) {
+  //     console.error("문서 추가 실패:", error);
+  //   }
+  // };
 
   return (
     <>
@@ -217,10 +235,8 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
                             items={currencyOptions}
                             onChange={(selectedValue) => {
                               const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-
                               if (selected) {
                                 field.onChange(selected.value);
-                                setCurrency({ label: selected.label, value: Number(selected.value) });
                               }
                             }}
                             value={field.value}
@@ -247,7 +263,7 @@ export default function ManagementWrite({ uid, refetch, isOpen, setIsOpen, updat
                     <div className="w-full">
                       <FormItem className="w-full">
                         <FormLabel>원화 환산</FormLabel>
-                        <Input placeholder="예) 1000" className="bg-white" value={costPriceKRW.toLocaleString()} readOnly />
+                        <Input placeholder="예) 1000" className="bg-white" value={(watchCostPrice * watchExchangeRate).toLocaleString()} readOnly />
                       </FormItem>
                     </div>
                   </div>

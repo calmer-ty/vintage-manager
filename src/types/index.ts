@@ -18,13 +18,11 @@ export interface IItemData {
   category: string;
   brandName: string;
   name: string;
-  currency: { label: string; value: number };
   costPrice: string;
   costPriceKRW: number;
   salePrice: number;
   profit: number;
-  // createdAt: Timestamp;
-  // soldAt: Timestamp | null;
+  exchangeRate: number;
   createdAt: Date;
   soldAt: Date | null;
 }
