@@ -63,8 +63,8 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.4 }}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
+          // whileHover={{ scale: 1.01 }}
+          // whileTap={{ scale: 0.99 }}
         >
           <CardContent className="flex flex-col items-center gap-x-6 gap-y-2 lg:flex-row">
             <div className="p-3 bg-gray-100 rounded-lg">{el.icon}</div>

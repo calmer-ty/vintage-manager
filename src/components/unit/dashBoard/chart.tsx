@@ -88,8 +88,8 @@ export default function DashBoardChart({ items, totalDays, selectedYear, selecte
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.5, duration: 0.4 }}
-      whileHover={{ scale: 1.03 }}
-      whileTap={{ scale: 0.97 }}
+      // whileHover={{ scale: 1.03 }}
+      // whileTap={{ scale: 0.97 }}
     >
       <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
