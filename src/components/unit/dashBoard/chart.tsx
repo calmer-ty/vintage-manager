@@ -8,7 +8,6 @@ import { getDateString } from "@/lib/date";
 
 import type { IItemData } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
-import { motion } from "framer-motion";
 
 // export const description = "An interactive bar chart";
 interface IDashBoardChartProps {
@@ -80,17 +79,10 @@ export default function DashBoardChart({ items, totalDays, selectedYear, selecte
     }),[mergedDateArray]
   );
 
-  const MotionCard = motion(Card);
+  // const MotionCard = motion(Card);
 
   return (
-    <MotionCard
-      className="w-full py-0"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 0.4 }}
-      // whileHover={{ scale: 1.03 }}
-      // whileTap={{ scale: 0.97 }}
-    >
+    <Card className="w-full py-0">
       <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
           <CardTitle>
@@ -159,6 +151,6 @@ export default function DashBoardChart({ items, totalDays, selectedYear, selecte
           </BarChart>
         </ChartContainer>
       </CardContent>
-    </MotionCard>
+    </Card>
   );
 }

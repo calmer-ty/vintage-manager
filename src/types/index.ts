@@ -1,5 +1,7 @@
 // import type { Timestamp } from "firebase/firestore";
 
+import type { Timestamp } from "firebase/firestore";
+
 export interface IExchangeRate {
   base: string;
   data: {
@@ -23,8 +25,8 @@ export interface IItemData {
   salePrice: number;
   profit: number;
   exchangeRate: number;
-  createdAt: Date;
-  soldAt: Date | null;
+  createdAt: Timestamp;
+  soldAt: Timestamp | null;
 }
 export interface IUpdateItemData {
   category: string;
