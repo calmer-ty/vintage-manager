@@ -7,7 +7,6 @@ import { Trash, Settings } from "lucide-react";
 
 import type { IItemData } from "@/types";
 import type { Table } from "@tanstack/react-table";
-
 interface IControlTableProps {
   table: Table<IItemData>;
   columnConfig: {
@@ -18,7 +17,7 @@ interface IControlTableProps {
   onClickDelete: (selectionItem: string[]) => Promise<void>;
 }
 
-export default function ControlTable({ table, columnConfig, setIsOpen, onClickDelete }: IControlTableProps) {
+export default function TableControl({ table, columnConfig, setIsOpen, onClickDelete }: IControlTableProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
 

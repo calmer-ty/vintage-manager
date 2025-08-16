@@ -4,8 +4,12 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { IItemData } from "@/types";
+interface IManagementSelectProps {
+  item: IItemData;
+  refetch: () => Promise<void>;
+}
 
-export default function ManagementSelect({ item, refetch }: { item: IItemData; refetch: () => Promise<void> }) {
+export default function CellSelect({ item, refetch }: IManagementSelectProps) {
   // 판매상태 함수
   const onUpdate = async (id: string, value: boolean) => {
     try {
