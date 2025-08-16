@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/contexts/authContext";
 import { DateSelectorProvider } from "@/contexts/dateSelectorContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 import Header from "@/components/commons/layout/header";
 import Nav from "@/components/commons/layout/nav";
@@ -40,6 +41,7 @@ export default function RootLayout({
               <div className="flex flex-col w-full h-screen">
                 <Header />
                 <main>{children}</main>
+                <Toaster />
               </div>
             </SidebarProvider>
           </DateSelectorProvider>

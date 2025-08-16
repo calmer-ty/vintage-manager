@@ -17,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Timestamp } from "firebase/firestore";
 import type { IItemData, IUpdateItemData, IUpdateItemParams } from "@/types";
+import { toast } from "sonner";
 
 const categoryItems = [
   { label: "상의", value: "상의" },
@@ -29,7 +30,7 @@ const categoryItems = [
 
 const FormSchema = z.object({
   category: z.string().min(1, "카테고리를 선택해주세요."),
-  brandName: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
+  brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
   costPrice: z.string().min(1, "매입가격을 입력해주세요."),
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
@@ -55,7 +56,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
     resolver: zodResolver(FormSchema),
     defaultValues: {
       category: "",
-      brandName: "",
+      brand: "",
       name: "",
       costPrice: "",
       salePrice: "",
@@ -68,7 +69,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
     if (isEdit) {
       form.reset({
         category: updateTarget.category,
-        brandName: updateTarget.brandName,
+        brand: updateTarget.brand,
         name: updateTarget.name,
         costPrice: updateTarget.costPrice.replace(/[^\d]/g, ""),
         salePrice: updateTarget.salePrice?.toString(),
@@ -77,7 +78,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
     } else {
       form.reset({
         category: "",
-        brandName: "",
+        brand: "",
         name: "",
         costPrice: "",
         salePrice: "",
@@ -121,8 +122,21 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
         soldAt: null,
       };
 
+      // 데이터 생성 및 리패치
       await createItem(itemData);
       await fetchItems();
+
+      // 등록 성공 후 폼 초기화 및 토스트 띄우기
+      form.reset();
+      toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다!</p>, {
+        description: `${data.category} • ${data.brand} - ${data.name}`,
+        action: {
+          label: "닫기",
+          onClick: () => console.log("닫기"),
+        },
+        position: "top-center",
+        descriptionClassName: "ml-5",
+      });
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
@@ -130,7 +144,6 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
 
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
-    console.log("data: ", data);
     const updateTargetId = updateTarget?._id;
     if (!updateTargetId) return;
 
@@ -143,8 +156,21 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
         profit: Number(data.salePrice) - costPriceKRW,
       };
 
+      // 데이터 수정 및 리패치
       await updateItem({ updateTargetId: updateTargetId, itemData: itemData });
       await fetchItems();
+
+      // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
+      toast(<p className="font-bold">🔄 상품이 성공적으로 수정되었습니다!</p>, {
+        description: `${data.category} • ${data.brand} - ${data.name}`,
+        action: {
+          label: "닫기",
+          onClick: () => console.log("닫기"),
+        },
+        position: "top-center",
+        descriptionClassName: "ml-5",
+      });
+      setIsOpen(false);
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
@@ -189,7 +215,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
 
                 <FormField
                   control={form.control}
-                  name="brandName"
+                  name="brand"
                   render={({ field }) => (
                     <FormItem className="w-full">
                       <FormLabel>브랜드명</FormLabel>
@@ -253,7 +279,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                       <FormItem className="w-full">
                         <FormLabel>매입가</FormLabel>
                         <FormControl>
-                          <Input placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit} />
+                          <Input type="number" placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -283,7 +309,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                     <FormItem className="w-full">
                       <FormLabel>판매가</FormLabel>
                       <FormControl>
-                        <Input placeholder="예) 1000" {...field} className="bg-white" />
+                        <Input type="number" placeholder="예) 1000" {...field} className="bg-white" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

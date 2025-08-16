@@ -18,7 +18,7 @@ export interface IItemData {
   _id: string; // 문서 id 값
   uid: string;
   category: string;
-  brandName: string;
+  brand: string;
   name: string;
   costPrice: string;
   costPriceKRW: number;
@@ -30,7 +30,7 @@ export interface IItemData {
 }
 export interface IUpdateItemData {
   category: string;
-  brandName: string;
+  brand: string;
   name: string;
   salePrice: number;
   profit: number;
