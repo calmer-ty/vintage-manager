@@ -14,6 +14,7 @@ import BasicSelect from "@/components/commons/select/basic";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Timestamp } from "firebase/firestore";
 import type { IItemData, IUpdateItemParams } from "@/types";
 
 const categoryItems = [
@@ -115,7 +116,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,
         exchangeRate: Number(data.exchangeRate),
-        createdAt: new Date(), // 테이블 생성 시간
+        createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
         soldAt: null,
       };
 

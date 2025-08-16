@@ -4,7 +4,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
-import { getDateString } from "@/lib/date";
+import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
 
 import type { IItemData } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
@@ -12,9 +12,6 @@ import type { ChartConfig } from "@/components/ui/chart";
 // export const description = "An interactive bar chart";
 interface IDashBoardChartProps {
   items: IItemData[];
-  totalDays: {
-    date: string;
-  }[];
   selectedYear: number;
   selectedMonth: number;
 }
@@ -33,43 +30,43 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({ items, totalDays, selectedYear, selectedMonth }: IDashBoardChartProps) {
+export default function DashBoardChart({ items, selectedYear, selectedMonth }: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
 
-  const totalItemCost = items.map((item) => {
+  const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
+
+  // 판매/판매완료 된 상품들의 날짜를 추출
+  const costDays = items.map((item) => {
     const convertedDate = item.createdAt.toDate();
-    return {
-      date: getDateString(convertedDate),
-    };
+    return getDateString(convertedDate);
   });
-  const totalItemSold = items
+  const soldDays = items
     .filter((item) => item.soldAt != null)
     .map((item) => {
       const convertedDate = item.soldAt!.toDate();
-      return {
-        date: getDateString(convertedDate),
-      };
+      return getDateString(convertedDate);
     });
 
-  const countByDate = (items: { date: string }[]) =>
-    items.reduce<Record<string, number>>((acc, cur) => {
+  // 날짜를 키값으로 하여 그 날짜에 팔린/판매중인 상품이 몇 개가 해당되는지 카운트하는 함수
+  const countByDate = (days: string[]) =>
+    days.reduce<Record<string, number>>((acc, cur) => {
       // acc: 누적값, cur: 현재값
-      if (acc[cur.date]) {
-        acc[cur.date] += 1;
+      if (acc[cur]) {
+        acc[cur] += 1;
       } else {
-        acc[cur.date] = 1;
+        acc[cur] = 1;
       }
       return acc;
     }, {});
 
-  const costDays = countByDate(totalItemCost);
-  const soldDays = countByDate(totalItemSold);
+  const costDaysCount = countByDate(costDays);
+  const soldDaysCount = countByDate(soldDays);
 
   //  모든 날짜에 카운트된 데이터 대입하여 덮기
-  const mergedDateArray = totalDays.map((day) => ({
+  const mergedDateArray = daysOfCurrentMonth.map((day) => ({
     ...day,
-    cost: costDays[day.date] ?? 0,
-    sold: soldDays[day.date] ?? 0,
+    cost: costDaysCount[day.date] ?? 0,
+    sold: soldDaysCount[day.date] ?? 0,
   }));
 
   // prettier-ignore
@@ -78,8 +75,6 @@ export default function DashBoardChart({ items, totalDays, selectedYear, selecte
       sold: mergedDateArray.reduce((acc, curr) => acc + curr.sold, 0),
     }),[mergedDateArray]
   );
-
-  // const MotionCard = motion(Card);
 
   return (
     <Card className="w-full py-0">
