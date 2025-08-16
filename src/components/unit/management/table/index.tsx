@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
@@ -50,6 +50,10 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   };
 
   const { table, columns } = useTable({ items, columnConfig, fetchItems, onClickMoveToUpdate, onClickDelete });
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
 
   return (
     <div
