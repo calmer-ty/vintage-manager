@@ -95,7 +95,7 @@ export default function DashBoardChart({ items, selectedYear, selectedMonth }: I
                 className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
                 onClick={() => setActiveChart(chart)}
               >
-                <span className="text-muted-foreground text-xs">{chartConfig[chart].label}2333333333</span>
+                <span className="text-muted-foreground text-xs">{chartConfig[chart].label}</span>
                 <span className="text-lg leading-none font-bold sm:text-3xl">{total[key as keyof typeof total].toLocaleString()}</span>
               </button>
             );
@@ -106,7 +106,7 @@ export default function DashBoardChart({ items, selectedYear, selectedMonth }: I
         <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
           <BarChart
             accessibilityLayer
-            data={mergedDateArray}
+            data={dailyStats}
             margin={{
               left: 12,
               right: 12,
