@@ -7,15 +7,16 @@ interface IBasicSelectProps {
   onChange: (...event: unknown[]) => void;
   value?: string;
   defaultValue?: string;
+  disabled?: boolean;
 }
 interface IItem {
   label: string;
   value: string;
 }
 
-export default function BasicSelect({ placeholder, items, onChange, defaultValue, value }: IBasicSelectProps) {
+export default function BasicSelect({ placeholder, items, onChange, defaultValue, value, disabled }: IBasicSelectProps) {
   return (
-    <Select onValueChange={onChange} defaultValue={defaultValue} value={value}>
+    <Select onValueChange={onChange} defaultValue={defaultValue} value={value} disabled={disabled}>
       <FormControl>
         <SelectTrigger className="bg-white">
           <SelectValue placeholder={placeholder} />

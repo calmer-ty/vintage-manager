@@ -33,11 +33,11 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
   };
 
   // ✅ [수정]
-  const updateItem = async ({ targetId, itemData }: IUpdateItemParams) => {
+  const updateItem = async ({ updateTargetId, itemData }: IUpdateItemParams) => {
     if (!uid) return;
 
     try {
-      const docRef = doc(db, "items", targetId);
+      const docRef = doc(db, "items", updateTargetId);
 
       await updateDoc(docRef, { ...itemData });
     } catch (err) {

@@ -32,12 +32,11 @@ export interface IUpdateItemData {
   category: string;
   brandName: string;
   name: string;
-  costPrice: string;
-  salePrice: string;
-  exchangeRate: string;
+  salePrice: number;
+  profit: number;
 }
 export interface IUpdateItemParams {
-  targetId: string;
+  updateTargetId: string;
   itemData: IUpdateItemData;
 }
 

@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import BasicSelect from "@/components/commons/select/basic";
 
@@ -15,7 +16,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Timestamp } from "firebase/firestore";
-import type { IItemData, IUpdateItemParams } from "@/types";
+import type { IItemData, IUpdateItemData, IUpdateItemParams } from "@/types";
 
 const categoryItems = [
   { label: "상의", value: "상의" },
@@ -33,14 +34,12 @@ const FormSchema = z.object({
   costPrice: z.string().min(1, "매입가격을 입력해주세요."),
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
   exchangeRate: z.string().min(1, "통화를 선택해주세요."),
-  // 하단 값들은 number 타입이지만, input은 string로 받기 때문에 타입 변경
-  // costPriceKRW: z.string().optional(),
 });
 
 interface IManagementWriteProps {
   uid: string;
   createItem: (itemData: IItemData) => Promise<void>;
-  updateItem: ({ targetId, itemData }: IUpdateItemParams) => Promise<void>;
+  updateItem: ({ updateTargetId, itemData }: IUpdateItemParams) => Promise<void>;
   fetchItems: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -100,18 +99,20 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
   const watchCostPrice = Number(form.watch("costPrice"));
   const watchExchangeRate = Number(form.watch("exchangeRate"));
 
+  // 값 변환 함수
+  const formatPriceKRW = (costPrice: string, exchangeRate: string) => Math.round(Number(costPrice) * Number(exchangeRate));
+  const formatLabel = (exchangeRate: string) => currencyOptions.find((opt) => opt.value === exchangeRate)?.label;
+
   // 등록 함수
   const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
-      // 등록 시간 측정
-      const costPriceKRW = Math.round(Number(data.costPrice) * Number(data.exchangeRate));
-      const currencyLabel = currencyOptions.find((opt) => opt.value === data.exchangeRate)?.label;
+      const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
 
-      const items: IItemData = {
+      const itemData: IItemData = {
         ...data,
         _id: "",
         uid,
-        costPrice: `${data.costPrice.toLocaleString()} ${currencyLabel}`,
+        costPrice: `${data.costPrice.toLocaleString()} ${formatLabel(data.exchangeRate)}`,
         costPriceKRW,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,
@@ -120,7 +121,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
         soldAt: null,
       };
 
-      await createItem(items);
+      await createItem(itemData);
       await fetchItems();
     } catch (error) {
       console.error("문서 추가 실패:", error);
@@ -129,11 +130,20 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
 
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
+    console.log("data: ", data);
     const updateTargetId = updateTarget?._id;
     if (!updateTargetId) return;
 
     try {
-      await updateItem({ targetId: updateTargetId, itemData: data });
+      const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
+
+      const itemData: IUpdateItemData = {
+        ...data,
+        salePrice: Number(data.salePrice),
+        profit: Number(data.salePrice) - costPriceKRW,
+      };
+
+      await updateItem({ updateTargetId: updateTargetId, itemData: itemData });
       await fetchItems();
     } catch (error) {
       console.error("문서 추가 실패:", error);
@@ -205,7 +215,10 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                 )}
               />
 
-              <p className="text-sm text-muted-foreground mt-1">상품을 매입했을 때 사용한 통화를 선택해주세요.</p>
+              <div>
+                <p className="text-sm text-muted-foreground mt-1">상품을 매입했을 때 사용한 통화를 선택해주세요. </p>
+                <p className="text-sm text-destructive mt-1">※ 통화와 매입가는 등록 후 수정할 수 없습니다.</p>
+              </div>
               <div className="flex gap-4">
                 <FormField
                   control={form.control}
@@ -215,7 +228,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                       <FormLabel>통화</FormLabel>
                       <FormControl>
                         <BasicSelect
-                          placeholder="통화를 선택해주세요."
+                          placeholder="통화"
                           items={currencyOptions}
                           onChange={(selectedValue) => {
                             const selected = currencyOptions.find((opt) => opt.value === selectedValue);
@@ -224,21 +237,23 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                             }
                           }}
                           value={field.value}
+                          disabled={isEdit}
                         />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="flex flex-col gap-4 w-full">
+
+                <div className="flex gap-4 w-full">
                   <FormField
                     control={form.control}
                     name="costPrice"
                     render={({ field }) => (
                       <FormItem className="w-full">
-                        <FormLabel>매입가격</FormLabel>
+                        <FormLabel>매입가</FormLabel>
                         <FormControl>
-                          <Input placeholder="예) 1000" {...field} className="bg-white" />
+                          <Input placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -246,19 +261,27 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                   />
                   <div className="w-full">
                     <FormItem className="w-full">
-                      <FormLabel>원화 환산</FormLabel>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <FormLabel className="cursor-help gap-1">
+                            원화 환산 금액<span className="text-red-500 ">*</span>
+                          </FormLabel>
+                        </TooltipTrigger>
+                        <TooltipContent>상품 매입시 사용했던 화폐를 원화로 환산한 금액입니다.</TooltipContent>
+                      </Tooltip>
                       <Input placeholder="예) 1000" className="bg-white" value={(watchCostPrice * watchExchangeRate).toLocaleString()} readOnly />
                     </FormItem>
                   </div>
                 </div>
               </div>
+
               <div className="flex gap-2">
                 <FormField
                   control={form.control}
                   name="salePrice"
                   render={({ field }) => (
                     <FormItem className="w-full">
-                      <FormLabel>판매가격</FormLabel>
+                      <FormLabel>판매가</FormLabel>
                       <FormControl>
                         <Input placeholder="예) 1000" {...field} className="bg-white" />
                       </FormControl>
