@@ -49,12 +49,12 @@ export default function DashBoardChart({ items, selectedYear, selectedMonth }: I
 
   // 날짜를 키값으로 하여 그 날짜에 팔린/판매중인 상품이 몇 개가 해당되는지 카운트하는 함수
   const countByDate = (days: string[]) =>
-    days.reduce<Record<string, number>>((acc, cur) => {
-      // acc: 누적값, cur: 현재값
-      if (acc[cur]) {
-        acc[cur] += 1;
+    days.reduce<Record<string, number>>((acc, curr) => {
+      // acc: 누적값, curr: 현재값
+      if (acc[curr]) {
+        acc[curr] += 1;
       } else {
-        acc[cur] = 1;
+        acc[curr] = 1;
       }
       return acc;
     }, {});
@@ -63,7 +63,7 @@ export default function DashBoardChart({ items, selectedYear, selectedMonth }: I
   const soldDaysCount = countByDate(soldDays);
 
   //  모든 날짜에 카운트된 데이터 대입하여 덮기
-  const mergedDateArray = daysOfCurrentMonth.map((day) => ({
+  const dailyStats = daysOfCurrentMonth.map((day) => ({
     ...day,
     cost: costDaysCount[day.date] ?? 0,
     sold: soldDaysCount[day.date] ?? 0,
@@ -71,10 +71,10 @@ export default function DashBoardChart({ items, selectedYear, selectedMonth }: I
 
   // prettier-ignore
   const total = useMemo(() => ({
-      cost: mergedDateArray.reduce((acc, curr) => acc + curr.cost, 0),
-      sold: mergedDateArray.reduce((acc, curr) => acc + curr.sold, 0),
-    }),[mergedDateArray]
-  );
+    cost: dailyStats.reduce((acc, curr) => acc + curr.cost, 0),
+    sold: dailyStats.reduce((acc, curr) => acc + curr.sold, 0),
+  }),[dailyStats]
+);
 
   return (
     <Card className="w-full py-0">
@@ -95,7 +95,7 @@ export default function DashBoardChart({ items, selectedYear, selectedMonth }: I
                 className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
                 onClick={() => setActiveChart(chart)}
               >
-                <span className="text-muted-foreground text-xs">{chartConfig[chart].label}</span>
+                <span className="text-muted-foreground text-xs">{chartConfig[chart].label}2333333333</span>
                 <span className="text-lg leading-none font-bold sm:text-3xl">{total[key as keyof typeof total].toLocaleString()}</span>
               </button>
             );
