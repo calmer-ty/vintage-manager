@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, doc, getDocs, orderBy, query, Timestamp, updateDoc, where } from "firebase/firestore";
@@ -78,6 +78,10 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
       setLoading(false);
     }
   }, [uid, selectedYear, selectedMonth]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
 
   return { items, loading, createItem, updateItem, fetchItems };
 };
