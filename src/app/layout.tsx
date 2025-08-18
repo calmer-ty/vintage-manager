@@ -38,7 +38,7 @@ export default function RootLayout({
           <DateSelectorProvider>
             <SidebarProvider>
               <Nav />
-              <div className="flex flex-col w-full h-screen">
+              <div className="w-full">
                 <Header />
                 <main>{children}</main>
                 <Toaster />
