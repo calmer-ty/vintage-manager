@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 
@@ -22,7 +21,6 @@ export default function Header() {
       <div className="flex w-full items-center gap-1 px-6 lg:gap-2">
         {pathname !== "/" ? (
           <>
-            <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" />
             <SidebarTrigger className="-ml-1" />
             <h2 className="font-medium shrink-0">{currentPage}</h2>
             <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
