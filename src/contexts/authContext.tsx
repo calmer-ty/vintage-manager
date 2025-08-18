@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
 
 import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
@@ -33,6 +34,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const uid = user?.uid;
 
+  const router = useRouter();
+
   useEffect(() => {
     console.log("AuthProvider mounted, setting up onAuthStateChanged listener");
 
@@ -48,7 +51,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleLogin = async (): Promise<void> => {
     try {
       await signInWithPopup(auth, googleProvider);
-      console.log(auth);
+      router.push("/dashboard"); // 로그인 시 첫 진입 페이지
     } catch (error) {
       console.error("로그인 실패:", error);
     }
@@ -58,8 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleLogout = async (): Promise<void> => {
     try {
       await auth.signOut();
-      // setAlertOpen(true);
-      // setRouting("/");
+      router.push("/"); // 로그아웃 시 진입 페이지
     } catch (error) {
       console.error("로그아웃 실패:", error);
     }
