@@ -55,21 +55,32 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
   const MotionCard = motion(Card);
 
   return (
-    <div className="grid grid-cols-2 gap-5 w-full 2xl:grid-cols-4">
+    <div
+      className="grid gap-5 w-full 
+        grid-cols-2 2xl:grid-cols-4"
+    >
       {infoStatus.map((el, index) => (
         <MotionCard
           key={el.title}
-          className="w-full py-4 hover:shadow-md lg:py-6"
+          className="w-full
+            hover:shadow-md 
+            py-4 lg:py-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: index * 0.1, duration: 0.4 }}
-          // whileHover={{ scale: 1.01 }}
-          // whileTap={{ scale: 0.99 }}
         >
-          <CardContent className="flex flex-col items-center gap-x-6 gap-y-2 lg:flex-row">
-            <div className="p-3 bg-gray-100 rounded-lg">{el.icon}</div>
-            <div className="grid gap-1 w-full text-center sm:text-left">
-              <CardTitle className="text-2xl">{el.value}</CardTitle>
+          <CardContent
+            className="flex items-center gap-x-6 gap-y-2 
+              flex-col lg:flex-row"
+          >
+            <div
+              className="bg-gray-100 rounded-lg
+                p-2 lg:p-3"
+            >
+              {el.icon}
+            </div>
+            <div className="grid gap-1 w-full text-center lg:text-left">
+              <CardTitle className="text-xl lg:text-2xl">{el.value}</CardTitle>
               <CardDescription>{el.title}</CardDescription>
             </div>
           </CardContent>
