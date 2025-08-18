@@ -151,12 +151,14 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
 
   return (
     <div
-      className="overflow-auto px-6 border rounded-lg shadow-sm 
+      className="w-full overflow-auto mx-auto px-6 border bg-white rounded-lg shadow-sm 
         max-w-xs
-        sm:max-w-lg
-        lg:max-w-xl
+        sm:max-w-sm
+        md:max-w md
+        lg:max-w-lg
         xl:max-w-3xl
-        2xl:max-w-max"
+        2xl:max-w-5xl
+        "
     >
       {/* 다이얼로그 창 */}
       <ManagementWrite
