@@ -62,8 +62,8 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
       {infoStatus.map((el, index) => (
         <MotionCard
           key={el.title}
-          className="w-full
-            hover:shadow-md 
+          className="w-full group
+            transition-shadow duration-300 ease-in-out hover:shadow-md 
             py-4 lg:py-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -74,8 +74,9 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
               flex-col lg:flex-row"
           >
             <div
-              className="bg-gray-100 rounded-lg
-                p-2 lg:p-3"
+              className="rounded-lg
+                p-2 lg:p-3
+                transition-bg duration-300 ease-in-out bg-gray-100 group-hover:bg-gray-200 shadow-md"
             >
               {el.icon}
             </div>
