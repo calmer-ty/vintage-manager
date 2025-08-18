@@ -55,7 +55,7 @@ export default function Nav() {
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                    <DropdownMenuItem onClick={handleLogout}>Sign out</DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout}>로그아웃</DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuItem>
