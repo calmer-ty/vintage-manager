@@ -4,7 +4,7 @@ import { Layout, Settings } from "lucide-react";
 export const pages = [
   {
     title: "대시보드",
-    url: "/",
+    url: "/dashboard",
     icon: Layout,
   },
   {

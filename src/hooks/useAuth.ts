@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 
+import { useRouter } from "next/navigation";
 import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
 
 import type { User } from "firebase/auth";
@@ -14,6 +15,7 @@ export const useAuth = (): {
 } => {
   const [user, setUser] = useState<User | null>(null);
   const uid = user?.uid;
+  const router = useRouter();
 
   useEffect(() => {
     console.log("useAuth mounted, setting up onAuthStateChanged listener");
@@ -35,7 +37,7 @@ export const useAuth = (): {
   const handleLogin = async (): Promise<void> => {
     try {
       await signInWithPopup(auth, googleProvider);
-      console.log(auth);
+      router.push("/dashboard"); // 로그인 시 첫 진입 페이지
     } catch (error) {
       console.error("로그인 실패:", error);
     }
@@ -45,8 +47,7 @@ export const useAuth = (): {
   const handleLogout = async (): Promise<void> => {
     try {
       await auth.signOut();
-      // setAlertOpen(true);
-      // setRouting("/");
+      router.push("/"); // ← 이건 작동안 하면 위에서 잘림
     } catch (error) {
       console.error("로그아웃 실패:", error);
     }
