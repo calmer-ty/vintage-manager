@@ -71,7 +71,7 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
       className="grid gap-5 w-full 
         grid-cols-2 2xl:grid-cols-3"
     >
-      {infoStatus.map((el, index) => (
+      {infoStatus.map((el, idx) => (
         <MotionCard
           key={el.title}
           className="w-full group
@@ -79,7 +79,7 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
             py-4 lg:py-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1, duration: 0.4 }}
+          transition={{ delay: idx * 0.1, duration: 0.4 }}
         >
           <CardContent
             className="flex items-center gap-x-6 gap-y-2 

@@ -40,7 +40,7 @@ export default function RootLayout({
               <Nav />
               <div className="w-full">
                 <Header />
-                <main>{children}</main>
+                <main className="bg-gray-50">{children}</main>
                 <Toaster />
               </div>
             </SidebarProvider>
