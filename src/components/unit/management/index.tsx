@@ -16,7 +16,7 @@ const columnConfig = [
 
 export default function ManagementUI({ uid }: IUserID) {
   return (
-    <article className="p-10">
+    <article className="p-6">
       <TableUI uid={uid} columnConfig={columnConfig} />
     </article>
   );

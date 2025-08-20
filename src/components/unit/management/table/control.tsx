@@ -29,7 +29,7 @@ export default function TableControl({ table, columnConfig, setIsOpen, onClickDe
   };
 
   return (
-    <div className="flex justify-between items-center gap-2 w-full py-4">
+    <div className="flex justify-between items-center gap-2 w-full py-3">
       <div className="flex items-center gap-2">
         <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickDelete(selectedIds)}>
           <span className="hidden sm:block">선택 삭제</span>

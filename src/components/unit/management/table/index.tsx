@@ -217,7 +217,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
             </TableBody>
           </Table>
         </div>
-        <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="flex items-center justify-end space-x-2 py-3">
           <div className="text-muted-foreground flex-1 text-sm">
             총 {table.getFilteredRowModel().rows.length}개 중 {table.getFilteredSelectedRowModel().rows.length}개 선택됨.
           </div>
