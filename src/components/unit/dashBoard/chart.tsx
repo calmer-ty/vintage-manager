@@ -1,15 +1,16 @@
+// 라이브러리
 import { useMemo, useState } from "react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
+// 유틸 함수
+import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
+
+// 외부 요소
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
-
-import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import type { IItemData } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
-
-// export const description = "An interactive bar chart";
 interface IDashBoardChartProps {
   items: IItemData[];
   selectedYear: number;

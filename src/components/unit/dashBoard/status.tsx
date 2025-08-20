@@ -1,5 +1,7 @@
+// 라이브러리
 import { motion } from "framer-motion";
 
+// 외부 요소
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
 

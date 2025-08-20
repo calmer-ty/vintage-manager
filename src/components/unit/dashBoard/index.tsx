@@ -1,6 +1,8 @@
+// 훅
 import { useUserItems } from "@/hooks/useUserItems";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 
+// 내부 요소
 import DashBoardChart from "./chart";
 import DashBoardStatus from "./status";
 
