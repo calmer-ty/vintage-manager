@@ -1,6 +1,8 @@
+// 라이브러리
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
+// 외부 요소
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { IItemData } from "@/types";
@@ -9,7 +11,7 @@ interface IManagementSelectProps {
   refetch: () => Promise<void>;
 }
 
-export default function CellSelect({ item, refetch }: IManagementSelectProps) {
+export default function ItemState({ item, refetch }: IManagementSelectProps) {
   // 판매상태 함수
   const onUpdate = async (id: string, value: boolean) => {
     try {

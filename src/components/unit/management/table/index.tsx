@@ -1,28 +1,27 @@
+// 라이브러리
 import { useState } from "react";
-
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
+import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
+// 훅
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useUserItems } from "@/hooks/useUserItems";
 
-//
-import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
-
+// 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
 
-import ManagementWrite from "@/components/unit/management/table/write";
+// 내부 요소
+import ManagementWrite from "./write";
 import TableControl from "./control";
-import CellSelect from "./cellSelect";
+import ItemState from "./itemState";
 
-import { Timestamp } from "firebase/firestore";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IItemData } from "@/types";
-
 interface IDataTableProps {
   uid: string;
   columnConfig: {
@@ -105,7 +104,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        return <CellSelect item={row.original} refetch={fetchItems} />;
+        return <ItemState item={row.original} refetch={fetchItems} />;
       },
     },
     {
