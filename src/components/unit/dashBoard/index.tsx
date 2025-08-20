@@ -11,7 +11,7 @@ export default function DashBoardUI({ uid }: IUserID) {
   const { items } = useUserItems({ uid, selectedYear, selectedMonth });
 
   return (
-    <article className="p-6 lg:p-12">
+    <article className="p-10">
       <DashBoardStatus items={items} />
       <DashBoardChart items={items} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>

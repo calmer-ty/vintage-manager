@@ -50,6 +50,16 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
       value: `${soldItems.length} 개`,
       icon: <Boxes className="shrink-0 text-yellow-500" />,
     },
+    {
+      title: "준비중 1",
+      value: `${soldItems.length} 개`,
+      icon: <Boxes className="shrink-0 text-yellow-500" />,
+    },
+    {
+      title: "준비중 2",
+      value: `${soldItems.length} 개`,
+      icon: <Boxes className="shrink-0 text-yellow-500" />,
+    },
   ];
 
   const MotionCard = motion(Card);
@@ -57,7 +67,7 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
   return (
     <div
       className="grid gap-5 w-full 
-        grid-cols-2 2xl:grid-cols-4"
+        grid-cols-2 2xl:grid-cols-3"
     >
       {infoStatus.map((el, index) => (
         <MotionCard
