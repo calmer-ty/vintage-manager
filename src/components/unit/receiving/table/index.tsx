@@ -22,6 +22,7 @@ import ItemState from "./itemState";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IItemData } from "@/types";
+import { useProductPackage } from "@/hooks/useProductPackage";
 interface IDataTableProps {
   uid: string;
   columnConfig: {
@@ -33,6 +34,7 @@ interface IDataTableProps {
 export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { items, createItem, updateItem, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
+  const { createProductPackage } = useProductPackage({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -164,7 +166,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         isOpen={isWriteOpen}
         setIsOpen={setIsWriteOpen}
         uid={uid}
-        createItem={createItem}
+        createProductPackage={createProductPackage}
         updateItem={updateItem}
         fetchItems={fetchItems}
         updateTarget={updateTarget}
