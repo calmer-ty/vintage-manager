@@ -1,16 +1,17 @@
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { Timestamp } from "firebase/firestore";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import { toast } from "sonner";
+import { PlusCircle, X } from "lucide-react";
 
-import BasicSelect from "@/components/commons/select/basic";
 import CurrencySelect from "./currencySelect";
 import FormInputWrap from "@/components/commons/inputWrap/form";
 
@@ -18,8 +19,8 @@ import FormInputWrap from "@/components/commons/inputWrap/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Timestamp } from "firebase/firestore";
-import type { ICurrency, IProductPackage, IUpdateItemParams } from "@/types";
+import type { Dispatch, SetStateAction } from "react";
+import type { ICurrency, IProductPackage } from "@/types";
 
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
@@ -36,13 +37,14 @@ interface IManagementWriteProps {
   uid: string;
   isOpen: boolean;
   updateTarget: IProductPackage | undefined;
+  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
 
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
+export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
@@ -62,7 +64,8 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
   // 통화 정보
   const { currencyOptions } = useExchangeRate();
   // 원화로 환산
-  const currency: ICurrency | undefined = form.watch("currency") ? JSON.parse(form.watch("currency")) : undefined;
+  const currency = form.watch("currency");
+  const formattedCurrency: ICurrency | undefined = currency ? JSON.parse(currency) : undefined;
 
   // 등록 함수
   const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
@@ -71,6 +74,7 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
         ...data,
         uid,
         _id: "",
+        currency: JSON.parse(data.currency),
         createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
       };
 
@@ -95,7 +99,7 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
   };
 
   // 수정 함수
-  const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {};
+  const onClickUpdate = async () => {};
 
   // 추가버튼
   const onClickAddProduct = () => {
@@ -114,7 +118,7 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
       form.reset({
         currency: "",
         shipping: "",
-        products: [],
+        products: [{ name: "", brand: "", costPrice: "" }],
       });
     }
   }, [form, isOpen, isEdit, updateTarget]);
@@ -126,31 +130,31 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
         if (!open) {
           form.reset();
           setIsOpen(false);
-          // setUpdateTarget(undefined);
+          setUpdateTarget(undefined);
         } else {
           setIsOpen(true);
         }
       }}
     >
-      <DialogContent className="flex-col overflow-y-scroll max-h-160 sm:max-w-120">
+      <DialogContent className="flex-col overflow-y-auto max-h-180 sm:max-w-120">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickSubmit)} className="flex flex-col gap-4">
             <DialogHeader>
               <DialogTitle>패키지 {isEdit ? "수정" : "등록"}</DialogTitle>
-              {/* <DialogDescription>{isEdit ? "패키지의 옵션 정보를 수정하세요." : "패키지 정보를 입력하고 등록하세요."}</DialogDescription> */}
+              <DialogDescription>{isEdit ? "패키지의 옵션 정보를 수정하세요." : "패키지 정보를 입력하고 등록하세요."}</DialogDescription>
             </DialogHeader>
 
-            <p className="text-sm text-muted-foreground">상품을 구매했을 때 사용한 통화를 선택해주세요. </p>
-            <div className="flex gap-4 mt-2 pb-4 border-b-1">
+            <div className="grid">
+              {!currency && <p className="text-sm text-red-500 mb-2">상품을 입력하려면 먼저 통화를 선택해주세요.</p>}
               <FormField
                 control={form.control}
                 name="currency"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>통화</FormLabel>
+                    <FormLabel>사용된 통화</FormLabel>
                     <FormControl>
                       <CurrencySelect
-                        placeholder="통화"
+                        placeholder="사용된 통화"
                         items={currencyOptions}
                         onChange={(selectedValue) => {
                           const selected = currencyOptions.find((opt) => opt.value === selectedValue);
@@ -167,32 +171,31 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="shipping"
-                render={({ field }) => (
-                  <FormInputWrap title="직배송비">
-                    <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" />
-                  </FormInputWrap>
-                )}
-              />
             </div>
+
+            <FormField
+              control={form.control}
+              name="shipping"
+              render={({ field }) => (
+                <FormInputWrap title="직배송비">
+                  <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" disabled={!currency} />
+                </FormInputWrap>
+              )}
+            />
+            {/* </div> */}
 
             <ul className="space-y-8">
               {fields.map((el, idx) => {
                 const costPrice = form.watch(`products.${idx}.costPrice`);
-                console.log("costPrice: ", costPrice);
 
                 return (
                   <li key={el.id}>
-                    <h3 className="mb-4 px-6 py-2 border-t bg-gray-100 text-md font-semibold">
-                      <span>상품 {idx + 1}</span>
-                      <Button type="button" variant="destructive" onClick={() => remove(idx)}>
-                        삭제
-                      </Button>
+                    <h3 className="flex justify-between items-center mb-4 px-4 py-1 border-t bg-gray-200">
+                      <span className="text-md font-semibold">상품 {idx + 1}</span>
+                      {idx !== 0 && <X size={16} onClick={() => remove(idx)} className="cursor-pointer" />}
                     </h3>
 
-                    <div className="flex flex-col gap-4">
+                    <fieldset className="flex flex-col gap-4" disabled={!currency}>
                       <FormField
                         control={form.control}
                         name={`products.${idx}.brand`}
@@ -219,7 +222,7 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
                           <FormItem className="w-full">
                             <div className="flex gap-2">
                               <FormLabel>매입가</FormLabel>
-                              <p className="font-bold text-sm">( KRW: {Math.round(Number(costPrice) * Number(currency.rate)).toLocaleString()} )</p>
+                              <p className="font-bold text-sm">( KRW: {Math.round(Number(costPrice) * Number(formattedCurrency ? formattedCurrency.rate : 0)).toLocaleString()} )</p>
                             </div>
                             <FormControl>
                               <Input type="number" placeholder="예) 1000" {...field} className="bg-white" />
@@ -228,14 +231,15 @@ export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, 
                           </FormItem>
                         )}
                       />
-                    </div>
+                    </fieldset>
                   </li>
                 );
               })}
             </ul>
 
-            <Button type="button" onClick={onClickAddProduct}>
-              상품 추가하기
+            <Button type="button" variant="secondary" size="sm" onClick={onClickAddProduct}>
+              <PlusCircle size={16} />
+              <span className="pr-2">상품 추가하기</span>
             </Button>
 
             <DialogFooter className="mt-4">

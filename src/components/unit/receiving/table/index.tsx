@@ -16,12 +16,11 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
 
 // 내부 요소
-import ManagementWrite from "./write";
+import ReceivingWrite from "./write";
 import TableControl from "./control";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IProductPackage, IReceivingProduct } from "@/types";
-import { useExchangeRate } from "@/hooks/useExchangeRate";
 interface IDataTableProps {
   uid: string;
   columnConfig: {
@@ -65,7 +64,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const [rowSelection, setRowSelection] = useState({});
 
   // 통화 정보
-  const { currencyOptions } = useExchangeRate();
+  // const { currencyOptions } = useExchangeRate();
 
   const dynamicColumns: ColumnDef<IProductPackage>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
@@ -180,7 +179,15 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         "
     >
       {/* 다이얼로그 창 */}
-      <ManagementWrite uid={uid} isOpen={isWriteOpen} setIsOpen={setIsWriteOpen} createProductPackage={createProductPackage} fetchProductPackages={fetchProductPackages} updateTarget={updateTarget} />
+      <ReceivingWrite
+        uid={uid}
+        isOpen={isWriteOpen}
+        updateTarget={updateTarget}
+        setUpdateTarget={setUpdateTarget}
+        setIsOpen={setIsWriteOpen}
+        createProductPackage={createProductPackage}
+        fetchProductPackages={fetchProductPackages}
+      />
 
       <TableControl table={table} setIsOpen={setIsWriteOpen} columnConfig={columnConfig} />
       <>
