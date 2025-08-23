@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { IExchangeRate } from "@/types";
 
@@ -25,12 +25,16 @@ export const useExchangeRate = () => {
   const usdToKrw = KRW; // 1 USD = 1400 KRW
   const jpyToKrw = KRW / JPY;
 
-  //   console.log("usdToKrw", usdToKrw);
-  //   console.log("jpyToKrw", jpyToKrw);
+  const currencyOptions = useMemo(
+    () => [
+      { label: "₩", value: "KRW", rate: baseRate },
+      { label: "$", value: "USD", rate: usdToKrw },
+      { label: "¥", value: "JPY", rate: jpyToKrw },
+    ],
+    [baseRate, usdToKrw, jpyToKrw]
+  );
 
   return {
-    baseRate,
-    usdToKrw,
-    jpyToKrw,
+    currencyOptions,
   };
 };

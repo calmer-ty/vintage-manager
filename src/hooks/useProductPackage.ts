@@ -13,7 +13,7 @@ interface IUseProductPackageParams {
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProductPackageParams) => {
-  const [packages, setPackages] = useState<IProductPackage[]>([]);
+  const [productPackages, setProductPackages] = useState<IProductPackage[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
@@ -21,7 +21,7 @@ export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProd
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "packages"), { ...productsPackage });
+      const docRef = await addDoc(collection(db, "productPackages"), { ...productsPackage });
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
@@ -37,7 +37,7 @@ export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProd
   //   if (!uid) return;
 
   //   try {
-  //     const docRef = doc(db, "packages", updateTargetId);
+  //     const docRef = doc(db, "productP, updateTargetId);
 
   //     await updateDoc(docRef, { ...itemData });
   //   } catch (err) {
@@ -56,7 +56,7 @@ export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProd
       const end = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1)); // 다음 달 1일
 
       const q = query(
-        collection(db, "packages"),
+        collection(db, "productPackages"),
         // 특정 값 기준으로 필터링
         where("uid", "==", uid),
         where("createdAt", ">=", start),
@@ -71,7 +71,7 @@ export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProd
         ...doc.data(),
       }));
 
-      setPackages(dataArray as IProductPackage[]);
+      setProductPackages(dataArray as IProductPackage[]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -84,7 +84,7 @@ export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProd
   }, [fetchProductPackages]);
 
   return {
-    packages,
+    productPackages,
     loading,
     createProductPackage,
     // updateProductPackage,

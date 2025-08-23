@@ -21,6 +21,7 @@ import TableControl from "./control";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { IProductPackage, IReceivingProduct } from "@/types";
+import { useExchangeRate } from "@/hooks/useExchangeRate";
 interface IDataTableProps {
   uid: string;
   columnConfig: {
@@ -31,31 +32,31 @@ interface IDataTableProps {
 
 export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { packages, createProductPackage, fetchProductPackages } = useProductPackage({ uid, selectedYear, selectedMonth });
+  const { productPackages, createProductPackage, fetchProductPackages } = useProductPackage({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  // const [updateTarget, setUpdateTarget] = useState<IItemData | undefined>(undefined);
+  const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
 
   // 수정 함수
-  // const onClickMoveToUpdate = async (selectedItemId: string) => {
-  //   const selectedItem = items.find((item) => item._id === selectedItemId);
-  //   setUpdateTarget(selectedItem);
-  //   setIsWriteOpen(true);
-  // };
-  // // 삭제 함수
-  // const onClickDelete = async (selectedItems: string[]) => {
-  //   // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-  //   for (const id of selectedItems) {
-  //     try {
-  //       await deleteDoc(doc(db, "items", id));
-  //       console.log(`ID ${id} 삭제 성공`);
-  //     } catch (error) {
-  //       console.error(`ID ${id} 삭제 실패`, error);
-  //     }
-  //   }
-  //   fetchItems();
-  // };
+  const onClickMoveToUpdate = async (selectedItemId: string) => {
+    const selectedItem = productPackages.find((el) => el._id === selectedItemId);
+    setUpdateTarget(selectedItem);
+    setIsWriteOpen(true);
+  };
+  // 삭제 함수
+  const onClickDelete = async (selectedItems: string[]) => {
+    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
+    for (const id of selectedItems) {
+      try {
+        await deleteDoc(doc(db, "items", id));
+        console.log(`ID ${id} 삭제 성공`);
+      } catch (error) {
+        console.error(`ID ${id} 삭제 실패`, error);
+      }
+    }
+    await fetchProductPackages();
+  };
 
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -63,11 +64,17 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  // 통화 정보
+  const { currencyOptions } = useExchangeRate();
+
   const dynamicColumns: ColumnDef<IProductPackage>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
       const value = row.getValue(key);
+      // const currency = row.getValue("currency");
+      // const usedCurrency = currencyOptions.find((el) => el.value === currency)?.label;
+      // console.log("currency: ", currency);
 
       // 숫자라면 toLocaleString으로 포맷 (예: 가격)
       if (typeof value === "number") {
@@ -82,6 +89,11 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         return <div>-</div>;
       }
 
+      // 배송비
+      if (key === "shipping") {
+        return <div className="">{value?.toLocaleString()}</div>;
+      }
+      // products 일 때, 각 각 상품 정보 표시
       if (key === "products" && Array.isArray(value)) {
         return (
           <div className="flex flex-col gap-1">
@@ -90,7 +102,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
                 <span className="">
                   {p.brand} - {p.name}
                 </span>
-                <span className="text-sm text-gray-500">{Number(p.costPrice).toLocaleString()} KRW</span>
+                <span className="text-sm text-gray-500">{Number(p.costPrice).toLocaleString()}</span>
               </div>
             ))}
           </div>
@@ -115,38 +127,30 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
       enableHiding: false,
     },
     ...dynamicColumns,
-    // {
-    //   id: "status",
-    //   header: "상태",
-    //   enableHiding: false,
-    //   cell: ({ row }) => {
-    //     return <ItemState item={row.original} refetch={fetchProductPackages} />;
-    //   },
-    // },
-    // {
-    //   id: "actions",
-    //   header: "설정",
-    //   enableHiding: false,
-    //   cell: ({ row }) => {
-    //     return (
-    //       <DropdownMenu>
-    //         <DropdownMenuTrigger asChild>
-    //           <Button variant="ghost" className="h-8 w-8 p-0">
-    //             <span className="sr-only">Open menu</span>
-    //             <MoreHorizontal />
-    //           </Button>
-    //         </DropdownMenuTrigger>
-    //         {/* <DropdownMenuContent align="end">
-    //           <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 수정</DropdownMenuItem>
-    //           <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
-    //         </DropdownMenuContent> */}
-    //       </DropdownMenu>
-    //     );
-    //   },
-    // },
+    {
+      id: "actions",
+      header: "설정",
+      enableHiding: false,
+      cell: ({ row }) => {
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 수정</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
   ];
   const table = useReactTable({
-    data: packages, // 데이터: row 값?
+    data: productPackages, // 데이터: row 값?
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -176,7 +180,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         "
     >
       {/* 다이얼로그 창 */}
-      <ManagementWrite uid={uid} isOpen={isWriteOpen} setIsOpen={setIsWriteOpen} createProductPackage={createProductPackage} fetchProductPackages={fetchProductPackages} />
+      <ManagementWrite uid={uid} isOpen={isWriteOpen} setIsOpen={setIsWriteOpen} createProductPackage={createProductPackage} fetchProductPackages={fetchProductPackages} updateTarget={updateTarget} />
 
       <TableControl table={table} setIsOpen={setIsWriteOpen} columnConfig={columnConfig} />
       <>

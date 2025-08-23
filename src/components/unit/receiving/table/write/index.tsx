@@ -11,6 +11,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { toast } from "sonner";
 
 import BasicSelect from "@/components/commons/select/basic";
+import CurrencySelect from "./currencySelect";
 import FormInputWrap from "@/components/commons/inputWrap/form";
 
 // Schema
@@ -18,7 +19,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Timestamp } from "firebase/firestore";
-import type { IProductPackage, IUpdateItemParams } from "@/types";
+import type { ICurrency, IProductPackage, IUpdateItemParams } from "@/types";
 
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
@@ -26,7 +27,7 @@ const ProductSchema = z.object({
   costPrice: z.string().min(1, "매입가격을 입력해주세요."),
 });
 const FormSchema = z.object({
-  exchangeRate: z.string().min(1, "통화를 선택해주세요."),
+  currency: z.string().min(1, "통화를 선택해주세요."),
   shipping: z.string().min(1, "사용된 배송비를 입력해주세요."),
   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
 });
@@ -34,20 +35,21 @@ const FormSchema = z.object({
 interface IManagementWriteProps {
   uid: string;
   isOpen: boolean;
+  updateTarget: IProductPackage | undefined;
+
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductPackage }: IManagementWriteProps) {
-  // const isEdit = !!updateTarget;
-  const isEdit = false;
+export default function ManagementWrite({ uid, isOpen, updateTarget, setIsOpen, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
+  const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      exchangeRate: "",
+      currency: "",
       shipping: "",
       products: [{ name: "", brand: "", costPrice: "" }],
     },
@@ -56,38 +58,11 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
     control: form.control,
     name: "products",
   });
-  console.log("fields: ", fields);
-
-  // updateTarget 변경 시 form 값을 리셋
-  // useEffect(() => {
-  //   if (isEdit) {
-  //     form.reset({
-  //       name: updateTarget.name,
-  //       costPrice: updateTarget.costPrice.replace(/[^\d]/g, ""),
-  //       salePrice: updateTarget.salePrice?.toString(),
-  //       exchangeRate: updateTarget.exchangeRate?.toString(),
-  //     });
-  //   } else {
-  //     form.reset({
-  //       name: "",
-  //       costPrice: "",
-  //       salePrice: "",
-  //       exchangeRate: "",
-  //     });
-  //   }
-  // }, [form, isOpen, isEdit, updateTarget]);
 
   // 통화 정보
-  const { baseRate, usdToKrw, jpyToKrw } = useExchangeRate();
-  // prettier-ignore
-  const currencyOptions = useMemo(() => [
-    { label: "₩", value: baseRate.toString() },
-    { label: "$", value: usdToKrw.toString() },
-    { label: "¥", value: jpyToKrw.toString() },
-  ],[baseRate, usdToKrw, jpyToKrw]);
-
+  const { currencyOptions } = useExchangeRate();
   // 원화로 환산
-  const exchangeRate = Number(form.watch("exchangeRate"));
+  const currency: ICurrency | undefined = form.watch("currency") ? JSON.parse(form.watch("currency")) : undefined;
 
   // 등록 함수
   const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
@@ -101,7 +76,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
 
       // 데이터 생성 및 리패치
       await createProductPackage(productPackage);
-      // await fetchItems();
+      await fetchProductPackages();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       form.reset();
@@ -123,10 +98,26 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
   const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {};
 
   // 추가버튼
-
   const onClickAddProduct = () => {
     append({ name: "", brand: "", costPrice: "" });
   };
+
+  // updateTarget 변경 시 form 값을 리셋
+  useEffect(() => {
+    if (isEdit) {
+      form.reset({
+        currency: updateTarget.currency.value,
+        shipping: updateTarget.shipping,
+        products: updateTarget.products,
+      });
+    } else {
+      form.reset({
+        currency: "",
+        shipping: "",
+        products: [],
+      });
+    }
+  }, [form, isOpen, isEdit, updateTarget]);
 
   return (
     <Dialog
@@ -153,22 +144,23 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
             <div className="flex gap-4 mt-2 pb-4 border-b-1">
               <FormField
                 control={form.control}
-                name="exchangeRate"
+                name="currency"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>통화</FormLabel>
                     <FormControl>
-                      <BasicSelect
+                      <CurrencySelect
                         placeholder="통화"
                         items={currencyOptions}
                         onChange={(selectedValue) => {
                           const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+
                           if (selected) {
-                            field.onChange(selected.value);
+                            field.onChange(JSON.stringify(selected));
+                            console.log("selected: ", selected);
                           }
                         }}
                         value={field.value}
-                        disabled={isEdit}
                       />
                     </FormControl>
                     <FormMessage />
@@ -189,6 +181,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
             <ul className="space-y-8">
               {fields.map((el, idx) => {
                 const costPrice = form.watch(`products.${idx}.costPrice`);
+                console.log("costPrice: ", costPrice);
 
                 return (
                   <li key={el.id}>
@@ -226,10 +219,10 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
                           <FormItem className="w-full">
                             <div className="flex gap-2">
                               <FormLabel>매입가</FormLabel>
-                              <p className="font-bold text-sm">( KRW: {Math.round(Number(costPrice) * exchangeRate).toLocaleString()} )</p>
+                              <p className="font-bold text-sm">( KRW: {Math.round(Number(costPrice) * Number(currency.rate)).toLocaleString()} )</p>
                             </div>
                             <FormControl>
-                              <Input type="number" placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit} />
+                              <Input type="number" placeholder="예) 1000" {...field} className="bg-white" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>

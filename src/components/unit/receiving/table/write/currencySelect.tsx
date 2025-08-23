@@ -14,9 +14,12 @@ interface IItem {
   value: string;
 }
 
-export default function BasicSelect({ placeholder, items, onChange, defaultValue, value, disabled }: IBasicSelectProps) {
+export default function CurrencySelect({ placeholder, items, onChange, defaultValue, value, disabled }: IBasicSelectProps) {
+  const selectedValue: string | undefined = value ? JSON.parse(value).value : undefined;
+  console.log("selectedValue: ", selectedValue);
+
   return (
-    <Select onValueChange={onChange} defaultValue={defaultValue} value={value} disabled={disabled}>
+    <Select onValueChange={onChange} defaultValue={defaultValue} value={selectedValue} disabled={disabled}>
       <FormControl>
         <SelectTrigger className="bg-white">
           <SelectValue placeholder={placeholder} />
