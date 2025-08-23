@@ -11,6 +11,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { toast } from "sonner";
 
 import BasicSelect from "@/components/commons/select/basic";
+import FormInputWrap from "@/components/commons/inputWrap/form";
 
 // Schema
 import { z } from "zod";
@@ -209,26 +210,18 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
                         control={form.control}
                         name={`products.${idx}.name`}
                         render={({ field }) => (
-                          <FormItem className="w-full">
-                            <FormLabel>제품명</FormLabel>
-                            <FormControl>
-                              <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                          <FormInputWrap title="제품명">
+                            <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
+                          </FormInputWrap>
                         )}
                       />
                       <FormField
                         control={form.control}
                         name={`products.${idx}.brand`}
                         render={({ field }) => (
-                          <FormItem className="w-full">
-                            <FormLabel>브랜드명</FormLabel>
-                            <FormControl>
-                              <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                          <FormInputWrap title="브랜드명">
+                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
+                          </FormInputWrap>
                         )}
                       />
 
