@@ -17,8 +17,8 @@ export interface IExchangeRate {
 export interface IItemData {
   _id: string; // 문서 id 값
   uid: string;
-  category: string;
-  brand: string;
+  // category: string;
+  // brand: string;
   name: string;
   costPrice: string;
   costPriceKRW: number;
@@ -29,8 +29,8 @@ export interface IItemData {
   soldAt: Timestamp | null;
 }
 export interface IUpdateItemData {
-  category: string;
-  brand: string;
+  // category: string;
+  // brand: string;
   name: string;
   salePrice: number;
   profit: number;
