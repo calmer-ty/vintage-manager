@@ -16,7 +16,6 @@ interface IItem {
 
 export default function CurrencySelect({ placeholder, items, onChange, defaultValue, value, disabled }: IBasicSelectProps) {
   const selectedValue: string | undefined = value ? JSON.parse(value).value : undefined;
-  console.log("selectedValue: ", selectedValue);
 
   return (
     <Select onValueChange={onChange} defaultValue={defaultValue} value={selectedValue} disabled={disabled}>

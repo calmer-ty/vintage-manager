@@ -20,7 +20,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { ICurrency, IProductPackage } from "@/types";
+import type { IProductPackage } from "@/types";
 
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
@@ -63,9 +63,8 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
 
   // 통화 정보
   const { currencyOptions } = useExchangeRate();
-  // 원화로 환산
+  // 환율 데이터
   const currency = form.watch("currency");
-  const formattedCurrency: ICurrency | undefined = currency ? JSON.parse(currency) : undefined;
 
   // 등록 함수
   const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
@@ -74,7 +73,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
         ...data,
         uid,
         _id: "",
-        currency: JSON.parse(data.currency),
         createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
       };
 
@@ -84,6 +82,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       form.reset();
+      setIsOpen(false);
       toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다!</p>, {
         description: `상품 ${data.products.length} 개`,
         action: {
@@ -110,7 +109,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
   useEffect(() => {
     if (isEdit) {
       form.reset({
-        currency: updateTarget.currency.value,
+        currency: updateTarget.currency,
         shipping: updateTarget.shipping,
         products: updateTarget.products,
       });
@@ -122,7 +121,11 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
       });
     }
   }, [form, isOpen, isEdit, updateTarget]);
-
+  useEffect(() => {
+    if (form.getValues("currency") !== "") {
+      form.trigger("currency");
+    }
+  }, [form]);
   return (
     <Dialog
       open={isOpen}
@@ -144,8 +147,10 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
               <DialogDescription>{isEdit ? "패키지의 옵션 정보를 수정하세요." : "패키지 정보를 입력하고 등록하세요."}</DialogDescription>
             </DialogHeader>
 
-            <div className="grid">
-              {!currency && <p className="text-sm text-red-500 mb-2">상품을 입력하려면 먼저 통화를 선택해주세요.</p>}
+            <div className="grid gap-2">
+              <p className="text-sm text-red-500">통화 가치는 실시간으로 변동되므로, 추후에는 수정할 수 없습니다.</p>
+
+              {!currency && <p className="text-sm text-yellow-600 mb-2">⚠ 상품 정보를 입력하기 전에 통화를 선택하는 것이 좋습니다.</p>}
               <FormField
                 control={form.control}
                 name="currency"
@@ -158,13 +163,14 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
                         items={currencyOptions}
                         onChange={(selectedValue) => {
                           const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                          console.log("selected: ", selected);
 
                           if (selected) {
                             field.onChange(JSON.stringify(selected));
-                            console.log("selected: ", selected);
                           }
                         }}
                         value={field.value}
+                        disabled={isEdit}
                       />
                     </FormControl>
                     <FormMessage />
@@ -195,7 +201,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
                       {idx !== 0 && <X size={16} onClick={() => remove(idx)} className="cursor-pointer" />}
                     </h3>
 
-                    <fieldset className="flex flex-col gap-4" disabled={!currency}>
+                    <fieldset className="flex flex-col gap-4">
                       <FormField
                         control={form.control}
                         name={`products.${idx}.brand`}
@@ -222,7 +228,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
                           <FormItem className="w-full">
                             <div className="flex gap-2">
                               <FormLabel>매입가</FormLabel>
-                              <p className="font-bold text-sm">( KRW: {Math.round(Number(costPrice) * Number(formattedCurrency ? formattedCurrency.rate : 0)).toLocaleString()} )</p>
+                              <p className="font-bold text-sm">( KRW: {Math.round(Number(costPrice) * Number(currency ? JSON.parse(currency).rate : 0)).toLocaleString()} )</p>
                             </div>
                             <FormControl>
                               <Input type="number" placeholder="예) 1000" {...field} className="bg-white" />

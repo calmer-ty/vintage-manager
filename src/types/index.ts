@@ -15,7 +15,7 @@ export interface IExchangeRate {
 export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
-  currency: ICurrency;
+  currency: string;
   shipping: string;
   products: IReceivingProduct[];
   createdAt: Timestamp;
