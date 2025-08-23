@@ -46,48 +46,48 @@ export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProd
   // };
 
   // 조회 함수
-  // const fetchProductPackages = useCallback(async () => {
-  //   if (!uid) return;
-  //   setLoading(true);
+  const fetchProductPackages = useCallback(async () => {
+    if (!uid) return;
+    setLoading(true);
 
-  //   try {
-  //     // 선택한 년/월 기준으로 필터링 데이터 정의
-  //     const start = Timestamp.fromDate(new Date(selectedYear, selectedMonth - 1, 1)); // JS는 월이 0-based
-  //     const end = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1)); // 다음 달 1일
+    try {
+      // 선택한 년/월 기준으로 필터링 데이터 정의
+      const start = Timestamp.fromDate(new Date(selectedYear, selectedMonth - 1, 1)); // JS는 월이 0-based
+      const end = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1)); // 다음 달 1일
 
-  //     const q = query(
-  //       collection(db, "packages"),
-  //       // 특정 값 기준으로 필터링
-  //       where("uid", "==", uid),
-  //       where("createdAt", ">=", start),
-  //       where("createdAt", "<", end),
-  //       // 그 필터된 문서들을 createdAt(생성 시각) 기준으로 내림차순(최신순) 정렬
-  //       orderBy("createdAt", "desc")
-  //     );
+      const q = query(
+        collection(db, "packages"),
+        // 특정 값 기준으로 필터링
+        where("uid", "==", uid),
+        where("createdAt", ">=", start),
+        where("createdAt", "<", end),
+        // 그 필터된 문서들을 createdAt(생성 시각) 기준으로 내림차순(최신순) 정렬
+        orderBy("createdAt", "desc")
+      );
 
-  //     const querySnapshot = await getDocs(q);
-  //     const dataArray = querySnapshot.docs.map((doc) => ({
-  //       _id: doc.id,
-  //       ...doc.data(),
-  //     }));
+      const querySnapshot = await getDocs(q);
+      const dataArray = querySnapshot.docs.map((doc) => ({
+        _id: doc.id,
+        ...doc.data(),
+      }));
 
-  //     setPackages(dataArray as IProductPackage[]);
-  //   } catch (err) {
-  //     console.error(err);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }, [uid, selectedYear, selectedMonth]);
+      setPackages(dataArray as IProductPackage[]);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [uid, selectedYear, selectedMonth]);
 
-  // useEffect(() => {
-  //   fetchProductPackages();
-  // }, [fetchProductPackages]);
+  useEffect(() => {
+    fetchProductPackages();
+  }, [fetchProductPackages]);
 
   return {
     packages,
     loading,
     createProductPackage,
     // updateProductPackage,
-    // fetchProductPackages,
+    fetchProductPackages,
   };
 };

@@ -17,8 +17,8 @@ export interface IProductPackage {
   uid: string;
   exchangeRate: string;
   shipping: string;
-  createdAt: Timestamp;
   products: IReceivingProduct[];
+  createdAt: Timestamp;
 }
 export interface IReceivingProduct {
   name: string;

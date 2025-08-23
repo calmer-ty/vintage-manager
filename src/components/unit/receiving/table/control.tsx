@@ -3,23 +3,23 @@ import { ChevronDown, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Trash, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 
-import type { IItemData } from "@/types";
+import type { IProductPackage } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface IControlTableProps {
-  table: Table<IItemData>;
+  table: Table<IProductPackage>;
   columnConfig: {
     key: string;
     label: string;
   }[];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onClickDelete: (selectionItem: string[]) => Promise<void>;
+  // onClickDelete: (selectionItem: string[]) => Promise<void>;
 }
 
-export default function TableControl({ table, columnConfig, setIsOpen, onClickDelete }: IControlTableProps) {
+export default function TableControl({ table, columnConfig, setIsOpen }: IControlTableProps) {
   //  선택한 체크박스
-  const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
+  // const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
 
   //  보기 설정용 객체 코드
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
@@ -31,19 +31,19 @@ export default function TableControl({ table, columnConfig, setIsOpen, onClickDe
   return (
     <div className="flex justify-between items-center gap-2 w-full py-3">
       <div className="flex items-center gap-2">
-        <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickDelete(selectedIds)}>
+        {/* <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickDelete(selectedIds)}>
           <span className="hidden sm:block">선택 삭제</span>
           <Trash
             className="w-4 h-4 
               block sm:hidden"
           />
-        </Button>
-        <Input
+        </Button> */}
+        {/* <Input
           placeholder="상품명을 입력해주세요."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
           className="max-w-sm text-sm"
-        />
+        /> */}
       </div>
 
       <div className="flex gap-2">
@@ -73,7 +73,7 @@ export default function TableControl({ table, columnConfig, setIsOpen, onClickDe
         </DropdownMenu>
 
         <Button variant="default" onClick={onClickCreate}>
-          <span className="hidden sm:block">상품 등록</span>
+          <span className="hidden sm:block">패키지 등록</span>
           <Pencil
             className="w-4 h-4 
               block sm:hidden"

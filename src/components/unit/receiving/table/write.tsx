@@ -18,13 +18,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Timestamp } from "firebase/firestore";
-import type { IItemData, IProductPackage, IUpdateItemData, IUpdateItemParams } from "@/types";
+import type { IProductPackage, IUpdateItemParams } from "@/types";
 
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   costPrice: z.string().min(1, "매입가격을 입력해주세요."),
-  // salePrice: z.string().min(1, "판매가격을 입력해주세요."),
 });
 const FormSchema = z.object({
   exchangeRate: z.string().min(1, "통화를 선택해주세요."),
@@ -34,17 +33,15 @@ const FormSchema = z.object({
 
 interface IManagementWriteProps {
   uid: string;
-  createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
-  updateItem: ({ updateTargetId, itemData }: IUpdateItemParams) => Promise<void>;
-  fetchItems: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  updateTarget: IItemData | undefined;
-  setUpdateTarget: React.Dispatch<React.SetStateAction<IItemData | undefined>>;
+  createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
+  fetchProductPackages: () => Promise<void>;
 }
 
-export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductPackage, updateItem, fetchItems, updateTarget, setUpdateTarget }: IManagementWriteProps) {
-  const isEdit = !!updateTarget;
+export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductPackage }: IManagementWriteProps) {
+  // const isEdit = !!updateTarget;
+  const isEdit = false;
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -59,6 +56,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
     control: form.control,
     name: "products",
   });
+  console.log("fields: ", fields);
 
   // updateTarget 변경 시 form 값을 리셋
   // useEffect(() => {
@@ -107,15 +105,15 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       form.reset();
-      // toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다!</p>, {
-      //   description: `${data.category} • ${data.brand} - ${data.name}`,
-      //   action: {
-      //     label: "닫기",
-      //     onClick: () => console.log("닫기"),
-      //   },
-      //   position: "top-center",
-      //   descriptionClassName: "ml-5",
-      // });
+      toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다!</p>, {
+        description: `상품 ${data.products.length} 개`,
+        action: {
+          label: "닫기",
+          onClick: () => console.log("닫기"),
+        },
+        position: "top-center",
+        descriptionClassName: "ml-5",
+      });
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
@@ -137,13 +135,13 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
         if (!open) {
           form.reset();
           setIsOpen(false);
-          setUpdateTarget(undefined);
+          // setUpdateTarget(undefined);
         } else {
           setIsOpen(true);
         }
       }}
     >
-      <DialogContent className="flex-col overflow-scroll max-h-160 sm:max-w-120">
+      <DialogContent className="flex-col overflow-y-scroll max-h-160 sm:max-w-120">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickSubmit)} className="flex flex-col gap-4">
             <DialogHeader>
@@ -181,13 +179,9 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
                 control={form.control}
                 name="shipping"
                 render={({ field }) => (
-                  <FormItem className="w-full">
-                    <FormLabel>직배송비</FormLabel>
-                    <FormControl>
-                      <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                  <FormInputWrap title="직배송비">
+                    <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" />
+                  </FormInputWrap>
                 )}
               />
             </div>
@@ -208,19 +202,19 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
                     <div className="flex flex-col gap-4">
                       <FormField
                         control={form.control}
-                        name={`products.${idx}.name`}
+                        name={`products.${idx}.brand`}
                         render={({ field }) => (
-                          <FormInputWrap title="제품명">
-                            <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
+                          <FormInputWrap title="브랜드명">
+                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
                           </FormInputWrap>
                         )}
                       />
                       <FormField
                         control={form.control}
-                        name={`products.${idx}.brand`}
+                        name={`products.${idx}.name`}
                         render={({ field }) => (
-                          <FormInputWrap title="브랜드명">
-                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
+                          <FormInputWrap title="제품명">
+                            <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
                           </FormInputWrap>
                         )}
                       />
@@ -255,7 +249,8 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createProductP
               <DialogClose asChild>
                 <Button variant="outline">취소</Button>
               </DialogClose>
-              <Button type="submit">{updateTarget ? "수정" : "등록"}</Button>
+              {/* <Button type="submit">{updateTarget ? "수정" : "등록"}</Button> */}
+              <Button type="submit">등록</Button>
             </DialogFooter>
           </form>
         </Form>
