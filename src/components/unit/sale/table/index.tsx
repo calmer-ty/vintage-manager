@@ -6,7 +6,7 @@ import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel
 
 // 훅
 import { useDateSelector } from "@/contexts/dateSelectorContext";
-import { useUserItems } from "@/hooks/useUserItems";
+import { useProducts } from "@/hooks/useProducts";
 
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -32,7 +32,7 @@ interface IDataTableProps {
 
 export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { items, createItem, updateItem, fetchItems } = useUserItems({ uid, selectedYear, selectedMonth });
+  const { products, createProduct, updateProduct, fetchProducts } = useProducts({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -40,7 +40,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
 
   // 수정 함수
   const onClickMoveToUpdate = async (selectedItemId: string) => {
-    const selectedItem = items.find((item) => item._id === selectedItemId);
+    const selectedItem = products.find((product) => product._id === selectedItemId);
     setUpdateTarget(selectedItem);
     setIsWriteOpen(true);
   };
@@ -55,7 +55,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         console.error(`ID ${id} 삭제 실패`, error);
       }
     }
-    fetchItems();
+    fetchProducts();
   };
 
   // shadcn 테이블 기본 코드
@@ -104,7 +104,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        return <ItemState item={row.original} refetch={fetchItems} />;
+        return <ItemState item={row.original} refetch={fetchProducts} />;
       },
     },
     {
@@ -130,7 +130,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     },
   ];
   const table = useReactTable({
-    data: items, // 데이터: row 값?
+    data: products, // 데이터: row 값?
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -164,9 +164,9 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         isOpen={isWriteOpen}
         setIsOpen={setIsWriteOpen}
         uid={uid}
-        createItem={createItem}
-        updateItem={updateItem}
-        fetchItems={fetchItems}
+        createProduct={createProduct}
+        updateProduct={updateProduct}
+        fetchProducts={fetchProducts}
         updateTarget={updateTarget}
         setUpdateTarget={setUpdateTarget}
       />

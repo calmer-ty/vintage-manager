@@ -29,16 +29,16 @@ const FormSchema = z.object({
 
 interface IManagementWriteProps {
   uid: string;
-  createItem: (itemData: IItemData) => Promise<void>;
-  updateItem: ({ updateTargetId, itemData }: IUpdateItemParams) => Promise<void>;
-  fetchItems: () => Promise<void>;
+  createProduct: (itemData: IItemData) => Promise<void>;
+  updateProduct: ({ updateTargetId, itemData }: IUpdateItemParams) => Promise<void>;
+  fetchProducts: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   updateTarget: IItemData | undefined;
   setUpdateTarget: React.Dispatch<React.SetStateAction<IItemData | undefined>>;
 }
 
-export default function SaleWrite({ uid, isOpen, setIsOpen, createItem, updateItem, fetchItems, updateTarget, setUpdateTarget }: IManagementWriteProps) {
+export default function SaleWrite({ uid, isOpen, setIsOpen, createProduct, updateProduct, fetchProducts, updateTarget, setUpdateTarget }: IManagementWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
@@ -104,8 +104,8 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, createItem, updateIt
       };
 
       // 데이터 생성 및 리패치
-      await createItem(itemData);
-      await fetchItems();
+      await createProduct(itemData);
+      await fetchProducts();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       form.reset();
@@ -138,8 +138,8 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, createItem, updateIt
       };
 
       // 데이터 수정 및 리패치
-      await updateItem({ updateTargetId: updateTargetId, itemData: itemData });
-      await fetchItems();
+      await updateProduct({ updateTargetId: updateTargetId, itemData: itemData });
+      await fetchProducts();
 
       // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
       toast(<p className="font-bold">🔄 상품이 성공적으로 수정되었습니다!</p>, {

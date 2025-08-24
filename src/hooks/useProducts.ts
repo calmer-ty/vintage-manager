@@ -5,23 +5,23 @@ import { addDoc, collection, doc, getDocs, orderBy, query, Timestamp, updateDoc,
 
 import type { IItemData, IUpdateItemParams } from "@/types";
 
-interface IUseUserItemsProps {
+interface IuseProductsProps {
   uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
-export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItemsProps) => {
-  const [items, setItems] = useState<IItemData[]>([]);
+export const useProducts = ({ uid, selectedYear, selectedMonth }: IuseProductsProps) => {
+  const [products, setProducts] = useState<IItemData[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createItem = async (itemData: IItemData) => {
+  const createProduct = async (itemData: IItemData) => {
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "items"), { ...itemData });
+      const docRef = await addDoc(collection(db, "product"), { ...itemData });
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
@@ -33,11 +33,11 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
   };
 
   // ✅ [수정]
-  const updateItem = async ({ updateTargetId, itemData }: IUpdateItemParams) => {
+  const updateProduct = async ({ updateTargetId, itemData }: IUpdateItemParams) => {
     if (!uid) return;
 
     try {
-      const docRef = doc(db, "items", updateTargetId);
+      const docRef = doc(db, "product", updateTargetId);
 
       await updateDoc(docRef, { ...itemData });
     } catch (err) {
@@ -46,7 +46,7 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
   };
 
   // 조회 함수
-  const fetchItems = useCallback(async () => {
+  const fetchProducts = useCallback(async () => {
     if (!uid) return;
     setLoading(true);
 
@@ -56,7 +56,7 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
       const end = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1)); // 다음 달 1일
 
       const q = query(
-        collection(db, "items"),
+        collection(db, "product"),
         // 특정 값 기준으로 필터링
         where("uid", "==", uid),
         where("createdAt", ">=", start),
@@ -71,7 +71,7 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
         ...doc.data(),
       }));
 
-      setItems(dataArray as IItemData[]);
+      setProducts(dataArray as IItemData[]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -80,8 +80,8 @@ export const useUserItems = ({ uid, selectedYear, selectedMonth }: IUseUserItems
   }, [uid, selectedYear, selectedMonth]);
 
   useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+    fetchProducts();
+  }, [fetchProducts]);
 
-  return { items, loading, createItem, updateItem, fetchItems };
+  return { products, loading, createProduct, updateProduct, fetchProducts };
 };

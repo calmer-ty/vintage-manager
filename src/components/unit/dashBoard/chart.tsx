@@ -12,7 +12,7 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import type { IItemData } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
 interface IDashBoardChartProps {
-  items: IItemData[];
+  products: IItemData[];
   selectedYear: number;
   selectedMonth: number;
 }
@@ -31,20 +31,20 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({ items, selectedYear, selectedMonth }: IDashBoardChartProps) {
+export default function DashBoardChart({ products, selectedYear, selectedMonth }: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
 
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
 
   // 판매/판매완료 된 상품들의 날짜를 추출
-  const costDays = items.map((item) => {
-    const convertedDate = item.createdAt.toDate();
+  const costDays = products.map((product) => {
+    const convertedDate = product.createdAt.toDate();
     return getDateString(convertedDate);
   });
-  const soldDays = items
-    .filter((item) => item.soldAt != null)
-    .map((item) => {
-      const convertedDate = item.soldAt!.toDate();
+  const soldDays = products
+    .filter((product) => product.soldAt != null)
+    .map((product) => {
+      const convertedDate = product.soldAt!.toDate();
       return getDateString(convertedDate);
     });
 

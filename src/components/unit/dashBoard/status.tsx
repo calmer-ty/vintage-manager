@@ -7,9 +7,9 @@ import { Boxes, DollarSign, ShoppingCart, TrendingUp } from "lucide-react";
 
 import type { IItemData } from "@/types";
 
-export default function DashBoardStatus({ items }: { items: IItemData[] }) {
+export default function DashBoardStatus({ products }: { products: IItemData[] }) {
   // soldAt null이 아닌 item 데이터들
-  const soldItems = items.filter((item) => item.soldAt !== null);
+  const soldItems = products.filter((product) => product.soldAt !== null);
 
   // items의 특정 키의 값들을 모두 더하여 합한 값을 계산하는 함수
   function sumField(items: IItemData[], field: keyof IItemData) {
@@ -26,7 +26,7 @@ export default function DashBoardStatus({ items }: { items: IItemData[] }) {
 
     return sum;
   }
-  const totalCostPriceKRW = sumField(items, "costPriceKRW");
+  const totalCostPriceKRW = sumField(products, "costPriceKRW");
   const totalSalePrice = sumField(soldItems, "salePrice");
   const totalProfit = sumField(soldItems, "profit");
 
