@@ -5,14 +5,14 @@ import { addDoc, collection, doc, getDocs, orderBy, query, Timestamp, updateDoc,
 
 import type { IItemData, IUpdateItemParams } from "@/types";
 
-interface IuseProductsProps {
+interface IUseProductsProps {
   uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
-export const useProducts = ({ uid, selectedYear, selectedMonth }: IuseProductsProps) => {
+export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsProps) => {
   const [products, setProducts] = useState<IItemData[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +21,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IuseProductsPr
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "product"), { ...itemData });
+      const docRef = await addDoc(collection(db, "products"), { ...itemData });
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
@@ -37,7 +37,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IuseProductsPr
     if (!uid) return;
 
     try {
-      const docRef = doc(db, "product", updateTargetId);
+      const docRef = doc(db, "products", updateTargetId);
 
       await updateDoc(docRef, { ...itemData });
     } catch (err) {
@@ -56,7 +56,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IuseProductsPr
       const end = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1)); // 다음 달 1일
 
       const q = query(
-        collection(db, "product"),
+        collection(db, "products"),
         // 특정 값 기준으로 필터링
         where("uid", "==", uid),
         where("createdAt", ">=", start),
