@@ -13,8 +13,8 @@ export const pages = [
     icon: Settings,
   },
   {
-    title: "상품관리",
-    url: "/management",
+    title: "판매관리",
+    url: "/sale",
     icon: Settings,
   },
 ];

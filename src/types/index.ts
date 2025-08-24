@@ -34,7 +34,6 @@ export interface ICurrency {
 export interface IItemData {
   _id: string; // 문서 id 값
   uid: string;
-  category: string;
   name: string;
   brand: string;
   costPrice: string;
