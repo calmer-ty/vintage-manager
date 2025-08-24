@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
 
 // 내부 요소
-import ReceivingWrite from "./write";
+import ReceivingWrite from "../write";
 import TableControl from "./control";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
@@ -199,7 +199,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead key={header.id}>
-                      <div className="px-4">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
+                      <div className="px-4 text-center">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
                     </TableHead>
                   ))}
                 </TableRow>
