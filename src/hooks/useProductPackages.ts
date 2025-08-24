@@ -4,15 +4,14 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, getDocs, orderBy, query, Timestamp, updateDoc, where } from "firebase/firestore";
 
 import type { IProductPackage } from "@/types";
-
-interface IUseProductPackageParams {
+interface IUseProductPackagesParams {
   uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
-export const useProductPackage = ({ uid, selectedYear, selectedMonth }: IUseProductPackageParams) => {
+export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUseProductPackagesParams) => {
   const [productPackages, setProductPackages] = useState<IProductPackage[]>([]);
   const [loading, setLoading] = useState(false);
 

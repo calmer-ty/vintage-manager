@@ -6,7 +6,7 @@ import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel
 
 // 훅
 import { useDateSelector } from "@/contexts/dateSelectorContext";
-import { useProductPackage } from "@/hooks/useProductPackage";
+import { useProductPackages } from "@/hooks/useProductPackages";
 
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -31,7 +31,7 @@ interface IDataTableProps {
 
 export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { productPackages, createProductPackage, fetchProductPackages } = useProductPackage({ uid, selectedYear, selectedMonth });
+  const { productPackages, createProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
