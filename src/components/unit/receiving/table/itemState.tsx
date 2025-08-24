@@ -5,9 +5,9 @@ import { db } from "@/lib/firebase/firebaseApp";
 // 외부 요소
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { IItemData } from "@/types";
+import type { IProduct } from "@/types";
 interface IManagementSelectProps {
-  item: IItemData;
+  item: IProduct;
   refetch: () => Promise<void>;
 }
 

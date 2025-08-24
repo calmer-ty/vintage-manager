@@ -17,7 +17,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Timestamp } from "firebase/firestore";
-import type { IItemData, IUpdateItemData, IUpdateItemParams } from "@/types";
+import type { IProduct, IUpdateProduct, IUpdateItemParams } from "@/types";
 
 // const categoryItems = [
 //   { label: "상의", value: "상의" },
@@ -39,13 +39,13 @@ const FormSchema = z.object({
 
 interface IManagementWriteProps {
   uid: string;
-  createItem: (itemData: IItemData) => Promise<void>;
+  createItem: (itemData: IProduct) => Promise<void>;
   updateItem: ({ updateTargetId, itemData }: IUpdateItemParams) => Promise<void>;
   fetchItems: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  updateTarget: IItemData | undefined;
-  setUpdateTarget: React.Dispatch<React.SetStateAction<IItemData | undefined>>;
+  updateTarget: IProduct | undefined;
+  setUpdateTarget: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
 }
 
 export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, updateItem, fetchItems, updateTarget, setUpdateTarget }: IManagementWriteProps) {
@@ -103,7 +103,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
     try {
       const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
 
-      const itemData: IItemData = {
+      const itemData: IProduct = {
         ...data,
         _id: "",
         uid,
@@ -144,7 +144,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
     try {
       const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
 
-      const itemData: IUpdateItemData = {
+      const itemData: IUpdateProduct = {
         ...data,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,

@@ -21,7 +21,7 @@ import TableControl from "./control";
 import ItemState from "./itemState";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { IItemData } from "@/types";
+import type { IProduct } from "@/types";
 interface IDataTableProps {
   uid: string;
   columnConfig: {
@@ -36,7 +36,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IItemData | undefined>(undefined);
+  const [updateTarget, setUpdateTarget] = useState<IProduct | undefined>(undefined);
 
   // 수정 함수
   const onClickMoveToUpdate = async (selectedItemId: string) => {
@@ -64,7 +64,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const dynamicColumns: ColumnDef<IItemData>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<IProduct>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
@@ -84,7 +84,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
       return <div className="capitalize">{row.getValue(key)}</div>;
     },
   }));
-  const columns: ColumnDef<IItemData>[] = [
+  const columns: ColumnDef<IProduct>[] = [
     {
       id: "select",
       header: ({ table }) => (

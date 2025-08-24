@@ -31,7 +31,7 @@ export interface ICurrency {
   rate: string;
 }
 
-export interface IItemData {
+export interface IProduct {
   _id: string; // 문서 id 값
   uid: string;
   name: string;
@@ -44,8 +44,7 @@ export interface IItemData {
   createdAt: Timestamp;
   soldAt: Timestamp | null;
 }
-export interface IUpdateItemData {
-  // category: string;
+export interface IUpdateProduct {
   name: string;
   brand: string;
   salePrice: number;
@@ -53,7 +52,7 @@ export interface IUpdateItemData {
 }
 export interface IUpdateItemParams {
   updateTargetId: string;
-  itemData: IUpdateItemData;
+  itemData: IUpdateProduct;
 }
 
 export interface IUserID {

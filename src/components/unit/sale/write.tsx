@@ -17,7 +17,7 @@ import BasicSelect from "@/components/commons/select/basic";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IItemData, IUpdateItemData, IUpdateItemParams } from "@/types";
+import type { IProduct, IUpdateProduct, IUpdateItemParams } from "@/types";
 
 const FormSchema = z.object({
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
@@ -29,13 +29,13 @@ const FormSchema = z.object({
 
 interface IManagementWriteProps {
   uid: string;
-  createProduct: (itemData: IItemData) => Promise<void>;
+  createProduct: (itemData: IProduct) => Promise<void>;
   updateProduct: ({ updateTargetId, itemData }: IUpdateItemParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  updateTarget: IItemData | undefined;
-  setUpdateTarget: React.Dispatch<React.SetStateAction<IItemData | undefined>>;
+  updateTarget: IProduct | undefined;
+  setUpdateTarget: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
 }
 
 export default function SaleWrite({ uid, isOpen, setIsOpen, createProduct, updateProduct, fetchProducts, updateTarget, setUpdateTarget }: IManagementWriteProps) {
@@ -90,7 +90,7 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, createProduct, updat
     try {
       const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
 
-      const itemData: IItemData = {
+      const itemData: IProduct = {
         ...data,
         _id: "",
         uid,
@@ -131,7 +131,7 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, createProduct, updat
     try {
       const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
 
-      const itemData: IUpdateItemData = {
+      const itemData: IUpdateProduct = {
         ...data,
         salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,

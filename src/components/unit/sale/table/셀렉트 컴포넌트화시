@@ -10,6 +10,6 @@
 //           const item = row.original;
 //           return renderStatusCell(item); // ✅ 여기서 호출
 //         },
-//       } as ColumnDef<IItemData>,
+//       } as ColumnDef<IProduct>,
 //     ]
 //   : []),

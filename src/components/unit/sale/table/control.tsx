@@ -5,10 +5,10 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Trash, Settings } from "lucide-react";
 
-import type { IItemData } from "@/types";
+import type { IProduct } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface IControlTableProps {
-  table: Table<IItemData>;
+  table: Table<IProduct>;
   columnConfig: {
     key: string;
     label: string;

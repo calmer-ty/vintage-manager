@@ -9,10 +9,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import type { IItemData } from "@/types";
+import type { IProduct } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
 interface IDashBoardChartProps {
-  products: IItemData[];
+  products: IProduct[];
   selectedYear: number;
   selectedMonth: number;
 }

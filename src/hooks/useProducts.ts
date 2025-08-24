@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, doc, getDocs, orderBy, query, Timestamp, updateDoc, where } from "firebase/firestore";
 
-import type { IItemData, IUpdateItemParams } from "@/types";
+import type { IProduct, IUpdateItemParams } from "@/types";
 
 interface IUseProductsProps {
   uid: string;
@@ -13,11 +13,11 @@ interface IUseProductsProps {
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsProps) => {
-  const [products, setProducts] = useState<IItemData[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createProduct = async (itemData: IItemData) => {
+  const createProduct = async (itemData: IProduct) => {
     if (!uid) return;
 
     try {
@@ -71,7 +71,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
         ...doc.data(),
       }));
 
-      setProducts(dataArray as IItemData[]);
+      setProducts(dataArray as IProduct[]);
     } catch (err) {
       console.error(err);
     } finally {
