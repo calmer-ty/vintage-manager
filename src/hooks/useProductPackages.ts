@@ -1,7 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
-
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, getDocs, orderBy, query, Timestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+
+import { getMonthRangeTimestamps } from "@/lib/date";
 
 import type { IProductPackage } from "@/types";
 interface IUseProductPackagesParams {
@@ -50,9 +51,8 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     setLoading(true);
 
     try {
-      // 선택한 년/월 기준으로 필터링 데이터 정의
-      const start = Timestamp.fromDate(new Date(selectedYear, selectedMonth - 1, 1)); // JS는 월이 0-based
-      const end = Timestamp.fromDate(new Date(selectedYear, selectedMonth, 1)); // 다음 달 1일
+      // 선택한 년/월 값을 받아 현재 1일부터 다음 달 1일 값 불러옴
+      const { start, end } = getMonthRangeTimestamps(selectedYear, selectedMonth);
 
       const q = query(
         collection(db, "productPackages"),
