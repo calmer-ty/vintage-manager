@@ -1,30 +1,23 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
-
-import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-import BasicSelect from "@/components/commons/select/basic";
+import FormInputWrap from "@/components/commons/inputWrap/form";
 
 // Schema
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IProduct, IUpdateProduct, IUpdateItemParams, ICreateProduct, IProduct2 } from "@/types";
-import FormInputWrap from "@/components/commons/inputWrap/form";
+import type { IUpdateProduct, IUpdateItemParams, ICreateProduct, IProduct2, ICurrency } from "@/types";
 
 const FormSchema = z.object({
-  // brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
-  // name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
-  // costPrice: z.string().min(1, "매입가격을 입력해주세요."),
-  // exchangeRate: z.string().min(1, "통화를 선택해주세요."),
+  brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
+  name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
 });
 
@@ -46,10 +39,8 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      // brand: "",
-      // name: "",
-      // costPrice: "",
-      // exchangeRate: "",
+      brand: "",
+      name: "",
       salePrice: "",
     },
   });
@@ -58,93 +49,40 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
   useEffect(() => {
     if (isEdit) {
       form.reset({
-        // brand: updateTarget.brand,
-        // name: updateTarget.name,
-        // costPrice: updateTarget.costPrice.replace(/[^\d]/g, ""),
-        // exchangeRate: updateTarget.exchangeRate?.toString(),
-        salePrice: updateTarget.salePrice?.toString(),
+        brand: updateTarget.brand,
+        name: updateTarget.name,
+        salePrice: updateTarget.salePrice ?? "",
       });
     } else {
       form.reset({
-        // brand: "",
-        // name: "",
-        // costPrice: "",
-        // exchangeRate: "",
+        brand: "",
+        name: "",
         salePrice: "",
       });
     }
   }, [form, isOpen, isEdit, updateTarget]);
 
-  // 통화 정보
-  // const { currencyOptions } = useExchangeRate();
-
-  // 원화로 환산
-  // const watchCostPrice = Number(form.watch("costPrice"));
-  // const watchExchangeRate = Number(form.watch("exchangeRate"));
-
-  // 값 변환 함수
-  const formatPriceKRW = (costPrice: string, exchangeRate: string) => Math.round(Number(costPrice) * Number(exchangeRate));
-  // const formatLabel = (exchangeRate: string) => currencyOptions.find((opt) => opt.value === exchangeRate)?.label;
-
-  // 등록 함수
-  // const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
-  //   try {
-  //     const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
-
-  //     const itemData: IProduct = {
-  //       ...data,
-  //       _id: "",
-  //       uid,
-  //       costPrice: `${data.costPrice.toLocaleString()} ${formatLabel(data.exchangeRate)}`,
-  //       costPriceKRW,
-  //       salePrice: Number(data.salePrice),
-  //       profit: Number(data.salePrice) - costPriceKRW,
-  //       exchangeRate: Number(data.exchangeRate),
-  //       createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
-  //       soldAt: null,
-  //     };
-
-  //     // 데이터 생성 및 리패치
-  //     await createProduct(itemData);
-  //     await fetchProducts();
-
-  //     // 등록 성공 후 폼 초기화 및 토스트 띄우기
-  //     form.reset();
-  //     toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다!</p>, {
-  //       description: `${data.brand} - ${data.name}`,
-  //       action: {
-  //         label: "닫기",
-  //         onClick: () => console.log("닫기"),
-  //       },
-  //       position: "top-center",
-  //       descriptionClassName: "ml-5",
-  //     });
-  //   } catch (error) {
-  //     console.error("문서 추가 실패:", error);
-  //   }
-  // };
-
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
-    const updateTargetId = updateTarget?._id;
-    if (!updateTargetId) return;
+    if (!uid || !isEdit) return;
 
     try {
-      const costPriceKRW = formatPriceKRW(data.costPrice, data.exchangeRate);
+      const costPrice = updateTarget?.costPrice;
+      const currency: ICurrency = JSON.parse(updateTarget?.currency);
+      const costPriceKRW = Number(costPrice) * currency.rate;
 
-      const products: IUpdateProduct = {
+      const product: IUpdateProduct = {
         ...data,
-        salePrice: Number(data.salePrice),
         profit: Number(data.salePrice) - costPriceKRW,
       };
 
       // 데이터 수정 및 리패치
-      await updateProduct({ updateTargetId: updateTargetId, products });
+      await updateProduct({ updateTargetId: updateTarget?._id, product });
       await fetchProducts();
 
       // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
       toast(<p className="font-bold">🔄 상품이 성공적으로 수정되었습니다!</p>, {
-        description: `${data.brand} - ${data.name}`,
+        description: `${updateTarget.brand} - ${updateTarget.name} - 판매가: ${data.salePrice}`,
         action: {
           label: "닫기",
           onClick: () => console.log("닫기"),

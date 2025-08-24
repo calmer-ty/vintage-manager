@@ -1,6 +1,6 @@
 // 라이브러리
 import { useState } from "react";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
@@ -69,21 +69,36 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     header: label,
     cell: ({ row }) => {
       const value = row.getValue(key);
-      const costPrice: number = row.getValue("costPrice");
-      const currency: ICurrency = JSON.parse(row.original.currency);
-      console.log("currency: ", currency.rate);
-      console.log("costPriceKRW: ", costPrice * currency.rate);
 
-      // 숫자라면 toLocaleString으로 포맷 (예: 가격)
-      if (typeof value === "number") {
-        return <div className="capitalize">{value?.toLocaleString()}</div>;
+      const currency: ICurrency = JSON.parse(row.original.currency);
+      const costPrice = row.original.costPrice;
+      const salePrice = row.original.salePrice;
+      const profit = row.original.profit;
+
+      if (value instanceof Timestamp) {
+        // Timestamp일 때만 처리
+        const timestamp = value as Timestamp;
+        return <div>{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
       }
-      // products 일 때, 각 각 상품 정보 표시
-      // if (key === "salePrice") {
-      //   return <div className="flex flex-col gap-1">111</div>;
-      // }
       if (value == null) {
-        return <div className="capitalize">-</div>;
+        return <div>-</div>;
+      }
+
+      if (key === "costPrice") {
+        return (
+          <div className="flex gap-2">
+            <span>{Math.round(Number(costPrice) * currency.rate)} ₩</span>
+            <span>
+              ({costPrice} {currency.label})
+            </span>
+          </div>
+        );
+      }
+      if (key === "salePrice") {
+        return <div>{salePrice} ₩</div>;
+      }
+      if (key === "profit") {
+        return <div>{Math.round(Number(profit))} ₩</div>;
       }
 
       return <div className="capitalize">{String(value)}</div>;
@@ -126,8 +141,8 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 수정</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 판매가 지정</DropdownMenuItem>
+              {/* <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );

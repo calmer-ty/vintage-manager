@@ -1,6 +1,6 @@
 // 라이브러리
 import { useState } from "react";
-import { deleteDoc, doc } from "firebase/firestore";
+import { deleteDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
@@ -68,11 +68,13 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     header: label,
     cell: ({ row }) => {
       const value = row.getValue(key);
+
       const currency: ICurrency = JSON.parse(row.original.currency);
 
-      // 숫자라면 toLocaleString으로 포맷 (예: 가격)
-      if (typeof value === "number") {
-        return <div>{value?.toLocaleString()}</div>;
+      if (value instanceof Timestamp) {
+        // Timestamp일 때만 처리
+        const timestamp = row.getValue(key) as Timestamp;
+        return <div className="capitalize">{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
       }
       if (value == null) {
         return <div>-</div>;
