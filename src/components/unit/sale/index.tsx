@@ -14,7 +14,7 @@ const columnConfig = [
   { key: "profit", label: "예상 이익" },
 ];
 
-export default function ManagementUI({ uid }: IUserID) {
+export default function SaleUI({ uid }: IUserID) {
   return (
     <article className="p-6">
       <TableUI uid={uid} columnConfig={columnConfig} />

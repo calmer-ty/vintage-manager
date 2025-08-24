@@ -19,18 +19,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Timestamp } from "firebase/firestore";
 import type { IItemData, IUpdateItemData, IUpdateItemParams } from "@/types";
 
-const categoryItems = [
-  { label: "상의", value: "상의" },
-  { label: "하의", value: "하의" },
-  { label: "아우터", value: "아우터" },
-  { label: "가방", value: "가방" },
-  { label: "액세사리", value: "액세사리" },
-  { label: "기타", value: "기타" },
-];
+// const categoryItems = [
+//   { label: "상의", value: "상의" },
+//   { label: "하의", value: "하의" },
+//   { label: "아우터", value: "아우터" },
+//   { label: "가방", value: "가방" },
+//   { label: "액세사리", value: "액세사리" },
+//   { label: "기타", value: "기타" },
+// ];
 
 const FormSchema = z.object({
-  category: z.string().min(1, "카테고리를 선택해주세요."),
-  brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
+  // category: z.string().min(1, "카테고리를 선택해주세요."),
+  // brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
   costPrice: z.string().min(1, "매입가격을 입력해주세요."),
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
@@ -55,8 +55,6 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      category: "",
-      brand: "",
       name: "",
       costPrice: "",
       salePrice: "",
@@ -68,8 +66,6 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
   useEffect(() => {
     if (isEdit) {
       form.reset({
-        category: updateTarget.category,
-        brand: updateTarget.brand,
         name: updateTarget.name,
         costPrice: updateTarget.costPrice.replace(/[^\d]/g, ""),
         salePrice: updateTarget.salePrice?.toString(),
@@ -77,8 +73,6 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
       });
     } else {
       form.reset({
-        category: "",
-        brand: "",
         name: "",
         costPrice: "",
         salePrice: "",
@@ -129,7 +123,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       form.reset();
       toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다!</p>, {
-        description: `${data.category} • ${data.brand} - ${data.name}`,
+        description: `${data.name}`,
         action: {
           label: "닫기",
           onClick: () => console.log("닫기"),
@@ -162,7 +156,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
 
       // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
       toast(<p className="font-bold">🔄 상품이 성공적으로 수정되었습니다!</p>, {
-        description: `${data.category} • ${data.brand} - ${data.name}`,
+        description: `${data.name}`,
         action: {
           label: "닫기",
           onClick: () => console.log("닫기"),
@@ -198,7 +192,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
             </DialogHeader>
 
             <div className="flex flex-col gap-4">
-              <div className="flex gap-4">
+              {/* <div className="flex gap-4">
                 <FormField
                   control={form.control}
                   name="category"
@@ -226,7 +220,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                     </FormItem>
                   )}
                 />
-              </div>
+              </div> */}
               <FormField
                 control={form.control}
                 name="name"
@@ -234,7 +228,7 @@ export default function ManagementWrite({ uid, isOpen, setIsOpen, createItem, up
                   <FormItem className="w-full">
                     <FormLabel>제품명</FormLabel>
                     <FormControl>
-                      <Input placeholder="예) 1940s 복각 청남방" {...field} className="bg-white" />
+                      <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

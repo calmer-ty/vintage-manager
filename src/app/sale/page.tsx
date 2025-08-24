@@ -1,12 +1,12 @@
 "use client";
 
-import { useAuth } from "@/contexts/authContext";
-
-import ManagementUI from "@/components/unit/management";
-
 import { Loader } from "lucide-react";
 
-export default function ManagementPage() {
+import { useAuth } from "@/contexts/authContext";
+
+import SaleUI from "@/components/unit/sale";
+
+export default function SalePage() {
   const { loading, user } = useAuth();
 
   if (loading) {
@@ -18,5 +18,5 @@ export default function ManagementPage() {
     return <div>로그인이 필요합니다.</div>;
   }
 
-  return <ManagementUI uid={user.uid} />;
+  return <SaleUI uid={user.uid} />;
 }

@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
 
 // 내부 요소
-import ManagementWrite from "./write";
+import SaleWrite from "../write";
 import TableControl from "./control";
 import ItemState from "./itemState";
 
@@ -160,7 +160,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         "
     >
       {/* 다이얼로그 창 */}
-      <ManagementWrite
+      <SaleWrite
         isOpen={isWriteOpen}
         setIsOpen={setIsWriteOpen}
         uid={uid}
