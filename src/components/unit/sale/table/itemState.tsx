@@ -5,17 +5,17 @@ import { db } from "@/lib/firebase/firebaseApp";
 // 외부 요소
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { IProduct } from "@/types";
+import type { IProduct2 } from "@/types";
 interface IManagementSelectProps {
-  item: IProduct;
+  product: IProduct2;
   refetch: () => Promise<void>;
 }
 
-export default function ItemState({ item, refetch }: IManagementSelectProps) {
+export default function ItemState({ product, refetch }: IManagementSelectProps) {
   // 판매상태 함수
   const onUpdate = async (id: string, value: boolean) => {
     try {
-      const docRef = doc(db, "items", id);
+      const docRef = doc(db, "products", id);
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
@@ -30,13 +30,13 @@ export default function ItemState({ item, refetch }: IManagementSelectProps) {
 
   return (
     <Select
-      value={item.soldAt ? "true" : "false"}
+      value={product.soldAt ? "true" : "false"}
       onValueChange={(value) => {
         // 선택된 값이 'false'면 판매완료니까 업데이트 실행
         if (value === "true") {
-          onUpdate(item._id, true);
+          onUpdate(product._id, true);
         } else {
-          onUpdate(item._id, false);
+          onUpdate(product._id, false);
         }
       }}
     >

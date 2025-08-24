@@ -15,7 +15,7 @@ export interface IExchangeRate {
 export interface ICurrency {
   label: string;
   value: string;
-  rate: string;
+  rate: number;
 }
 
 export interface IProductPackage {
@@ -49,15 +49,24 @@ export interface IProduct {
   createdAt: Timestamp;
   soldAt: Timestamp | null;
 }
-export interface IUpdateProduct {
-  name: string;
+export interface IProduct2 {
+  _id: string; // 문서 id 값
+  uid: string;
   brand: string;
+  name: string;
+  costPrice: string;
+  salePrice: number;
+  currency: string;
+  createdAt: Timestamp;
+  soldAt: Timestamp | null;
+}
+export interface IUpdateProduct {
   salePrice: number;
   profit: number;
 }
 export interface IUpdateItemParams {
   updateTargetId: string;
-  products: IUpdateProduct;
+  product: IUpdateProduct;
 }
 
 export interface IUserID {

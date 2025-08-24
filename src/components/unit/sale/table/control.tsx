@@ -1,32 +1,27 @@
-import { ChevronDown, Pencil } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Trash, Settings } from "lucide-react";
 
-import type { IProduct } from "@/types";
+import type { IProduct2 } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface IControlTableProps {
-  table: Table<IProduct>;
+  table: Table<IProduct2>;
   columnConfig: {
     key: string;
     label: string;
   }[];
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onClickDelete: (selectionItem: string[]) => Promise<void>;
 }
 
-export default function TableControl({ table, columnConfig, setIsOpen, onClickDelete }: IControlTableProps) {
+export default function TableControl({ table, columnConfig, onClickDelete }: IControlTableProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
 
   //  보기 설정용 객체 코드
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
-
-  const onClickCreate = () => {
-    setIsOpen(true);
-  };
 
   return (
     <div className="flex justify-between items-center gap-2 w-full py-3">
@@ -71,14 +66,6 @@ export default function TableControl({ table, columnConfig, setIsOpen, onClickDe
               })}
           </DropdownMenuContent>
         </DropdownMenu>
-
-        <Button variant="default" onClick={onClickCreate}>
-          <span className="hidden sm:block">상품 등록</span>
-          <Pencil
-            className="w-4 h-4 
-              block sm:hidden"
-          />
-        </Button>
       </div>
     </div>
   );

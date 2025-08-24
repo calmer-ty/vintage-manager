@@ -7,7 +7,7 @@ interface IFormInputProps {
 
 export default function FormInputWrap({ title, children }: IFormInputProps) {
   return (
-    <FormItem>
+    <FormItem className="w-full">
       <FormLabel>{title}</FormLabel>
       <FormControl>{children}</FormControl>
       <FormMessage />

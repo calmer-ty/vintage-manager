@@ -4,7 +4,7 @@ import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore"
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { IProduct, ICreateProduct, IUpdateItemParams } from "@/types";
+import type { ICreateProduct, IUpdateItemParams, IProduct2 } from "@/types";
 interface IUseProductsProps {
   uid: string;
   selectedYear: number;
@@ -13,7 +13,7 @@ interface IUseProductsProps {
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsProps) => {
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<IProduct2[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
@@ -34,13 +34,13 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
   };
 
   // ✅ [수정]
-  const updateProduct = async ({ updateTargetId, products }: IUpdateItemParams) => {
+  const updateProduct = async ({ updateTargetId, product }: IUpdateItemParams) => {
     if (!uid) return;
 
     try {
       const docRef = doc(db, "products", updateTargetId);
 
-      await updateDoc(docRef, { ...products });
+      await updateDoc(docRef, { ...product });
     } catch (err) {
       console.error(err);
     }
@@ -61,7 +61,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
         ...doc.data(),
       }));
 
-      setProducts(dataArray as IProduct[]);
+      setProducts(dataArray as IProduct2[]);
     } catch (err) {
       console.error(err);
     } finally {

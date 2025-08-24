@@ -1,6 +1,6 @@
 // 라이브러리
 import { useState } from "react";
-import { deleteDoc, doc, Timestamp } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
@@ -21,7 +21,7 @@ import TableControl from "./control";
 import ItemState from "./itemState";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { IProduct } from "@/types";
+import type { ICurrency, IProduct2 } from "@/types";
 interface IDataTableProps {
   uid: string;
   columnConfig: {
@@ -36,7 +36,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IProduct | undefined>(undefined);
+  const [updateTarget, setUpdateTarget] = useState<IProduct2 | undefined>(undefined);
 
   // 수정 함수
   const onClickMoveToUpdate = async (selectedItemId: string) => {
@@ -64,27 +64,32 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
-  const dynamicColumns: ColumnDef<IProduct>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<IProduct2>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
+      const value = row.getValue(key);
+      const costPrice: number = row.getValue("costPrice");
+      const currency: ICurrency = JSON.parse(row.original.currency);
+      console.log("currency: ", currency.rate);
+      console.log("costPriceKRW: ", costPrice * currency.rate);
+
       // 숫자라면 toLocaleString으로 포맷 (예: 가격)
-      if (typeof row.getValue(key) === "number") {
-        return <div className="capitalize">{row.getValue(key)?.toLocaleString()}</div>;
+      if (typeof value === "number") {
+        return <div className="capitalize">{value?.toLocaleString()}</div>;
       }
-      if (row.getValue(key) instanceof Timestamp) {
-        // Timestamp일 때만 처리
-        const timestamp = row.getValue(key) as Timestamp;
-        return <div className="capitalize">{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
-      }
-      if (row.getValue(key) == null) {
+      // products 일 때, 각 각 상품 정보 표시
+      // if (key === "salePrice") {
+      //   return <div className="flex flex-col gap-1">111</div>;
+      // }
+      if (value == null) {
         return <div className="capitalize">-</div>;
       }
 
-      return <div className="capitalize">{row.getValue(key)}</div>;
+      return <div className="capitalize">{String(value)}</div>;
     },
   }));
-  const columns: ColumnDef<IProduct>[] = [
+  const columns: ColumnDef<IProduct2>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -104,7 +109,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        return <ItemState item={row.original} refetch={fetchProducts} />;
+        return <ItemState product={row.original} refetch={fetchProducts} />;
       },
     },
     {
@@ -171,7 +176,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         setUpdateTarget={setUpdateTarget}
       />
 
-      <TableControl table={table} setIsOpen={setIsWriteOpen} onClickDelete={onClickDelete} columnConfig={columnConfig} />
+      <TableControl table={table} onClickDelete={onClickDelete} columnConfig={columnConfig} />
       <>
         <div className="border rounded-md">
           <Table>
@@ -189,12 +194,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
-                  <TableRow
-                    key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
-                    // onClick={}
-                    className={row.original.soldAt ? "bg-gray-100" : ""}
-                  >
+                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id} className="text-center">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
