@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 // Date 값을 문자열로 년-월-일로 리턴
 export const getDateString = (date: Date) => {
   const year = date.getFullYear();
@@ -30,11 +28,4 @@ export const getDaysOfCurrentMonth = (year: number, month: number) => {
     const pad = (n: number) => String(n).padStart(2, "0");
     return { date: `${year}-${pad(month)}-${pad(i + 1)}` };
   });
-};
-
-export const getMonthRangeTimestamps = (year: number, month: number) => {
-  const start = Timestamp.fromDate(new Date(year, month - 1, 1)); // JS는 월이 0-based
-  const end = Timestamp.fromDate(new Date(year, month, 1)); // 다음 달 1일
-
-  return { start, end };
 };

@@ -1,10 +1,10 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, doc, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
 
-import { getMonthRangeTimestamps } from "@/lib/date";
+import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { IProduct, IUpdateItemParams } from "@/types";
+import type { IProduct, ICreateProduct, IUpdateItemParams } from "@/types";
 interface IUseProductsProps {
   uid: string;
   selectedYear: number;
@@ -17,29 +17,30 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createProduct = async (itemData: IProduct) => {
+  const createProduct = async ({ currency, products, createdAt }: ICreateProduct) => {
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "products"), { ...itemData });
+      for (const product of products) {
+        const docRef = await addDoc(collection(db, "products"), { uid, currency, ...product, createdAt });
 
-      // 문서 ID를 포함한 데이터로 업데이트
-      await updateDoc(docRef, {
-        _id: docRef.id,
-      });
+        await updateDoc(docRef, {
+          _id: docRef.id,
+        });
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
   // ✅ [수정]
-  const updateProduct = async ({ updateTargetId, itemData }: IUpdateItemParams) => {
+  const updateProduct = async ({ updateTargetId, products }: IUpdateItemParams) => {
     if (!uid) return;
 
     try {
       const docRef = doc(db, "products", updateTargetId);
 
-      await updateDoc(docRef, { ...itemData });
+      await updateDoc(docRef, { ...products });
     } catch (err) {
       console.error(err);
     }
@@ -51,18 +52,8 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
     setLoading(true);
 
     try {
-      // 선택한 년/월 값을 받아 현재 1일부터 다음 달 1일 값 불러옴
-      const { start, end } = getMonthRangeTimestamps(selectedYear, selectedMonth);
-
-      const q = query(
-        collection(db, "products"),
-        // 특정 값 기준으로 필터링
-        where("uid", "==", uid),
-        where("createdAt", ">=", start),
-        where("createdAt", "<", end),
-        // 그 필터된 문서들을 createdAt(생성 시각) 기준으로 내림차순(최신순) 정렬
-        orderBy("createdAt", "desc")
-      );
+      // 년/월 데이터를 제한하여 한정적으로 데이터 쿼리
+      const q = getUserDateQuery(uid, "products", selectedYear, selectedMonth);
 
       const querySnapshot = await getDocs(q);
       const dataArray = querySnapshot.docs.map((doc) => ({

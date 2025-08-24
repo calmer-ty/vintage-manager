@@ -17,7 +17,7 @@ import BasicSelect from "@/components/commons/select/basic";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IProduct, IUpdateProduct, IUpdateItemParams } from "@/types";
+import type { IProduct, IUpdateProduct, IUpdateItemParams, ICreateProduct } from "@/types";
 
 const FormSchema = z.object({
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
@@ -29,7 +29,7 @@ const FormSchema = z.object({
 
 interface IManagementWriteProps {
   uid: string;
-  createProduct: (itemData: IProduct) => Promise<void>;
+  createProduct: ({ currency, products, createdAt }: ICreateProduct) => Promise<void>;
   updateProduct: ({ updateTargetId, itemData }: IUpdateItemParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
   isOpen: boolean;

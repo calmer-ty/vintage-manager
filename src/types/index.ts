@@ -12,6 +12,12 @@ export interface IExchangeRate {
   };
   time_last_update_utc: string;
 }
+export interface ICurrency {
+  label: string;
+  value: string;
+  rate: string;
+}
+
 export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
@@ -25,12 +31,11 @@ export interface IReceivingProduct {
   brand: string;
   costPrice: string;
 }
-export interface ICurrency {
-  label: string;
-  value: string;
-  rate: string;
+export interface ICreateProduct {
+  currency: string;
+  products: IReceivingProduct[];
+  createdAt: Timestamp;
 }
-
 export interface IProduct {
   _id: string; // 문서 id 값
   uid: string;
@@ -52,7 +57,7 @@ export interface IUpdateProduct {
 }
 export interface IUpdateItemParams {
   updateTargetId: string;
-  itemData: IUpdateProduct;
+  products: IUpdateProduct;
 }
 
 export interface IUserID {

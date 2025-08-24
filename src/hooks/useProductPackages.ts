@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, getDocs, orderBy, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, updateDoc } from "firebase/firestore";
 
-import { getMonthRangeTimestamps } from "@/lib/date";
+import { useProducts } from "./useProducts";
+import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { IProductPackage } from "@/types";
 interface IUseProductPackagesParams {
@@ -13,6 +14,8 @@ interface IUseProductPackagesParams {
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUseProductPackagesParams) => {
+  const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
+
   const [productPackages, setProductPackages] = useState<IProductPackage[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -27,6 +30,8 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
       await updateDoc(docRef, {
         _id: docRef.id,
       });
+
+      await createProduct({ currency: productsPackage.currency, products: productsPackage.products, createdAt: productsPackage.createdAt });
     } catch (err) {
       console.error(err);
     }
@@ -51,18 +56,8 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     setLoading(true);
 
     try {
-      // 선택한 년/월 값을 받아 현재 1일부터 다음 달 1일 값 불러옴
-      const { start, end } = getMonthRangeTimestamps(selectedYear, selectedMonth);
-
-      const q = query(
-        collection(db, "productPackages"),
-        // 특정 값 기준으로 필터링
-        where("uid", "==", uid),
-        where("createdAt", ">=", start),
-        where("createdAt", "<", end),
-        // 그 필터된 문서들을 createdAt(생성 시각) 기준으로 내림차순(최신순) 정렬
-        orderBy("createdAt", "desc")
-      );
+      // 년/월 데이터를 제한하여 한정적으로 데이터 쿼리
+      const q = getUserDateQuery(uid, "productPackages", selectedYear, selectedMonth);
 
       const querySnapshot = await getDocs(q);
       const dataArray = querySnapshot.docs.map((doc) => ({
