@@ -15,8 +15,6 @@ export default function Nav() {
   const pathname = usePathname();
   const { user, handleLogout } = useAuth();
 
-  // 로그아웃 처리
-
   return (
     <>
       {user ? (
