@@ -1,19 +1,32 @@
 // 라이브러리
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
+import { toast } from "sonner";
 
 // 외부 요소
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { IProduct } from "@/types";
-interface IManagementSelectProps {
+interface IItemStateProps {
   product: IProduct;
   refetch: () => Promise<void>;
 }
 
-export default function ItemState({ product, refetch }: IManagementSelectProps) {
-  // 판매상태 함수
+export default function ItemState({ product, refetch }: IItemStateProps) {
   const onUpdate = async (id: string, value: boolean) => {
+    // 판매가 지정해야함
+    if (!product.salePrice) {
+      toast(<p className="font-bold">⛔ 판매가를 지정해주세요.</p>, {
+        // description: `상품 ${data.products.length} 개`,
+        action: {
+          label: "닫기",
+          onClick: () => console.log("닫기"),
+        },
+        position: "top-center",
+        descriptionClassName: "ml-5",
+      });
+      return;
+    }
     try {
       const docRef = doc(db, "products", id);
 
@@ -30,10 +43,10 @@ export default function ItemState({ product, refetch }: IManagementSelectProps) 
 
   return (
     <Select
-      value={product.soldAt ? "true" : "false"}
+      value={product.soldAt ? "sold" : "available"}
       onValueChange={(value) => {
         // 선택된 값이 'false'면 판매완료니까 업데이트 실행
-        if (value === "true") {
+        if (value === "sold") {
           onUpdate(product._id, true);
         } else {
           onUpdate(product._id, false);
@@ -46,8 +59,8 @@ export default function ItemState({ product, refetch }: IManagementSelectProps) 
       <SelectContent>
         <SelectGroup>
           <SelectLabel>상태</SelectLabel>
-          <SelectItem value="false">판매중</SelectItem>
-          <SelectItem value="true">판매완료</SelectItem>
+          <SelectItem value="available">판매중</SelectItem>
+          <SelectItem value="sold">판매완료</SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
