@@ -1,11 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
 
 import { useProducts } from "./useProducts";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { IProductPackage } from "@/types";
+import type { IProductPackage, IUpdateProductPackageParams } from "@/types";
 interface IUseProductPackagesParams {
   uid: string;
   selectedYear: number;
@@ -38,17 +38,17 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
   };
 
   // ✅ [수정]
-  // const updateProductPackage = async ({ updateTargetId, itemData }) => {
-  //   if (!uid) return;
+  const updateProductPackage = async ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => {
+    if (!uid) return;
 
-  //   try {
-  //     const docRef = doc(db, "productP, updateTargetId);
+    try {
+      const docRef = doc(db, "productPackages", updateTargetId);
 
-  //     await updateDoc(docRef, { ...itemData });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+      await updateDoc(docRef, { ...productPackage });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   // 조회 함수
   const fetchProductPackages = useCallback(async () => {
@@ -81,7 +81,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     productPackages,
     loading,
     createProductPackage,
-    // updateProductPackage,
+    updateProductPackage,
     fetchProductPackages,
   };
 };

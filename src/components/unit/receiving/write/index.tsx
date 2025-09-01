@@ -20,7 +20,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { IProductPackage } from "@/types";
+import type { IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
 
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
@@ -36,15 +36,16 @@ const FormSchema = z.object({
 interface IManagementWriteProps {
   uid: string;
   isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   updateTarget: IProductPackage | undefined;
   setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
 
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
+  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
+export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, createProductPackage, updateProductPackage, fetchProductPackages }: IManagementWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
@@ -98,9 +99,32 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
   };
 
   // 수정 함수
-  const onClickUpdate = async () => {};
+  const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
+    if (!uid || !isEdit) return;
 
-  // 추가버튼
+    try {
+      const productPackage: IUpdateProductPackage = { ...data };
+
+      // 데이터 수정 및 리패치
+      await updateProductPackage({ updateTargetId: updateTarget?._id, productPackage });
+      await fetchProductPackages();
+
+      // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
+      toast(<p className="font-bold">🔄 패키지가 성공적으로 수정되었습니다!</p>, {
+        action: {
+          label: "닫기",
+          onClick: () => console.log("닫기"),
+        },
+        position: "top-center",
+        descriptionClassName: "ml-5",
+      });
+      setIsOpen(false);
+    } catch (error) {
+      console.error("문서 추가 실패:", error);
+    }
+  };
+
+  // 상품 추가 버튼
   const onClickAddProduct = () => {
     append({ name: "", brand: "", costPrice: "" });
   };
@@ -148,15 +172,14 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
             </DialogHeader>
 
             <div className="grid gap-2">
-              <p className="text-sm text-red-500">통화 가치는 실시간으로 변동되므로, 추후에는 수정할 수 없습니다.</p>
-
-              {!currency && <p className="text-sm text-yellow-600 mb-2">⚠ 상품 정보를 입력하기 전에 통화를 선택하는 것이 좋습니다.</p>}
               <FormField
                 control={form.control}
                 name="currency"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>사용된 통화</FormLabel>
+                    <p className="text-sm text-red-500">통화 가치는 실시간으로 변동되므로, 수정할 수 없습니다.</p>
+                    {!currency && <p className="text-sm text-yellow-600 mb-2">⚠ 상품 정보를 입력하기 전에 통화를 선택하는 것이 좋습니다.</p>}
                     <FormControl>
                       <CurrencySelect
                         placeholder="사용된 통화"
@@ -183,12 +206,11 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
               control={form.control}
               name="shipping"
               render={({ field }) => (
-                <FormInputWrap title="직배송비">
+                <FormInputWrap title="배송비 & 대행비">
                   <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" disabled={!currency} />
                 </FormInputWrap>
               )}
             />
-            {/* </div> */}
 
             <ul className="space-y-8">
               {fields.map((el, idx) => {
@@ -196,12 +218,12 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
 
                 return (
                   <li key={el.id}>
-                    <h3 className="flex justify-between items-center mb-4 px-4 py-1 border-t bg-gray-200">
-                      <span className="text-md font-semibold">상품 {idx + 1}</span>
+                    <h3 className="flex justify-between items-center mb-4 px-3 py-1 border-t bg-gray-200">
+                      <span className="text-sm font-bold">상품 {idx + 1}</span>
                       {idx !== 0 && <X size={16} onClick={() => remove(idx)} className="cursor-pointer" />}
                     </h3>
 
-                    <fieldset className="flex flex-col gap-4">
+                    <fieldset className="flex flex-col gap-4 px-2">
                       <FormField
                         control={form.control}
                         name={`products.${idx}.brand`}
@@ -252,8 +274,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
               <DialogClose asChild>
                 <Button variant="outline">취소</Button>
               </DialogClose>
-              {/* <Button type="submit">{updateTarget ? "수정" : "등록"}</Button> */}
-              <Button type="submit">등록</Button>
+              <Button type="submit">{isEdit ? "수정" : "등록"}</Button>
             </DialogFooter>
           </form>
         </Form>

@@ -18,6 +18,7 @@ export interface ICurrency {
   rate: number;
 }
 
+// 패키지
 export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
@@ -26,6 +27,15 @@ export interface IProductPackage {
   products: IReceivingProduct[];
   createdAt: Timestamp;
 }
+export interface IUpdateProductPackage {
+  shipping: string;
+  products: IReceivingProduct[];
+}
+export interface IUpdateProductPackageParams {
+  updateTargetId: string;
+  productPackage: IUpdateProductPackage;
+}
+
 export interface IReceivingProduct {
   name: string;
   brand: string;

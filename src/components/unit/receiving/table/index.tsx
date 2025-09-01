@@ -31,7 +31,7 @@ interface IDataTableProps {
 
 export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { productPackages, createProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
+  const { productPackages, createProductPackage, updateProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -138,8 +138,8 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 수정</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -184,6 +184,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         updateTarget={updateTarget}
         setUpdateTarget={setUpdateTarget}
         createProductPackage={createProductPackage}
+        updateProductPackage={updateProductPackage}
         fetchProductPackages={fetchProductPackages}
       />
 
