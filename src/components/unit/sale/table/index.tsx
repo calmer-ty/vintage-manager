@@ -1,7 +1,6 @@
 // 라이브러리
 import { useState } from "react";
-import { deleteDoc, doc, Timestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase/firebaseApp";
+import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
 // 훅
@@ -11,7 +10,6 @@ import { useProducts } from "@/hooks/useProducts";
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
 
@@ -44,19 +42,6 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     setUpdateTarget(selectedItem);
     setIsWriteOpen(true);
   };
-  // 삭제 함수
-  const onClickDelete = async (selectedItems: string[]) => {
-    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-    for (const id of selectedItems) {
-      try {
-        await deleteDoc(doc(db, "items", id));
-        console.log(`ID ${id} 삭제 성공`);
-      } catch (error) {
-        console.error(`ID ${id} 삭제 실패`, error);
-      }
-    }
-    fetchProducts();
-  };
 
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -87,37 +72,24 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
       if (key === "costPrice") {
         return (
           <div className="flex gap-2">
-            <span>{Math.round(Number(costPrice) * currency.rate)} ₩</span>
+            <span>{Math.round(Number(costPrice) * currency.rate).toLocaleString()} ₩</span>
             <span>
-              ({costPrice} {currency.label})
+              ({Number(costPrice).toLocaleString()} {currency.label})
             </span>
           </div>
         );
       }
       if (key === "salePrice") {
-        return <div>{salePrice} ₩</div>;
+        return <div>{Number(salePrice).toLocaleString()} ₩</div>;
       }
       if (key === "profit") {
-        return <div>{Math.round(Number(profit))} ₩</div>;
+        return <div>{Math.round(Number(profit)).toLocaleString()} ₩</div>;
       }
 
       return <div className="capitalize">{String(value)}</div>;
     },
   }));
   const columns: ColumnDef<IProduct>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
-      enableSorting: false,
-      enableHiding: false,
-    },
     ...dynamicColumns,
     {
       id: "status",
@@ -191,7 +163,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         setUpdateTarget={setUpdateTarget}
       />
 
-      <TableControl table={table} onClickDelete={onClickDelete} columnConfig={columnConfig} />
+      <TableControl table={table} columnConfig={columnConfig} />
       <>
         <div className="border rounded-md">
           <Table>
@@ -222,8 +194,8 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
                   <TableCell colSpan={columns.length} className="text-center">
                     <div className="flex flex-col items-center justify-center py-10 text-gray-500">
                       <PackageOpen className="w-8 h-8 mb-4" />
-                      <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
-                      <p className="text-sm text-gray-400">상품을 추가하면 이곳에 표시됩니다.</p>
+                      <p className="text-lg font-medium">검색 조건에 맞는 상품이 없습니다</p>
+                      <p className="text-sm text-gray-400">상품을 추가하거나 검색 조건을 변경해보세요.</p>
                     </div>
                   </TableCell>
                 </TableRow>
