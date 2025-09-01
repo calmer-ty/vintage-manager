@@ -154,10 +154,10 @@
     @apply bg-background text-foreground;
   }
 }
-
 html {
   /* font-size: calc((40 / 9) * 1vw); */
   font-size: clamp(14px, 4vw, 18px);
+  scroll-behavior: smooth;
 }
 html,
 body {

@@ -7,7 +7,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FlagIcon } from "react-flag-kit";
 import { Button } from "@mui/material";
 import { motion } from "framer-motion";
-import { Calendar, Globe, Monitor, Package } from "lucide-react";
+import { Calendar, Globe, Monitor, Package, Settings } from "lucide-react";
 
 const points = [
   {
@@ -36,9 +36,10 @@ export default function StartedUI() {
   const { handleLogin } = useAuth();
 
   const MotionCard = motion(Card);
+
   return (
     <article>
-      <section className="relative py-32 text-center bg-stone-800 text-white overflow-hidden">
+      <section className="relative py-40 text-center bg-stone-800 text-white overflow-hidden">
         {/* 배경 장식 이미지 */}
         <img
           src="/images/started_2.svg"
@@ -55,8 +56,8 @@ export default function StartedUI() {
 
         <motion.div className="relative z-10 max-w-4xl mx-auto px-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <div className="mb-14">
-            <h2 className="text-5xl font-bold mb-10">빈티지 노트</h2>
-            <p className="text-xl mb-6">다양한 국가에서 사입한 상품들의 예상 수익을 간편하게 확인하세요.</p>
+            <h2 className="text-5xl font-bold mb-16">빈티지 노트</h2>
+            <p className="text-xl mb-10">다양한 국가에서 사입한 상품들의 예상 수익을 간편하게 확인하세요.</p>
             <p className="text-lg text-gray-300">상품 관리와 대시보드로 매입가·판매가·재고를 정리하고 전체 흐름을 쉽게 파악할 수 있습니다.</p>
           </div>
 
@@ -81,41 +82,62 @@ export default function StartedUI() {
           </div>
 
           {/* 로그인 버튼 */}
-          <Button
-            variant="contained"
-            sx={{
-              fontSize: "1rem",
-              backgroundColor: "#e5e7eb",
-              color: "#1f2937",
-              "&:hover": {
-                backgroundColor: "#f3f4f6",
-              },
-            }}
-            className="flex items-center justify-center gap-2"
-            onClick={handleLogin}
-          >
-            <FcGoogle size={20} />
-            구글 로그인 하고 시작하기
-          </Button>
+          <div className="flex justify-center gap-4">
+            <Button
+              variant="contained"
+              sx={{
+                fontSize: "1rem",
+                backgroundColor: "#e5e7eb",
+                color: "#1f2937",
+                "&:hover": {
+                  backgroundColor: "#f3f4f6",
+                },
+              }}
+              className="flex items-center justify-center gap-2"
+              onClick={handleLogin}
+            >
+              <FcGoogle size={20} />
+              구글 로그인 하고 시작하기
+            </Button>
+            <Button
+              variant="contained"
+              sx={{
+                fontSize: "1rem",
+                backgroundColor: "#e5e7eb",
+                color: "#1f2937",
+                "&:hover": {
+                  backgroundColor: "#f3f4f6",
+                },
+              }}
+              className="flex items-center justify-center gap-2"
+              href="#points"
+            >
+              <Settings size={24} />
+              기능 보기
+            </Button>
+          </div>
         </motion.div>
       </section>
 
       <section
-        className="relative py-32 text-center bg-stone-50
-         px-10 sm:px-18"
+        id="points"
+        className="relative text-center bg-stone-50
+         px-10 sm:px-18 
+         py-20 sm:py-30 xl:py-52"
       >
         <motion.h3
-          className="mb-14 text-3xl font-bold"
+          className=" text-3xl font-bold
+            mb-12 sm:mb-24"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.8 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <span className="text-stone-700 text-4xl">빈티지 노트</span>의 주요 기능
+          <strong className="text-stone-700 text-4xl">빈티지 노트</strong>의 주요 기능
         </motion.h3>
         <div
           className="grid gap-10
-          grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
+            grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
         >
           {points.map((el, idx) => (
             <MotionCard
