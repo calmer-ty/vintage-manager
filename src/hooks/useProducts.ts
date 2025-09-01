@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } 
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductParams, IProduct2 } from "@/types";
+import type { ICreateProductParams, IUpdateProductParams, IProduct } from "@/types";
 interface IUseProductsParams {
   uid: string;
   selectedYear: number;
@@ -13,10 +13,8 @@ interface IUseProductsParams {
 
 // 패키지 상태에 따라 종속적으로 데이터 처리
 export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsParams) => {
-  const [products, setProducts] = useState<IProduct2[]>([]);
+  const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(false);
-
-  // console.log("products: ", products);
 
   // 등록 함수
   const createProduct = async ({ packageId, uid, currency, products, createdAt }: ICreateProductParams) => {
@@ -30,6 +28,21 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
           _id: docRef.id,
         });
       }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // [수정]
+  const updateProduct = async ({ targetId, product }: IUpdateProductParams) => {
+    if (!uid) return;
+
+    console.log("targetId: ", targetId);
+
+    try {
+      const docRef = doc(db, "products", targetId);
+
+      await updateDoc(docRef, { ...product });
     } catch (err) {
       console.error(err);
     }
@@ -68,7 +81,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
         ...doc.data(),
       }));
 
-      setProducts(dataArray as IProduct2[]);
+      setProducts(dataArray as IProduct[]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -80,5 +93,5 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
     fetchProducts();
   }, [fetchProducts]);
 
-  return { products, loading, createProduct, deleteProduct, fetchProducts };
+  return { products, loading, createProduct, updateProduct, deleteProduct, fetchProducts };
 };

@@ -35,20 +35,7 @@ export interface IProductPackage {
 
 // 상품
 
-// export interface IProduct {
-//   _id: string; // 문서 id 값
-//   uid: string;
-//   name: string;
-//   brand: string;
-//   costPrice: string;
-//   salePrice: number;
-//   costPriceKRW: number;
-//   profit?: number;
-//   exchangeRate?: number;
-//   createdAt: Timestamp;
-//   soldAt: Timestamp | null;
-// }
-export interface IProduct2 {
+export interface IProduct {
   _id: string; // 문서 id 값
   uid: string;
   brand: string;
@@ -60,13 +47,22 @@ export interface IProduct2 {
   createdAt: Timestamp;
   soldAt: Timestamp | null;
 }
-
 export interface ICreateProductParams {
   packageId: string;
   uid: string;
   currency: string;
   products: IReceivingProduct[];
   createdAt: Timestamp;
+}
+
+// 수정 상품
+export interface IUpdateProduct {
+  salePrice: string;
+  profit: number;
+}
+export interface IUpdateProductParams {
+  targetId: string;
+  product: IUpdateProduct;
 }
 
 export interface IUserID {

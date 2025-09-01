@@ -13,7 +13,7 @@ import FormInputWrap from "@/components/commons/inputWrap/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IUpdateProduct, IUpdateItemParams, ICreateProductParams, IProduct2, ICurrency } from "@/types";
+import type { IUpdateProduct, IUpdateProductParams, ICreateProductParams, IProduct, ICurrency } from "@/types";
 
 const FormSchema = z.object({
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
@@ -25,10 +25,10 @@ interface IManagementWriteProps {
   uid: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  updateTarget: IProduct2 | undefined;
-  setUpdateTarget: React.Dispatch<React.SetStateAction<IProduct2 | undefined>>;
+  updateTarget: IProduct | undefined;
+  setUpdateTarget: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
   createProduct: ({ currency, products, createdAt }: ICreateProductParams) => Promise<void>;
-  updateProduct: ({ updateTargetId, product }: IUpdateItemParams) => Promise<void>;
+  updateProduct: ({ targetId, product }: IUpdateProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
 }
 
@@ -77,11 +77,11 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
       };
 
       // 데이터 수정 및 리패치
-      await updateProduct({ updateTargetId: updateTarget?._id, product });
+      await updateProduct({ targetId: updateTarget?._id, product });
       await fetchProducts();
 
       // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
-      toast(<p className="font-bold">🔄 상품이 성공적으로 수정되었습니다!</p>, {
+      toast(<p className="font-bold">🔄 상품 판매가가 변경되었습니다.</p>, {
         description: `${updateTarget.brand} - ${updateTarget.name} - 판매가: ${data.salePrice}`,
         action: {
           label: "닫기",
