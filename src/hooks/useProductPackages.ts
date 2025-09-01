@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
 import { useProducts } from "./useProducts";
 import { getUserDateQuery } from "@/lib/firebase/utils";
@@ -37,7 +37,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     }
   };
 
-  // ✅ [수정]
+  // [수정]
   const updateProductPackage = async ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => {
     if (!uid) return;
 
@@ -48,6 +48,20 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     } catch (err) {
       console.error(err);
     }
+  };
+  // [삭제]
+  const deleteProductPackage = async (selectedCheckbox: string[]) => {
+    if (!uid) return;
+
+    for (const id of selectedCheckbox) {
+      try {
+        await deleteDoc(doc(db, "productPackages", id));
+        console.log(`ID ${id} 삭제 성공`);
+      } catch (error) {
+        console.error(`ID ${id} 삭제 실패`, error);
+      }
+    }
+    await fetchProductPackages();
   };
 
   // 조회 함수
@@ -82,6 +96,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     loading,
     createProductPackage,
     updateProductPackage,
+    deleteProductPackage,
     fetchProductPackages,
   };
 };

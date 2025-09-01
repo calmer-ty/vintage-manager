@@ -1,7 +1,6 @@
 // 라이브러리
 import { useState } from "react";
-import { deleteDoc, doc, Timestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase/firebaseApp";
+import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
 // 훅
@@ -11,6 +10,7 @@ import { useProductPackages } from "@/hooks/useProductPackages";
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal, PackageOpen } from "lucide-react";
@@ -31,31 +31,13 @@ interface IDataTableProps {
 
 export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { productPackages, createProductPackage, updateProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
+  const { productPackages, createProductPackage, updateProductPackage, deleteProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteTargets, setDeleteTargets] = useState<string[]>([]); // 선택된 ID들
   const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
-
-  // 수정 함수
-  const onClickMoveToUpdate = async (selectedItemId: string) => {
-    const selectedItem = productPackages.find((el) => el._id === selectedItemId);
-    setUpdateTarget(selectedItem);
-    setIsWriteOpen(true);
-  };
-  // 삭제 함수
-  const onClickDelete = async (selectedItems: string[]) => {
-    // map / forEach를 쓰지 않는 이유는 비동기적으로 한번에 처리되면 순차적으로 삭제가 되지 않을 수도 있기 때문에 for로 함
-    for (const id of selectedItems) {
-      try {
-        await deleteDoc(doc(db, "items", id));
-        console.log(`ID ${id} 삭제 성공`);
-      } catch (error) {
-        console.error(`ID ${id} 삭제 실패`, error);
-      }
-    }
-    await fetchProductPackages();
-  };
 
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -139,7 +121,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -165,6 +147,23 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     },
   });
 
+  // 수정 함수
+  const onClickMoveToUpdate = (selectedProductPackageId: string) => {
+    const selectedProductPackage = productPackages.find((el) => el._id === selectedProductPackageId);
+    setUpdateTarget(selectedProductPackage);
+    setIsWriteOpen(true);
+  };
+
+  // 삭제 함수
+  const onClickMoveToDelete = async (selectedProductPackagesId: string[]) => {
+    setIsDeleteOpen(true);
+    setDeleteTargets(selectedProductPackagesId);
+  };
+  const onClickDelete = async (selectedProductPackagesId: string[]) => {
+    await deleteProductPackage(selectedProductPackagesId);
+    setRowSelection({});
+  };
+
   return (
     <div
       className="w-full overflow-auto mx-auto px-6 border bg-white rounded-lg shadow-sm 
@@ -176,7 +175,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         2xl:max-w-5xl
         "
     >
-      {/* 다이얼로그 창 */}
+      {/* 등록/수정 모달 */}
       <ReceivingWrite
         uid={uid}
         isOpen={isWriteOpen}
@@ -188,7 +187,32 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         fetchProductPackages={fetchProductPackages}
       />
 
-      <TableControl table={table} setIsOpen={setIsWriteOpen} columnConfig={columnConfig} />
+      {/* 삭제 모달 */}
+      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>입고된 패키지를 삭제하시겠습니까?</DialogTitle>
+            <DialogDescription>선택한 패키지를 삭제하면 복구할 수 없습니다.</DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">취소</Button>
+            </DialogClose>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                await onClickDelete(deleteTargets);
+                setIsDeleteOpen(false);
+              }}
+            >
+              삭제
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <TableControl table={table} columnConfig={columnConfig} setIsOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
       <>
         <div className="border rounded-md">
           <Table>
