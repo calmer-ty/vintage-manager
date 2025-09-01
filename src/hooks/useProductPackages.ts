@@ -14,7 +14,7 @@ interface IUseProductPackagesParams {
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUseProductPackagesParams) => {
-  const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
+  const { createProduct, deleteProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   const [productPackages, setProductPackages] = useState<IProductPackage[]>([]);
   const [loading, setLoading] = useState(false);
@@ -31,7 +31,9 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
         _id: docRef.id,
       });
 
-      await createProduct({ currency: productsPackage.currency, products: productsPackage.products, createdAt: productsPackage.createdAt });
+      const { _id, ...rest } = productsPackage;
+      // console.log("package _id", _id);
+      await createProduct({ packageId: docRef.id, ...rest });
     } catch (err) {
       console.error(err);
     }
@@ -62,6 +64,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
       }
     }
     await fetchProductPackages();
+    await deleteProduct(selectedProductPackageIds);
   };
 
   // 조회 함수

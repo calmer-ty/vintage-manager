@@ -36,12 +36,15 @@ export interface IUpdateProductPackageParams {
   productPackage: IUpdateProductPackage;
 }
 
+// 상품
 export interface IReceivingProduct {
   name: string;
   brand: string;
   costPrice: string;
 }
 export interface ICreateProduct {
+  packageId: string;
+  uid: string;
   currency: string;
   products: IReceivingProduct[];
   createdAt: Timestamp;

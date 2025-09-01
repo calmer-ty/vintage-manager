@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
@@ -11,18 +11,18 @@ interface IUseProductsProps {
   selectedMonth: number;
 }
 
-// useAuth 훅을 만들어 Firebase 인증 상태를 관리
+// 패키지 상태에 따라 종속적으로 데이터 처리
 export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsProps) => {
   const [products, setProducts] = useState<IProduct2[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createProduct = async ({ currency, products, createdAt }: ICreateProduct) => {
+  const createProduct = async ({ packageId, uid, currency, products, createdAt }: ICreateProduct) => {
     if (!uid) return;
 
     try {
       for (const product of products) {
-        const docRef = await addDoc(collection(db, "products"), { uid, currency, ...product, createdAt });
+        const docRef = await addDoc(collection(db, "products"), { packageId, uid, currency, ...product, createdAt });
 
         await updateDoc(docRef, {
           _id: docRef.id,
@@ -33,7 +33,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
     }
   };
 
-  // ✅ [수정]
+  // [수정]
   const updateProduct = async ({ updateTargetId, product }: IUpdateItemParams) => {
     if (!uid) return;
 
@@ -44,6 +44,24 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
     } catch (err) {
       console.error(err);
     }
+  };
+
+  // [삭제]
+  const deleteProduct = async (packageIds: string[]) => {
+    for (const packageId of packageIds) {
+      const q = query(collection(db, "products"), where("packageId", "==", packageId));
+      const querySnapshot = await getDocs(q);
+
+      for (const productDoc of querySnapshot.docs) {
+        try {
+          await deleteDoc(doc(db, "products", productDoc.id));
+          console.log(`Product ID ${productDoc.id} 삭제 성공`);
+        } catch (error) {
+          console.error(`Product ID ${productDoc.id} 삭제 실패`, error);
+        }
+      }
+    }
+    await fetchProducts();
   };
 
   // 조회 함수
@@ -73,5 +91,5 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
     fetchProducts();
   }, [fetchProducts]);
 
-  return { products, loading, createProduct, updateProduct, fetchProducts };
+  return { products, loading, createProduct, updateProduct, deleteProduct, fetchProducts };
 };
