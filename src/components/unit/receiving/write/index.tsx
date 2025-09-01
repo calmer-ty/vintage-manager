@@ -20,7 +20,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { IProductPackage } from "@/types";
 
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
@@ -41,13 +41,10 @@ interface IManagementWriteProps {
   setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
 
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
-  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, createProductPackage, updateProductPackage, fetchProductPackages }: IManagementWriteProps) {
-  const isEdit = !!updateTarget;
-
+export default function ReceivingWrite({ uid, isOpen, setIsOpen, setUpdateTarget, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -98,32 +95,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
     }
   };
 
-  // 수정 함수
-  const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
-    if (!uid || !isEdit) return;
-
-    try {
-      const productPackage: IUpdateProductPackage = { ...data };
-
-      // 데이터 수정 및 리패치
-      await updateProductPackage({ updateTargetId: updateTarget?._id, productPackage });
-      await fetchProductPackages();
-
-      // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
-      toast(<p className="font-bold">🔄 패키지가 성공적으로 수정되었습니다!</p>, {
-        action: {
-          label: "닫기",
-          onClick: () => console.log("닫기"),
-        },
-        position: "top-center",
-        descriptionClassName: "ml-5",
-      });
-      setIsOpen(false);
-    } catch (error) {
-      console.error("문서 추가 실패:", error);
-    }
-  };
-
   // 상품 추가 버튼
   const onClickAddProduct = () => {
     append({ name: "", brand: "", costPrice: "" });
@@ -131,20 +102,12 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
 
   // updateTarget 변경 시 form 값을 리셋
   useEffect(() => {
-    if (isEdit) {
-      form.reset({
-        currency: updateTarget.currency,
-        shipping: updateTarget.shipping,
-        products: updateTarget.products,
-      });
-    } else {
-      form.reset({
-        currency: "",
-        shipping: "",
-        products: [{ name: "", brand: "", costPrice: "" }],
-      });
-    }
-  }, [form, isOpen, isEdit, updateTarget]);
+    form.reset({
+      currency: "",
+      shipping: "",
+      products: [{ name: "", brand: "", costPrice: "" }],
+    });
+  }, [form, isOpen]);
   useEffect(() => {
     if (form.getValues("currency") !== "") {
       form.trigger("currency");
@@ -165,10 +128,10 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
     >
       <DialogContent className="flex-col overflow-y-auto max-h-180 sm:max-w-120">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickSubmit)} className="flex flex-col gap-4">
+          <form onSubmit={form.handleSubmit(onClickSubmit)} className="flex flex-col gap-4">
             <DialogHeader>
-              <DialogTitle>패키지 {isEdit ? "수정" : "등록"}</DialogTitle>
-              <DialogDescription>{isEdit ? "패키지의 옵션 정보를 수정하세요." : "패키지 정보를 입력하고 등록하세요."}</DialogDescription>
+              <DialogTitle>패키지 등록</DialogTitle>
+              <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
             <div className="grid gap-2">
@@ -193,7 +156,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
                           }
                         }}
                         value={field.value}
-                        disabled={isEdit}
                       />
                     </FormControl>
                     <FormMessage />
@@ -274,7 +236,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, updateTarget, s
               <DialogClose asChild>
                 <Button variant="outline">취소</Button>
               </DialogClose>
-              <Button type="submit">{isEdit ? "수정" : "등록"}</Button>
+              <Button type="submit">등록</Button>
             </DialogFooter>
           </form>
         </Form>

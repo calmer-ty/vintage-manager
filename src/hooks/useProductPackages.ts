@@ -5,7 +5,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 import { useProducts } from "./useProducts";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { IProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { IProductPackage } from "@/types";
 interface IUseProductPackagesParams {
   uid: string;
   selectedYear: number;
@@ -39,23 +39,11 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     }
   };
 
-  // [수정]
-  const updateProductPackage = async ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => {
-    if (!uid) return;
-
-    try {
-      const docRef = doc(db, "productPackages", updateTargetId);
-
-      await updateDoc(docRef, { ...productPackage });
-    } catch (err) {
-      console.error(err);
-    }
-  };
   // [삭제]
-  const deleteProductPackage = async (selectedProductPackageIds: string[]) => {
+  const deleteProductPackage = async (packageIds: string[]) => {
     if (!uid) return;
 
-    for (const id of selectedProductPackageIds) {
+    for (const id of packageIds) {
       try {
         await deleteDoc(doc(db, "productPackages", id));
         console.log(`ID ${id} 삭제 성공`);
@@ -64,7 +52,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
       }
     }
     await fetchProductPackages();
-    await deleteProduct(selectedProductPackageIds);
+    await deleteProduct(packageIds);
   };
 
   // 조회 함수
@@ -98,7 +86,6 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     productPackages,
     loading,
     createProductPackage,
-    updateProductPackage,
     deleteProductPackage,
     fetchProductPackages,
   };

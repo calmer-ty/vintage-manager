@@ -31,7 +31,7 @@ interface IDataTableProps {
 
 export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { productPackages, createProductPackage, updateProductPackage, deleteProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
+  const { productPackages, createProductPackage, deleteProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -120,7 +120,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
+              {/* <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem> */}
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -148,19 +148,19 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   });
 
   // 수정 함수
-  const onClickMoveToUpdate = (selectedProductPackageId: string) => {
-    const selectedProductPackage = productPackages.find((el) => el._id === selectedProductPackageId);
-    setUpdateTarget(selectedProductPackage);
-    setIsWriteOpen(true);
-  };
+  // const onClickMoveToUpdate = (selectedProductPackageId: string) => {
+  //   const selectedProductPackage = productPackages.find((el) => el._id === selectedProductPackageId);
+  //   setUpdateTarget(selectedProductPackage);
+  //   setIsWriteOpen(true);
+  // };
 
   // 삭제 함수
-  const onClickMoveToDelete = async (selectedProductPackageIds: string[]) => {
+  const onClickMoveToDelete = async (packageIds: string[]) => {
     setIsDeleteOpen(true);
-    setDeleteTargets(selectedProductPackageIds);
+    setDeleteTargets(packageIds);
   };
-  const onClickDelete = async (selectedProductPackageIds: string[]) => {
-    await deleteProductPackage(selectedProductPackageIds);
+  const onClickDelete = async (packageIds: string[]) => {
+    await deleteProductPackage(packageIds);
     setRowSelection({});
   };
 
@@ -183,7 +183,6 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         updateTarget={updateTarget}
         setUpdateTarget={setUpdateTarget}
         createProductPackage={createProductPackage}
-        updateProductPackage={updateProductPackage}
         fetchProductPackages={fetchProductPackages}
       />
 

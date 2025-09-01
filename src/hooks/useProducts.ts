@@ -4,20 +4,22 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } 
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProduct, IUpdateItemParams, IProduct2 } from "@/types";
-interface IUseProductsProps {
+import type { ICreateProductParams, IProduct2 } from "@/types";
+interface IUseProductsParams {
   uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
 // 패키지 상태에 따라 종속적으로 데이터 처리
-export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsProps) => {
+export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsParams) => {
   const [products, setProducts] = useState<IProduct2[]>([]);
   const [loading, setLoading] = useState(false);
 
+  // console.log("products: ", products);
+
   // 등록 함수
-  const createProduct = async ({ packageId, uid, currency, products, createdAt }: ICreateProduct) => {
+  const createProduct = async ({ packageId, uid, currency, products, createdAt }: ICreateProductParams) => {
     if (!uid) return;
 
     try {
@@ -28,19 +30,6 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
           _id: docRef.id,
         });
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // [수정]
-  const updateProduct = async ({ updateTargetId, product }: IUpdateItemParams) => {
-    if (!uid) return;
-
-    try {
-      const docRef = doc(db, "products", updateTargetId);
-
-      await updateDoc(docRef, { ...product });
     } catch (err) {
       console.error(err);
     }
@@ -91,5 +80,5 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPr
     fetchProducts();
   }, [fetchProducts]);
 
-  return { products, loading, createProduct, updateProduct, deleteProduct, fetchProducts };
+  return { products, loading, createProduct, deleteProduct, fetchProducts };
 };
