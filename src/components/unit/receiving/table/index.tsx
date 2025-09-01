@@ -155,12 +155,12 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   };
 
   // 삭제 함수
-  const onClickMoveToDelete = async (selectedProductPackagesId: string[]) => {
+  const onClickMoveToDelete = async (selectedProductPackageIds: string[]) => {
     setIsDeleteOpen(true);
-    setDeleteTargets(selectedProductPackagesId);
+    setDeleteTargets(selectedProductPackageIds);
   };
-  const onClickDelete = async (selectedProductPackagesId: string[]) => {
-    await deleteProductPackage(selectedProductPackagesId);
+  const onClickDelete = async (selectedProductPackageIds: string[]) => {
+    await deleteProductPackage(selectedProductPackageIds);
     setRowSelection({});
   };
 

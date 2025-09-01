@@ -50,10 +50,10 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     }
   };
   // [삭제]
-  const deleteProductPackage = async (selectedCheckbox: string[]) => {
+  const deleteProductPackage = async (selectedProductPackageIds: string[]) => {
     if (!uid) return;
 
-    for (const id of selectedCheckbox) {
+    for (const id of selectedProductPackageIds) {
       try {
         await deleteDoc(doc(db, "productPackages", id));
         console.log(`ID ${id} 삭제 성공`);
