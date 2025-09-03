@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Timestamp } from "firebase/firestore";
+import { toast } from "sonner";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
@@ -8,9 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-
-import { toast } from "sonner";
-import { PlusCircle, X } from "lucide-react";
+import { AlertCircle, Info, PlusCircle, X } from "lucide-react";
 
 import CurrencySelect from "./currencySelect";
 import FormInputWrap from "@/components/commons/inputWrap/form";
@@ -21,6 +20,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { IProductPackage } from "@/types";
+interface IManagementWriteProps {
+  uid: string;
+  isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+
+  createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
+  fetchProductPackages: () => Promise<void>;
+}
 
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
@@ -32,15 +39,6 @@ const FormSchema = z.object({
   shipping: z.string().min(1, "사용된 배송비를 입력해주세요."),
   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
 });
-
-interface IManagementWriteProps {
-  uid: string;
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-
-  createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
-  fetchProductPackages: () => Promise<void>;
-}
 
 export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
   // ✍️ 폼 설정
@@ -138,15 +136,20 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>사용된 통화</FormLabel>
-                    <p className="text-sm text-red-500">통화 가치는 실시간으로 변동되므로, 수정할 수 없습니다.</p>
-                    {!currency && <p className="text-sm text-yellow-600 mb-2">⚠ 상품 정보를 입력하기 전에 통화를 선택하는 것이 좋습니다.</p>}
+                    <p className="flex items-center gap-1 text-sm text-red-500">
+                      <AlertCircle className="w-3 h-3" /> 통화 가치는 실시간으로 변동되므로, 수정할 수 없습니다.
+                    </p>
+                    {!currency && (
+                      <p className="flex items-center gap-1 text-sm text-yellow-600 mb-2">
+                        <Info className="w-3 h-3" /> 통화를 선택하면 예상 원화 값을 볼 수 있습니다.
+                      </p>
+                    )}
                     <FormControl>
                       <CurrencySelect
                         placeholder="사용된 통화"
                         items={currencyOptions}
                         onChange={(selectedValue) => {
                           const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-                          console.log("selected: ", selected);
 
                           if (selected) {
                             field.onChange(JSON.stringify(selected));
@@ -166,7 +169,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
               name="shipping"
               render={({ field }) => (
                 <FormInputWrap title="배송비 & 대행비">
-                  <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" disabled={!currency} />
+                  <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" />
                 </FormInputWrap>
               )}
             />
