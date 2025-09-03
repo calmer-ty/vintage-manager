@@ -17,7 +17,7 @@ export default function Nav() {
 
   return (
     <>
-      {user ? (
+      {user && pathname !== "/" ? (
         <Sidebar>
           <SidebarContent>
             <SidebarGroup>
