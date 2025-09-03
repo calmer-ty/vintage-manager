@@ -7,7 +7,7 @@ import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, PackageOpen } from "lucide-react";
+import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import TableControl from "./control";
@@ -23,9 +23,10 @@ interface ITableUIProps {
   }[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  loading: boolean;
 }
 
-export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProductPackage }: ITableUIProps) {
+export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProductPackage, loading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -132,10 +133,10 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
     },
   });
 
+  // 패키지 데이터 삭제 로직
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]); // 선택된 ID들
 
-  // 삭제 함수
   const onClickMoveToDelete = async (packageIds: string[]) => {
     setIsDeleteOpen(true);
     setDeleteTargets(packageIds);
@@ -159,7 +160,23 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center h-50">
+                  <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center">
+                  <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                    <PackageOpen className="w-8 h-8 mb-4" />
+                    <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
+                    <p className="text-sm text-gray-400">패키지를 추가하면 이곳에 표시됩니다.</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                   {row.getVisibleCells().map((cell) => (
@@ -169,16 +186,6 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
                   ))}
                 </TableRow>
               ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length} className="text-center">
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-500">
-                    <PackageOpen className="w-8 h-8 mb-4" />
-                    <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
-                    <p className="text-sm text-gray-400">상품을 추가하면 이곳에 표시됩니다.</p>
-                  </div>
-                </TableCell>
-              </TableRow>
             )}
           </TableBody>
         </Table>

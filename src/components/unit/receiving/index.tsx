@@ -16,7 +16,7 @@ const columnConfig = [
 
 export default function ReceivingUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { productPackages, createProductPackage, deleteProductPackage, fetchProductPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
+  const { productPackages, createProductPackage, deleteProductPackage, fetchProductPackages, loading } = useProductPackages({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -35,7 +35,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         {/* 등록/수정 모달 */}
         <ReceivingWrite uid={uid} isOpen={isWriteOpen} setIsOpen={setIsWriteOpen} createProductPackage={createProductPackage} fetchProductPackages={fetchProductPackages} />
         {/* 테이블 */}
-        <TableUI data={productPackages} columnConfig={columnConfig} setIsWriteOpen={setIsWriteOpen} deleteProductPackage={deleteProductPackage} />
+        <TableUI data={productPackages} columnConfig={columnConfig} setIsWriteOpen={setIsWriteOpen} deleteProductPackage={deleteProductPackage} loading={loading} />
       </div>
     </article>
   );
