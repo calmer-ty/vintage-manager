@@ -13,7 +13,7 @@ import FormInputWrap from "@/components/commons/inputWrap/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IUpdateProduct, IUpdateProductParams, ICreateProductParams, IProduct, ICurrency } from "@/types";
+import type { IUpdateProduct, IUpdateProductParams, IProduct, ICurrency } from "@/types";
 
 const FormSchema = z.object({
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
@@ -27,7 +27,6 @@ interface IManagementWriteProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   updateTarget: IProduct | undefined;
   setUpdateTarget: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
-  createProduct: ({ currency, products, createdAt }: ICreateProductParams) => Promise<void>;
   updateProduct: ({ targetId, product }: IUpdateProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
 }

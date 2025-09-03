@@ -3,47 +3,33 @@ import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
-// 훅
-import { useDateSelector } from "@/contexts/dateSelectorContext";
-import { useProducts } from "@/hooks/useProducts";
-
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, PackageOpen } from "lucide-react";
+import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 
 // 내부 요소
-import SaleWrite from "../write";
 import TableControl from "./control";
 import ItemState from "./itemState";
 
+import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ICurrency, IProduct } from "@/types";
-interface IDataTableProps {
-  uid: string;
+interface ITableUIProps {
+  data: IProduct[];
   columnConfig: {
     key: string;
     label: string;
   }[];
+
+  setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
+  setUpdateTarget: Dispatch<SetStateAction<IProduct | undefined>>;
+  fetchProducts: () => Promise<void>;
+  loading: boolean;
 }
 
-export default function TableUI({ uid, columnConfig }: IDataTableProps) {
-  const { selectedYear, selectedMonth } = useDateSelector();
-  const { products, createProduct, updateProduct, fetchProducts } = useProducts({ uid, selectedYear, selectedMonth });
-
-  // 등록/수정 스테이트
-  const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IProduct | undefined>(undefined);
-
-  // 수정 함수
-  const onClickMoveToUpdate = async (selectedItemId: string) => {
-    const selectedItem = products.find((product) => product._id === selectedItemId);
-    setUpdateTarget(selectedItem);
-    setIsWriteOpen(true);
-  };
-
-  // shadcn 테이블 기본 코드
+export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateTarget, fetchProducts, loading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -114,7 +100,6 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 판매가 지정</DropdownMenuItem>
-              {/* <DropdownMenuItem onClick={() => onClickDelete([row.original._id])}>상품 삭제</DropdownMenuItem> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -122,7 +107,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     },
   ];
   const table = useReactTable({
-    data: products, // 데이터: row 값?
+    data, // 데이터: row 값?
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -140,83 +125,99 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     },
   });
 
-  return (
-    <div
-      className="w-full overflow-auto mx-auto px-6 border bg-white rounded-lg shadow-sm 
-        max-w-xs
-        sm:max-w-sm
-        md:max-w md
-        lg:max-w-lg
-        xl:max-w-3xl
-        2xl:max-w-5xl
-        "
-    >
-      {/* 다이얼로그 창 */}
-      <SaleWrite
-        isOpen={isWriteOpen}
-        setIsOpen={setIsWriteOpen}
-        uid={uid}
-        createProduct={createProduct}
-        updateProduct={updateProduct}
-        fetchProducts={fetchProducts}
-        updateTarget={updateTarget}
-        setUpdateTarget={setUpdateTarget}
-      />
+  console.log("data: ", data);
+  console.log("loading: ", loading);
 
+  // 수정 함수
+  const onClickMoveToUpdate = async (selectedItemId: string) => {
+    const selectedItem = data.find((el) => el._id === selectedItemId);
+    setIsWriteOpen(true);
+    setUpdateTarget(selectedItem);
+  };
+
+  return (
+    <>
       <TableControl table={table} columnConfig={columnConfig} />
-      <>
-        <div className="border rounded-md">
-          <Table>
-            <TableHeader>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <TableHead key={header.id}>
-                      <div className="px-4 text-center">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
-                    </TableHead>
+      <div className="border rounded-md">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    <div className="px-4 text-center">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          {/* <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="text-center">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
                   ))}
                 </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="text-center">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="text-center">
-                    <div className="flex flex-col items-center justify-center py-10 text-gray-500">
-                      <PackageOpen className="w-8 h-8 mb-4" />
-                      <p className="text-lg font-medium">검색 조건에 맞는 상품이 없습니다</p>
-                      <p className="text-sm text-gray-400">상품을 추가하거나 검색 조건을 변경해보세요.</p>
-                    </div>
-                  </TableCell>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center">
+                  <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                    <PackageOpen className="w-8 h-8 mb-4" />
+                    <p className="text-lg font-medium">검색 조건에 맞는 상품이 없습니다</p>
+                    <p className="text-sm text-gray-400">상품을 추가하거나 검색 조건을 변경해보세요.</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody> */}
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center h-50">
+                  <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center">
+                  <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                    <PackageOpen className="w-8 h-8 mb-4" />
+                    <p className="text-lg font-medium">검색 조건에 맞는 상품이 없습니다</p>
+                    <p className="text-sm text-gray-400">상품을 추가하거나 검색 조건을 변경해보세요.</p>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              table.getRowModel().rows.map((row) => (
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="text-center">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  ))}
                 </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-3">
+        <div className="text-muted-foreground flex-1 text-sm">
+          총 {table.getFilteredRowModel().rows.length}개 중 {table.getFilteredSelectedRowModel().rows.length}개 선택됨.
         </div>
-        <div className="flex items-center justify-end space-x-2 py-3">
-          <div className="text-muted-foreground flex-1 text-sm">
-            총 {table.getFilteredRowModel().rows.length}개 중 {table.getFilteredSelectedRowModel().rows.length}개 선택됨.
-          </div>
-          <div className="space-x-2">
-            <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-              이전
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-              다음
-            </Button>
-          </div>
+        <div className="space-x-2">
+          <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+            이전
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+            다음
+          </Button>
         </div>
-      </>
-    </div>
+      </div>
+    </>
   );
 }
