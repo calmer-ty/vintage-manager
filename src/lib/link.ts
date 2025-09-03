@@ -1,4 +1,4 @@
-import { Layout, Settings } from "lucide-react";
+import { Layout, Package, DollarSign } from "lucide-react";
 
 // Menu page
 export const pages = [
@@ -10,11 +10,11 @@ export const pages = [
   {
     title: "입고관리",
     url: "/receiving",
-    icon: Settings,
+    icon: Package,
   },
   {
     title: "판매관리",
     url: "/sale",
-    icon: Settings,
+    icon: DollarSign,
   },
 ];
