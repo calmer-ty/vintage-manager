@@ -4,7 +4,6 @@ import type { IUserID } from "@/types";
 
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
-  // { key: "currency", label: "사용 화폐" },
   { key: "shipping", label: "배송비" },
   { key: "products", label: "상품" },
 ];

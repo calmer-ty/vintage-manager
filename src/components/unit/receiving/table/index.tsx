@@ -37,7 +37,6 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
   const [isWriteOpen, setIsWriteOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]); // 선택된 ID들
-  const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
 
   // shadcn 테이블 기본 코드
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -120,7 +119,6 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {/* <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem> */}
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -147,13 +145,6 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
     },
   });
 
-  // 수정 함수
-  // const onClickMoveToUpdate = (selectedProductPackageId: string) => {
-  //   const selectedProductPackage = productPackages.find((el) => el._id === selectedProductPackageId);
-  //   setUpdateTarget(selectedProductPackage);
-  //   setIsWriteOpen(true);
-  // };
-
   // 삭제 함수
   const onClickMoveToDelete = async (packageIds: string[]) => {
     setIsDeleteOpen(true);
@@ -176,15 +167,7 @@ export default function TableUI({ uid, columnConfig }: IDataTableProps) {
         "
     >
       {/* 등록/수정 모달 */}
-      <ReceivingWrite
-        uid={uid}
-        isOpen={isWriteOpen}
-        setIsOpen={setIsWriteOpen}
-        updateTarget={updateTarget}
-        setUpdateTarget={setUpdateTarget}
-        createProductPackage={createProductPackage}
-        fetchProductPackages={fetchProductPackages}
-      />
+      <ReceivingWrite uid={uid} isOpen={isWriteOpen} setIsOpen={setIsWriteOpen} createProductPackage={createProductPackage} fetchProductPackages={fetchProductPackages} />
 
       {/* 삭제 모달 */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>

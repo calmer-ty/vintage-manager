@@ -37,14 +37,12 @@ interface IManagementWriteProps {
   uid: string;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  updateTarget: IProductPackage | undefined;
-  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
 
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ReceivingWrite({ uid, isOpen, setIsOpen, setUpdateTarget, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
+export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPackage, fetchProductPackages }: IManagementWriteProps) {
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -120,7 +118,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, setUpdateTarget
         if (!open) {
           form.reset();
           setIsOpen(false);
-          setUpdateTarget(undefined);
         } else {
           setIsOpen(true);
         }
