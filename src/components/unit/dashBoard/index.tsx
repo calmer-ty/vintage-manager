@@ -7,14 +7,16 @@ import DashBoardChart from "./chart";
 import DashBoardStatus from "./status";
 
 import type { IUserID } from "@/types";
+import { useProductPackages } from "@/hooks/useProductPackages";
 
 export default function DashBoardUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { products } = useProducts({ uid, selectedYear, selectedMonth });
+  const { productPackages } = useProductPackages({ uid, selectedYear, selectedMonth });
 
   return (
     <article className="p-10">
-      <DashBoardStatus products={products} />
+      <DashBoardStatus products={products} productPackages={productPackages} />
       <DashBoardChart products={products} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>
   );
