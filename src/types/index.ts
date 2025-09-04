@@ -19,6 +19,7 @@ export interface ICurrency {
 }
 
 export interface IReceivingProduct {
+  _id: string;
   name: string;
   brand: string;
   costPrice: string;

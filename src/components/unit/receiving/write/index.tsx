@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
@@ -55,6 +56,8 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
     name: "products",
   });
 
+  console.log("fields: ", fields);
+
   // 통화 정보
   const { currencyOptions } = useExchangeRate();
   // 환율 데이터
@@ -67,6 +70,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
         ...data,
         uid,
         _id: "",
+        products: data.products.map((p) => ({ ...p, _id: uuidv4() })),
         createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
       };
 
