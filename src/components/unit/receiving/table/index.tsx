@@ -1,5 +1,5 @@
 // 라이브러리
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
@@ -12,10 +12,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import TableControl from "./control";
 import TableDelete from "./delete";
+import { ProductList } from "./productList";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICurrency, IProductPackage, IReceivingProduct } from "@/types";
-import { ProductList } from "./productList";
+import type { ICurrency, IProductPackage } from "@/types";
 interface ITableUIProps {
   data: IProductPackage[];
   columnConfig: {
@@ -59,20 +59,10 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
       }
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products" && Array.isArray(value)) {
+        console.log("value: ", value);
         return (
           <div className="flex flex-col gap-1">
-            {value.map((p: IReceivingProduct, idx: number) => (
-              <>
-                <div key={`${p.name}_${idx}`} className="flex justify-between gap-4 p-2 border rounded-md">
-                  <span>
-                    {p.brand} - {p.name}
-                  </span>
-                  <span className="text-sm text-gray-500">
-                    {Number(p.costPrice).toLocaleString()} {currency.label}
-                  </span>
-                </div>
-              </>
-            ))}
+            <ProductList products={value} />
           </div>
         );
       }
@@ -146,7 +136,6 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
 
   return (
     <>
-      <ProductList />
       <TableDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
       <TableControl table={table} columnConfig={columnConfig} setIsOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
       <div className="border rounded-md">

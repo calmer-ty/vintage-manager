@@ -56,8 +56,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
     name: "products",
   });
 
-  console.log("fields: ", fields);
-
   // 통화 정보
   const { currencyOptions } = useExchangeRate();
   // 환율 데이터
