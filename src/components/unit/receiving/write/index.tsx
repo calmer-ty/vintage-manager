@@ -68,7 +68,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
         ...data,
         uid,
         _id: "",
-        products: data.products.map((p) => ({ ...p, _id: uuid(), salePrice: "0", profit: 0 })),
+        products: data.products.map((p) => ({ ...p, _id: uuid(), salePrice: "0", profit: 0, soldAt: null })),
         createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
       };
 

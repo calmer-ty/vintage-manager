@@ -25,6 +25,7 @@ export interface IReceivingProduct {
   costPrice: string;
   salePrice: string;
   profit: number;
+  soldAt: Timestamp | null;
 }
 // 패키지
 export interface IProductPackage {

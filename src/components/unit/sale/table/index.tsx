@@ -160,8 +160,8 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
                 <TableCell colSpan={columns.length} className="text-center">
                   <div className="flex flex-col items-center justify-center py-10 text-gray-500">
                     <PackageOpen className="w-8 h-8 mb-4" />
-                    <p className="text-lg font-medium">검색 조건에 맞는 상품이 없습니다</p>
-                    <p className="text-sm text-gray-400">검색 조건을 변경해보세요.</p>
+                    <p className="text-lg font-medium">검색 조건에 맞지 않거나 입고된 상품이 없습니다.</p>
+                    <p className="text-sm text-gray-400">검색 조건을 변경하거나 입고된 패키지를 확인해보세요.</p>
                   </div>
                 </TableCell>
               </TableRow>
