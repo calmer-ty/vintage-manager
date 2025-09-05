@@ -62,7 +62,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
         console.log("value: ", value);
         return (
           <div className="flex flex-col gap-1">
-            <ProductList products={value} />
+            <ProductList products={value} currency={currency} />
           </div>
         );
       }
