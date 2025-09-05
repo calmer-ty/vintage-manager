@@ -31,9 +31,8 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
         _id: docRef.id,
       });
 
-      const { _id, ...rest } = productsPackage;
-      // console.log("package _id", _id);
-      await createProduct({ packageId: docRef.id, ...rest });
+      const productsPackage2: Omit<IProductPackage, "_id"> = productsPackage;
+      await createProduct({ packageId: docRef.id, ...productsPackage2 });
     } catch (err) {
       console.error(err);
     }
