@@ -59,7 +59,6 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
       }
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products" && Array.isArray(value)) {
-        console.log("value: ", value);
         return (
           <div className="flex flex-col gap-1">
             <ProductList products={value} currency={currency} />

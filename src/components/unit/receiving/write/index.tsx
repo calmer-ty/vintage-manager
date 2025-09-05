@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
-import { v4 as uuidv4 } from "uuid";
+import { v4 as uuid } from "uuid";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
@@ -68,7 +68,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
         ...data,
         uid,
         _id: "",
-        products: data.products.map((p) => ({ ...p, _id: uuidv4() })),
+        products: data.products.map((p) => ({ ...p, _id: uuid(), salePrice: "0", profit: 0 })),
         createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
       };
 

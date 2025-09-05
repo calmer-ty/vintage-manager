@@ -23,6 +23,8 @@ export interface IReceivingProduct {
   name: string;
   brand: string;
   costPrice: string;
+  salePrice: string;
+  profit: number;
 }
 // 패키지
 export interface IProductPackage {

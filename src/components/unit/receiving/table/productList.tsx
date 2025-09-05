@@ -16,8 +16,6 @@ export function ProductList({ products, currency }: IProductListProps) {
 
   const [first, ...rest] = products;
 
-  console.log("rest: ", rest);
-
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex w-full flex-col gap-2">
       {rest.length !== 0 ? (
@@ -57,7 +55,6 @@ export function ProductList({ products, currency }: IProductListProps) {
             </span>
           </div>
         ))}
-        {/* <div className="rounded-md border px-4 py-2 text-sm">@stitches/react</div> */}
       </CollapsibleContent>
     </Collapsible>
   );
