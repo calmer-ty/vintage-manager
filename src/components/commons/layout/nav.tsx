@@ -17,7 +17,7 @@ export default function Nav() {
 
   return (
     <>
-      {user && pathname !== "/" ? (
+      {user && pathname !== "/" && (
         <Sidebar>
           <SidebarContent>
             <SidebarGroup>
@@ -60,8 +60,6 @@ export default function Nav() {
             </SidebarMenu>
           </SidebarFooter>
         </Sidebar>
-      ) : (
-        <></>
       )}
     </>
   );
