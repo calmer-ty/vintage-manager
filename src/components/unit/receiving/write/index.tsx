@@ -171,7 +171,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
               name="shipping"
               render={({ field }) => (
                 <FormInputWrap title="배송비 & 대행비">
-                  <Input placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" />
+                  <Input type="number" placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" />
                 </FormInputWrap>
               )}
             />
