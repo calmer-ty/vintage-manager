@@ -5,9 +5,9 @@ import { useAuth } from "@/contexts/authContext";
 // 외부 요소
 import { FcGoogle } from "react-icons/fc";
 import { FlagIcon } from "react-flag-kit";
-import { Button } from "@mui/material";
 import { motion } from "framer-motion";
 import { Calendar, Globe, Monitor, Package, Settings } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const points = [
   {
@@ -83,37 +83,15 @@ export default function StartedUI() {
 
           {/* 로그인 버튼 */}
           <div className="flex justify-center gap-4">
-            <Button
-              variant="contained"
-              sx={{
-                fontSize: "1rem",
-                backgroundColor: "#e5e7eb",
-                color: "#1f2937",
-                "&:hover": {
-                  backgroundColor: "#f3f4f6",
-                },
-              }}
-              className="flex items-center justify-center gap-2"
-              onClick={handleLogin}
-            >
+            <Button variant="default" className="flex items-center justify-center gap-2" onClick={handleLogin}>
               <FcGoogle size={20} />
               구글 로그인 하고 시작하기
             </Button>
-            <Button
-              variant="contained"
-              sx={{
-                fontSize: "1rem",
-                backgroundColor: "#e5e7eb",
-                color: "#1f2937",
-                "&:hover": {
-                  backgroundColor: "#f3f4f6",
-                },
-              }}
-              className="flex items-center justify-center gap-2"
-              href="#points"
-            >
-              <Settings size={24} />
-              기능 보기
+            <Button asChild variant="default" className="flex items-center justify-center gap-2">
+              <a href="#points">
+                <Settings size={24} />
+                기능 보기
+              </a>
             </Button>
           </div>
         </motion.div>
