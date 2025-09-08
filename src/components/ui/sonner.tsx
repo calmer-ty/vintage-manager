@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
 "use client";
 
 import { useTheme } from "next-themes";
