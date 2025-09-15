@@ -24,12 +24,7 @@ export default function Header() {
       {pathname !== "/" ? (
         <>
           <SidebarTrigger className="-ml-1" />
-          <h2
-            className="font-medium shrink-0 
-              hidden sm:block"
-          >
-            {currentPage}
-          </h2>
+          <h2 className="font-medium shrink-0">{currentPage}</h2>
           <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
         </>
       ) : (

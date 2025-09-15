@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/contexts/authContext";
 
-import DashBoardUI from "@/components/unit/dashBoard";
+import DashboardUI from "@/components/unit/dashboard";
 
 import { Loader } from "lucide-react";
 
@@ -18,5 +18,5 @@ export default function NewPage() {
     return <div>로그인이 필요합니다.</div>;
   }
 
-  return <DashBoardUI uid={uid} />;
+  return <DashboardUI uid={uid} />;
 }

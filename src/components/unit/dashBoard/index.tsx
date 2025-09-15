@@ -3,8 +3,8 @@ import { useProducts } from "@/hooks/useProducts";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 
 // 내부 요소
-import DashBoardChart from "./chart";
-import DashBoardStatus from "./status";
+import DashboardChart from "./chart";
+import DashboardStatus from "./status";
 
 import type { IUserID } from "@/types";
 import { useProductPackages } from "@/hooks/useProductPackages";
@@ -16,8 +16,8 @@ export default function DashBoardUI({ uid }: IUserID) {
 
   return (
     <article className="p-10">
-      <DashBoardStatus products={products} productPackages={productPackages} />
-      <DashBoardChart products={products} selectedYear={selectedYear} selectedMonth={selectedMonth} />
+      <DashboardStatus products={products} productPackages={productPackages} />
+      <DashboardChart products={products} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>
   );
 }
