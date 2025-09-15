@@ -8,12 +8,13 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import type { ICurrency, IReceivingProduct } from "@/types";
 interface IProductListProps {
   products: IReceivingProduct[];
-  currency: ICurrency;
 }
 
-export function ProductList({ products, currency }: IProductListProps) {
+export function ProductList({ products }: IProductListProps) {
   const [isOpen, setIsOpen] = useState(false);
+
   const [first, ...rest] = products;
+  const firstCurrency: ICurrency = JSON.parse(first.costPrice.currency);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex w-full flex-col gap-2">
@@ -37,25 +38,28 @@ export function ProductList({ products, currency }: IProductListProps) {
             {first.brand} - {first.name}
           </span>
           <span className="flex items-center gap-1">
-            {Number(first.costPrice).toLocaleString()} {currency.label}
-            <em className="text-xs not-italic text-gray-500">({Math.round(Number(first.costPrice) * currency.rate).toLocaleString()} ₩)</em>
+            {Number(first.costPrice.amount).toLocaleString()} {firstCurrency.label}
+            <em className="text-xs not-italic text-gray-500">({Math.round(Number(first.costPrice.amount) * firstCurrency.rate).toLocaleString()} ₩)</em>
           </span>
         </div>
       )}
 
       {/* 리스트 문장 */}
       <CollapsibleContent className="flex flex-col gap-2">
-        {products.map((p, idx) => (
-          <div key={`${p._id}_${idx}`} className="flex justify-between px-4 py-2 border border-gray-300 rounded-md bg-white text-sm">
-            <span>
-              {p.brand} - {p.name}
-            </span>
-            <span className="flex items-center gap-1">
-              {Number(p.costPrice).toLocaleString()} {currency.label}
-              <em className="text-xs not-italic text-gray-500">({Math.round(Number(p.costPrice) * currency.rate).toLocaleString()} ₩)</em>
-            </span>
-          </div>
-        ))}
+        {products.map((p, idx) => {
+          const productCurrency: ICurrency = JSON.parse(p.costPrice.currency);
+          return (
+            <div key={`${p._id}_${idx}`} className="flex justify-between px-4 py-2 border border-gray-300 rounded-md bg-white text-sm">
+              <span>
+                {p.brand} - {p.name}
+              </span>
+              <span className="flex items-center gap-1">
+                {Number(p.costPrice.amount).toLocaleString()} {productCurrency.label}
+                <em className="text-xs not-italic text-gray-500">({Math.round(Number(p.costPrice.amount) * productCurrency.rate).toLocaleString()} ₩)</em>
+              </span>
+            </div>
+          );
+        })}
       </CollapsibleContent>
     </Collapsible>
   );

@@ -20,7 +20,7 @@ export default function CurrencySelect({ placeholder, items, onChange, defaultVa
   return (
     <Select onValueChange={onChange} defaultValue={defaultValue} value={selectedValue} disabled={disabled}>
       <FormControl>
-        <SelectTrigger className="bg-white">
+        <SelectTrigger className="bg-white min-w-32">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
       </FormControl>

@@ -17,12 +17,16 @@ export interface ICurrency {
   value: string;
   rate: number;
 }
+export interface IPrice {
+  currency: string;
+  amount: string;
+}
 
 export interface IReceivingProduct {
   _id: string;
   name: string;
   brand: string;
-  costPrice: string;
+  costPrice: IPrice;
   salePrice: string;
   profit: number;
   soldAt: Timestamp | null;
@@ -31,8 +35,8 @@ export interface IReceivingProduct {
 export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
-  currency: string;
-  shipping: string;
+  // currency: string;
+  shipping: IPrice;
   products: IReceivingProduct[];
   createdAt: Timestamp;
 }
@@ -58,11 +62,11 @@ export interface ICreateProductParams {
   createdAt: Timestamp;
 }
 export interface IUpdateProductPackage {
-  shipping: string;
+  shipping: IPrice;
   products: {
     name: string;
     brand: string;
-    costPrice: string;
+    costPrice: IPrice;
   }[];
 }
 export interface IUpdateProductPackageParams {

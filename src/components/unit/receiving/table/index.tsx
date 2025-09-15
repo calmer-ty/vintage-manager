@@ -15,7 +15,7 @@ import TableDelete from "./delete";
 import { ProductList } from "./productList";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICurrency, IProductPackage } from "@/types";
+import type { IPrice, IProductPackage } from "@/types";
 interface ITableUIProps {
   data: IProductPackage[];
   columnConfig: {
@@ -39,7 +39,6 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
     header: label,
     cell: ({ row }) => {
       const value = row.getValue(key);
-      const currency: ICurrency = JSON.parse(row.original.currency);
 
       // 날짜 정보 처리
       if (value instanceof Timestamp) {
@@ -52,17 +51,18 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
 
       // 배송비
       if (key === "shipping") {
+        const shipping = value as IPrice;
         return (
-          <div className="">
-            {value?.toLocaleString()} {currency.label}
-          </div>
+          <span>
+            {shipping.amount.toLocaleString()} {shipping.currency === "" ? "-" : JSON.parse(shipping.currency).label}
+          </span>
         );
       }
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products" && Array.isArray(value)) {
         return (
           <div className="flex flex-col gap-1">
-            <ProductList products={value} currency={currency} />
+            <ProductList products={value} />
           </div>
         );
       }
