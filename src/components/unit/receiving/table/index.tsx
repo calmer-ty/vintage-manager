@@ -1,5 +1,5 @@
 // 라이브러리
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
@@ -134,7 +134,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
   };
 
   return (
-    <>
+    <div className="overflow-auto mx-auto px-6 border bg-white rounded-lg shadow-sm">
       <TableDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
       <TableControl table={table} columnConfig={columnConfig} setIsOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
       <div className="border rounded-md">
@@ -199,6 +199,6 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

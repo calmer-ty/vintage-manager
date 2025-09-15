@@ -25,31 +25,11 @@ export default function SaleUI({ uid }: IUserID) {
   const [updateTarget, setUpdateTarget] = useState<IProduct | undefined>(undefined);
 
   return (
-    <article className="p-6">
-      <div
-        className="w-full overflow-auto mx-auto px-6 border bg-white rounded-lg shadow-sm 
-        max-w-xs
-        sm:max-w-sm
-        md:max-w md
-        lg:max-w-lg
-        xl:max-w-3xl
-        2xl:max-w-5xl
-        "
-      >
-        {/* 판매가 수정 모달창 */}
-        <SaleWrite
-          uid={uid}
-          isOpen={isWriteOpen}
-          setIsOpen={setIsWriteOpen}
-          updateTarget={updateTarget}
-          setUpdateTarget={setUpdateTarget}
-          updateProduct={updateProduct}
-          fetchProducts={fetchProducts}
-        />
-
-        {/* 테이블 */}
-        <TableUI columnConfig={columnConfig} data={products} setIsWriteOpen={setIsWriteOpen} setUpdateTarget={setUpdateTarget} fetchProducts={fetchProducts} loading={loading} />
-      </div>
+    <article className="flex-1 px-10 py-6">
+      {/* 판매가 수정 모달창 */}
+      <SaleWrite uid={uid} isOpen={isWriteOpen} setIsOpen={setIsWriteOpen} updateTarget={updateTarget} setUpdateTarget={setUpdateTarget} updateProduct={updateProduct} fetchProducts={fetchProducts} />
+      {/* 테이블 */}
+      <TableUI columnConfig={columnConfig} data={products} setIsWriteOpen={setIsWriteOpen} setUpdateTarget={setUpdateTarget} fetchProducts={fetchProducts} loading={loading} />
     </article>
   );
 }

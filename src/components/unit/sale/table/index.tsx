@@ -133,10 +133,10 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
   };
 
   return (
-    <>
+    <div className="w-full overflow-auto mx-auto px-6 border bg-white rounded-lg shadow-sm">
       <TableControl table={table} columnConfig={columnConfig} />
-      <div className="border rounded-md">
-        <Table>
+      <div className="border rounded-md w-full overflow-x-auto">
+        <Table className="w-full min-w-0">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -192,6 +192,6 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
           </Button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
