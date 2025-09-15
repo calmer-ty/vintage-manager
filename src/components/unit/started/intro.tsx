@@ -15,13 +15,13 @@ export default function StartedIntro() {
     <section className="relative py-40 text-center bg-stone-800 text-white overflow-hidden">
       {/* 배경 장식 이미지 */}
       <img
-        src="/images/started_2.svg"
+        src="/images/started_2.png"
         className="absolute left-10 top-8 w-170 opacity-10 pointer-events-none
           hidden lg:block"
         alt="왼쪽 이미지"
       />
       <img
-        src="/images/started.svg"
+        src="/images/started.png"
         className="absolute right-12 bottom-6 w-90 opacity-40 pointer-events-none
           hidden lg:block"
         alt="오른쪽 이미지"
