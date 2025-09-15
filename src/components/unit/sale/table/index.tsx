@@ -57,9 +57,9 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
 
       if (key === "costPrice") {
         return (
-          <div className="flex gap-2">
+          <div className="flex justify-center items-center gap-1">
             <span>{Math.round(Number(costPrice) * currency.rate).toLocaleString()} ₩</span>
-            <span>
+            <span className="text-xs text-gray-500">
               ({Number(costPrice).toLocaleString()} {currency.label})
             </span>
           </div>
