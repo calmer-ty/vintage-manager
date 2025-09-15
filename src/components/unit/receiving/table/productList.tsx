@@ -33,12 +33,13 @@ export function ProductList({ products, currency }: IProductListProps) {
         </div>
       ) : (
         // products가 한개일 경우
-        <div key={first._id} className="flex justify-between rounded-md border px-4 py-2 text-sm">
+        <div key={first._id} className="flex justify-between px-4 py-2 border border-gray-300 rounded-md bg-white text-sm">
           <span>
             {first.brand} - {first.name}
           </span>
-          <span className="text-sm text-gray-500">
+          <span className="flex items-center gap-1">
             {Number(first.costPrice).toLocaleString()} {currency.label}
+            <em className="text-xs not-italic text-gray-500">({Math.round(Number(first.costPrice) * currency.rate).toLocaleString()} ₩)</em>
           </span>
         </div>
       )}
@@ -46,12 +47,13 @@ export function ProductList({ products, currency }: IProductListProps) {
       {/* 리스트 문장 */}
       <CollapsibleContent className="flex flex-col gap-2">
         {products.map((p) => (
-          <div key={p._id} className="flex justify-between rounded-md border px-4 py-2 text-sm">
+          <div key={p._id} className="flex justify-between px-4 py-2 border border-gray-300 rounded-md bg-white text-sm">
             <span>
               {p.brand} - {p.name}
             </span>
-            <span className="text-sm text-gray-500">
+            <span className="flex items-center gap-1">
               {Number(p.costPrice).toLocaleString()} {currency.label}
+              <em className="text-xs not-italic text-gray-500">({Math.round(Number(p.costPrice) * currency.rate).toLocaleString()} ₩)</em>
             </span>
           </div>
         ))}
