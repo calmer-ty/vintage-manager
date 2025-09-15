@@ -2,10 +2,10 @@ import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
-import { useProducts } from "./useProducts";
+// import { useProducts } from "./useProducts";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { IProductPackage } from "@/types";
+import type { IProductPackage, IUpdateProductPackageParams } from "@/types";
 interface IUseProductPackagesParams {
   uid: string;
   selectedYear: number;
@@ -14,12 +14,12 @@ interface IUseProductPackagesParams {
 
 // useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUseProductPackagesParams) => {
-  const { createProduct, deleteProduct } = useProducts({ uid, selectedYear, selectedMonth });
+  // const { createProduct, deleteProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   const [productPackages, setProductPackages] = useState<IProductPackage[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // 등록 함수
+  // [등록]
   const createProductPackage = async (productsPackage: IProductPackage) => {
     if (!uid) return;
 
@@ -31,8 +31,21 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
         _id: docRef.id,
       });
 
-      const productsPackage2: Omit<IProductPackage, "_id"> = productsPackage;
-      await createProduct({ packageId: docRef.id, ...productsPackage2 });
+      // const productsPackage2: Omit<IProductPackage, "_id"> = productsPackage;
+      // await createProduct({ packageId: docRef.id, ...productsPackage2 });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // [수정]
+  const updateProductPackage = async ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => {
+    if (!uid) return;
+
+    try {
+      const docRef = doc(db, "productPackages", updateTargetId);
+
+      await updateDoc(docRef, { ...productPackage });
     } catch (err) {
       console.error(err);
     }
@@ -51,7 +64,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
       }
     }
     await fetchProductPackages();
-    await deleteProduct(packageIds);
+    // await deleteProduct(packageIds);
   };
 
   // 조회 함수
@@ -85,6 +98,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     productPackages,
     loading,
     createProductPackage,
+    updateProductPackage,
     deleteProductPackage,
     fetchProductPackages,
   };

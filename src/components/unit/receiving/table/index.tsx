@@ -24,10 +24,11 @@ interface ITableUIProps {
   }[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setUpdateTarget: React.Dispatch<React.SetStateAction<IProductPackage | undefined>>;
   loading: boolean;
 }
 
-export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProductPackage, loading }: ITableUIProps) {
+export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateTarget, deleteProductPackage, loading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -98,6 +99,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -131,6 +133,12 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, deleteProd
   const onClickMoveToDelete = async (packageIds: string[]) => {
     setIsDeleteOpen(true);
     setDeleteTargets(packageIds);
+  };
+
+  const onClickMoveToUpdate = async (packageId: string) => {
+    const selectedItem = data.find((p) => p._id === packageId);
+    setUpdateTarget(selectedItem);
+    setIsWriteOpen(true);
   };
 
   return (

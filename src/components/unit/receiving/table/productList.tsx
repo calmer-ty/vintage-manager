@@ -45,8 +45,8 @@ export function ProductList({ products, currency }: IProductListProps) {
 
       {/* 리스트 문장 */}
       <CollapsibleContent className="flex flex-col gap-2">
-        {products.map((p) => (
-          <div key={p._id} className="flex justify-between px-4 py-2 border border-gray-300 rounded-md bg-white text-sm">
+        {products.map((p, idx) => (
+          <div key={`${p._id}_${idx}`} className="flex justify-between px-4 py-2 border border-gray-300 rounded-md bg-white text-sm">
             <span>
               {p.brand} - {p.name}
             </span>

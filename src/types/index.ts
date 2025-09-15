@@ -38,7 +38,6 @@ export interface IProductPackage {
 }
 
 // 상품
-
 export interface IProduct {
   _id: string; // 문서 id 값
   uid: string;
@@ -57,6 +56,18 @@ export interface ICreateProductParams {
   currency: string;
   products: IReceivingProduct[];
   createdAt: Timestamp;
+}
+export interface IUpdateProductPackage {
+  shipping: string;
+  products: {
+    name: string;
+    brand: string;
+    costPrice: string;
+  }[];
+}
+export interface IUpdateProductPackageParams {
+  updateTargetId: string;
+  productPackage: IUpdateProductPackage;
 }
 
 // 수정 상품
