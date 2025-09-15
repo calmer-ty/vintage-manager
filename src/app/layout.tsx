@@ -38,9 +38,9 @@ export default function RootLayout({
           <DateSelectorProvider>
             <SidebarProvider>
               <Nav />
-              <div className="w-full">
+              <div className="flex-1 overflow-x-auto">
                 <Header />
-                <main className="bg-gray-50">{children}</main>
+                <main className="h-full pt-[64px] bg-gray-50">{children}</main>
                 <Toaster />
               </div>
             </SidebarProvider>

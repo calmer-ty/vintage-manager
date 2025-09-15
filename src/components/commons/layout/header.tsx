@@ -18,7 +18,7 @@ export default function Header() {
 
   return (
     <header
-      className="sticky top-0 z-50 flex items-center w-full h-16 border-b px-6 bg-white
+      className="fixed z-50 flex items-center w-full h-16 border-b px-6 bg-white
         gap-1 lg:gap-2"
     >
       {pathname !== "/" ? (
