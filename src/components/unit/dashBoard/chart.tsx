@@ -1,5 +1,6 @@
 // 라이브러리
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
 // 유틸 함수
 import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
@@ -77,8 +78,19 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
   }),[dailyStats]
 );
 
+  const MotionCard = motion(Card);
+  const hasAnimatedRef = useRef(false);
+
   return (
-    <Card className="w-full py-0 mt-7">
+    <MotionCard
+      className="w-full py-0 mt-7"
+      initial={!hasAnimatedRef.current ? { opacity: 0, y: 20 } : {}}
+      animate={!hasAnimatedRef.current ? { opacity: 1, y: 0 } : {}}
+      transition={{ delay: 0.7, duration: 0.4 }}
+      onAnimationComplete={() => {
+        hasAnimatedRef.current = true;
+      }}
+    >
       <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
         <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
           <CardTitle>
@@ -147,6 +159,6 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
           </BarChart>
         </ChartContainer>
       </CardContent>
-    </Card>
+    </MotionCard>
   );
 }
