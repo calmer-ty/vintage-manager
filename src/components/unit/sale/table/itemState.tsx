@@ -17,10 +17,9 @@ export default function ItemState({ product, refetch }: IItemStateProps) {
     // 판매가 지정해야함
     if (!product.salePrice) {
       toast(<p className="font-bold">⛔ 판매가를 지정해주세요.</p>, {
-        // description: `상품 ${data.products.length} 개`,
         action: {
           label: "닫기",
-          onClick: () => console.log("닫기"),
+          onClick: () => {},
         },
         position: "top-center",
         descriptionClassName: "ml-5",
@@ -35,7 +34,6 @@ export default function ItemState({ product, refetch }: IItemStateProps) {
         soldAt: value ? new Date() : null,
       });
       refetch();
-      console.log(`soldAt을 ${value}로 업데이트했습니다`);
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }

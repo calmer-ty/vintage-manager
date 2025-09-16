@@ -113,7 +113,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
         description: `상품 ${data.products.length} 개`,
         action: {
           label: "닫기",
-          onClick: () => console.log("닫기"),
+          onClick: () => {},
         },
         descriptionClassName: "ml-5",
       });
@@ -129,7 +129,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
       toast(<p className="font-bold">✨ 변경된 내용이 없습니다.</p>, {
         action: {
           label: "닫기",
-          onClick: () => console.log("닫기"),
+          onClick: () => {},
         },
         descriptionClassName: "ml-5",
       });
@@ -153,7 +153,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
       toast(<p className="font-bold">🔄 패키지가 성공적으로 수정되었습니다.</p>, {
         action: {
           label: "닫기",
-          onClick: () => console.log("닫기"),
+          onClick: () => {},
         },
         descriptionClassName: "ml-5",
       });

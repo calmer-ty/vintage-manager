@@ -22,7 +22,6 @@ export default function ItemState({ item, refetch }: IManagementSelectProps) {
         soldAt: value ? new Date() : null,
       });
       refetch();
-      console.log(`soldAt을 ${value}로 업데이트했습니다`);
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }

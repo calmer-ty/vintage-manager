@@ -21,7 +21,7 @@ export default function TableDelete({ isDeleteOpen, setIsDeleteOpen, deleteTarge
     toast(<p className="font-bold">🗑️ 선택한 항목이 삭제되었습니다.</p>, {
       action: {
         label: "닫기",
-        onClick: () => console.log("닫기"),
+        onClick: () => {},
       },
       descriptionClassName: "ml-5",
     });

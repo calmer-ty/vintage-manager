@@ -13,7 +13,7 @@ import FormInputWrap from "@/components/commons/inputWrap/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IUpdateProduct, IUpdateProductParams, IProduct, ICurrency } from "@/types";
+import type { IProduct, ICurrency } from "@/types";
 
 const FormSchema = z.object({
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
@@ -84,7 +84,7 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
         description: `${updateTarget.brand} - ${updateTarget.name} - 판매가: ${data.salePrice}`,
         action: {
           label: "닫기",
-          onClick: () => console.log("닫기"),
+          onClick: () => {},
         },
         position: "top-center",
         descriptionClassName: "ml-5",

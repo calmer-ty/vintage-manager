@@ -37,8 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("AuthProvider mounted, setting up onAuthStateChanged listener");
-
+    // console.log("AuthProvider mounted, setting up onAuthStateChanged listener");
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);

@@ -12,8 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 현재 시간과 마지막 호출 시간 비교해서 24시간 안 지났으면 캐시 반환
   if (cachedRate && now - lastFetchedTime < CACHE_DURATION) {
-    console.log("⚡ 캐시에서 데이터 반환됨"); // 캐시에서 가져올 때 서버 로그
-    console.log("현재 캐시된 데이터:", cachedRate); // 캐시 데이터 확인
+    // console.log("⚡ 캐시에서 데이터 반환됨"); // 캐시에서 가져올 때 서버 로그
+    // console.log("현재 캐시된 데이터:", cachedRate); // 캐시 데이터 확인
     return res.status(200).json({
       data: cachedRate,
       cached: true, // 캐시에서 가져온 데이터임을 표시
@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     cachedRate = response.data;
     lastFetchedTime = now;
 
-    console.log("🔄 새로 호출된 환율 데이터: ", cachedRate); // 새로 호출된 데이터 확인
+    // console.log("🔄 새로 호출된 환율 데이터: ", cachedRate); // 새로 호출된 데이터 확인
 
     return res.status(200).json({
       data: cachedRate,

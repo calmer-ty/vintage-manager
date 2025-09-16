@@ -37,8 +37,6 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
   const updateProduct = async ({ targetId, product }: IUpdateProductParams) => {
     if (!uid) return;
 
-    console.log("targetId: ", targetId);
-
     try {
       const docRef = doc(db, "products", targetId);
 
@@ -57,7 +55,6 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
       for (const productDoc of querySnapshot.docs) {
         try {
           await deleteDoc(doc(db, "products", productDoc.id));
-          console.log(`Product ID ${productDoc.id} 삭제 성공`);
         } catch (error) {
           console.error(`Product ID ${productDoc.id} 삭제 실패`, error);
         }

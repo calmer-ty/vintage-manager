@@ -57,7 +57,6 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     for (const id of packageIds) {
       try {
         await deleteDoc(doc(db, "productPackages", id));
-        console.log(`ID ${id} 삭제 성공`);
       } catch (error) {
         console.error(`ID ${id} 삭제 실패`, error);
       }
