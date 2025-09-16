@@ -43,10 +43,10 @@ const ProductSchema = z.object({
   }),
 });
 const FormSchema = z.object({
-  shipping: z.object({
-    amount: z.string().min(1, "배송비는 최소 0 이상입니다."),
-    currency: z.string().min(1, "통화를 선택해주세요."),
-  }),
+  // shipping: z.object({
+  //   amount: z.string().optional(),
+  //   currency: z.string().optional(),
+  // }),
   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
 });
 
@@ -57,10 +57,10 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      shipping: {
-        amount: "",
-        currency: "",
-      },
+      // shipping: {
+      //   amount: "",
+      //   currency: "",
+      // },
       products: [
         {
           name: "",
@@ -85,20 +85,16 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
     try {
       const productPackage = {
-        ...data,
+        // ...data,
         uid,
         _id: "",
-        shipping: {
-          amount: data.shipping.amount ?? "",
-          currency: data.shipping.currency ?? "",
-        },
+        // shipping: {
+        //   amount: data.shipping.amount ?? "",
+        //   currency: data.shipping.currency ?? "",
+        // },
         products: data.products.map((p) => ({
           ...p,
           _id: uuid(),
-          costPrice: {
-            amount: p.costPrice.amount ?? "",
-            currency: p.costPrice.currency ?? "",
-          },
           salePrice: "0",
           profit: 0,
           soldAt: null,
@@ -169,15 +165,15 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   useEffect(() => {
     if (isEdit) {
       form.reset({
-        shipping: updateTarget.shipping,
+        // shipping: updateTarget.shipping,
         products: updateTarget.products,
       });
     } else {
       form.reset({
-        shipping: {
-          amount: "",
-          currency: "",
-        },
+        // shipping: {
+        //   amount: "",
+        //   currency: "",
+        // },
         products: [
           {
             name: "",
@@ -283,7 +279,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                         name={`products.${idx}.costPrice.amount`}
                         render={({ field }) => (
                           <FormInputWrap title="매입가">
-                            <Input type="number" placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit} />
+                            <Input type="number" placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit && idx < updateTarget.products.length} />
                           </FormInputWrap>
                         )}
                       />
@@ -298,14 +294,13 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                                 placeholder="사용한 통화"
                                 items={currencyOptions}
                                 onChange={(selectedValue) => {
-                                  console.log("selectedValue", selectedValue);
                                   const selected = currencyOptions.find((opt) => opt.value === selectedValue);
                                   if (selected) {
                                     field.onChange(JSON.stringify(selected));
                                   }
                                 }}
                                 value={field.value ?? ""}
-                                disabled={isEdit}
+                                disabled={isEdit && idx < updateTarget.products.length}
                               />
                             </FormControl>
                             <FormMessage />

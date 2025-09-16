@@ -35,10 +35,21 @@ export interface IReceivingProduct {
 export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
-  // currency: string;
-  shipping: IPrice;
+  // shipping?: IPrice;
   products: IReceivingProduct[];
   createdAt: Timestamp;
+}
+export interface IUpdateProductPackage {
+  // shipping?: IPrice;
+  products: {
+    name: string;
+    brand: string;
+    costPrice: IPrice;
+  }[];
+}
+export interface IUpdateProductPackageParams {
+  updateTargetId: string;
+  productPackage: IUpdateProductPackage;
 }
 
 // 상품
@@ -61,28 +72,15 @@ export interface ICreateProductParams {
   products: IReceivingProduct[];
   createdAt: Timestamp;
 }
-export interface IUpdateProductPackage {
-  shipping: IPrice;
-  products: {
-    name: string;
-    brand: string;
-    costPrice: IPrice;
-  }[];
-}
-export interface IUpdateProductPackageParams {
-  updateTargetId: string;
-  productPackage: IUpdateProductPackage;
-}
-
-// 수정 상품
-export interface IUpdateProduct {
-  salePrice: string;
-  profit: number;
-}
-export interface IUpdateProductParams {
-  targetId: string;
-  product: IUpdateProduct;
-}
+// 수정
+// export interface IUpdateProduct {
+//   salePrice: string;
+//   profit: number;
+// }
+// export interface IUpdateProductParams {
+//   targetId: string;
+//   product: IUpdateProduct;
+// }
 
 export interface IUserID {
   uid: string;
