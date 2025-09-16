@@ -278,7 +278,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                         control={form.control}
                         name={`products.${idx}.costPrice.amount`}
                         render={({ field }) => (
-                          <FormInputWrap title="매입가">
+                          <FormInputWrap title="매입가" tooltip="매입가는 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
                             <Input type="number" placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit && idx < updateTarget.products.length} />
                           </FormInputWrap>
                         )}
