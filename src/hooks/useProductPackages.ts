@@ -12,7 +12,6 @@ interface IUseProductPackagesParams {
   selectedMonth: number;
 }
 
-// useAuth 훅을 만들어 Firebase 인증 상태를 관리
 export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUseProductPackagesParams) => {
   // const { createProduct, deleteProduct } = useProducts({ uid, selectedYear, selectedMonth });
 

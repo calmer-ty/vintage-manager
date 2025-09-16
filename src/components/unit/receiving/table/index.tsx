@@ -58,6 +58,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
           </span>
         );
       }
+
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products" && Array.isArray(value)) {
         return (
@@ -99,6 +100,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {/* <DropdownMenuItem onClick={() => onClickSubmitShipping(row.original._id)}>배송비 입력</DropdownMenuItem> */}
               <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>

@@ -2,12 +2,13 @@
 import { useProducts } from "@/hooks/useProducts";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 
+import { useProductPackages } from "@/hooks/useProductPackages";
+
 // 내부 요소
 import DashboardChart from "./chart";
 import DashboardStatus from "./status";
 
 import type { IUserID } from "@/types";
-import { useProductPackages } from "@/hooks/useProductPackages";
 
 export default function DashBoardUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
