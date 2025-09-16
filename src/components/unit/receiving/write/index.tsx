@@ -109,13 +109,12 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       form.reset();
       setIsOpen(false);
-      toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다!</p>, {
+      toast(<p className="font-bold">✅ 상품이 성공적으로 등록되었습니다.</p>, {
         description: `상품 ${data.products.length} 개`,
         action: {
           label: "닫기",
           onClick: () => console.log("닫기"),
         },
-        position: "top-center",
         descriptionClassName: "ml-5",
       });
     } catch (error) {
@@ -126,6 +125,16 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
     if (!isEdit) return;
+    if (!form.formState.isDirty) {
+      toast(<p className="font-bold">✨ 변경된 내용이 없습니다.</p>, {
+        action: {
+          label: "닫기",
+          onClick: () => console.log("닫기"),
+        },
+        descriptionClassName: "ml-5",
+      });
+      return;
+    }
 
     try {
       const productPackage: IUpdateProductPackage = {
@@ -141,12 +150,11 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
       await fetchProductPackages();
 
       // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
-      toast(<p className="font-bold">🔄 패키지가 성공적으로 수정되었습니다!</p>, {
+      toast(<p className="font-bold">🔄 패키지가 성공적으로 수정되었습니다.</p>, {
         action: {
           label: "닫기",
           onClick: () => console.log("닫기"),
         },
-        position: "top-center",
         descriptionClassName: "ml-5",
       });
       setIsOpen(false);

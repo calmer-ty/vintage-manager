@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { Dispatch, SetStateAction } from "react";
+import { toast } from "sonner";
 interface ITableDeleteProps {
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
@@ -16,6 +17,14 @@ export default function TableDelete({ isDeleteOpen, setIsDeleteOpen, deleteTarge
   const onClickDelete = async (packageIds: string[]) => {
     await deleteProductPackage(packageIds);
     setRowSelection({});
+
+    toast(<p className="font-bold">🗑️ 선택한 항목이 삭제되었습니다.</p>, {
+      action: {
+        label: "닫기",
+        onClick: () => console.log("닫기"),
+      },
+      descriptionClassName: "ml-5",
+    });
   };
 
   return (

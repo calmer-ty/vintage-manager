@@ -41,7 +41,7 @@ export default function RootLayout({
               <div className="flex-1 overflow-x-auto">
                 <Header />
                 <main className="h-full pt-[64px] bg-gray-50">{children}</main>
-                <Toaster />
+                <Toaster position="top-center" />
               </div>
             </SidebarProvider>
           </DateSelectorProvider>
