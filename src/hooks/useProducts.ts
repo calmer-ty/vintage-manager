@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } 
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductParams, IUpdateProductParams, IProduct } from "@/types";
+import type { ICreateProductParams, IProduct, IUpdateProductParams } from "@/types";
 interface IUseProductsParams {
   uid: string;
   selectedYear: number;

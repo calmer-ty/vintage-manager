@@ -13,7 +13,7 @@ import FormInputWrap from "@/components/commons/inputWrap/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import type { IProduct, ICurrency } from "@/types";
+import type { IProduct, ICurrency, IUpdateProductParams, IUpdateProduct } from "@/types";
 
 const FormSchema = z.object({
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),

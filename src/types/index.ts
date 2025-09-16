@@ -73,14 +73,14 @@ export interface ICreateProductParams {
   createdAt: Timestamp;
 }
 // 수정
-// export interface IUpdateProduct {
-//   salePrice: string;
-//   profit: number;
-// }
-// export interface IUpdateProductParams {
-//   targetId: string;
-//   product: IUpdateProduct;
-// }
+export interface IUpdateProduct {
+  salePrice: string;
+  profit: number;
+}
+export interface IUpdateProductParams {
+  targetId: string;
+  product: IUpdateProduct;
+}
 
 export interface IUserID {
   uid: string;
