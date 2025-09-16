@@ -57,10 +57,10 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      // shipping: {
-      //   amount: "",
-      //   currency: "",
-      // },
+      shipping: {
+        amount: "",
+        currency: "",
+      },
       products: [
         {
           name: "",
@@ -221,7 +221,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                 name="shipping.amount"
                 render={({ field }) => (
                   <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
-                    <Input type="number" placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" disabled={!!field.value && isEdit} />
+                    <Input type="number" placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" disabled={isEdit && updateTarget.shipping?.amount !== ""} />
                   </FormInputWrap>
                 )}
               />
@@ -242,6 +242,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                           }
                         }}
                         value={field.value ?? ""}
+                        disabled={isEdit && updateTarget.shipping?.amount !== ""}
                       />
                     </FormControl>
                     <FormMessage />
