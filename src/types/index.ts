@@ -35,12 +35,12 @@ export interface IReceivingProduct {
 export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
-  // shipping?: IPrice;
+  shipping?: IPrice;
   products: IReceivingProduct[];
   createdAt: Timestamp;
 }
 export interface IUpdateProductPackage {
-  // shipping?: IPrice;
+  shipping?: IPrice;
   products: {
     name: string;
     brand: string;

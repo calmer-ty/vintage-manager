@@ -14,7 +14,9 @@ export default function FormInputWrap({ title, children, tooltip }: IFormInputPr
         {title}
         {tooltip && (
           <Tooltip>
-            <TooltipTrigger className="text-red-700">*</TooltipTrigger>
+            <TooltipTrigger asChild>
+              <span className="text-red-700 cursor-help">*</span>
+            </TooltipTrigger>
             <TooltipContent>
               <p>{tooltip}</p>
             </TooltipContent>
