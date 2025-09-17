@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { Dispatch, SetStateAction } from "react";
-interface ITableDeleteProps {
+interface IDialogDeleteProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
@@ -13,10 +13,10 @@ interface ITableDeleteProps {
   setRowSelection: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 }
 
-export default function TableDelete({ isOpen, setIsOpen, deleteTargets, deleteProductPackage, setRowSelection }: ITableDeleteProps) {
+export default function DialogDelete({ isOpen, setIsOpen, deleteTargets, deleteProductPackage, setRowSelection }: IDialogDeleteProps) {
   // 삭제 함수
-  const onClickDelete = async (packageIds: string[]) => {
-    await deleteProductPackage(packageIds);
+  const onClickDelete = async () => {
+    await deleteProductPackage(deleteTargets);
     setRowSelection({});
 
     toast(<p className="font-bold">🗑️ 선택한 항목이 삭제되었습니다.</p>, {
@@ -26,6 +26,8 @@ export default function TableDelete({ isOpen, setIsOpen, deleteTargets, deletePr
       },
       descriptionClassName: "ml-5",
     });
+
+    setIsOpen(false);
   };
 
   return (
@@ -42,13 +44,7 @@ export default function TableDelete({ isOpen, setIsOpen, deleteTargets, deletePr
             <DialogClose asChild>
               <Button variant="outline">취소</Button>
             </DialogClose>
-            <Button
-              variant="destructive"
-              onClick={async () => {
-                await onClickDelete(deleteTargets);
-                setIsOpen(false);
-              }}
-            >
+            <Button variant="destructive" onClick={onClickDelete}>
               삭제
             </Button>
           </DialogFooter>

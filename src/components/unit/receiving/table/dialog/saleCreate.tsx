@@ -6,7 +6,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ICreateProductParams, IProductPackage } from "@/types";
-interface ITableSaleCreateProps {
+interface IDialogSaleCreateProps {
   uid: string;
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -15,7 +15,7 @@ interface ITableSaleCreateProps {
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
 }
 
-export default function TableSaleCreate({ uid, isOpen, setIsOpen, saleCreateTarget, createProduct }: ITableSaleCreateProps) {
+export default function DialogSaleCreate({ uid, isOpen, setIsOpen, saleCreateTarget, createProduct }: IDialogSaleCreateProps) {
   if (!saleCreateTarget) return;
   console.log("saleCreateTarget: ", saleCreateTarget.products);
 
