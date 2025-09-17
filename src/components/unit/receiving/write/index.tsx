@@ -42,11 +42,22 @@ const ProductSchema = z.object({
     currency: z.string().min(1, "통화를 선택해주세요."),
   }),
 });
-const FormSchema = z.object({
-  shipping: z.object({
-    amount: z.string().optional(),
-    currency: z.string().optional(),
-  }),
+const PackageSchema = z.object({
+  shipping: z
+    .object({
+      amount: z.string().optional(),
+      currency: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        if (!data.amount && !data.currency) return true; // 둘 다 비었으면 OK
+        return !!data.amount && !!data.currency; // 하나라도 있으면 둘 다 필요
+      },
+      {
+        message: "배송비를 입력하려면 금액과 통화를 모두 입력해주세요.",
+        path: ["shipping"], // 에러 위치
+      }
+    ),
   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
 });
 
@@ -54,8 +65,8 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof PackageSchema>>({
+    resolver: zodResolver(PackageSchema),
     defaultValues: {
       shipping: {
         amount: "",
@@ -82,7 +93,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   const { currencyOptions } = useExchangeRate();
 
   // 등록 함수
-  const onClickSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onClickSubmit = async (data: z.infer<typeof PackageSchema>) => {
     try {
       const productPackage = {
         ...data,
@@ -116,7 +127,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   };
 
   // 수정 함수
-  const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
+  const onClickUpdate = async (data: z.infer<typeof PackageSchema>) => {
     if (!isEdit) return;
     if (!form.formState.isDirty) {
       toast("✨ 변경된 내용이 없습니다.");
@@ -182,6 +193,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
     }
   }, [form, isOpen, isEdit, updateTarget]);
 
+  console.log("formState: ", form.formState.errors);
   return (
     <Dialog
       open={isOpen}
@@ -203,41 +215,38 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
-            <div className="flex items-center gap-2">
-              <FormField
-                control={form.control}
-                name="shipping.amount"
-                render={({ field }) => (
+            <FormField
+              control={form.control}
+              name="shipping"
+              render={({ field }) => (
+                <div className="flex items-start gap-2">
                   <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
-                    <Input type="number" placeholder="사용한 통화 기준으로 작성" {...field} className="bg-white" disabled={isEdit && updateTarget.shipping?.amount !== ""} />
+                    <Input
+                      type="number"
+                      className="bg-white"
+                      placeholder="사용한 통화 기준으로 작성"
+                      value={field.value?.amount}
+                      onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                      disabled={isEdit && updateTarget.shipping?.amount !== ""}
+                    />
                   </FormInputWrap>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="shipping.currency"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="opacity-0">통화</FormLabel>
-                    <FormControl>
-                      <CurrencySelect
-                        placeholder="사용한 통화"
-                        items={currencyOptions}
-                        onChange={(selectedValue) => {
-                          const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-                          if (selected) {
-                            field.onChange(JSON.stringify(selected));
-                          }
-                        }}
-                        value={field.value ?? ""}
-                        disabled={isEdit && updateTarget.shipping?.amount !== ""}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+
+                  <CurrencySelect
+                    placeholder="사용한 통화"
+                    items={currencyOptions}
+                    value={field.value?.currency}
+                    onChange={(selectedValue) => {
+                      const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                      if (selected) {
+                        field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                      }
+                    }}
+                    disabled={isEdit && updateTarget.shipping?.amount !== ""}
+                  />
+                </div>
+              )}
+            ></FormField>
+            <FormMessage>{form.formState.errors.shipping?.message}</FormMessage>
 
             <ul className="space-y-8">
               {fields.map((el, idx) => (
@@ -267,7 +276,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                       )}
                     />
 
-                    <div className="flex items-end gap-2">
+                    <div className="flex items-start gap-2">
                       <FormField
                         control={form.control}
                         name={`products.${idx}.costPrice.amount`}
