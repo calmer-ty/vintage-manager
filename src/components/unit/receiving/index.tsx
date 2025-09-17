@@ -24,29 +24,28 @@ export default function ReceivingUI({ uid }: IUserID) {
   const [isWriteOpen, setIsWriteOpen] = useState(false);
   const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
 
+  // props 묶음
+  const receivingProps = { uid, setIsWriteOpen, setUpdateTarget };
+
   return (
     <article className="px-10 py-6">
       {/* 등록/수정 모달 */}
       <ReceivingWrite
-        uid={uid}
-        isOpen={isWriteOpen}
-        setIsOpen={setIsWriteOpen}
+        {...receivingProps}
+        isWriteOpen={isWriteOpen}
+        updateTarget={updateTarget}
         createProductPackage={createProductPackage}
         updateProductPackage={updateProductPackage}
         fetchProductPackages={fetchProductPackages}
-        updateTarget={updateTarget}
-        setUpdateTarget={setUpdateTarget}
       />
       {/* 테이블 */}
       <TableUI
-        uid={uid}
+        {...receivingProps}
         data={productPackages}
         columnConfig={columnConfig}
         deleteProductPackage={deleteProductPackage}
         createProduct={createProduct}
         deleteProduct={deleteProduct}
-        setIsWriteOpen={setIsWriteOpen}
-        setUpdateTarget={setUpdateTarget}
         loading={loading}
       />
     </article>

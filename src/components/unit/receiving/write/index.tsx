@@ -8,7 +8,7 @@ import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormMessage } from "@/components/ui/form";
+import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PlusCircle, X } from "lucide-react";
 
@@ -23,15 +23,15 @@ import type { Dispatch, SetStateAction } from "react";
 import type { IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
 interface IManagementWriteProps {
   uid: string;
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
+  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
+
+  isWriteOpen: boolean;
+  updateTarget: IProductPackage | undefined;
 
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
   updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
-
-  updateTarget: IProductPackage | undefined;
-  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
 }
 
 const ProductSchema = z.object({
@@ -55,8 +55,8 @@ const ProductSchema = z.object({
 const PackageSchema = z.object({
   shipping: z
     .object({
-      amount: z.string().optional(),
-      currency: z.string().optional(),
+      amount: z.string(),
+      currency: z.string(),
     })
     .superRefine((val, ctx) => {
       // 둘 중 하나만 입력됐을 때
@@ -64,24 +64,34 @@ const PackageSchema = z.object({
         ctx.addIssue({
           code: "custom",
           path: [],
-          message: "배송비를 입력하려면 금액과 통화를 모두 입력해주세요.",
+          message: "배송비와 통화를 모두 입력해주세요.",
         });
       }
     }),
   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
 });
 
-export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPackage, updateProductPackage, fetchProductPackages, updateTarget, setUpdateTarget }: IManagementWriteProps) {
+export default function ReceivingWrite({
+  uid,
+  setIsWriteOpen,
+  setUpdateTarget,
+
+  isWriteOpen,
+  updateTarget,
+  createProductPackage,
+  updateProductPackage,
+  fetchProductPackages,
+}: IManagementWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof PackageSchema>>({
     resolver: zodResolver(PackageSchema),
     defaultValues: {
-      shipping: {
-        amount: "",
-        currency: "",
-      },
+      // shipping: {
+      //   amount: "",
+      //   currency: "",
+      // },
       products: [
         {
           name: "",
@@ -129,7 +139,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       form.reset();
-      setIsOpen(false);
+      setIsWriteOpen(false);
       toast("✅ 상품이 성공적으로 등록되었습니다.");
     } catch (error) {
       console.error("문서 추가 실패:", error);
@@ -158,7 +168,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
       await fetchProductPackages();
 
       toast("🔄 패키지가 성공적으로 수정되었습니다.");
-      setIsOpen(false);
+      setIsWriteOpen(false);
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
@@ -180,15 +190,15 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
   useEffect(() => {
     if (isEdit) {
       form.reset({
-        shipping: updateTarget.shipping,
+        // shipping: updateTarget.shipping,
         products: updateTarget.products,
       });
     } else {
       form.reset({
-        shipping: {
-          amount: "",
-          currency: "",
-        },
+        // shipping: {
+        //   amount: "",
+        //   currency: "",
+        // },
         products: [
           {
             name: "",
@@ -201,19 +211,19 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
         ],
       });
     }
-  }, [form, isOpen, isEdit, updateTarget]);
+  }, [form, isWriteOpen, isEdit, updateTarget]);
 
   console.log("formState: ", form.formState.errors);
   return (
     <Dialog
-      open={isOpen}
+      open={isWriteOpen}
       onOpenChange={(open) => {
         if (!open) {
           form.reset();
-          setIsOpen(false);
+          setIsWriteOpen(false);
           setUpdateTarget(undefined);
         } else {
-          setIsOpen(true);
+          setIsWriteOpen(true);
         }
       }}
     >
@@ -225,12 +235,12 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
-            <FormField
+            {/* <FormField
               control={form.control}
               name="shipping"
               render={({ field }) => (
                 <div className="flex items-start gap-2">
-                  <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다." noMessage={true}>
+                  <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
                     <Input
                       type="number"
                       className="bg-white"
@@ -253,8 +263,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                   />
                 </div>
               )}
-            ></FormField>
-            <FormMessage>{form.formState.errors.shipping?.message}</FormMessage>
+            ></FormField> */}
 
             <ul className="space-y-8">
               {fields.map((el, idx) => (
