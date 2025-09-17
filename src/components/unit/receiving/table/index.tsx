@@ -144,7 +144,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
   };
 
   return (
-    <div className="overflow-auto mx-auto px-6 border bg-white rounded-lg shadow-sm">
+    <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
       <TableDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
       <TableControl table={table} columnConfig={columnConfig} setIsOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
       <div className="border rounded-md">
