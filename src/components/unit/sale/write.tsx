@@ -79,16 +79,7 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
       await updateProduct({ targetId: updateTarget?._id, product });
       await fetchProducts();
 
-      // 수정 성공 후 토스트 띄우기 및 다이얼로그 닫기
-      toast(<p className="font-bold">🔄 상품 판매가가 변경되었습니다.</p>, {
-        description: `${updateTarget.brand} - ${updateTarget.name} - 판매가: ${data.salePrice}`,
-        action: {
-          label: "닫기",
-          onClick: () => {},
-        },
-        position: "top-center",
-        descriptionClassName: "ml-5",
-      });
+      toast("🔄 상품 판매가가 변경되었습니다.");
       setIsOpen(false);
     } catch (error) {
       console.error("문서 추가 실패:", error);

@@ -16,27 +16,15 @@ interface IDialogSaleCreateProps {
 }
 
 export default function DialogSaleCreate({ uid, isOpen, setIsOpen, saleCreateTarget, createProduct }: IDialogSaleCreateProps) {
-  if (!saleCreateTarget) {
-    toast(<p className="font-bold">⛔ 판매 등록할 패키지를 찾을 수 없습니다.</p>, {
-      action: {
-        label: "닫기",
-        onClick: () => {},
-      },
-      descriptionClassName: "ml-5",
-    });
-    return;
-  }
-
   const onClickSaleCreate = async () => {
+    if (!saleCreateTarget) {
+      toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
+      return;
+    }
+
     await createProduct({ uid, products: saleCreateTarget.products });
 
-    toast(<p className="font-bold">✅ 선택한 패키지가 판매 등록되었습니다.</p>, {
-      action: {
-        label: "닫기",
-        onClick: () => {},
-      },
-      descriptionClassName: "ml-5",
-    });
+    toast("✅ 선택한 패키지가 판매 등록되었습니다.");
 
     setIsOpen(false);
   };

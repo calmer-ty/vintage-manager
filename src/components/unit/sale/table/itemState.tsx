@@ -16,14 +16,7 @@ export default function ItemState({ product, refetch }: IItemStateProps) {
   const onUpdate = async (id: string, value: boolean) => {
     // 판매가 지정해야함
     if (!product.salePrice) {
-      toast(<p className="font-bold">⛔ 판매가를 지정해주세요.</p>, {
-        action: {
-          label: "닫기",
-          onClick: () => {},
-        },
-        position: "top-center",
-        descriptionClassName: "ml-5",
-      });
+      toast("⛔ 판매가를 지정해주세요.");
       return;
     }
     try {
