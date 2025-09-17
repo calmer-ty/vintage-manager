@@ -54,14 +54,13 @@ export interface IUpdateProductPackageParams {
 
 // 상품
 export interface IProduct {
-  _id: string; // 문서 id 값
+  _id: string;
   uid: string;
   brand: string;
   name: string;
-  costPrice: string;
+  costPrice: IPrice;
   salePrice: string;
   profit: number;
-  currency: string;
   createdAt: Timestamp;
   soldAt: Timestamp | null;
 }

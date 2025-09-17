@@ -41,7 +41,6 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
     cell: ({ row }) => {
       const value = row.getValue(key);
 
-      const currency: ICurrency = JSON.parse(row.original.currency);
       const costPrice = row.original.costPrice;
       const salePrice = row.original.salePrice;
       const profit = row.original.profit;
@@ -56,11 +55,13 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
       }
 
       if (key === "costPrice") {
+        const costPriceExchange: ICurrency = JSON.parse(costPrice.currency);
+
         return (
           <div className="flex justify-center items-center gap-1">
-            <span>{Math.round(Number(costPrice) * currency.rate).toLocaleString()} ₩</span>
+            <span>{Math.round(Number(costPrice.amount) * costPriceExchange.rate).toLocaleString()} ₩</span>
             <span className="text-xs text-gray-500">
-              ({Number(costPrice).toLocaleString()} {currency.label})
+              ({Number(costPrice.amount).toLocaleString()} {costPriceExchange.label})
             </span>
           </div>
         );

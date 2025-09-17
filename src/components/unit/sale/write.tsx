@@ -66,9 +66,8 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
     if (!uid || !isEdit) return;
 
     try {
-      const costPrice = updateTarget?.costPrice;
-      const currency: ICurrency = JSON.parse(updateTarget?.currency);
-      const costPriceKRW = Number(costPrice) * currency.rate;
+      const costPriceExchange: ICurrency = JSON.parse(updateTarget.costPrice.currency);
+      const costPriceKRW = Number(updateTarget.costPrice.amount) * costPriceExchange.rate;
 
       const product: IUpdateProduct = {
         ...data,
