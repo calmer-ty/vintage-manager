@@ -11,12 +11,13 @@ import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import TableControl from "./control";
-import TableDelete from "./delete";
+import TableDelete from "./dialog/delete";
+import TableSaleCreate from "./dialog/saleCreate";
+
 import { ProductList } from "./productList";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ICreateProductParams, IPrice, IProductPackage } from "@/types";
-import TableSaleCreate from "./saleCreate";
 interface ITableUIProps {
   uid: string;
   data: IProductPackage[];
