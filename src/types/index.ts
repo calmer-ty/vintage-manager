@@ -66,11 +66,8 @@ export interface IProduct {
   soldAt: Timestamp | null;
 }
 export interface ICreateProductParams {
-  packageId: string;
   uid: string;
-  currency: string;
   products: IReceivingProduct[];
-  createdAt: Timestamp;
 }
 // 수정
 export interface IUpdateProduct {

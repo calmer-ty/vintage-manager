@@ -7,6 +7,7 @@ import ReceivingWrite from "./write";
 import TableUI from "./table";
 
 import type { IProductPackage, IUserID } from "@/types";
+import { useProducts } from "@/hooks/useProducts";
 
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
@@ -17,6 +18,7 @@ const columnConfig = [
 export default function ReceivingUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { productPackages, createProductPackage, updateProductPackage, deleteProductPackage, fetchProductPackages, loading } = useProductPackages({ uid, selectedYear, selectedMonth });
+  const { createProduct, deleteProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -36,7 +38,17 @@ export default function ReceivingUI({ uid }: IUserID) {
         setUpdateTarget={setUpdateTarget}
       />
       {/* 테이블 */}
-      <TableUI data={productPackages} columnConfig={columnConfig} setIsWriteOpen={setIsWriteOpen} deleteProductPackage={deleteProductPackage} setUpdateTarget={setUpdateTarget} loading={loading} />
+      <TableUI
+        uid={uid}
+        data={productPackages}
+        columnConfig={columnConfig}
+        deleteProductPackage={deleteProductPackage}
+        createProduct={createProduct}
+        deleteProduct={deleteProduct}
+        setIsWriteOpen={setIsWriteOpen}
+        setUpdateTarget={setUpdateTarget}
+        loading={loading}
+      />
     </article>
   );
 }

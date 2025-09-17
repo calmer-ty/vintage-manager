@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
@@ -17,12 +17,12 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createProduct = async ({ packageId, uid, currency, products, createdAt }: ICreateProductParams) => {
+  const createProduct = async ({ uid, products }: ICreateProductParams) => {
     if (!uid) return;
 
     try {
       for (const product of products) {
-        const docRef = await addDoc(collection(db, "products"), { packageId, uid, currency, ...product, createdAt });
+        const docRef = await addDoc(collection(db, "products"), { uid, ...product, createdAt: Timestamp.fromDate(new Date()) });
 
         await updateDoc(docRef, {
           _id: docRef.id,

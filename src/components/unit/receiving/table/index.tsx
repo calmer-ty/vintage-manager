@@ -15,20 +15,24 @@ import TableDelete from "./delete";
 import { ProductList } from "./productList";
 
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { IPrice, IProductPackage } from "@/types";
+import type { ICreateProductParams, IPrice, IProductPackage } from "@/types";
+import TableSaleCreate from "./saleCreate";
 interface ITableUIProps {
+  uid: string;
   data: IProductPackage[];
   columnConfig: {
     key: string;
     label: string;
   }[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
+  createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
+  deleteProduct: (packageIds: string[]) => Promise<void>;
   setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setUpdateTarget: React.Dispatch<React.SetStateAction<IProductPackage | undefined>>;
   loading: boolean;
 }
 
-export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateTarget, deleteProductPackage, loading }: ITableUIProps) {
+export default function TableUI({ uid, data, columnConfig, deleteProductPackage, createProduct, setIsWriteOpen, setUpdateTarget, loading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -100,7 +104,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {/* <DropdownMenuItem onClick={() => onClickSubmitShipping(row.original._id)}>배송비 입력</DropdownMenuItem> */}
+              <DropdownMenuItem onClick={() => onClickOpenSaleDialog(row.original._id)}>판매 등록</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
@@ -132,83 +136,97 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]); // 선택된 ID들
 
-  const onClickMoveToDelete = async (packageIds: string[]) => {
+  // packageId/s 는 테이블에서 받아온 값의 id 값
+  const onClickMoveToDelete = async (rowIds: string[]) => {
     setIsDeleteOpen(true);
-    setDeleteTargets(packageIds);
+    setDeleteTargets(rowIds);
   };
 
-  const onClickMoveToUpdate = async (packageId: string) => {
-    const selectedItem = data.find((p) => p._id === packageId);
+  const onClickMoveToUpdate = async (rowId: string) => {
+    const selectedItem = data.find((p) => p._id === rowId);
     setUpdateTarget(selectedItem);
     setIsWriteOpen(true);
   };
 
+  const [isSaleCreateOpen, setIsSaleCreateOpen] = useState(false);
+  const [saleCreateTarget, setSaleCreateTarget] = useState<IProductPackage | undefined>(undefined);
+
+  const onClickOpenSaleDialog = async (rowId: string) => {
+    const selectedItem = data.find((p) => p._id === rowId);
+    setSaleCreateTarget(selectedItem);
+    setIsSaleCreateOpen(true);
+  };
+
   return (
-    <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
-      <TableDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
-      <TableControl table={table} columnConfig={columnConfig} setIsOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
-      <div className="border rounded-md">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    <div className="px-4 text-center">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {
-              // 로딩 중일 때
-              loading ? (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="text-center h-50">
-                    <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />
-                  </TableCell>
+    <>
+      <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
+        <TableControl table={table} columnConfig={columnConfig} setIsOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
+        <div className="border rounded-md">
+          <Table>
+            <TableHeader>
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      <div className="px-4 text-center">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
+                    </TableHead>
+                  ))}
                 </TableRow>
-              ) : // 데이터가 없을 때
-              table.getRowModel().rows?.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={columns.length} className="text-center">
-                    <div className="flex flex-col items-center justify-center py-10 text-gray-500">
-                      <PackageOpen className="w-8 h-8 mb-4" />
-                      <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
-                      <p className="text-sm text-gray-400">패키지를 추가하면 이곳에 표시됩니다.</p>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ) : (
-                // 데이터가 있을 때
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="text-center">
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
+              ))}
+            </TableHeader>
+            <TableBody>
+              {
+                // 로딩 중일 때
+                loading ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="text-center h-50">
+                      <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />
+                    </TableCell>
                   </TableRow>
-                ))
-              )
-            }
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-3">
-        <div className="text-muted-foreground flex-1 text-sm">
-          총 {table.getFilteredRowModel().rows.length}개 중 {table.getFilteredSelectedRowModel().rows.length}개 선택됨.
+                ) : // 데이터가 없을 때
+                table.getRowModel().rows?.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={columns.length} className="text-center">
+                      <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                        <PackageOpen className="w-8 h-8 mb-4" />
+                        <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
+                        <p className="text-sm text-gray-400">패키지를 추가하면 이곳에 표시됩니다.</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  // 데이터가 있을 때
+                  table.getRowModel().rows.map((row) => (
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="text-center">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  ))
+                )
+              }
+            </TableBody>
+          </Table>
         </div>
-        <div className="space-x-2">
-          <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
-            이전
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-            다음
-          </Button>
+        <div className="flex items-center justify-end space-x-2 py-3">
+          <div className="text-muted-foreground flex-1 text-sm">
+            총 {table.getFilteredRowModel().rows.length}개 중 {table.getFilteredSelectedRowModel().rows.length}개 선택됨.
+          </div>
+          <div className="space-x-2">
+            <Button variant="outline" size="sm" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
+              이전
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
+              다음
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+
+      <TableDelete isOpen={isDeleteOpen} setIsOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
+      <TableSaleCreate uid={uid} isOpen={isSaleCreateOpen} setIsOpen={setIsSaleCreateOpen} saleCreateTarget={saleCreateTarget} createProduct={createProduct} />
+    </>
   );
 }
