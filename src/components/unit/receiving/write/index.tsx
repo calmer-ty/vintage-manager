@@ -46,7 +46,7 @@ const ProductSchema = z.object({
       if (!val.amount || !val.currency) {
         ctx.addIssue({
           code: "custom",
-          path: [], // costPrice 객체 레벨
+          path: [],
           message: "매입가와 통화를 모두 입력해주세요.",
         });
       }
@@ -63,7 +63,7 @@ const PackageSchema = z.object({
       if ((val.amount && !val.currency) || (!val.amount && val.currency)) {
         ctx.addIssue({
           code: "custom",
-          path: [], // []로 두면 shipping 자체에 에러 붙음
+          path: [],
           message: "배송비를 입력하려면 금액과 통화를 모두 입력해주세요.",
         });
       }
@@ -241,7 +241,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                     />
                   </FormInputWrap>
                   <CurrencySelect
-                    placeholder="사용한 통화"
                     items={currencyOptions}
                     value={field.value.currency}
                     onChange={(selectedValue) => {
@@ -302,7 +301,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                             />
                           </FormInputWrap>
                           <CurrencySelect
-                            placeholder="사용한 통화"
                             items={currencyOptions}
                             onChange={(selectedValue) => {
                               const selected = currencyOptions.find((opt) => opt.value === selectedValue);
@@ -316,7 +314,6 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                         </div>
                       )}
                     ></FormField>
-                    {/* <FormMessage>{form.formState.errors.products?.message}</FormMessage> */}
                   </fieldset>
                 </li>
               ))}
