@@ -8,7 +8,7 @@ import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormLabel, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormField, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PlusCircle, X } from "lucide-react";
 
@@ -37,10 +37,20 @@ interface IManagementWriteProps {
 const ProductSchema = z.object({
   name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
-  costPrice: z.object({
-    amount: z.string().min(1, "매입가는 최소 0 이상입니다."),
-    currency: z.string().min(1, "통화를 선택해주세요."),
-  }),
+  costPrice: z
+    .object({
+      amount: z.string(),
+      currency: z.string(),
+    })
+    .superRefine((val, ctx) => {
+      if (!val.amount || !val.currency) {
+        ctx.addIssue({
+          code: "custom",
+          path: [], // costPrice 객체 레벨
+          message: "매입가와 통화를 모두 입력해주세요.",
+        });
+      }
+    }),
 });
 const PackageSchema = z.object({
   shipping: z
@@ -48,16 +58,16 @@ const PackageSchema = z.object({
       amount: z.string().optional(),
       currency: z.string().optional(),
     })
-    .refine(
-      (data) => {
-        if (!data.amount && !data.currency) return true; // 둘 다 비었으면 OK
-        return !!data.amount && !!data.currency; // 하나라도 있으면 둘 다 필요
-      },
-      {
-        message: "배송비를 입력하려면 금액과 통화를 모두 입력해주세요.",
-        path: ["shipping"], // 에러 위치
+    .superRefine((val, ctx) => {
+      // 둘 중 하나만 입력됐을 때
+      if ((val.amount && !val.currency) || (!val.amount && val.currency)) {
+        ctx.addIssue({
+          code: "custom",
+          path: [], // []로 두면 shipping 자체에 에러 붙음
+          message: "배송비를 입력하려면 금액과 통화를 모두 입력해주세요.",
+        });
       }
-    ),
+    }),
   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
 });
 
@@ -220,21 +230,20 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
               name="shipping"
               render={({ field }) => (
                 <div className="flex items-start gap-2">
-                  <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
+                  <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다." noMessage={true}>
                     <Input
                       type="number"
                       className="bg-white"
                       placeholder="사용한 통화 기준으로 작성"
-                      value={field.value?.amount}
+                      value={field.value.amount}
                       onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
                       disabled={isEdit && updateTarget.shipping?.amount !== ""}
                     />
                   </FormInputWrap>
-
                   <CurrencySelect
                     placeholder="사용한 통화"
                     items={currencyOptions}
-                    value={field.value?.currency}
+                    value={field.value.currency}
                     onChange={(selectedValue) => {
                       const selected = currencyOptions.find((opt) => opt.value === selectedValue);
                       if (selected) {
@@ -266,6 +275,7 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                         </FormInputWrap>
                       )}
                     />
+
                     <FormField
                       control={form.control}
                       name={`products.${idx}.name`}
@@ -276,41 +286,37 @@ export default function ReceivingWrite({ uid, isOpen, setIsOpen, createProductPa
                       )}
                     />
 
-                    <div className="flex items-start gap-2">
-                      <FormField
-                        control={form.control}
-                        name={`products.${idx}.costPrice.amount`}
-                        render={({ field }) => (
+                    <FormField
+                      control={form.control}
+                      name={`products.${idx}.costPrice`}
+                      render={({ field }) => (
+                        <div className="flex items-start gap-2">
                           <FormInputWrap title="매입가" tooltip="매입가는 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
-                            <Input type="number" placeholder="예) 1000" {...field} className="bg-white" disabled={isEdit && idx < updateTarget.products.length} />
+                            <Input
+                              type="number"
+                              placeholder="예) 1000"
+                              className="bg-white"
+                              value={field.value.amount}
+                              onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                              disabled={isEdit && idx < updateTarget.products.length}
+                            />
                           </FormInputWrap>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`products.${idx}.costPrice.currency`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="opacity-0">통화</FormLabel>
-                            <FormControl>
-                              <CurrencySelect
-                                placeholder="사용한 통화"
-                                items={currencyOptions}
-                                onChange={(selectedValue) => {
-                                  const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-                                  if (selected) {
-                                    field.onChange(JSON.stringify(selected));
-                                  }
-                                }}
-                                value={field.value ?? ""}
-                                disabled={isEdit && idx < updateTarget.products.length}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                          <CurrencySelect
+                            placeholder="사용한 통화"
+                            items={currencyOptions}
+                            onChange={(selectedValue) => {
+                              const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                              if (selected) {
+                                field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                              }
+                            }}
+                            value={field.value.currency}
+                            disabled={isEdit && idx < updateTarget.products.length}
+                          />
+                        </div>
+                      )}
+                    ></FormField>
+                    {/* <FormMessage>{form.formState.errors.products?.message}</FormMessage> */}
                   </fieldset>
                 </li>
               ))}

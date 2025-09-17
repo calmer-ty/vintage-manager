@@ -5,9 +5,10 @@ interface IFormInputProps {
   title: string;
   children: React.ReactNode;
   tooltip?: string;
+  noMessage?: boolean;
 }
 
-export default function FormInputWrap({ title, children, tooltip }: IFormInputProps) {
+export default function FormInputWrap({ title, children, tooltip, noMessage }: IFormInputProps) {
   return (
     <FormItem className="w-full">
       <FormLabel className="gap-0.5">
@@ -25,7 +26,7 @@ export default function FormInputWrap({ title, children, tooltip }: IFormInputPr
       </FormLabel>
 
       <FormControl>{children}</FormControl>
-      <FormMessage />
+      {!noMessage && <FormMessage />}
     </FormItem>
   );
 }
