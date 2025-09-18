@@ -4,7 +4,7 @@ import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useProductPackages } from "@/hooks/useProductPackages";
 
 import TableUI from "./table";
-import ReceivingWrite from "./dialog/write";
+import ReceivingForm from "./dialog/form";
 import ReceivingDelete from "./dialog/delete";
 
 import type { IProductPackage, IUserID } from "@/types";
@@ -69,7 +69,7 @@ export default function ReceivingUI({ uid }: IUserID) {
       />
 
       {/* 등록/수정 모달 */}
-      <ReceivingWrite
+      <ReceivingForm
         {...receivingProps}
         uid={uid}
         isWriteOpen={isWriteOpen}
