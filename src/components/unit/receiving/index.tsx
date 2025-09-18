@@ -21,22 +21,25 @@ export default function ReceivingUI({ uid }: IUserID) {
   const { productPackages, createProductPackage, updateProductPackage, deleteProductPackage, fetchProductPackages, loading } = useProductPackages({ uid, selectedYear, selectedMonth });
   const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
-  // 등록/수정 스테이트
+  // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
-  // const [saleTarget, setSaleTarget] = useState<IProductPackage | undefined>(undefined);
-
-  // 패키지 데이터 삭제
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
+
+  // props 묶음
+  const receivingProps = { setIsWriteOpen, setUpdateTarget };
+
+  const onClickMoveToUpdate = async (rowId: string) => {
+    const selectedItem = productPackages.find((p) => p._id === rowId);
+    setUpdateTarget(selectedItem);
+    setIsWriteOpen(true);
+  };
 
   const onClickMoveToDelete = async (rowIds: string[]) => {
     setIsDeleteOpen(true);
     setDeleteTargets(rowIds);
   };
-
-  // props 묶음
-  const receivingProps = { setIsWriteOpen, setUpdateTarget };
 
   return (
     <article className="px-10 py-6">
@@ -45,6 +48,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         {...receivingProps}
         data={productPackages}
         columnConfig={columnConfig}
+        onClickMoveToUpdate={onClickMoveToUpdate}
         onClickMoveToDelete={onClickMoveToDelete}
         deleteProductPackage={deleteProductPackage}
         createProduct={createProduct}

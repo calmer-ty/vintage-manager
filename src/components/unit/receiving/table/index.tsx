@@ -27,13 +27,14 @@ interface ITableUIProps {
     key: string;
     label: string;
   }[];
+  onClickMoveToUpdate: (rowId: string) => Promise<void>;
   onClickMoveToDelete: (rowIds: string[]) => Promise<void>;
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
   loading: boolean;
 }
 
-export default function TableUI({ setUpdateTarget, setIsWriteOpen, onClickMoveToDelete, data, columnConfig, loading }: ITableUIProps) {
+export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, data, columnConfig, loading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -134,12 +135,6 @@ export default function TableUI({ setUpdateTarget, setIsWriteOpen, onClickMoveTo
       rowSelection,
     },
   });
-
-  const onClickMoveToUpdate = async (rowId: string) => {
-    const selectedItem = data.find((p) => p._id === rowId);
-    setUpdateTarget(selectedItem);
-    setIsWriteOpen(true);
-  };
 
   return (
     <>
