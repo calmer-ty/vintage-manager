@@ -4,7 +4,7 @@ import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useProductPackages } from "@/hooks/useProductPackages";
 
 import TableUI from "./table";
-import ReceivingForm from "./dialog/form";
+import ReceivingWrite from "./dialog/write";
 import ReceivingDelete from "./dialog/delete";
 
 import type { IProductPackage, IUserID } from "@/types";
@@ -34,9 +34,6 @@ export default function ReceivingUI({ uid }: IUserID) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
-  // props 묶음
-  const receivingProps = { setIsWriteOpen, setUpdateTarget };
-
   const onClickMoveToUpdate = async (rowId: string) => {
     const selectedRow = productPackages.find((p) => p._id === rowId);
     setUpdateTarget(selectedRow);
@@ -48,17 +45,12 @@ export default function ReceivingUI({ uid }: IUserID) {
     setDeleteTargets(rowIds);
   };
 
-  // const onClickMoveToSale = async (rowId: string) => {
-  //   const selectedRow = productPackages.find((p) => p._id === rowId);
-
-  //   setIsWriteOpen(true);
-  // };
-
   return (
     <article className="px-10 py-6">
       {/* 테이블 */}
       <TableUI
-        {...receivingProps}
+        setIsWriteOpen={setIsWriteOpen}
+        setUpdateTarget={setUpdateTarget}
         data={productPackages}
         columnConfig={columnConfig}
         onClickMoveToUpdate={onClickMoveToUpdate}
@@ -69,8 +61,9 @@ export default function ReceivingUI({ uid }: IUserID) {
       />
 
       {/* 등록/수정 모달 */}
-      <ReceivingForm
-        {...receivingProps}
+      <ReceivingWrite
+        setIsWriteOpen={setIsWriteOpen}
+        setUpdateTarget={setUpdateTarget}
         uid={uid}
         isWriteOpen={isWriteOpen}
         updateTarget={updateTarget}

@@ -24,10 +24,11 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
   // }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((sum, el) => {
-    const currency: ICurrency = JSON.parse(el.currency);
-    const costPrice = currency.rate * Number(el.costPrice);
+    const currency: ICurrency = JSON.parse(el.costPrice.currency);
+    const costPrice = currency.rate * Number(el.costPrice.amount);
     return sum + costPrice;
   }, 0);
+
   const totalSalePrice = soldProducts.reduce((sum, el) => {
     const salePrice = Number(el.salePrice);
     return sum + salePrice;

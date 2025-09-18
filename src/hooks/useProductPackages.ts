@@ -13,8 +13,6 @@ interface IUseProductPackagesParams {
 }
 
 export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUseProductPackagesParams) => {
-  // const { createProduct, deleteProduct } = useProducts({ uid, selectedYear, selectedMonth });
-
   const [productPackages, setProductPackages] = useState<IProductPackage[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -29,9 +27,6 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
       await updateDoc(docRef, {
         _id: docRef.id,
       });
-
-      // const productsPackage2: Omit<IProductPackage, "_id"> = productsPackage;
-      // await createProduct({ packageId: docRef.id, ...productsPackage2 });
     } catch (err) {
       console.error(err);
     }
@@ -62,7 +57,6 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
       }
     }
     await fetchProductPackages();
-    // await deleteProduct(packageIds);
   };
 
   // 조회 함수

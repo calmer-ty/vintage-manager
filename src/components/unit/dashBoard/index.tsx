@@ -17,7 +17,7 @@ export default function DashBoardUI({ uid }: IUserID) {
 
   return (
     <article className="p-10">
-      {/* <DashboardStatus products={products} productPackages={productPackages} /> */}
+      <DashboardStatus products={products} productPackages={productPackages} />
       <DashboardChart products={products} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>
   );
