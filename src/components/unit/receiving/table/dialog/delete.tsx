@@ -10,14 +10,14 @@ interface IDialogDeleteProps {
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
-  setRowSelection: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
+  // setRowSelection: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 }
 
-export default function DialogDelete({ isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage, setRowSelection }: IDialogDeleteProps) {
+export default function DialogDelete({ isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IDialogDeleteProps) {
   // 삭제 함수
   const onClickDelete = async () => {
     await deleteProductPackage(deleteTargets);
-    setRowSelection({});
+    // setRowSelection({});
 
     toast(<p className="font-bold">🗑️ 선택한 항목이 삭제되었습니다.</p>, {
       action: {

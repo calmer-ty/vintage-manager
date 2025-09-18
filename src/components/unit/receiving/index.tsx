@@ -8,6 +8,7 @@ import TableUI from "./table";
 
 import type { IProductPackage, IUserID } from "@/types";
 import { useProducts } from "@/hooks/useProducts";
+import DialogDelete from "./table/dialog/delete";
 
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
@@ -25,11 +26,31 @@ export default function ReceivingUI({ uid }: IUserID) {
   const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
   // const [saleTarget, setSaleTarget] = useState<IProductPackage | undefined>(undefined);
 
+  // 패키지 데이터 삭제
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
+
+  const onClickMoveToDelete = async (rowIds: string[]) => {
+    setIsDeleteOpen(true);
+    setDeleteTargets(rowIds);
+  };
+
   // props 묶음
   const receivingProps = { setIsWriteOpen, setUpdateTarget, updateProductPackage };
 
   return (
     <article className="px-10 py-6">
+      {/* 테이블 */}
+      <TableUI
+        {...receivingProps}
+        data={productPackages}
+        columnConfig={columnConfig}
+        onClickMoveToDelete={onClickMoveToDelete}
+        deleteProductPackage={deleteProductPackage}
+        createProduct={createProduct}
+        loading={loading}
+      />
+
       {/* 등록/수정 모달 */}
       <ReceivingWrite
         {...receivingProps}
@@ -40,8 +61,8 @@ export default function ReceivingUI({ uid }: IUserID) {
         updateProductPackage={updateProductPackage}
         fetchProductPackages={fetchProductPackages}
       />
-      {/* 테이블 */}
-      <TableUI {...receivingProps} data={productPackages} columnConfig={columnConfig} deleteProductPackage={deleteProductPackage} createProduct={createProduct} loading={loading} />
+
+      <DialogDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
     </article>
   );
 }

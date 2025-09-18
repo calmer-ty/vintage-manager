@@ -12,7 +12,6 @@ import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import TableControl from "./control";
-import TableDelete from "./dialog/delete";
 
 import { ProductList } from "./productList";
 
@@ -28,12 +27,13 @@ interface ITableUIProps {
     key: string;
     label: string;
   }[];
+  onClickMoveToDelete: (rowIds: string[]) => Promise<void>;
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
   loading: boolean;
 }
 
-export default function TableUI({ setUpdateTarget, setIsWriteOpen, data, columnConfig, deleteProductPackage, loading }: ITableUIProps) {
+export default function TableUI({ setUpdateTarget, setIsWriteOpen, onClickMoveToDelete, data, columnConfig, loading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -107,7 +107,7 @@ export default function TableUI({ setUpdateTarget, setIsWriteOpen, data, columnC
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickOpenSaleDialog(row.original._id)}>판매 등록</DropdownMenuItem>
+              {/* <DropdownMenuItem onClick={() => onClickOpenSaleDialog(row.original._id)}>판매 등록</DropdownMenuItem> */}
               <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
@@ -135,31 +135,22 @@ export default function TableUI({ setUpdateTarget, setIsWriteOpen, data, columnC
     },
   });
 
-  // 패키지 데이터 삭제 / 판매 데이터 이전 기능
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
-
-  const onClickMoveToDelete = async (rowIds: string[]) => {
-    setIsDeleteOpen(true);
-    setDeleteTargets(rowIds);
-  };
-
-  const onClickOpenSaleDialog = async (rowId: string) => {
-    const selectedItem = data.find((p) => p._id === rowId);
-    setUpdateTarget(selectedItem);
-    setIsWriteOpen(true);
-  };
-
   const onClickMoveToUpdate = async (rowId: string) => {
     const selectedItem = data.find((p) => p._id === rowId);
     setUpdateTarget(selectedItem);
     setIsWriteOpen(true);
   };
 
+  // const onClickOpenSaleDialog = async (rowId: string) => {
+  //   const selectedItem = data.find((p) => p._id === rowId);
+  //   setUpdateTarget(selectedItem);
+  //   setIsWriteOpen(true);
+  // };
+
   return (
     <>
       <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
-        <TableControl table={table} columnConfig={columnConfig} setIsOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
+        <TableControl table={table} columnConfig={columnConfig} setIsWriteOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
         <div className="border rounded-md">
           <Table>
             <TableHeader>
@@ -223,8 +214,6 @@ export default function TableUI({ setUpdateTarget, setIsWriteOpen, data, columnC
           </div>
         </div>
       </div>
-
-      <TableDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
     </>
   );
 }

@@ -13,18 +13,18 @@ interface IControlTableProps {
     key: string;
     label: string;
   }[];
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onClickMoveToDelete: (selectedProductPackagesId: string[]) => Promise<void>;
 }
 
-export default function TableControl({ table, columnConfig, setIsOpen, onClickMoveToDelete }: IControlTableProps) {
+export default function TableControl({ table, columnConfig, setIsWriteOpen, onClickMoveToDelete }: IControlTableProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
   //  보기 설정용 객체 코드
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
 
   const onClickCreate = () => {
-    setIsOpen(true);
+    setIsWriteOpen(true);
   };
 
   return (
