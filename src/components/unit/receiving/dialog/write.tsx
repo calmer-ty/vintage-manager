@@ -216,6 +216,7 @@ export default function ReceivingWrite({
     <Dialog
       open={isWriteOpen}
       onOpenChange={(open) => {
+        console.log("open: ", open);
         if (!open) {
           form.reset();
           setIsWriteOpen(false);
@@ -233,7 +234,7 @@ export default function ReceivingWrite({
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
-            {/* <FormField
+            <FormField
               control={form.control}
               name="shipping"
               render={({ field }) => (
@@ -261,7 +262,7 @@ export default function ReceivingWrite({
                   />
                 </div>
               )}
-            ></FormField> */}
+            ></FormField>
 
             <ul className="space-y-8">
               {fields.map((el, idx) => (
@@ -325,7 +326,6 @@ export default function ReceivingWrite({
                 </li>
               ))}
             </ul>
-
             <Button type="button" variant="secondary" size="sm" onClick={onClickAddProduct}>
               <PlusCircle size={16} />
               <span className="pr-2">상품 추가하기</span>

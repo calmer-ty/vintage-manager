@@ -18,21 +18,28 @@ const columnConfig = [
 
 export default function ReceivingUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { productPackages, createProductPackage, updateProductPackage, deleteProductPackage, fetchProductPackages, loading } = useProductPackages({ uid, selectedYear, selectedMonth });
+  const {
+    productPackages,
+    createProductPackage,
+    updateProductPackage,
+    deleteProductPackage,
+    fetchProductPackages,
+    loading: packagesLoading,
+  } = useProductPackages({ uid, selectedYear, selectedMonth });
   const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
   // props 묶음
   const receivingProps = { setIsWriteOpen, setUpdateTarget };
 
   const onClickMoveToUpdate = async (rowId: string) => {
-    const selectedItem = productPackages.find((p) => p._id === rowId);
-    setUpdateTarget(selectedItem);
+    const selectedRow = productPackages.find((p) => p._id === rowId);
+    setUpdateTarget(selectedRow);
     setIsWriteOpen(true);
   };
 
@@ -40,6 +47,12 @@ export default function ReceivingUI({ uid }: IUserID) {
     setIsDeleteOpen(true);
     setDeleteTargets(rowIds);
   };
+
+  // const onClickMoveToSale = async (rowId: string) => {
+  //   const selectedRow = productPackages.find((p) => p._id === rowId);
+
+  //   setIsWriteOpen(true);
+  // };
 
   return (
     <article className="px-10 py-6">
@@ -52,7 +65,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         onClickMoveToDelete={onClickMoveToDelete}
         deleteProductPackage={deleteProductPackage}
         createProduct={createProduct}
-        loading={loading}
+        packagesLoading={packagesLoading}
       />
 
       {/* 등록/수정 모달 */}

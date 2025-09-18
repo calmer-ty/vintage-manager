@@ -31,10 +31,10 @@ interface ITableUIProps {
   onClickMoveToDelete: (rowIds: string[]) => Promise<void>;
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
-  loading: boolean;
+  packagesLoading: boolean;
 }
 
-export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, data, columnConfig, loading }: ITableUIProps) {
+export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, data, columnConfig, packagesLoading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -108,7 +108,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {/* <DropdownMenuItem onClick={() => onClickOpenSaleDialog(row.original._id)}>판매 등록</DropdownMenuItem> */}
+              {/* <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)}>판매 등록</DropdownMenuItem> */}
               <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>
@@ -156,7 +156,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
             <TableBody>
               {
                 // 로딩 중일 때
-                loading ? (
+                packagesLoading ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="text-center h-50">
                       <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />
