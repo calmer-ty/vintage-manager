@@ -27,14 +27,15 @@ interface ITableUIProps {
     key: string;
     label: string;
   }[];
-  onClickMoveToUpdate: (rowId: string) => Promise<void>;
-  onClickMoveToDelete: (rowIds: string[]) => Promise<void>;
+  onClickMoveToUpdate: (rowId: string) => void;
+  onClickMoveToDelete: (rowIds: string[]) => void;
+  onClickMoveToSale: (rowId: string) => void;
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
   packagesLoading: boolean;
 }
 
-export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, data, columnConfig, packagesLoading }: ITableUIProps) {
+export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, packagesLoading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -47,7 +48,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
       const value = row.getValue(key);
 
       const products = row.original.products;
-      const shipping = row.original.shipping;
+      // const shipping = row.original.shipping;
 
       // 날짜 정보 처리
       if (value instanceof Timestamp) {
@@ -59,13 +60,13 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
       }
 
       // 배송비
-      if (key === "shipping") {
-        return (
-          <span>
-            {shipping.amount.toLocaleString()} {shipping.currency === "" ? "-" : JSON.parse(shipping.currency).label}
-          </span>
-        );
-      }
+      // if (key === "shipping") {
+      //   return (
+      //     <span>
+      //       {shipping.amount.toLocaleString()} {shipping.currency === "" ? "-" : JSON.parse(shipping.currency).label}
+      //     </span>
+      //   );
+      // }
 
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products") {
@@ -108,7 +109,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {/* <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)}>판매 등록</DropdownMenuItem> */}
+              <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)}>판매 등록</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
               <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
             </DropdownMenuContent>

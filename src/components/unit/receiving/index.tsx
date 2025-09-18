@@ -9,6 +9,7 @@ import ReceivingDelete from "./dialog/delete";
 
 import type { IProductPackage, IUserID } from "@/types";
 import { useProducts } from "@/hooks/useProducts";
+import ReceivingSale from "./dialog/sale";
 
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
@@ -34,15 +35,24 @@ export default function ReceivingUI({ uid }: IUserID) {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
-  const onClickMoveToUpdate = async (rowId: string) => {
+  const [isSaleOpen, setIsSaleOpen] = useState(false);
+  const [saleTarget, setSaleTarget] = useState<IProductPackage | undefined>(undefined);
+
+  const onClickMoveToUpdate = (rowId: string) => {
     const selectedRow = productPackages.find((p) => p._id === rowId);
     setUpdateTarget(selectedRow);
     setIsWriteOpen(true);
   };
 
-  const onClickMoveToDelete = async (rowIds: string[]) => {
-    setIsDeleteOpen(true);
+  const onClickMoveToDelete = (rowIds: string[]) => {
     setDeleteTargets(rowIds);
+    setIsDeleteOpen(true);
+  };
+
+  const onClickMoveToSale = (rowId: string) => {
+    const selectedRow = productPackages.find((p) => p._id === rowId);
+    setSaleTarget(selectedRow);
+    setIsSaleOpen(true);
   };
 
   return (
@@ -55,6 +65,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         columnConfig={columnConfig}
         onClickMoveToUpdate={onClickMoveToUpdate}
         onClickMoveToDelete={onClickMoveToDelete}
+        onClickMoveToSale={onClickMoveToSale}
         deleteProductPackage={deleteProductPackage}
         createProduct={createProduct}
         packagesLoading={packagesLoading}
@@ -62,17 +73,27 @@ export default function ReceivingUI({ uid }: IUserID) {
 
       {/* 등록/수정 모달 */}
       <ReceivingWrite
+        isWriteOpen={isWriteOpen}
         setIsWriteOpen={setIsWriteOpen}
+        updateTarget={updateTarget}
         setUpdateTarget={setUpdateTarget}
         uid={uid}
-        isWriteOpen={isWriteOpen}
-        updateTarget={updateTarget}
         createProductPackage={createProductPackage}
         updateProductPackage={updateProductPackage}
         fetchProductPackages={fetchProductPackages}
       />
 
       <ReceivingDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
+      <ReceivingSale
+        uid={uid}
+        isSaleOpen={isSaleOpen}
+        setIsSaleOpen={setIsSaleOpen}
+        saleTarget={saleTarget}
+        setSaleTarget={setSaleTarget}
+        onClickMoveToSale={onClickMoveToSale}
+        updateProductPackage={updateProductPackage}
+        createProduct={createProduct}
+      />
     </article>
   );
 }

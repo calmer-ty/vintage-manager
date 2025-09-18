@@ -38,15 +38,12 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof PackageSchema>>({
     resolver: zodResolver(PackageSchema),
+    // prettier-ignore
     defaultValues: {
       products: [
-        {
-          name: "",
+        { name: "",
           brand: "",
-          costPrice: {
-            amount: "",
-            currency: "",
-          },
+          costPrice: { amount: "", currency: "" },
         },
       ],
     },
@@ -81,9 +78,9 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
       await fetchProductPackages();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
-      form.reset();
-      setIsWriteOpen(false);
       toast("✅ 상품이 성공적으로 등록되었습니다.");
+      setIsWriteOpen(false);
+      form.reset();
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
@@ -113,13 +110,11 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
 
   // 상품 추가 버튼
   const onClickAddProduct = () => {
+    // prettier-ignore
     append({
       name: "",
       brand: "",
-      costPrice: {
-        amount: "",
-        currency: "",
-      },
+      costPrice: { amount: "", currency: "" },
     });
   };
 
@@ -131,14 +126,11 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
       });
     } else {
       form.reset({
+        // prettier-ignore
         products: [
-          {
-            name: "",
+          { name: "",
             brand: "",
-            costPrice: {
-              amount: "",
-              currency: "",
-            },
+            costPrice: { amount: "", currency: "" },
           },
         ],
       });
@@ -149,7 +141,6 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
     <Dialog
       open={isWriteOpen}
       onOpenChange={(open) => {
-        console.log("open: ", open);
         if (!open) {
           form.reset();
           setIsWriteOpen(false);

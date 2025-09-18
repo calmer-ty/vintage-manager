@@ -14,7 +14,7 @@ interface IControlTableProps {
     label: string;
   }[];
   setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onClickMoveToDelete: (selectedProductPackagesId: string[]) => Promise<void>;
+  onClickMoveToDelete: (selectedProductPackagesId: string[]) => void;
 }
 
 export default function TableControl({ table, columnConfig, setIsWriteOpen, onClickMoveToDelete }: IControlTableProps) {
