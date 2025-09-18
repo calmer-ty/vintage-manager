@@ -97,13 +97,13 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
           }
         }}
       >
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-100">
           <DialogHeader>
             <DialogTitle>입고된 패키지를 판매 등록하시겠습니까?</DialogTitle>
             <DialogDescription>선택한 패키지를 판매 등록하면 수정할 수 없습니다.</DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onClickSaleCreate)} className="flex flex-col gap-4">
+            <form onSubmit={form.handleSubmit(onClickSaleCreate)} className="flex flex-col gap-6">
               <FormField
                 control={form.control}
                 name="shipping"
@@ -116,7 +116,6 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
                         placeholder="사용한 통화 기준으로 작성"
                         value={field.value.amount}
                         onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
-                        // disabled={isEdit && updateTarget.shipping?.amount !== ""}
                       />
                     </FormInputWrap>
                     <CurrencySelect
@@ -128,7 +127,6 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
                           field.onChange({ ...field.value, currency: JSON.stringify(selected) });
                         }
                       }}
-                      // disabled={isEdit && updateTarget.shipping?.amount !== ""}
                     />
                   </div>
                 )}

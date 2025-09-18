@@ -59,10 +59,10 @@ export default function ReceivingUI({ uid }: IUserID) {
     <article className="px-10 py-6">
       {/* 테이블 */}
       <TableUI
-        setIsWriteOpen={setIsWriteOpen}
-        setUpdateTarget={setUpdateTarget}
         data={productPackages}
         columnConfig={columnConfig}
+        setIsWriteOpen={setIsWriteOpen}
+        setUpdateTarget={setUpdateTarget}
         onClickMoveToUpdate={onClickMoveToUpdate}
         onClickMoveToDelete={onClickMoveToDelete}
         onClickMoveToSale={onClickMoveToSale}
@@ -71,7 +71,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         packagesLoading={packagesLoading}
       />
 
-      {/* 등록/수정 모달 */}
+      {/* 모달 */}
       <ReceivingWrite
         isWriteOpen={isWriteOpen}
         setIsWriteOpen={setIsWriteOpen}
@@ -82,7 +82,6 @@ export default function ReceivingUI({ uid }: IUserID) {
         updateProductPackage={updateProductPackage}
         fetchProductPackages={fetchProductPackages}
       />
-
       <ReceivingDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
       <ReceivingSale
         uid={uid}

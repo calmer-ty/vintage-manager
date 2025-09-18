@@ -19,14 +19,13 @@ import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ICreateProductParams, IProductPackage } from "@/types";
 interface ITableUIProps {
-  setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
-
   data: IProductPackage[];
   columnConfig: {
     key: string;
     label: string;
   }[];
+  setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
+  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
   onClickMoveToUpdate: (rowId: string) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
   onClickMoveToSale: (rowId: string) => void;
@@ -48,7 +47,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
       const value = row.getValue(key);
 
       const products = row.original.products;
-      // const shipping = row.original.shipping;
+      const shipping = row.original.shipping;
 
       // 날짜 정보 처리
       if (value instanceof Timestamp) {
@@ -60,13 +59,9 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
       }
 
       // 배송비
-      // if (key === "shipping") {
-      //   return (
-      //     <span>
-      //       {shipping.amount.toLocaleString()} {shipping.currency === "" ? "-" : JSON.parse(shipping.currency).label}
-      //     </span>
-      //   );
-      // }
+      if (key === "shipping") {
+        return <span>{shipping ? `${shipping.amount.toLocaleString()} ${JSON.parse(shipping.currency).label}` : "-"}</span>;
+      }
 
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products") {

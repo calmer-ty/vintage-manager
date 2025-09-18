@@ -150,43 +150,13 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
         }
       }}
     >
-      <DialogContent className="flex-col overflow-y-auto max-h-180 sm:max-w-120">
+      <DialogContent className="sm:max-w-120">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickCreate)} className="flex flex-col gap-4">
             <DialogHeader>
               <DialogTitle>패키지 {isEdit ? "수정" : "등록"}</DialogTitle>
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
-
-            {/* <FormField
-              control={form.control}
-              name="shipping"
-              render={({ field }) => (
-                <div className="flex items-start gap-2">
-                  <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
-                    <Input
-                      type="number"
-                      className="bg-white"
-                      placeholder="사용한 통화 기준으로 작성"
-                      value={field.value.amount}
-                      onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
-                      disabled={isEdit && updateTarget.shipping?.amount !== ""}
-                    />
-                  </FormInputWrap>
-                  <CurrencySelect
-                    items={currencyOptions}
-                    value={field.value.currency}
-                    onChange={(selectedValue) => {
-                      const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-                      if (selected) {
-                        field.onChange({ ...field.value, currency: JSON.stringify(selected) });
-                      }
-                    }}
-                    disabled={isEdit && updateTarget.shipping?.amount !== ""}
-                  />
-                </div>
-              )}
-            ></FormField> */}
 
             <ul className="space-y-8">
               {fields.map((el, idx) => (
