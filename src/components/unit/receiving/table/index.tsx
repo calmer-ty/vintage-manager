@@ -141,12 +141,6 @@ export default function TableUI({ setUpdateTarget, setIsWriteOpen, onClickMoveTo
     setIsWriteOpen(true);
   };
 
-  // const onClickOpenSaleDialog = async (rowId: string) => {
-  //   const selectedItem = data.find((p) => p._id === rowId);
-  //   setUpdateTarget(selectedItem);
-  //   setIsWriteOpen(true);
-  // };
-
   return (
     <>
       <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">

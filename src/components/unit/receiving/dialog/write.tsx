@@ -22,14 +22,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
 interface IReceivingWriteProps {
-  uid: string;
-  updateTarget: IProductPackage | undefined;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
-  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
 
+  uid: string;
   isWriteOpen: boolean;
+  updateTarget: IProductPackage | undefined;
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
+  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 

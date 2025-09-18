@@ -36,7 +36,7 @@ export default function ReceivingUI({ uid }: IUserID) {
   };
 
   // props 묶음
-  const receivingProps = { setIsWriteOpen, setUpdateTarget, updateProductPackage };
+  const receivingProps = { setIsWriteOpen, setUpdateTarget };
 
   return (
     <article className="px-10 py-6">
