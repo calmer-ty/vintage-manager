@@ -1,5 +1,6 @@
 // 라이브러리
 import { useState } from "react";
+
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
@@ -12,14 +13,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import TableControl from "./control";
 import TableDelete from "./dialog/delete";
-import TableSaleCreate from "./dialog/saleCreate";
 
 import { ProductList } from "./productList";
 
+import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ICreateProductParams, IProductPackage } from "@/types";
 interface ITableUIProps {
-  uid: string;
+  setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
+  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
+
   data: IProductPackage[];
   columnConfig: {
     key: string;
@@ -27,13 +30,10 @@ interface ITableUIProps {
   }[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
-  deleteProduct: (packageIds: string[]) => Promise<void>;
-  setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setUpdateTarget: React.Dispatch<React.SetStateAction<IProductPackage | undefined>>;
   loading: boolean;
 }
 
-export default function TableUI({ uid, data, columnConfig, deleteProductPackage, createProduct, setIsWriteOpen, setUpdateTarget, loading }: ITableUIProps) {
+export default function TableUI({ setUpdateTarget, setIsWriteOpen, data, columnConfig, deleteProductPackage, loading }: ITableUIProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -135,29 +135,25 @@ export default function TableUI({ uid, data, columnConfig, deleteProductPackage,
     },
   });
 
-  // 패키지 데이터 삭제 로직
+  // 패키지 데이터 삭제 / 판매 데이터 이전 기능
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [deleteTargets, setDeleteTargets] = useState<string[]>([]); // 선택된 ID들
+  const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
-  // packageId/s 는 테이블에서 받아온 값의 id 값
   const onClickMoveToDelete = async (rowIds: string[]) => {
     setIsDeleteOpen(true);
     setDeleteTargets(rowIds);
+  };
+
+  const onClickOpenSaleDialog = async (rowId: string) => {
+    const selectedItem = data.find((p) => p._id === rowId);
+    setUpdateTarget(selectedItem);
+    setIsWriteOpen(true);
   };
 
   const onClickMoveToUpdate = async (rowId: string) => {
     const selectedItem = data.find((p) => p._id === rowId);
     setUpdateTarget(selectedItem);
     setIsWriteOpen(true);
-  };
-
-  const [isSaleCreateOpen, setIsSaleCreateOpen] = useState(false);
-  const [saleCreateTarget, setSaleCreateTarget] = useState<IProductPackage | undefined>(undefined);
-
-  const onClickOpenSaleDialog = async (rowId: string) => {
-    const selectedItem = data.find((p) => p._id === rowId);
-    setSaleCreateTarget(selectedItem);
-    setIsSaleCreateOpen(true);
   };
 
   return (
@@ -228,8 +224,7 @@ export default function TableUI({ uid, data, columnConfig, deleteProductPackage,
         </div>
       </div>
 
-      <TableDelete isOpen={isDeleteOpen} setIsOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
-      <TableSaleCreate uid={uid} isOpen={isSaleCreateOpen} setIsOpen={setIsSaleCreateOpen} saleCreateTarget={saleCreateTarget} createProduct={createProduct} />
+      <TableDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} setRowSelection={setRowSelection} />
     </>
   );
 }

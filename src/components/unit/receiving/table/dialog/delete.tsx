@@ -6,14 +6,14 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import type { Dispatch, SetStateAction } from "react";
 interface IDialogDeleteProps {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  isDeleteOpen: boolean;
+  setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
   setRowSelection: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 }
 
-export default function DialogDelete({ isOpen, setIsOpen, deleteTargets, deleteProductPackage, setRowSelection }: IDialogDeleteProps) {
+export default function DialogDelete({ isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage, setRowSelection }: IDialogDeleteProps) {
   // 삭제 함수
   const onClickDelete = async () => {
     await deleteProductPackage(deleteTargets);
@@ -27,13 +27,13 @@ export default function DialogDelete({ isOpen, setIsOpen, deleteTargets, deleteP
       descriptionClassName: "ml-5",
     });
 
-    setIsOpen(false);
+    setIsDeleteOpen(false);
   };
 
   return (
     <>
       {/* 삭제 모달 */}
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>입고된 패키지를 삭제하시겠습니까?</DialogTitle>

@@ -23,14 +23,13 @@ import type { Dispatch, SetStateAction } from "react";
 import type { IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
 interface IManagementWriteProps {
   uid: string;
+  updateTarget: IProductPackage | undefined;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
+  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
 
   isWriteOpen: boolean;
-  updateTarget: IProductPackage | undefined;
-
   createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
-  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
@@ -52,7 +51,7 @@ const ProductSchema = z.object({
       }
     }),
 });
-const PackageSchema = z.object({
+export const PackageSchema = z.object({
   shipping: z
     .object({
       amount: z.string(),
@@ -72,10 +71,10 @@ const PackageSchema = z.object({
 });
 
 export default function ReceivingWrite({
-  uid,
   setIsWriteOpen,
   setUpdateTarget,
 
+  uid,
   isWriteOpen,
   updateTarget,
   createProductPackage,
@@ -88,10 +87,10 @@ export default function ReceivingWrite({
   const form = useForm<z.infer<typeof PackageSchema>>({
     resolver: zodResolver(PackageSchema),
     defaultValues: {
-      // shipping: {
-      //   amount: "",
-      //   currency: "",
-      // },
+      shipping: {
+        amount: "",
+        currency: "",
+      },
       products: [
         {
           name: "",
@@ -113,7 +112,7 @@ export default function ReceivingWrite({
   const { currencyOptions } = useExchangeRate();
 
   // 등록 함수
-  const onClickSubmit = async (data: z.infer<typeof PackageSchema>) => {
+  const onClickCreate = async (data: z.infer<typeof PackageSchema>) => {
     try {
       const productPackage = {
         ...data,
@@ -190,15 +189,15 @@ export default function ReceivingWrite({
   useEffect(() => {
     if (isEdit) {
       form.reset({
-        // shipping: updateTarget.shipping,
+        shipping: updateTarget.shipping,
         products: updateTarget.products,
       });
     } else {
       form.reset({
-        // shipping: {
-        //   amount: "",
-        //   currency: "",
-        // },
+        shipping: {
+          amount: "",
+          currency: "",
+        },
         products: [
           {
             name: "",
@@ -213,7 +212,6 @@ export default function ReceivingWrite({
     }
   }, [form, isWriteOpen, isEdit, updateTarget]);
 
-  console.log("formState: ", form.formState.errors);
   return (
     <Dialog
       open={isWriteOpen}
@@ -229,7 +227,7 @@ export default function ReceivingWrite({
     >
       <DialogContent className="flex-col overflow-y-auto max-h-180 sm:max-w-120">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickSubmit)} className="flex flex-col gap-4">
+          <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickCreate)} className="flex flex-col gap-4">
             <DialogHeader>
               <DialogTitle>패키지 {isEdit ? "수정" : "등록"}</DialogTitle>
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>

@@ -18,20 +18,22 @@ const columnConfig = [
 export default function ReceivingUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { productPackages, createProductPackage, updateProductPackage, deleteProductPackage, fetchProductPackages, loading } = useProductPackages({ uid, selectedYear, selectedMonth });
-  const { createProduct, deleteProduct } = useProducts({ uid, selectedYear, selectedMonth });
+  const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   // 등록/수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
   const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
+  // const [saleTarget, setSaleTarget] = useState<IProductPackage | undefined>(undefined);
 
   // props 묶음
-  const receivingProps = { uid, setIsWriteOpen, setUpdateTarget };
+  const receivingProps = { setIsWriteOpen, setUpdateTarget, updateProductPackage };
 
   return (
     <article className="px-10 py-6">
       {/* 등록/수정 모달 */}
       <ReceivingWrite
         {...receivingProps}
+        uid={uid}
         isWriteOpen={isWriteOpen}
         updateTarget={updateTarget}
         createProductPackage={createProductPackage}
@@ -39,15 +41,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         fetchProductPackages={fetchProductPackages}
       />
       {/* 테이블 */}
-      <TableUI
-        {...receivingProps}
-        data={productPackages}
-        columnConfig={columnConfig}
-        deleteProductPackage={deleteProductPackage}
-        createProduct={createProduct}
-        deleteProduct={deleteProduct}
-        loading={loading}
-      />
+      <TableUI {...receivingProps} data={productPackages} columnConfig={columnConfig} deleteProductPackage={deleteProductPackage} createProduct={createProduct} loading={loading} />
     </article>
   );
 }
