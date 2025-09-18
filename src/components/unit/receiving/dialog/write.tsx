@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
-interface IManagementWriteProps {
+interface IReceivingWriteProps {
   uid: string;
   updateTarget: IProductPackage | undefined;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
@@ -80,7 +80,7 @@ export default function ReceivingWrite({
   createProductPackage,
   updateProductPackage,
   fetchProductPackages,
-}: IManagementWriteProps) {
+}: IReceivingWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정

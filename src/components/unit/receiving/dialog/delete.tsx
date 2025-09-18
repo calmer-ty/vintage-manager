@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { Dispatch, SetStateAction } from "react";
-interface IDialogDeleteProps {
+interface IReceivingDeleteProps {
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
@@ -13,7 +13,7 @@ interface IDialogDeleteProps {
   // setRowSelection: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 }
 
-export default function DialogDelete({ isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IDialogDeleteProps) {
+export default function ReceivingDelete({ isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IReceivingDeleteProps) {
   // 삭제 함수
   const onClickDelete = async () => {
     await deleteProductPackage(deleteTargets);

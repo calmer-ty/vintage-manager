@@ -3,12 +3,12 @@ import { useState } from "react";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useProductPackages } from "@/hooks/useProductPackages";
 
-import ReceivingWrite from "./write";
 import TableUI from "./table";
+import ReceivingWrite from "./dialog/write";
+import ReceivingDelete from "./dialog/delete";
 
 import type { IProductPackage, IUserID } from "@/types";
 import { useProducts } from "@/hooks/useProducts";
-import DialogDelete from "./table/dialog/delete";
 
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
@@ -62,7 +62,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         fetchProductPackages={fetchProductPackages}
       />
 
-      <DialogDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
+      <ReceivingDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
     </article>
   );
 }

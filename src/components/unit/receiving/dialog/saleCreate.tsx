@@ -6,7 +6,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ICreateProductParams, IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
-import type { PackageSchema } from "../../write";
+import type { PackageSchema } from "../../dialog";
 import type { z } from "zod";
 interface IDialogSaleCreateProps {
   uid: string;
