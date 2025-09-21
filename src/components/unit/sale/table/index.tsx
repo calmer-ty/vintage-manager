@@ -12,6 +12,7 @@ import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 // 내부 요소
 import TableControl from "./control";
 import ItemState from "./itemState";
+import BasicTooltip from "@/components/commons/tooltip/basic";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
@@ -100,9 +101,13 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.soldAt}>
-                상품 판매가 지정
-              </DropdownMenuItem>
+              <BasicTooltip content={row.original.soldAt ? "상품이 판매되어 판매가를 지정할 수 없습니다." : undefined}>
+                <div className="w-full">
+                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.soldAt}>
+                    상품 판매가 지정
+                  </DropdownMenuItem>
+                </div>
+              </BasicTooltip>
             </DropdownMenuContent>
           </DropdownMenu>
         );

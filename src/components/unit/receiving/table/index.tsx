@@ -11,6 +11,7 @@ import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import TableControl from "./control";
+import BasicTooltip from "@/components/commons/tooltip/basic";
 
 import { ProductList } from "./productList";
 
@@ -103,15 +104,19 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.shipping}>
-                판매 등록
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.shipping}>
-                패키지 수정
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.shipping}>
-                패키지 삭제
-              </DropdownMenuItem>
+              <BasicTooltip content={row.original.shipping ? "상품이 판매되어 판매가를 지정할 수 없습니다." : undefined}>
+                <div className="w-full">
+                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.shipping}>
+                    판매 등록
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.shipping}>
+                    패키지 수정
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.shipping}>
+                    패키지 삭제
+                  </DropdownMenuItem>
+                </div>
+              </BasicTooltip>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -177,7 +182,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
                 ) : (
                   // 데이터가 있을 때
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.shipping ? "text-gray-400" : ""}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
