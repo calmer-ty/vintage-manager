@@ -20,14 +20,14 @@ import { PackageSchema } from "./schema";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
 interface IReceivingFormProps {
   uid: string;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   updateTarget: IProductPackage | undefined;
   setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
-  createProductPackage: (productsPackage: IProductPackage) => Promise<void>;
+  createProductPackage: ({ productPackage }: ICreateProductPackageParams) => Promise<void>;
   updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
@@ -74,7 +74,7 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
       };
 
       // 데이터 생성 및 리패치
-      await createProductPackage(productPackage);
+      await createProductPackage({ productPackage });
       await fetchProductPackages();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기

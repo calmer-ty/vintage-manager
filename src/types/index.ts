@@ -39,6 +39,10 @@ export interface IProductPackage {
   shipping?: IPrice;
   createdAt: Timestamp;
 }
+export interface ICreateProductPackageParams {
+  productPackage: IProductPackage;
+}
+
 export interface IUpdateProductPackage {
   products?: {
     name: string;

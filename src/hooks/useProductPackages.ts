@@ -5,7 +5,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 // import { useProducts } from "./useProducts";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { IProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackageParams } from "@/types";
 interface IUseProductPackagesParams {
   uid: string;
   selectedYear: number;
@@ -17,11 +17,11 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
   const [loading, setLoading] = useState(false);
 
   // [등록]
-  const createProductPackage = async (productsPackage: IProductPackage) => {
+  const createProductPackage = async ({ productPackage }: ICreateProductPackageParams) => {
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "productPackages"), { ...productsPackage });
+      const docRef = await addDoc(collection(db, "productPackages"), { ...productPackage });
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {

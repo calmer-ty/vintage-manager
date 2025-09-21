@@ -1,6 +1,5 @@
 // 라이브러리
 import { useState } from "react";
-
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
@@ -104,9 +103,15 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)}>판매 등록</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>패키지 수정</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.shipping}>
+                판매 등록
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.shipping}>
+                패키지 수정
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.shipping}>
+                패키지 삭제
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
