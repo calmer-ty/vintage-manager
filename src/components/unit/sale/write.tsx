@@ -15,9 +15,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { IProduct, ICurrency, IUpdateProductParams, IUpdateProduct } from "@/types";
 
-const FormSchema = z.object({
-  brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
-  name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
+const ProductSchema = z.object({
+  brand: z.string().optional(),
+  name: z.string().optional(),
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
 });
 
@@ -35,8 +35,8 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof ProductSchema>>({
+    resolver: zodResolver(ProductSchema),
     defaultValues: {
       brand: "",
       name: "",
@@ -62,7 +62,7 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
   }, [form, isOpen, isEdit, updateTarget]);
 
   // 수정 함수
-  const onClickUpdate = async (data: z.infer<typeof FormSchema>) => {
+  const onClickUpdate = async (data: z.infer<typeof ProductSchema>) => {
     if (!uid || !isEdit) return;
 
     try {
