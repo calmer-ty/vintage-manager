@@ -16,7 +16,7 @@ import CurrencySelect from "./currencySelect";
 
 import { ShippingSchema } from "./schema";
 
-import type { ICreateProductParams, IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { ICreateProductParams, IProductPackage, ISaleProductPackage, IUpdateProductPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 interface IReceivingSaleProps {
@@ -56,7 +56,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
     }
 
     try {
-      const productPackage: IUpdateProductPackage = {
+      const productPackage: ISaleProductPackage = {
         shipping: {
           amount: data.shipping.amount,
           currency: data.shipping.currency,

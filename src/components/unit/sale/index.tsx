@@ -7,7 +7,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { useState } from "react";
 
 const columnConfig = [
-  { key: "createdAt", label: "입고 일자" },
+  { key: "createdAt", label: "등록 일자" },
   { key: "soldAt", label: "판매 일자" },
   { key: "brand", label: "브랜드명" },
   { key: "name", label: "상품명" },

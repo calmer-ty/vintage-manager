@@ -34,16 +34,18 @@ export interface ICreateProductPackageParams {
   productPackage: IProductPackage;
 }
 export interface IUpdateProductPackage {
-  products?: {
+  products: {
     name: string;
     brand: string;
     costPrice: IPrice;
   }[];
-  shipping?: IPrice;
+}
+export interface ISaleProductPackage {
+  shipping: IPrice;
 }
 export interface IUpdateProductPackageParams {
   updateTargetId: string;
-  productPackage: IUpdateProductPackage;
+  productPackage: IUpdateProductPackage | ISaleProductPackage;
 }
 
 // 상품

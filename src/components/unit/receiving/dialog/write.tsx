@@ -148,7 +148,7 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
         }
       }}
     >
-      <DialogContent className="sm:max-w-120">
+      <DialogContent className="sm:max-w-120 sm:max-h-160 overflow-y-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickCreate)} className="flex flex-col gap-4">
             <DialogHeader>
