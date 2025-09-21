@@ -98,7 +98,7 @@ export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpd
         }
       }}
     >
-      <DialogContent className="flex-col sm:max-w-120">
+      <DialogContent className="max-w-120">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onClickUpdate)} className="">
             <DialogHeader className="mb-4">

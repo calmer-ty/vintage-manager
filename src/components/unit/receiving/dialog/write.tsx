@@ -148,7 +148,7 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
         }
       }}
     >
-      <DialogContent className="sm:max-w-120 sm:max-h-160 overflow-y-auto">
+      <DialogContent className="max-w-120">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickCreate)} className="flex flex-col gap-4">
             <DialogHeader>
@@ -156,68 +156,70 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
-            <ul className="space-y-8">
-              {fields.map((el, idx) => (
-                <li key={el.id}>
-                  <h3 className="flex justify-between items-center mb-4 px-3 py-1 border-t bg-gray-200">
-                    <span className="text-sm font-bold">상품 {idx + 1}</span>
-                    {idx !== 0 && <X size={16} onClick={() => remove(idx)} className="cursor-pointer" />}
-                  </h3>
+            <div className="flex-1 overflow-y-auto max-h-100">
+              <ul className="space-y-8">
+                {fields.map((el, idx) => (
+                  <li key={el.id}>
+                    <h3 className="flex justify-between items-center mb-4 px-3 py-1 border-t bg-gray-200">
+                      <span className="text-sm font-bold">상품 {idx + 1}</span>
+                      {idx !== 0 && <X size={16} onClick={() => remove(idx)} className="cursor-pointer" />}
+                    </h3>
 
-                  <fieldset className="flex flex-col gap-4 px-2">
-                    <FormField
-                      control={form.control}
-                      name={`products.${idx}.brand`}
-                      render={({ field }) => (
-                        <FormInputWrap title="브랜드명">
-                          <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
-                        </FormInputWrap>
-                      )}
-                    />
+                    <fieldset className="flex flex-col gap-4 px-2">
+                      <FormField
+                        control={form.control}
+                        name={`products.${idx}.brand`}
+                        render={({ field }) => (
+                          <FormInputWrap title="브랜드명">
+                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
+                          </FormInputWrap>
+                        )}
+                      />
 
-                    <FormField
-                      control={form.control}
-                      name={`products.${idx}.name`}
-                      render={({ field }) => (
-                        <FormInputWrap title="제품명">
-                          <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
-                        </FormInputWrap>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name={`products.${idx}.name`}
+                        render={({ field }) => (
+                          <FormInputWrap title="제품명">
+                            <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
+                          </FormInputWrap>
+                        )}
+                      />
 
-                    <FormField
-                      control={form.control}
-                      name={`products.${idx}.costPrice`}
-                      render={({ field }) => (
-                        <div className="flex items-start gap-2">
-                          <FormInputWrap title="매입가" tooltip="매입가는 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
-                            <Input
-                              type="number"
-                              placeholder="예) 1000"
-                              className="bg-white"
-                              value={field.value.amount}
-                              onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                      <FormField
+                        control={form.control}
+                        name={`products.${idx}.costPrice`}
+                        render={({ field }) => (
+                          <div className="flex items-start gap-2">
+                            <FormInputWrap title="매입가" tooltip="매입가는 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
+                              <Input
+                                type="number"
+                                placeholder="예) 1000"
+                                className="bg-white"
+                                value={field.value.amount}
+                                onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                                disabled={isEdit && idx < updateTarget.products.length}
+                              />
+                            </FormInputWrap>
+                            <CurrencySelect
+                              items={currencyOptions}
+                              onChange={(selectedValue) => {
+                                const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                                if (selected) {
+                                  field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                                }
+                              }}
+                              value={field.value.currency}
                               disabled={isEdit && idx < updateTarget.products.length}
                             />
-                          </FormInputWrap>
-                          <CurrencySelect
-                            items={currencyOptions}
-                            onChange={(selectedValue) => {
-                              const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-                              if (selected) {
-                                field.onChange({ ...field.value, currency: JSON.stringify(selected) });
-                              }
-                            }}
-                            value={field.value.currency}
-                            disabled={isEdit && idx < updateTarget.products.length}
-                          />
-                        </div>
-                      )}
-                    ></FormField>
-                  </fieldset>
-                </li>
-              ))}
-            </ul>
+                          </div>
+                        )}
+                      ></FormField>
+                    </fieldset>
+                  </li>
+                ))}
+              </ul>
+            </div>
             <Button type="button" variant="secondary" size="sm" onClick={onClickAddProduct}>
               <PlusCircle size={16} />
               <span className="pr-2">상품 추가하기</span>
