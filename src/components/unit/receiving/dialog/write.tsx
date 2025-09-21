@@ -65,12 +65,10 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
         _id: "",
         products: data.products.map((p) => ({
           ...p,
+          uid,
           _id: uuid(),
-          salePrice: "0",
-          profit: 0,
-          soldAt: null,
         })),
-        createdAt: Timestamp.fromDate(new Date()), // 테이블 생성 시간
+        createdAt: Timestamp.fromDate(new Date()),
       };
 
       // 데이터 생성 및 리패치
