@@ -100,7 +100,9 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)}>상품 판매가 지정</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.soldAt}>
+                상품 판매가 지정
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -168,7 +170,7 @@ export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateT
               </TableRow>
             ) : (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-gray-100" : ""}>
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-green-50 text-green-700" : ""}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

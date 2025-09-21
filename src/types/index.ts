@@ -57,7 +57,7 @@ export interface IProduct {
   costPrice: IPrice;
   salePrice?: string;
   profit?: number;
-  soldAt?: Timestamp;
+  soldAt?: Timestamp | null;
 }
 export interface ICreateProductParams {
   uid: string;
