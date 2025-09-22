@@ -35,9 +35,9 @@ interface ITableUIProps {
 }
 
 export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, packagesLoading }: ITableUIProps) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
   const [rowSelection, setRowSelection] = useState({});
 
   const dynamicColumns: ColumnDef<IProductPackage>[] = columnConfig.map(({ key, label }) => ({
@@ -97,6 +97,12 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
       cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" disabled={!!row.original.shipping} />,
       enableSorting: false,
       enableHiding: false,
+    },
+    {
+      id: "shippingSort",
+      accessorFn: (row) => (row.shipping ? 1 : 0), // shipping 있으면 1, 없으면 0
+      enableSorting: true,
+      enableHiding: false, // shippingSort UI에서 숨김
     },
     ...dynamicColumns,
     {

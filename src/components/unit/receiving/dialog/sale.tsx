@@ -26,13 +26,12 @@ interface IReceivingSaleProps {
   saleTarget: IProductPackage | undefined;
   setSaleTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
 
-  onClickMoveToSale: (rowId: string) => void;
-
   updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
+  fetchProductPackages: () => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
 }
 
-export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, updateProductPackage }: IReceivingSaleProps) {
+export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, updateProductPackage, fetchProductPackages }: IReceivingSaleProps) {
   // 환율 데이터
   const { currencyOptions } = useExchangeRate();
 
@@ -65,7 +64,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
 
       await updateProductPackage({ updateTargetId: saleTarget._id, productPackage });
       await createProduct({ uid, products: saleTarget.products });
-
+      await fetchProductPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
       setIsSaleOpen(false);
       form.reset();

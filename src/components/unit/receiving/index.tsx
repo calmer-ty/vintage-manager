@@ -89,8 +89,8 @@ export default function ReceivingUI({ uid }: IUserID) {
         setIsSaleOpen={setIsSaleOpen}
         saleTarget={saleTarget}
         setSaleTarget={setSaleTarget}
-        onClickMoveToSale={onClickMoveToSale}
         updateProductPackage={updateProductPackage}
+        fetchProductPackages={fetchProductPackages}
         createProduct={createProduct}
       />
     </article>
