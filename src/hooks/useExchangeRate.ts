@@ -5,17 +5,6 @@ import type { IExchangeRate } from "@/types";
 
 export const useExchangeRate = () => {
   const [rates, setRates] = useState<IExchangeRate>();
-  useEffect(() => {
-    const fetchExchangeRate = async () => {
-      try {
-        const response = await axios.get("/api/exchange-rate");
-        setRates(response.data);
-      } catch (err) {
-        console.error("환율 정보 불러오기 실패:", err);
-      }
-    };
-    fetchExchangeRate();
-  }, []);
 
   // const USD = rates?.data.conversion_rates.USD ?? 0;
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
@@ -33,6 +22,18 @@ export const useExchangeRate = () => {
     ],
     [baseRate, usdToKrw, jpyToKrw]
   );
+
+  useEffect(() => {
+    const fetchExchangeRate = async () => {
+      try {
+        const response = await axios.get("/api/exchange-rate");
+        setRates(response.data);
+      } catch (err) {
+        console.error("환율 정보 불러오기 실패:", err);
+      }
+    };
+    fetchExchangeRate();
+  }, []);
 
   return {
     currencyOptions,

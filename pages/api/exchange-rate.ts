@@ -1,19 +1,18 @@
 import axios from "axios";
-import type { NextApiRequest, NextApiResponse } from "next";
 
-// 24시간 = 1000ms * 60초 * 60분 * 24시간
-const CACHE_DURATION = 1000 * 60 * 60 * 24;
+import { getTodayMidnight } from "@/lib/date";
+
+import type { NextApiRequest, NextApiResponse } from "next";
 
 let cachedRate: unknown = null;
 let lastFetchedTime: number = 0;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const now = Date.now();
+  // const now = Date.now();
+  const todayMidnight = getTodayMidnight();
 
-  // 현재 시간과 마지막 호출 시간 비교해서 24시간 안 지났으면 캐시 반환
-  if (cachedRate && now - lastFetchedTime < CACHE_DURATION) {
-    // console.log("⚡ 캐시에서 데이터 반환됨"); // 캐시에서 가져올 때 서버 로그
-    // console.log("현재 캐시된 데이터:", cachedRate); // 캐시 데이터 확인
+  // 마지막 데이터를 불러온 시간과 현재 시간 자정과 함께 비교하여 날짜가 같으면 캐시된 데이터 사용
+  if (cachedRate && lastFetchedTime === todayMidnight) {
     return res.status(200).json({
       data: cachedRate,
       cached: true, // 캐시에서 가져온 데이터임을 표시
@@ -24,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const response = await axios.get(`https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGERATE_API_KEY}/latest/USD`);
 
     cachedRate = response.data;
-    lastFetchedTime = now;
+    lastFetchedTime = todayMidnight;
 
     // console.log("🔄 새로 호출된 환율 데이터: ", cachedRate); // 새로 호출된 데이터 확인
 

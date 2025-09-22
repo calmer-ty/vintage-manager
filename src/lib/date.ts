@@ -19,6 +19,13 @@ export const getNowDate = () => {
   };
 };
 
+// 오늘 00:00 (자정) 타임스탬프
+export const getTodayMidnight = () => {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  return now.getTime();
+};
+
 // 파라미터(현재 달)에 대한 모든 날짜 리턴
 export const getDaysOfCurrentMonth = (year: number, month: number) => {
   // 이번 달 마지막 날짜 구하기
