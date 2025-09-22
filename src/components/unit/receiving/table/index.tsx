@@ -78,14 +78,23 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
   const columns: ColumnDef<IProductPackage>[] = [
     {
       id: "select",
-      header: ({ table }) => (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      ),
-      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
+      header: ({ table }) => {
+        const selectableRows = table.getRowModel().rows.filter((row) => !row.original.shipping); // shipping이 없는 행만 선택 가능
+        const allSelected = selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
+
+        return (
+          <Checkbox
+            // checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+            checked={allSelected}
+            onCheckedChange={(value) => {
+              // table.toggleAllPageRowsSelected(!!value)
+              selectableRows.forEach((row) => row.toggleSelected(!!value));
+            }}
+            aria-label="Select all"
+          />
+        );
+      },
+      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" disabled={!!row.original.shipping} />,
       enableSorting: false,
       enableHiding: false,
     },
@@ -104,7 +113,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={row.original.shipping ? "상품이 판매되어 판매가를 지정할 수 없습니다." : undefined}>
+              <BasicTooltip content={row.original.shipping ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
                 <div className="w-full">
                   <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.shipping}>
                     판매 등록

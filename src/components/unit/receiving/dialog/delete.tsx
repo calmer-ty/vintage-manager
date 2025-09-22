@@ -34,7 +34,7 @@ export default function ReceivingDelete({ isDeleteOpen, setIsDeleteOpen, deleteT
     <>
       {/* 삭제 모달 */}
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-100">
           <DialogHeader>
             <DialogTitle>입고된 패키지를 삭제하시겠습니까?</DialogTitle>
             <DialogDescription>선택한 패키지를 삭제하면 복구할 수 없습니다.</DialogDescription>
