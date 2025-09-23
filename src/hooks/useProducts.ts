@@ -35,7 +35,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
   // [수정]
   const updateProduct = async ({ targetId, product }: IUpdateProductParams) => {
-    if (!uid) return;
+    // if (!uid) return;
 
     try {
       const docRef = doc(db, "products", targetId);
@@ -65,7 +65,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
   // 조회 함수
   const fetchProducts = useCallback(async () => {
-    if (!uid) return;
+    // if (!uid) return;
     setLoading(true);
 
     try {

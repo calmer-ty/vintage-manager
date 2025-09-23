@@ -51,12 +51,12 @@ export interface IUpdateProductPackageParams {
 // 상품
 export interface IProduct {
   _id: string;
-  uid: string;
   brand: string;
   name: string;
   costPrice: IPrice;
   soldAt: Timestamp | null;
 
+  uid?: string;
   salePrice?: string;
   profit?: number;
   createdAt?: Timestamp;

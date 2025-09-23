@@ -65,7 +65,6 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
         _id: "",
         products: data.products.map((p) => ({
           ...p,
-          uid,
           _id: uuid(),
           soldAt: null, // 판매중/판매완료 값이 토글하며 들어가기에 초기값 null 처리
         })),
