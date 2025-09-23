@@ -55,9 +55,11 @@ export interface IProduct {
   brand: string;
   name: string;
   costPrice: IPrice;
+  soldAt: Timestamp | null;
+
   salePrice?: string;
   profit?: number;
-  soldAt?: Timestamp | null;
+  createdAt?: Timestamp;
 }
 export interface ICreateProductParams {
   uid: string;

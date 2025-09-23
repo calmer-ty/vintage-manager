@@ -5,9 +5,9 @@ import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-import type { ICurrency, IReceivingProduct } from "@/types";
+import type { ICurrency, IProduct } from "@/types";
 interface IProductListProps {
-  products: IReceivingProduct[];
+  products: IProduct[];
 }
 
 export function ProductList({ products }: IProductListProps) {
