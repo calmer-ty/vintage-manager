@@ -80,7 +80,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
       id: "select",
       header: ({ table }) => {
         const selectableRows = table.getRowModel().rows.filter((row) => !row.original.shipping); // shipping이 없는 행만 선택 가능
-        const allSelected = selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
+        const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
 
         return (
           <Checkbox
