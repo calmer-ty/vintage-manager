@@ -171,7 +171,7 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
                         name={`products.${idx}.brand`}
                         render={({ field }) => (
                           <FormInputWrap title="브랜드명">
-                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" />
+                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" autoComplete="off" />
                           </FormInputWrap>
                         )}
                       />
@@ -181,7 +181,7 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
                         name={`products.${idx}.name`}
                         render={({ field }) => (
                           <FormInputWrap title="제품명">
-                            <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" />
+                            <Input placeholder="예) 페로우즈 1950s 복각 청남방" {...field} className="bg-white" autoComplete="off" />
                           </FormInputWrap>
                         )}
                       />

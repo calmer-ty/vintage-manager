@@ -17,11 +17,11 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
   const saleProducts = products.filter((product) => product.soldAt === null);
 
   // 합산된 패키지 배송비 계산
-  // const totalShipping = productPackages.reduce((sum, el) => {
-  //   const currency: ICurrency = JSON.parse(el.shipping.currency);
-  //   const shipping = currency.rate * Number(el.shipping);
-  //   return sum + shipping;
-  // }, 0);
+  const totalShipping = productPackages.reduce((sum, el) => {
+    const currency: ICurrency = el.shipping !== undefined && JSON.parse(el.shipping.currency);
+    const shipping = el.shipping !== undefined ? currency.rate * Number(el.shipping.amount) : 0;
+    return sum + shipping;
+  }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((sum, el) => {
     const currency: ICurrency = JSON.parse(el.costPrice.currency);
@@ -30,12 +30,12 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
   }, 0);
 
   const totalSalePrice = soldProducts.reduce((sum, el) => {
-    const salePrice = Number(el.salePrice);
+    const salePrice = el.salePrice !== undefined ? Number(el.salePrice) : 0;
     return sum + salePrice;
   }, 0);
   const totalProfit = soldProducts.reduce((sum, el) => {
-    const saleProfit = el.profit;
-    return sum + saleProfit;
+    const profit = el.profit !== undefined ? el.profit : 0;
+    return sum + profit;
   }, 0);
 
   // 상단의 상태 값들
@@ -45,14 +45,14 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
       value: `₩ ${Math.round(totalCost).toLocaleString()}`,
       icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
-    // {
-    //   title: "배송비",
-    //   value: `₩ ${Math.round(totalShipping).toLocaleString()}`,
-    //   icon: <Truck className="shrink-0 text-red-500" />,
-    // },
+    {
+      title: "배송비",
+      value: `₩ ${Math.round(totalShipping).toLocaleString()}`,
+      icon: <Truck className="shrink-0 text-red-500" />,
+    },
     {
       title: "총 매출",
-      value: `₩ ${totalSalePrice.toLocaleString()}`,
+      value: `₩ ${Math.round(totalSalePrice).toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-500" />,
     },
     {

@@ -38,12 +38,14 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
 
   // 판매/판매완료 된 상품들의 날짜를 추출
-  const costDays = products.map((product) => {
-    const convertedDate = product.createdAt.toDate();
-    return getDateString(convertedDate);
-  });
+  const costDays = products
+    .filter((product) => product.soldAt === null)
+    .map((product) => {
+      const convertedDate = product.createdAt!.toDate();
+      return getDateString(convertedDate);
+    });
   const soldDays = products
-    .filter((product) => product.soldAt != null)
+    .filter((product) => product.soldAt !== null)
     .map((product) => {
       const convertedDate = product.soldAt!.toDate();
       return getDateString(convertedDate);

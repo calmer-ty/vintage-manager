@@ -48,7 +48,6 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
   });
 
   const onClickSaleCreate = async (data: z.infer<typeof ShippingSchema>) => {
-    console.log("클릭");
     if (!saleTarget) {
       toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
       return;
