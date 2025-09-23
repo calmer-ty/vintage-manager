@@ -12,6 +12,9 @@ export interface IExchangeRate {
   };
   time_last_update_utc: string;
 }
+export interface IUserID {
+  uid: string;
+}
 export interface ICurrency {
   label: string;
   value: string;
@@ -27,11 +30,9 @@ export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
   products: IProduct[];
-  shipping?: IPrice;
   createdAt: Timestamp;
-}
-export interface ICreateProductPackageParams {
-  productPackage: IProductPackage;
+
+  shipping?: IPrice;
 }
 export interface IUpdateProductPackage {
   products: {
@@ -42,10 +43,6 @@ export interface IUpdateProductPackage {
 }
 export interface ISaleProductPackage {
   shipping: IPrice;
-}
-export interface IUpdateProductPackageParams {
-  updateTargetId: string;
-  productPackage: IUpdateProductPackage | ISaleProductPackage;
 }
 
 // 상품
@@ -61,20 +58,24 @@ export interface IProduct {
   profit?: number;
   createdAt?: Timestamp;
 }
-export interface ICreateProductParams {
-  uid: string;
-  products: IProduct[];
-}
-// 수정
 export interface IUpdateProduct {
   salePrice: string;
   profit: number;
 }
+
+// Hooks Params
+export interface ICreateProductPackageParams {
+  productPackage: IProductPackage;
+}
+export interface IUpdateProductPackageParams {
+  updateTargetId: string;
+  productPackage: IUpdateProductPackage | ISaleProductPackage;
+}
+export interface ICreateProductParams {
+  uid: string;
+  products: IProduct[];
+}
 export interface IUpdateProductParams {
   targetId: string;
   product: IUpdateProduct;
-}
-
-export interface IUserID {
-  uid: string;
 }
