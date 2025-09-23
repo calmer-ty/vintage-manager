@@ -1,4 +1,3 @@
-// prettier-ignore
 module.exports = {
   root: true,
   env: {

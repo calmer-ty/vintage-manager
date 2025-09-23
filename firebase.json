@@ -4,8 +4,7 @@
       "source": "functions",
       "codebase": "default",
       "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"],
-      "predeploy": ["yarn --cwd ./functions lint"],
-      "region": "asia-northeast1"
+      "predeploy": ["yarn --cwd ./functions"]
     }
   ],
   "hosting": {
@@ -14,8 +13,7 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "nextjsFunc",
-        "region": "asia-northeast1"
+        "function": "nextjsFunc"
       }
     ]
   }
