@@ -41,7 +41,7 @@ export default function RootLayout({
               <div className="flex-1 overflow-x-hidden">
                 {/* Nav 외에 유동적으로 크기 맞춤 */}
                 <Header />
-                <main className="h-full pt-[64px] bg-gray-50">{children}</main>
+                <main className="h-full pt-16 bg-gray-50">{children}</main>
                 <Toaster position="top-center" />
               </div>
             </SidebarProvider>
