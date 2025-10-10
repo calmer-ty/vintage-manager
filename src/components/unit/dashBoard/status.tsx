@@ -22,6 +22,11 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
     const shipping = val.shipping.currency !== "" ? currency.rate * Number(val.shipping.amount) : 0;
     return acc + shipping;
   }, 0);
+  const totalFee = productPackages.reduce((acc, val) => {
+    const currency: ICurrency = val.fee.currency !== "" && JSON.parse(val.fee.currency);
+    const fee = val.fee.currency !== "" ? currency.rate * Number(val.fee.amount) : 0;
+    return acc + fee;
+  }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((acc, val) => {
     const currency: ICurrency = JSON.parse(val.costPrice.currency);
@@ -46,8 +51,8 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
       icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
     {
-      title: "배송비",
-      value: `₩ ${Math.round(totalShipping).toLocaleString()}`,
+      title: "배송비 & 수수료",
+      value: `₩ ${Math.round(totalShipping + totalFee).toLocaleString()}`,
       icon: <Truck className="shrink-0 text-red-500" />,
     },
     {
