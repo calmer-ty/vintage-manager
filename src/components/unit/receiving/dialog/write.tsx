@@ -100,7 +100,9 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof PackageSchema>) => {
     if (!isEdit) return;
-    if (!form.formState.isDirty) {
+
+    const hasChanges = Object.keys(form.formState.dirtyFields).length > 0;
+    if (!hasChanges) {
       toast("✨ 변경된 내용이 없습니다.");
       return;
     }
@@ -148,6 +150,8 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
     }
   }, [form, isWriteOpen, isEdit, updateTarget]);
 
+  console.log(updateTarget?.products.length);
+
   return (
     <Dialog
       open={isWriteOpen}
@@ -175,7 +179,8 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
                   <li key={el.id}>
                     <h3 className="flex justify-between items-center mb-4 px-3 py-1 border-t bg-gray-200">
                       <span className="text-sm font-bold">상품 {idx + 1}</span>
-                      {idx !== 0 && <X size={16} onClick={() => remove(idx)} className="cursor-pointer" />}
+                      {/* 첫번째 폼은 삭제하지 않고, 수정하려는 패키지의 상품 이후의 폼만 삭제 버튼이 보이도록 함 */}
+                      {idx !== 0 && (!isEdit || idx >= updateTarget.products.length) && <X size={16} onClick={() => remove(idx)} className="cursor-pointer" />}
                     </h3>
 
                     <fieldset className="flex flex-col gap-4 px-2">
