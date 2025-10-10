@@ -38,8 +38,8 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
-      brand: "",
       name: "",
+      brand: "",
       salePrice: "",
     },
   });

@@ -30,41 +30,45 @@ export interface IPrice {
 export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
-  products: IProduct[];
+  products: IPackageProduct[];
   shipping: IPrice;
   fee: IPrice;
   createdAt: Timestamp;
   addSaleAt: Timestamp | null;
 }
-export interface IUpdateProductPackage {
-  products: {
-    name: string;
-    brand: string;
-    costPrice: IPrice;
-  }[];
-}
-export interface ISaleProductPackage {
+export interface ISalesProductPackage {
   shipping: IPrice;
   fee: IPrice;
   addSaleAt: Timestamp;
 }
 
 // 상품
+export interface IPackageProduct {
+  brand: string;
+  name: string;
+  costPrice: IPrice;
+}
 export interface IProduct {
+  uid: string;
   _id: string;
   brand: string;
   name: string;
   costPrice: IPrice;
-  soldAt: Timestamp | null;
   salePrice: string;
-  profit: number | null;
-
-  uid: string;
+  profit: number;
+  soldAt: Timestamp | null;
   createdAt: Timestamp;
 }
 export interface IUpdateProduct {
   salePrice: string;
   profit: number;
+}
+export interface IUpdateProducts {
+  products: {
+    name: string;
+    brand: string;
+    costPrice: IPrice;
+  }[];
 }
 
 // Hooks Params
@@ -73,7 +77,11 @@ export interface ICreateProductPackageParams {
 }
 export interface IUpdateProductPackageParams {
   updateTargetId: string;
-  productPackage: IUpdateProductPackage | ISaleProductPackage;
+  products: IUpdateProducts;
+}
+export interface ISalesProductPackageParams {
+  updateTargetId: string;
+  salesData: ISalesProductPackage;
 }
 export interface ICreateProductParams {
   uid: string;

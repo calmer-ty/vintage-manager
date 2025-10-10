@@ -20,7 +20,7 @@ import { PackageSchema } from "./schema";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackageParams, IUpdateProducts } from "@/types";
 interface IReceivingFormProps {
   uid: string;
   isWriteOpen: boolean;
@@ -28,7 +28,7 @@ interface IReceivingFormProps {
   updateTarget: IProductPackage | undefined;
   setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
   createProductPackage: ({ productPackage }: ICreateProductPackageParams) => Promise<void>;
-  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
+  updateProductPackage: ({ updateTargetId, products }: IUpdateProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
@@ -65,12 +65,12 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
         _id: "",
         products: data.products.map((p) => ({
           ...p,
-          uid,
-          _id: uuid(),
-          salePrice: "",
-          profit: null,
-          createdAt: Timestamp.fromDate(new Date()),
-          soldAt: null, // 판매중/판매완료 값이 토글하며 들어가기에 초기값 null 처리
+          // uid,
+          // _id: uuid(),
+          // salePrice: "",
+          // profit: 0,
+          // createdAt: Timestamp.fromDate(new Date()),
+          // soldAt: null, // 판매중/판매완료 값이 토글하며 들어가기에 초기값 null 처리
         })),
         shipping: {
           amount: "",
@@ -101,17 +101,16 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
   const onClickUpdate = async (data: z.infer<typeof PackageSchema>) => {
     if (!isEdit) return;
 
-    const hasChanges = Object.keys(form.formState.dirtyFields).length > 0;
-    if (!hasChanges) {
-      toast("✨ 변경된 내용이 없습니다.");
-      return;
-    }
+    // if (!form.formState.isDirty) {
+    //   toast("✨ 변경된 내용이 없습니다.");
+    //   return;
+    // }
 
     try {
-      const productPackage: IUpdateProductPackage = { ...data };
+      const products: IUpdateProducts = { ...data };
 
       // 데이터 수정 및 리패치
-      await updateProductPackage({ updateTargetId: updateTarget._id, productPackage });
+      await updateProductPackage({ updateTargetId: updateTarget._id, products });
       await fetchProductPackages();
 
       toast("🔄 패키지가 성공적으로 수정되었습니다.");
@@ -123,7 +122,6 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
 
   // 상품 추가 버튼
   const onClickAddProduct = () => {
-    // prettier-ignore
     append({
       name: "",
       brand: "",
@@ -135,17 +133,18 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
   useEffect(() => {
     if (isEdit) {
       form.reset({
-        products: updateTarget.products,
+        products: updateTarget.products.map((p) => ({
+          name: p.name ?? "",
+          brand: p.brand ?? "",
+          costPrice: {
+            amount: p.costPrice?.amount ?? "",
+            currency: p.costPrice?.currency ?? "",
+          },
+        })),
       });
     } else {
       form.reset({
-        // prettier-ignore
-        products: [
-          { name: "",
-            brand: "",
-            costPrice: { amount: "", currency: "" },
-          },
-        ],
+        products: [{ name: "", brand: "", costPrice: { amount: "", currency: "" } }],
       });
     }
   }, [form, isWriteOpen, isEdit, updateTarget]);

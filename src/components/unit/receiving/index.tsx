@@ -25,6 +25,7 @@ export default function ReceivingUI({ uid }: IUserID) {
     productPackages,
     createProductPackage,
     updateProductPackage,
+    salesProductPackage,
     deleteProductPackage,
     fetchProductPackages,
     loading: packagesLoading,
@@ -91,7 +92,7 @@ export default function ReceivingUI({ uid }: IUserID) {
         setIsSaleOpen={setIsSaleOpen}
         saleTarget={saleTarget}
         setSaleTarget={setSaleTarget}
-        updateProductPackage={updateProductPackage}
+        salesProductPackage={salesProductPackage}
         fetchProductPackages={fetchProductPackages}
         createProduct={createProduct}
       />

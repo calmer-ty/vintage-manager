@@ -17,7 +17,7 @@ import ReceivingSelect from "./select";
 
 import { ShippingSchema } from "./schema";
 
-import type { ICreateProductParams, IProductPackage, ISaleProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { ICreateProductParams, IProductPackage, ISalesProductPackage, ISalesProductPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 interface IReceivingSaleProps {
@@ -26,13 +26,12 @@ interface IReceivingSaleProps {
   setIsSaleOpen: Dispatch<SetStateAction<boolean>>;
   saleTarget: IProductPackage | undefined;
   setSaleTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
-
-  updateProductPackage: ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => Promise<void>;
+  salesProductPackage: ({ updateTargetId, salesData }: ISalesProductPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
 }
 
-export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, updateProductPackage, fetchProductPackages }: IReceivingSaleProps) {
+export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesProductPackage, fetchProductPackages }: IReceivingSaleProps) {
   // 환율 데이터
   const { currencyOptions } = useExchangeRate();
 
@@ -63,7 +62,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
     }
 
     try {
-      const productPackage: ISaleProductPackage = {
+      const salesData: ISalesProductPackage = {
         shipping: {
           amount: data.shipping.amount,
           currency: data.shipping.currency,
@@ -75,7 +74,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
         addSaleAt: Timestamp.fromDate(new Date()),
       };
 
-      await updateProductPackage({ updateTargetId: saleTarget._id, productPackage });
+      await salesProductPackage({ updateTargetId: saleTarget._id, salesData });
       await createProduct({ uid, products: saleTarget.products });
       await fetchProductPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");

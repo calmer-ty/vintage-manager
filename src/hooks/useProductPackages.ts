@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackageParams } from "@/types";
+import type { ICreateProductPackageParams, IProductPackage, ISalesProductPackageParams, IUpdateProductPackageParams } from "@/types";
 interface IUseProductPackagesParams {
   uid: string;
   selectedYear: number;
@@ -31,14 +31,41 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     }
   };
 
-  // [수정]
-  const updateProductPackage = async ({ updateTargetId, productPackage }: IUpdateProductPackageParams) => {
+  // [수정] - 상품 데이터를 수정
+  const updateProductPackage = async ({ updateTargetId, products }: IUpdateProductPackageParams) => {
     if (!uid) return;
+
+    // console.log("productPackage", productPackage);
 
     try {
       const docRef = doc(db, "productPackages", updateTargetId);
+      // ...object를 써서 업데이트할 경우
+      // → Firestore는 그 객체를 “새로운 전체 상태”로 인식
+      // → 기존 객체와 병합하지 않고, 그 필드 전체를 교체함
+      await updateDoc(docRef, {
+        ...products,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-      await updateDoc(docRef, { ...productPackage });
+  // [수정] - 상품 패키지의 배송비&수수료 추가
+  const salesProductPackage = async ({ updateTargetId, salesData }: ISalesProductPackageParams) => {
+    if (!uid) return;
+
+    // console.log("productPackage", productPackage);
+
+    try {
+      const docRef = doc(db, "productPackages", updateTargetId);
+      // ...object를 써서 업데이트할 경우
+      // → Firestore는 그 객체를 “새로운 전체 상태”로 인식
+      // → 기존 객체와 병합하지 않고, 그 필드 전체를 교체함
+      await updateDoc(docRef, {
+        shipping: salesData.shipping,
+        fee: salesData.fee,
+        addSaleAt: salesData.addSaleAt,
+      });
     } catch (err) {
       console.error(err);
     }
@@ -90,6 +117,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
     loading,
     createProductPackage,
     updateProductPackage,
+    salesProductPackage,
     deleteProductPackage,
     fetchProductPackages,
   };
