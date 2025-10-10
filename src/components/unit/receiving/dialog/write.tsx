@@ -68,7 +68,7 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
           uid,
           _id: uuid(),
           salePrice: "",
-          profit: 0,
+          profit: null,
           createdAt: Timestamp.fromDate(new Date()),
           soldAt: null, // 판매중/판매완료 값이 토글하며 들어가기에 초기값 null 처리
         })),
@@ -149,8 +149,6 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
       });
     }
   }, [form, isWriteOpen, isEdit, updateTarget]);
-
-  console.log(updateTarget?.products.length);
 
   return (
     <Dialog
