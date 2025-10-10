@@ -1,4 +1,5 @@
 import type { Timestamp } from "firebase/firestore";
+import { UseFormReturn } from "react-hook-form";
 
 export interface IExchangeRate {
   base: string;

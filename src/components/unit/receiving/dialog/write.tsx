@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useFieldArray, useForm, UseFormReturn } from "react-hook-form";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
-import { v4 as uuid } from "uuid";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
@@ -15,14 +14,14 @@ import { PlusCircle, X } from "lucide-react";
 import ReceivingSelect from "./select";
 import FormInputWrap from "@/components/commons/inputWrap/form";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PackageSchema } from "./schema";
+import { PackageSchema } from "../schema";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackageParams, IUpdateProducts } from "@/types";
 interface IReceivingFormProps {
   uid: string;
+  form: UseFormReturn<z.infer<typeof PackageSchema>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   updateTarget: IProductPackage | undefined;
@@ -32,22 +31,19 @@ interface IReceivingFormProps {
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updateTarget, setUpdateTarget, createProductPackage, updateProductPackage, fetchProductPackages }: IReceivingFormProps) {
+export default function ReceivingWrite({
+  uid,
+  form,
+  isWriteOpen,
+  setIsWriteOpen,
+  updateTarget,
+  setUpdateTarget,
+  createProductPackage,
+  updateProductPackage,
+  fetchProductPackages,
+}: IReceivingFormProps) {
   const isEdit = !!updateTarget;
 
-  // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof PackageSchema>>({
-    resolver: zodResolver(PackageSchema),
-    // prettier-ignore
-    defaultValues: {
-      products: [
-        { name: "",
-          brand: "",
-          costPrice: { amount: "", currency: "" },
-        },
-      ],
-    },
-  });
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "products",
@@ -95,10 +91,11 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
   const onClickUpdate = async (data: z.infer<typeof PackageSchema>) => {
     if (!isEdit) return;
 
-    // if (!form.formState.isDirty) {
-    //   toast("✨ 변경된 내용이 없습니다.");
-    //   return;
-    // }
+    const hasChanges = Object.keys(form.formState.dirtyFields).length > 0;
+    if (!hasChanges) {
+      toast("✨ 변경된 내용이 없습니다.");
+      return;
+    }
 
     try {
       const products: IUpdateProducts = { ...data };
@@ -109,6 +106,7 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
 
       toast("🔄 패키지가 성공적으로 수정되었습니다.");
       setIsWriteOpen(false);
+      form.reset();
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }

@@ -15,7 +15,7 @@ import { Form, FormField } from "@/components/ui/form";
 import FormInputWrap from "@/components/commons/inputWrap/form";
 import ReceivingSelect from "./select";
 
-import { ShippingSchema } from "./schema";
+import { ShippingSchema } from "../schema";
 
 import type { ICreateProductParams, IProductPackage, ISalesProductPackage, ISalesProductPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";

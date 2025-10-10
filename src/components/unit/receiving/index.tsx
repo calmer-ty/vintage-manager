@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProducts } from "@/hooks/useProducts";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
@@ -9,7 +12,10 @@ import ReceivingWrite from "./dialog/write";
 import ReceivingDelete from "./dialog/delete";
 import ReceivingSale from "./dialog/sale";
 
+import { PackageSchema } from "./schema";
+
 import type { IProductPackage, IUserID } from "@/types";
+import type { z } from "zod";
 
 const columnConfig = [
   { key: "createdAt", label: "패키지 등록 일자" },
@@ -31,6 +37,20 @@ export default function ReceivingUI({ uid }: IUserID) {
     loading: packagesLoading,
   } = useProductPackages({ uid, selectedYear, selectedMonth });
   const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
+
+  // ✍️ 폼 설정
+  const form = useForm<z.infer<typeof PackageSchema>>({
+    resolver: zodResolver(PackageSchema),
+    // prettier-ignore
+    defaultValues: {
+      products: [
+        { name: "",
+          brand: "",
+          costPrice: { amount: "", currency: "" },
+        },
+      ],
+    },
+  });
 
   // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -76,16 +96,17 @@ export default function ReceivingUI({ uid }: IUserID) {
 
       {/* 모달 */}
       <ReceivingWrite
+        uid={uid}
+        form={form}
         isWriteOpen={isWriteOpen}
         setIsWriteOpen={setIsWriteOpen}
         updateTarget={updateTarget}
         setUpdateTarget={setUpdateTarget}
-        uid={uid}
         createProductPackage={createProductPackage}
         updateProductPackage={updateProductPackage}
         fetchProductPackages={fetchProductPackages}
       />
-      <ReceivingDelete isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
+      <ReceivingDelete form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
       <ReceivingSale
         uid={uid}
         isSaleOpen={isSaleOpen}

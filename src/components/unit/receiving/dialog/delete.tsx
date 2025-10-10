@@ -1,32 +1,29 @@
+import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
 
 // 외부 요소
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import type { Dispatch, SetStateAction } from "react";
+import { PackageSchema } from "../schema";
 interface IReceivingDeleteProps {
+  form: UseFormReturn<z.infer<typeof PackageSchema>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
 }
 
-export default function ReceivingDelete({ isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IReceivingDeleteProps) {
+export default function ReceivingDelete({ form, isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IReceivingDeleteProps) {
   // 삭제 함수
   const onClickDelete = async () => {
     await deleteProductPackage(deleteTargets);
-    // setRowSelection({});
 
-    toast(<p className="font-bold">🗑️ 선택한 항목이 삭제되었습니다.</p>, {
-      action: {
-        label: "닫기",
-        onClick: () => {},
-      },
-      descriptionClassName: "ml-5",
-    });
-
+    toast("🗑️ 선택한 항목이 삭제되었습니다.");
     setIsDeleteOpen(false);
+    form.reset();
   };
 
   return (
