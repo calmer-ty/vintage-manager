@@ -30,10 +30,10 @@ export interface IProductPackage {
   _id: string; // 문서 id 값
   uid: string;
   products: IProduct[];
-  // createdAt: Timestamp;
-
   shipping: IPrice;
   fee: IPrice;
+  createdAt: Timestamp;
+  addSaleAt: Timestamp | null;
 }
 export interface IUpdateProductPackage {
   products: {
@@ -45,6 +45,7 @@ export interface IUpdateProductPackage {
 export interface ISaleProductPackage {
   shipping: IPrice;
   fee: IPrice;
+  addSaleAt: Timestamp;
 }
 
 // 상품

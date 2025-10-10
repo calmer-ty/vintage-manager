@@ -37,9 +37,8 @@ export function ProductList({ products }: IProductListProps) {
           </CollapsibleTrigger>
         </div>
       ) : (
-        // px-4 py-2 border border-gray-300 rounded-md bg-white
         // products가 한개일 경우
-        <div key={first._id} className="flex justify-between text-sm">
+        <div key={first._id} className="flex justify-between gap-4 text-sm">
           <span>
             {first.brand} - {first.name}
           </span>

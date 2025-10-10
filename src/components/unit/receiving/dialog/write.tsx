@@ -32,7 +32,7 @@ interface IReceivingFormProps {
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, updateTarget, setUpdateTarget, createProductPackage, updateProductPackage, fetchProductPackages }: IReceivingFormProps) {
+export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updateTarget, setUpdateTarget, createProductPackage, updateProductPackage, fetchProductPackages }: IReceivingFormProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
@@ -80,6 +80,8 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
           amount: "",
           currency: "",
         },
+        createdAt: Timestamp.fromDate(new Date()),
+        addSaleAt: null,
       };
 
       // 데이터 생성 및 리패치

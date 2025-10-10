@@ -2,7 +2,6 @@ import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
 
-// import { useProducts } from "./useProducts";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackageParams } from "@/types";

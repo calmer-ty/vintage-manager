@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { Timestamp } from "firebase/firestore";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
@@ -71,6 +72,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
           amount: data.fee.amount,
           currency: data.fee.currency,
         },
+        addSaleAt: Timestamp.fromDate(new Date()),
       };
 
       await updateProductPackage({ updateTargetId: saleTarget._id, productPackage });
