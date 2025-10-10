@@ -45,7 +45,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
           </span>
           <span className="flex items-center gap-1">
             {Number(first.costPrice.amount).toLocaleString()} {firstCurrency.label}
-            <em className="text-xs not-italic text-gray-500">({getPriceInKRW(first.costPrice.amount, firstCurrency.krw)})</em>
+            <em className="text-xs not-italic text-gray-500">({getPriceInKRW(first.costPrice.amount, firstCurrency.krw).toLocaleString()} ₩)</em>
           </span>
         </div>
       )}
@@ -62,13 +62,13 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
               </span>
               <span className="flex items-center gap-1">
                 {Number(p.costPrice.amount).toLocaleString()} {productCurrency.label}
-                <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, productCurrency.krw)})</em>
+                <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, productCurrency.krw).toLocaleString()} ₩)</em>
               </span>
             </div>
           );
         })}
         <div className="px-4 py-2 border-t-1 border-gray-500 text-right">
-          <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()}
+          <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()} ₩
         </div>
       </CollapsibleContent>
     </Collapsible>

@@ -48,7 +48,6 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       const costPriceCurrency: ICurrency = JSON.parse(costPrice.currency);
       const salePrice = row.original.salePrice;
       const profit = row.original.profit;
-      console.log("row.original.profit", row.original.profit);
 
       if (value instanceof Timestamp) {
         // Timestamp일 때만 처리
