@@ -1,7 +1,8 @@
 import { useState } from "react";
 
-import { ChevronsUpDown } from "lucide-react";
+import { getPriceInKRW } from "@/lib/price";
 
+import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
@@ -17,8 +18,8 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
   const firstCurrency: ICurrency = JSON.parse(first.costPrice.currency);
 
   const costSum = products.reduce((acc, val) => {
-    const value: ICurrency = JSON.parse(val.costPrice.currency);
-    return acc + Number(val.costPrice.amount) / value.rate;
+    const costPriceCurrency: ICurrency = JSON.parse(val.costPrice.currency);
+    return acc + getPriceInKRW(val.costPrice.amount, costPriceCurrency.krw);
   }, 0);
 
   return (
@@ -44,7 +45,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
           </span>
           <span className="flex items-center gap-1">
             {Number(first.costPrice.amount).toLocaleString()} {firstCurrency.label}
-            <em className="text-xs not-italic text-gray-500">({Math.round(Number(first.costPrice.amount) / firstCurrency.rate).toLocaleString()} $)</em>
+            <em className="text-xs not-italic text-gray-500">({getPriceInKRW(first.costPrice.amount, firstCurrency.krw)})</em>
           </span>
         </div>
       )}
@@ -61,21 +62,13 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
               </span>
               <span className="flex items-center gap-1">
                 {Number(p.costPrice.amount).toLocaleString()} {productCurrency.label}
-                <em className="text-xs not-italic text-gray-500">
-                  {/* ({(Number(p.costPrice.amount) / productCurrency.rate).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} $) */}(
-                  {Math.round(Number(p.costPrice.amount) * productCurrency.krw).toLocaleString()} ₩)
-                </em>
+                <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, productCurrency.krw)})</em>
               </span>
             </div>
           );
         })}
         <div className="px-4 py-2 border-t-1 border-gray-500 text-right">
-          <span className="font-bold">총 매입가:</span>{" "}
-          {costSum.toLocaleString("en-US", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}{" "}
-          $
+          <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()}
         </div>
       </CollapsibleContent>
     </Collapsible>

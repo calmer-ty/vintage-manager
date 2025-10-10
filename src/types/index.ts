@@ -57,7 +57,7 @@ export interface IProduct {
   costPrice: IPrice;
   soldAt: Timestamp | null;
   salePrice: string;
-  profit: number | null;
+  profit: number;
 
   uid: string;
   createdAt: Timestamp;

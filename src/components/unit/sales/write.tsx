@@ -13,6 +13,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import type { IProduct, ICurrency, IUpdateProductParams, IUpdateProduct } from "@/types";
+import { getPriceInKRW } from "@/lib/price";
 
 const ProductSchema = z.object({
   brand: z.string().optional(),
@@ -49,7 +50,7 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
       form.reset({
         brand: updateTarget.brand,
         name: updateTarget.name,
-        salePrice: updateTarget.salePrice ?? "",
+        salePrice: updateTarget.salePrice,
       });
     } else {
       form.reset({
@@ -65,12 +66,11 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
     if (!uid || !isEdit) return;
 
     try {
-      const costPriceExchange: ICurrency = JSON.parse(updateTarget.costPrice.currency);
-      const costPriceKRW = Number(updateTarget.costPrice.amount) * costPriceExchange.rate;
+      const costPriceCurrency: ICurrency = JSON.parse(updateTarget.costPrice.currency);
 
       const product: IUpdateProduct = {
         ...data,
-        profit: Number(data.salePrice) - costPriceKRW,
+        profit: Number(data.salePrice) - getPriceInKRW(updateTarget.costPrice.amount, costPriceCurrency.krw),
       };
 
       // 데이터 수정 및 리패치

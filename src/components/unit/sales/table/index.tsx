@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
+import { getPriceInKRW } from "@/lib/price";
+
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -46,6 +48,7 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       const costPriceCurrency: ICurrency = JSON.parse(costPrice.currency);
       const salePrice = row.original.salePrice;
       const profit = row.original.profit;
+      console.log("row.original.profit", row.original.profit);
 
       if (value instanceof Timestamp) {
         // Timestamp일 때만 처리
@@ -57,12 +60,9 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       }
 
       if (key === "costPrice") {
-        console.log("costPrice", costPrice);
-
         return (
-          <div className="flex justify-center items-center gap-1">
-            {/* <span>{Math.round(Number(costPrice.amount) * costPriceCurrency.rate).toLocaleString()} ₩</span> */}
-            <span>{Math.round(Number(costPrice.amount) * costPriceCurrency.krw).toLocaleString()} ₩</span>
+          <div className="flex justify-end items-center gap-1">
+            <span>{getPriceInKRW(costPrice.amount, costPriceCurrency.krw).toLocaleString()} ₩</span>
             <span className="text-xs text-gray-500">
               ({Number(costPrice.amount).toLocaleString()} {costPriceCurrency.label})
             </span>
@@ -70,10 +70,10 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
         );
       }
       if (key === "salePrice") {
-        return <div>{Number(salePrice).toLocaleString()} ₩</div>;
+        return <div className="text-right">{Number(salePrice).toLocaleString()} ₩</div>;
       }
       if (key === "profit") {
-        return <div>{Math.round(Number(profit)).toLocaleString()} ₩</div>;
+        return <div className="text-right">{Number(profit).toLocaleString()} ₩</div>;
       }
 
       return <div className="capitalize">{String(value)}</div>;
