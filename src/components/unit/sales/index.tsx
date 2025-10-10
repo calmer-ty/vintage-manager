@@ -1,10 +1,12 @@
 import TableUI from "./table";
 
-import type { IProduct, IUserID } from "@/types";
-import SaleWrite from "./write";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useProducts } from "@/hooks/useProducts";
 import { useState } from "react";
+
+import SaleWrite from "./write";
+
+import type { IProduct, IUserID } from "@/types";
 
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
@@ -16,7 +18,7 @@ const columnConfig = [
   { key: "profit", label: "예상 이익" },
 ];
 
-export default function SaleUI({ uid }: IUserID) {
+export default function SalesUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { products, updateProduct, fetchProducts, loading } = useProducts({ uid, selectedYear, selectedMonth });
 

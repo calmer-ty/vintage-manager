@@ -9,7 +9,6 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import FormInputWrap from "@/components/commons/inputWrap/form";
 
-// Schema
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -21,7 +20,7 @@ const ProductSchema = z.object({
   salePrice: z.string().min(1, "판매가격을 입력해주세요."),
 });
 
-interface IManagementWriteProps {
+interface ISalesWriteProps {
   uid: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,7 +30,7 @@ interface IManagementWriteProps {
   fetchProducts: () => Promise<void>;
 }
 
-export default function SaleWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, updateProduct, fetchProducts }: IManagementWriteProps) {
+export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, updateProduct, fetchProducts }: ISalesWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정

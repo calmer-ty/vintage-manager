@@ -7,7 +7,7 @@ import { Settings } from "lucide-react";
 
 import type { IProduct } from "@/types";
 import type { Table } from "@tanstack/react-table";
-interface IControlTableProps {
+interface ISalesTableControlProps {
   table: Table<IProduct>;
   columnConfig: {
     key: string;
@@ -15,7 +15,7 @@ interface IControlTableProps {
   }[];
 }
 
-export default function TableControl({ table, columnConfig }: IControlTableProps) {
+export default function SalesTableControl({ table, columnConfig }: ISalesTableControlProps) {
   //  보기 설정용 객체 코드
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
 

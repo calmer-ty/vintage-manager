@@ -17,7 +17,7 @@ import BasicTooltip from "@/components/commons/tooltip/basic";
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ICurrency, IProduct } from "@/types";
-interface ITableUIProps {
+interface ISalesTableProps {
   data: IProduct[];
   columnConfig: {
     key: string;
@@ -30,7 +30,7 @@ interface ITableUIProps {
   loading: boolean;
 }
 
-export default function TableUI({ data, columnConfig, setIsWriteOpen, setUpdateTarget, fetchProducts, loading }: ITableUIProps) {
+export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpdateTarget, fetchProducts, loading }: ISalesTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});

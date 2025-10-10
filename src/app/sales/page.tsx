@@ -4,9 +4,9 @@ import { Loader } from "lucide-react";
 
 import { useAuth } from "@/contexts/authContext";
 
-import SaleUI from "@/components/unit/sale";
+import SaleUI from "@/components/unit/sales";
 
-export default function SalePage() {
+export default function SalesPage() {
   const { loading, uid } = useAuth();
 
   if (loading) {
