@@ -122,15 +122,15 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={!row.original.shipping.currency ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
+              <BasicTooltip content={row.original.shipping.currency ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
                 <div className="w-full">
-                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.shipping.currency}>
                     판매 등록
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.shipping.currency}>
                     패키지 수정
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.shipping.currency}>
                     패키지 삭제
                   </DropdownMenuItem>
                 </div>
