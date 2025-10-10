@@ -49,8 +49,6 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       const shipping = row.original.shipping;
       const fee = row.original.fee;
 
-      console.log("products:", products);
-
       // 날짜 정보 처리
       if (value instanceof Timestamp) {
         const timestamp = row.getValue(key) as Timestamp;

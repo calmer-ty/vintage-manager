@@ -87,15 +87,17 @@ export default function ReceivingWrite({
     }
   };
 
+  console.log("form.formState.dirtyFields: ", form.formState.dirtyFields);
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof PackageSchema>) => {
     if (!isEdit) return;
 
-    const hasChanges = Object.keys(form.formState.dirtyFields).length > 0;
-    if (!hasChanges) {
-      toast("✨ 변경된 내용이 없습니다.");
-      return;
-    }
+    // 추후 개발 필요
+    // const hasChanges = Object.keys(form.formState.dirtyFields).length > 0;
+    // if (!hasChanges) {
+    //   toast("✨ 변경된 내용이 없습니다.");
+    //   return;
+    // }
 
     try {
       const products: IUpdateProducts = { ...data };
