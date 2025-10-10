@@ -6,11 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 import type { ICurrency, IProduct } from "@/types";
-interface IProductListProps {
+interface IReceivingTableProductListProps {
   products: IProduct[];
 }
 
-export function ProductList({ products }: IProductListProps) {
+export default function ReceivingTableProductList({ products }: IReceivingTableProductListProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   const [first, ...rest] = products;

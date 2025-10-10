@@ -10,15 +10,14 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import TableControl from "./control";
 import BasicTooltip from "@/components/commons/tooltip/basic";
-
-import { ProductList } from "./productList";
+import TableControl from "./control";
+import ReceivingTableProductList from "./productList";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ICreateProductParams, IProductPackage } from "@/types";
-interface ITableUIProps {
+interface IReceivingTableProps {
   data: IProductPackage[];
   columnConfig: {
     key: string;
@@ -34,7 +33,7 @@ interface ITableUIProps {
   packagesLoading: boolean;
 }
 
-export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, packagesLoading }: ITableUIProps) {
+export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, packagesLoading }: IReceivingTableProps) {
   const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
@@ -71,7 +70,7 @@ export default function TableUI({ setIsWriteOpen, onClickMoveToUpdate, onClickMo
       if (key === "products") {
         return (
           <div className="flex flex-col gap-1">
-            <ProductList products={products} />
+            <ReceivingTableProductList products={products} />
           </div>
         );
       }

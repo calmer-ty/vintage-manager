@@ -1,7 +1,7 @@
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface IBasicSelectProps {
+interface IReceivingSelectProps {
   items: IItem[];
   onChange: (...event: unknown[]) => void;
   value?: string;
@@ -12,7 +12,7 @@ interface IItem {
   value: string;
 }
 
-export default function CurrencySelect({ items, onChange, value, disabled }: IBasicSelectProps) {
+export default function ReceivingSelect({ items, onChange, value, disabled }: IReceivingSelectProps) {
   const selectedValue: string | undefined = value ? JSON.parse(value).value : undefined;
 
   return (

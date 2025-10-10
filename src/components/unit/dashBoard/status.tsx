@@ -17,25 +17,25 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
   const saleProducts = products.filter((product) => product.soldAt === null);
 
   // 합산된 패키지 배송비 계산
-  const totalShipping = productPackages.reduce((sum, el) => {
-    const currency: ICurrency = el.shipping !== undefined && JSON.parse(el.shipping.currency);
-    const shipping = el.shipping !== undefined ? currency.rate * Number(el.shipping.amount) : 0;
-    return sum + shipping;
+  const totalShipping = productPackages.reduce((acc, val) => {
+    const currency: ICurrency = val.shipping.currency !== "" && JSON.parse(val.shipping.currency);
+    const shipping = val.shipping.currency !== "" ? currency.rate * Number(val.shipping.amount) : 0;
+    return acc + shipping;
   }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
-  const totalCost = products.reduce((sum, el) => {
-    const currency: ICurrency = JSON.parse(el.costPrice.currency);
-    const costPrice = currency.rate * Number(el.costPrice.amount);
-    return sum + costPrice;
+  const totalCost = products.reduce((acc, val) => {
+    const currency: ICurrency = JSON.parse(val.costPrice.currency);
+    const costPrice = currency.rate * Number(val.costPrice.amount);
+    return acc + costPrice;
   }, 0);
 
-  const totalSalePrice = soldProducts.reduce((sum, el) => {
-    const salePrice = el.salePrice !== undefined ? Number(el.salePrice) : 0;
-    return sum + salePrice;
+  const totalSalePrice = soldProducts.reduce((acc, val) => {
+    const salePrice = val.salePrice !== undefined ? Number(val.salePrice) : 0;
+    return acc + salePrice;
   }, 0);
-  const totalProfit = soldProducts.reduce((sum, el) => {
-    const profit = el.profit !== undefined ? el.profit : 0;
-    return sum + profit;
+  const totalProfit = soldProducts.reduce((acc, val) => {
+    const profit = val.profit !== undefined ? val.profit : 0;
+    return acc + profit;
   }, 0);
 
   // 상단의 상태 값들

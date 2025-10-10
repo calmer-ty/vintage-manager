@@ -3,11 +3,10 @@ import { ChevronDown, Pencil, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Settings } from "lucide-react";
-// import { Input } from "@/components/ui/input";
 
 import type { IProductPackage } from "@/types";
 import type { Table } from "@tanstack/react-table";
-interface IControlTableProps {
+interface IReceivingTableControlProps {
   table: Table<IProductPackage>;
   columnConfig: {
     key: string;
@@ -17,7 +16,7 @@ interface IControlTableProps {
   onClickMoveToDelete: (selectedProductPackagesId: string[]) => void;
 }
 
-export default function TableControl({ table, columnConfig, setIsWriteOpen, onClickMoveToDelete }: IControlTableProps) {
+export default function ReceivingTableControl({ table, columnConfig, setIsWriteOpen, onClickMoveToDelete }: IReceivingTableControlProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
   //  보기 설정용 객체 코드
