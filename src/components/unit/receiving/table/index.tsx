@@ -16,15 +16,15 @@ import ReceivingTableProductList from "./productList";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICreateProductParams, IProductPackage } from "@/types";
+import type { ICreateProductParams, IPackage } from "@/types";
 interface IReceivingTableProps {
-  data: IProductPackage[];
+  data: IPackage[];
   columnConfig: {
     key: string;
     label: string;
   }[];
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
+  setUpdateTarget: Dispatch<SetStateAction<IPackage | undefined>>;
   onClickMoveToUpdate: (rowId: string) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
   onClickMoveToSale: (rowId: string) => void;
@@ -39,7 +39,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
   const [rowSelection, setRowSelection] = useState({});
 
-  const dynamicColumns: ColumnDef<IProductPackage>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<IPackage>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
@@ -48,6 +48,8 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       const products = row.original.products;
       const shipping = row.original.shipping;
       const fee = row.original.fee;
+
+      console.log("products:", products);
 
       // 날짜 정보 처리
       if (value instanceof Timestamp) {
@@ -78,7 +80,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       return <div className="capitalize">{String(value)}</div>;
     },
   }));
-  const columns: ColumnDef<IProductPackage>[] = [
+  const columns: ColumnDef<IPackage>[] = [
     {
       id: "select",
       header: ({ table }) => {

@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductPackageParams, IProductPackage, ISalesProductPackageParams, IUpdateProductPackageParams } from "@/types";
+import type { ICreatePackageParams, IPackage, ISalesPackageParams, IUpdatePackageParams } from "@/types";
 interface IUseProductPackagesParams {
   uid: string;
   selectedYear: number;
@@ -12,11 +12,11 @@ interface IUseProductPackagesParams {
 }
 
 export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUseProductPackagesParams) => {
-  const [productPackages, setProductPackages] = useState<IProductPackage[]>([]);
+  const [productPackages, setProductPackages] = useState<IPackage[]>([]);
   const [loading, setLoading] = useState(false);
 
   // [등록]
-  const createProductPackage = async ({ productPackage }: ICreateProductPackageParams) => {
+  const createProductPackage = async ({ productPackage }: ICreatePackageParams) => {
     if (!uid) return;
 
     try {
@@ -32,7 +32,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
   };
 
   // [수정] - 상품 데이터를 수정
-  const updateProductPackage = async ({ updateTargetId, products }: IUpdateProductPackageParams) => {
+  const updateProductPackage = async ({ updateTargetId, products }: IUpdatePackageParams) => {
     if (!uid) return;
 
     try {
@@ -46,7 +46,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
   };
 
   // [수정] - 상품 패키지의 배송비&수수료 추가
-  const salesProductPackage = async ({ updateTargetId, salesData }: ISalesProductPackageParams) => {
+  const salesProductPackage = async ({ updateTargetId, salesData }: ISalesPackageParams) => {
     if (!uid) return;
 
     try {
@@ -93,7 +93,7 @@ export const useProductPackages = ({ uid, selectedYear, selectedMonth }: IUsePro
         ...doc.data(),
       }));
 
-      setProductPackages(dataArray as IProductPackage[]);
+      setProductPackages(dataArray as IPackage[]);
     } catch (err) {
       console.error(err);
     } finally {

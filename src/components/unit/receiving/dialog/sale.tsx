@@ -17,16 +17,16 @@ import ReceivingSelect from "./select";
 
 import { ShippingSchema } from "../schema";
 
-import type { ICreateProductParams, IProductPackage, ISalesProductPackage, ISalesProductPackageParams } from "@/types";
+import type { ICreateProductParams, IPackage, ISalesPackage, ISalesPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 interface IReceivingSaleProps {
   uid: string;
   isSaleOpen: boolean;
   setIsSaleOpen: Dispatch<SetStateAction<boolean>>;
-  saleTarget: IProductPackage | undefined;
-  setSaleTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
-  salesProductPackage: ({ updateTargetId, salesData }: ISalesProductPackageParams) => Promise<void>;
+  saleTarget: IPackage | undefined;
+  setSaleTarget: Dispatch<SetStateAction<IPackage | undefined>>;
+  salesProductPackage: ({ updateTargetId, salesData }: ISalesPackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
 }
@@ -62,7 +62,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
     }
 
     try {
-      const salesData: ISalesProductPackage = {
+      const salesData: ISalesPackage = {
         shipping: {
           amount: data.shipping.amount,
           currency: data.shipping.currency,
@@ -74,7 +74,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
         addSaleAt: Timestamp.fromDate(new Date()),
       };
 
-      const products: ISalesProductPackage = {
+      const products: ISalesPackage = {
         shipping: {
           amount: data.shipping.amount,
           currency: data.shipping.currency,

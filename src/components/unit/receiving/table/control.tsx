@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Settings } from "lucide-react";
 
-import type { IProductPackage } from "@/types";
+import type { IPackage } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface IReceivingTableControlProps {
-  table: Table<IProductPackage>;
+  table: Table<IPackage>;
   columnConfig: {
     key: string;
     label: string;

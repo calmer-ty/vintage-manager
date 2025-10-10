@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck } from "lucide-react";
 
-import type { ICurrency, IProduct, IProductPackage } from "@/types";
+import type { ICurrency, IProduct, IPackage } from "@/types";
 interface IDashBoardStatusProps {
   products: IProduct[];
-  productPackages: IProductPackage[];
+  productPackages: IPackage[];
 }
 
 export default function DashBoardStatus({ products, productPackages }: IDashBoardStatusProps) {

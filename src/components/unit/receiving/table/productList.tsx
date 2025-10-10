@@ -6,9 +6,9 @@ import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-import type { ICurrency, IProduct } from "@/types";
+import type { ICurrency, IPackageProduct } from "@/types";
 interface IReceivingTableProductListProps {
-  products: IProduct[];
+  products: IPackageProduct[];
 }
 
 export default function ReceivingTableProductList({ products }: IReceivingTableProductListProps) {
@@ -39,7 +39,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
         </div>
       ) : (
         // products가 한개일 경우
-        <div key={first._id} className="flex justify-between gap-4 text-sm">
+        <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 text-sm">
           <span>
             {first.name} - {first.brand}
           </span>
@@ -56,7 +56,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
           const productCurrency: ICurrency = JSON.parse(p.costPrice.currency);
 
           return (
-            <div key={`${p._id}_${idx}`} className="flex justify-between gap-4 px-4 py-2 border-t border-gray-300 text-sm">
+            <div key={`${p.name}_${p.brand}_${idx}`} className="flex justify-between gap-4 px-4 py-2 border-t border-gray-300 text-sm">
               <span>
                 {p.name} - {p.brand}
               </span>

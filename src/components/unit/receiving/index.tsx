@@ -14,7 +14,7 @@ import ReceivingSale from "./dialog/sale";
 
 import { PackageSchema } from "./schema";
 
-import type { IProductPackage, IUserID } from "@/types";
+import type { IPackage, IUserID } from "@/types";
 import type { z } from "zod";
 
 const columnConfig = [
@@ -41,25 +41,19 @@ export default function ReceivingUI({ uid }: IUserID) {
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof PackageSchema>>({
     resolver: zodResolver(PackageSchema),
-    // prettier-ignore
     defaultValues: {
-      products: [
-        { name: "",
-          brand: "",
-          costPrice: { amount: "", currency: "" },
-        },
-      ],
+      products: [{ name: "", brand: "", costPrice: { amount: "", currency: "" } }],
     },
   });
 
   // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IProductPackage | undefined>(undefined);
+  const [updateTarget, setUpdateTarget] = useState<IPackage | undefined>(undefined);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
   const [isSaleOpen, setIsSaleOpen] = useState(false);
-  const [saleTarget, setSaleTarget] = useState<IProductPackage | undefined>(undefined);
+  const [saleTarget, setSaleTarget] = useState<IPackage | undefined>(undefined);
 
   const onClickMoveToUpdate = (rowId: string) => {
     const selectedRow = productPackages.find((p) => p._id === rowId);

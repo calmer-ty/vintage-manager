@@ -18,16 +18,16 @@ import { PackageSchema } from "../schema";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreateProductPackageParams, IProductPackage, IUpdateProductPackageParams, IUpdateProducts } from "@/types";
+import type { ICreatePackageParams, IPackage, IUpdatePackageParams, IUpdateProducts } from "@/types";
 interface IReceivingFormProps {
   uid: string;
   form: UseFormReturn<z.infer<typeof PackageSchema>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  updateTarget: IProductPackage | undefined;
-  setUpdateTarget: Dispatch<SetStateAction<IProductPackage | undefined>>;
-  createProductPackage: ({ productPackage }: ICreateProductPackageParams) => Promise<void>;
-  updateProductPackage: ({ updateTargetId, products }: IUpdateProductPackageParams) => Promise<void>;
+  updateTarget: IPackage | undefined;
+  setUpdateTarget: Dispatch<SetStateAction<IPackage | undefined>>;
+  createProductPackage: ({ productPackage }: ICreatePackageParams) => Promise<void>;
+  updateProductPackage: ({ updateTargetId, products }: IUpdatePackageParams) => Promise<void>;
   fetchProductPackages: () => Promise<void>;
 }
 
