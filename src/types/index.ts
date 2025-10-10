@@ -21,8 +21,8 @@ export interface ICurrency {
   rate: number;
 }
 export interface IPrice {
-  currency: string;
   amount: string;
+  currency: string;
 }
 
 // 패키지
@@ -32,7 +32,8 @@ export interface IProductPackage {
   products: IProduct[];
   createdAt: Timestamp;
 
-  shipping?: IPrice;
+  shipping: IPrice;
+  fee: IPrice;
 }
 export interface IUpdateProductPackage {
   products: {
@@ -43,6 +44,7 @@ export interface IUpdateProductPackage {
 }
 export interface ISaleProductPackage {
   shipping: IPrice;
+  fee: IPrice;
 }
 
 // 상품

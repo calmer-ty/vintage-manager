@@ -69,6 +69,14 @@ export default function ReceivingForm({ uid, isWriteOpen, setIsWriteOpen, update
           soldAt: null, // 판매중/판매완료 값이 토글하며 들어가기에 초기값 null 처리
         })),
         createdAt: Timestamp.fromDate(new Date()),
+        shipping: {
+          amount: "",
+          currency: "",
+        },
+        fee: {
+          amount: "",
+          currency: "",
+        },
       };
 
       // 데이터 생성 및 리패치

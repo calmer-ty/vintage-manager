@@ -14,6 +14,7 @@ import type { IProductPackage, IUserID } from "@/types";
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
   { key: "shipping", label: "배송비" },
+  { key: "fee", label: "수수료" },
   { key: "products", label: "개별 상품명 / 매입가" },
 ];
 

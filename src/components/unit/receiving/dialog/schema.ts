@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const ProductSchema = z.object({
-  name: z.string().min(1, "제품명은 최소 1글자 이상입니다."),
+  name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),
   brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
   costPrice: z
     .object({
@@ -13,7 +13,7 @@ const ProductSchema = z.object({
         ctx.addIssue({
           code: "custom",
           path: [],
-          message: "매입가와 통화를 모두 입력해주세요.",
+          message: "매입가와 사용된 통화를 모두 입력해주세요.",
         });
       }
     }),
@@ -29,11 +29,26 @@ export const ShippingSchema = z.object({
     })
     .superRefine((val, ctx) => {
       // 둘 중 하나만 입력됐을 때
-      if ((val.amount && !val.currency) || (!val.amount && val.currency)) {
+      if (!val.amount || !val.currency) {
         ctx.addIssue({
           code: "custom",
           path: [],
-          message: "배송비와 통화를 모두 입력해주세요.",
+          message: "배송비와 사용된 통화를 모두 입력해주세요.",
+        });
+      }
+    }),
+  fee: z
+    .object({
+      amount: z.string(),
+      currency: z.string(),
+    })
+    .superRefine((val, ctx) => {
+      // 둘 중 하나만 입력됐을 때
+      if (!val.amount || !val.currency) {
+        ctx.addIssue({
+          code: "custom",
+          path: [],
+          message: "수수료와 사용된 통화를 모두 입력해주세요.",
         });
       }
     }),

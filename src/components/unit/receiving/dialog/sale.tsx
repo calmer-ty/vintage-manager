@@ -43,11 +43,19 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
        shipping : {
         amount: "",
         currency: "",
+       },
+       fee : {
+        amount: "",
+        currency: "",
        }
     },
   });
 
   const onClickSaleCreate = async (data: z.infer<typeof ShippingSchema>) => {
+    if (!saleTarget) {
+      toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
+      return;
+    }
     if (!saleTarget) {
       toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
       return;
@@ -58,6 +66,10 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
         shipping: {
           amount: data.shipping.amount,
           currency: data.shipping.currency,
+        },
+        fee: {
+          amount: data.fee.amount,
+          currency: data.fee.currency,
         },
       };
 
@@ -79,6 +91,10 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
         amount: "",
         currency: "",
       },
+      fee: {
+        amount: "",
+        currency: "",
+      },
     });
   }, [form, saleTarget]);
 
@@ -95,40 +111,69 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
           }
         }}
       >
-        <DialogContent className="sm:max-w-100">
+        <DialogContent className="sm:max-w-120">
           <DialogHeader>
             <DialogTitle>입고된 패키지를 판매 등록하시겠습니까?</DialogTitle>
             <DialogDescription>선택한 패키지를 판매 등록하면 수정할 수 없습니다.</DialogDescription>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onClickSaleCreate)} className="flex flex-col gap-6">
-              <FormField
-                control={form.control}
-                name="shipping"
-                render={({ field }) => (
-                  <div className="flex items-start gap-2">
-                    <FormInputWrap title="배송비 & 대행비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
-                      <Input
-                        type="number"
-                        className="bg-white"
-                        placeholder="사용한 통화 기준으로 작성"
-                        value={field.value.amount}
-                        onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+              <fieldset className="flex flex-col gap-4 px-2">
+                <FormField
+                  control={form.control}
+                  name="shipping"
+                  render={({ field }) => (
+                    <div className="flex items-start gap-2">
+                      <FormInputWrap title="배송비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
+                        <Input
+                          type="number"
+                          className="bg-white"
+                          placeholder="사용한 통화 기준으로 작성"
+                          value={field.value.amount}
+                          onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                        />
+                      </FormInputWrap>
+                      <CurrencySelect
+                        items={currencyOptions}
+                        value={field.value.currency}
+                        onChange={(selectedValue) => {
+                          const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                          if (selected) {
+                            field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                          }
+                        }}
                       />
-                    </FormInputWrap>
-                    <CurrencySelect
-                      items={currencyOptions}
-                      value={field.value.currency}
-                      onChange={(selectedValue) => {
-                        const selected = currencyOptions.find((opt) => opt.value === selectedValue);
-                        if (selected) {
-                          field.onChange({ ...field.value, currency: JSON.stringify(selected) });
-                        }
-                      }}
-                    />
-                  </div>
-                )}
-              ></FormField>
+                    </div>
+                  )}
+                ></FormField>
+                <FormField
+                  control={form.control}
+                  name="fee"
+                  render={({ field }) => (
+                    <div className="flex items-start gap-2">
+                      <FormInputWrap title="수수료" tooltip="수수료 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
+                        <Input
+                          type="number"
+                          className="bg-white"
+                          placeholder="사용한 통화 기준으로 작성"
+                          value={field.value.amount}
+                          onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                        />
+                      </FormInputWrap>
+                      <CurrencySelect
+                        items={currencyOptions}
+                        value={field.value.currency}
+                        onChange={(selectedValue) => {
+                          const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                          if (selected) {
+                            field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                ></FormField>
+              </fieldset>
 
               <DialogFooter>
                 <DialogClose asChild>
