@@ -51,7 +51,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
     },
   });
 
-  const onClickSaleCreate = async (data: z.infer<typeof ShippingSchema>) => {
+  const onClickSalesPackage = async (data: z.infer<typeof ShippingSchema>) => {
     if (!saleTarget) {
       toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
       return;
@@ -63,6 +63,18 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
 
     try {
       const salesData: ISalesProductPackage = {
+        shipping: {
+          amount: data.shipping.amount,
+          currency: data.shipping.currency,
+        },
+        fee: {
+          amount: data.fee.amount,
+          currency: data.fee.currency,
+        },
+        addSaleAt: Timestamp.fromDate(new Date()),
+      };
+
+      const products: ISalesProductPackage = {
         shipping: {
           amount: data.shipping.amount,
           currency: data.shipping.currency,
@@ -118,7 +130,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
             <DialogDescription>선택한 패키지를 판매 등록하면 수정할 수 없습니다.</DialogDescription>
           </DialogHeader>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onClickSaleCreate)} className="flex flex-col gap-6">
+            <form onSubmit={form.handleSubmit(onClickSalesPackage)} className="flex flex-col gap-6">
               <fieldset className="flex flex-col gap-4 px-2">
                 <FormField
                   control={form.control}

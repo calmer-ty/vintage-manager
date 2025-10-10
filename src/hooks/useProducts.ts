@@ -1,4 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
+import { v4 as uuid } from "uuid";
+
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
 
@@ -22,7 +24,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
     try {
       for (const product of products) {
-        const docRef = await addDoc(collection(db, "products"), { uid, ...product, createdAt: Timestamp.fromDate(new Date()) });
+        const docRef = await addDoc(collection(db, "products"), { uid, ...product, _id: uuid(), salePrice: "", profit: null, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
 
         await updateDoc(docRef, {
           _id: docRef.id,
@@ -35,7 +37,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
   // [수정]
   const updateProduct = async ({ targetId, product }: IUpdateProductParams) => {
-    // if (!uid) return;
+    if (!uid) return;
 
     try {
       const docRef = doc(db, "products", targetId);
@@ -48,6 +50,8 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
   // [삭제]
   const deleteProduct = async (packageIds: string[]) => {
+    if (!uid) return;
+
     for (const packageId of packageIds) {
       const q = query(collection(db, "products"), where("packageId", "==", packageId));
       const querySnapshot = await getDocs(q);
@@ -65,7 +69,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
   // 조회 함수
   const fetchProducts = useCallback(async () => {
-    // if (!uid) return;
+    if (!uid) return;
     setLoading(true);
 
     try {

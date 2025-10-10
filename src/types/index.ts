@@ -44,8 +44,8 @@ export interface ISalesProductPackage {
 
 // 상품
 export interface IPackageProduct {
-  brand: string;
   name: string;
+  brand: string;
   costPrice: IPrice;
 }
 export interface IProduct {
@@ -64,11 +64,7 @@ export interface IUpdateProduct {
   profit: number;
 }
 export interface IUpdateProducts {
-  products: {
-    name: string;
-    brand: string;
-    costPrice: IPrice;
-  }[];
+  products: IPackageProduct[];
 }
 
 // Hooks Params
@@ -77,7 +73,7 @@ export interface ICreateProductPackageParams {
 }
 export interface IUpdateProductPackageParams {
   updateTargetId: string;
-  products: IUpdateProducts;
+  products: IUpdateProducts; // 패키지에서 수정할건 상품 데이터 뿐이기 때문
 }
 export interface ISalesProductPackageParams {
   updateTargetId: string;
@@ -85,7 +81,7 @@ export interface ISalesProductPackageParams {
 }
 export interface ICreateProductParams {
   uid: string;
-  products: IProduct[];
+  products: IPackageProduct[];
 }
 export interface IUpdateProductParams {
   targetId: string;
