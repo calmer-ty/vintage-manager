@@ -62,7 +62,8 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
               <span className="flex items-center gap-1">
                 {Number(p.costPrice.amount).toLocaleString()} {productCurrency.label}
                 <em className="text-xs not-italic text-gray-500">
-                  ({(Number(p.costPrice.amount) / productCurrency.rate).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} $)
+                  {/* ({(Number(p.costPrice.amount) / productCurrency.rate).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} $) */}(
+                  {Math.round(Number(p.costPrice.amount) * productCurrency.krw).toLocaleString()} ₩)
                 </em>
               </span>
             </div>

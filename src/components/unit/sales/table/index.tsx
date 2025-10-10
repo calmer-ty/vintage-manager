@@ -43,6 +43,7 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       const value = row.getValue(key);
 
       const costPrice = row.original.costPrice;
+      const costPriceCurrency: ICurrency = JSON.parse(costPrice.currency);
       const salePrice = row.original.salePrice;
       const profit = row.original.profit;
 
@@ -51,18 +52,19 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
         const timestamp = value as Timestamp;
         return <div>{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
       }
-      if (value == null) {
+      if (value == null || value === "") {
         return <div>-</div>;
       }
 
       if (key === "costPrice") {
-        const costPriceExchange: ICurrency = JSON.parse(costPrice.currency);
+        console.log("costPrice", costPrice);
 
         return (
           <div className="flex justify-center items-center gap-1">
-            <span>{Math.round(Number(costPrice.amount) * costPriceExchange.rate).toLocaleString()} ₩</span>
+            {/* <span>{Math.round(Number(costPrice.amount) * costPriceCurrency.rate).toLocaleString()} ₩</span> */}
+            <span>{Math.round(Number(costPrice.amount) * costPriceCurrency.krw).toLocaleString()} ₩</span>
             <span className="text-xs text-gray-500">
-              ({Number(costPrice.amount).toLocaleString()} {costPriceExchange.label})
+              ({Number(costPrice.amount).toLocaleString()} {costPriceCurrency.label})
             </span>
           </div>
         );

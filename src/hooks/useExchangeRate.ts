@@ -11,14 +11,11 @@ export const useExchangeRate = () => {
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
   const JPY = rates?.data.conversion_rates.JPY ?? 0;
 
-  // const usdToKrw = KRW; // 1 USD = 1400 KRW
-  // const jpyToKrw = KRW / JPY;
-
   const currencyOptions = useMemo(
     () => [
-      { label: "$", value: "USD", rate: USD },
-      { label: "₩", value: "KRW", rate: KRW },
-      { label: "¥", value: "JPY", rate: JPY },
+      { label: "$", value: "USD", rate: USD, krw: USD * KRW },
+      { label: "₩", value: "KRW", rate: KRW, krw: 1 },
+      { label: "¥", value: "JPY", rate: JPY, krw: KRW / JPY },
     ],
     [USD, KRW, JPY]
   );

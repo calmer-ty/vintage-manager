@@ -19,6 +19,7 @@ export interface ICurrency {
   label: string;
   value: string;
   rate: number;
+  krw: number;
 }
 export interface IPrice {
   amount: string;
@@ -56,7 +57,7 @@ export interface IProduct {
   costPrice: IPrice;
   soldAt: Timestamp | null;
   salePrice: string;
-  profit: number;
+  profit: number | null;
 
   uid: string;
   createdAt: Timestamp;
