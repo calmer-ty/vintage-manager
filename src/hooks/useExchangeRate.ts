@@ -7,20 +7,20 @@ export const useExchangeRate = () => {
   const [rates, setRates] = useState<IExchangeRate>();
 
   // const USD = rates?.data.conversion_rates.USD ?? 0;
+  const USD = 1;
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
   const JPY = rates?.data.conversion_rates.JPY ?? 0;
 
-  const baseRate = 1;
-  const usdToKrw = KRW; // 1 USD = 1400 KRW
-  const jpyToKrw = KRW / JPY;
+  // const usdToKrw = KRW; // 1 USD = 1400 KRW
+  // const jpyToKrw = KRW / JPY;
 
   const currencyOptions = useMemo(
     () => [
-      { label: "₩", value: "KRW", rate: baseRate },
-      { label: "$", value: "USD", rate: usdToKrw },
-      { label: "¥", value: "JPY", rate: jpyToKrw },
+      { label: "$", value: "USD", rate: USD },
+      { label: "₩", value: "KRW", rate: KRW },
+      { label: "¥", value: "JPY", rate: JPY },
     ],
-    [baseRate, usdToKrw, jpyToKrw]
+    [USD, KRW, JPY]
   );
 
   useEffect(() => {
