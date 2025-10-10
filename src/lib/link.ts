@@ -14,7 +14,7 @@ export const pages = [
   },
   {
     title: "판매관리",
-    url: "/sale",
+    url: "/sales",
     icon: DollarSign,
   },
 ];
