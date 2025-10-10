@@ -186,16 +186,6 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
                     <fieldset className="flex flex-col gap-4 px-2">
                       <FormField
                         control={form.control}
-                        name={`products.${idx}.brand`}
-                        render={({ field }) => (
-                          <FormInputWrap title="브랜드명">
-                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" autoComplete="off" />
-                          </FormInputWrap>
-                        )}
-                      />
-
-                      <FormField
-                        control={form.control}
                         name={`products.${idx}.name`}
                         render={({ field }) => (
                           <FormInputWrap title="제품명">
@@ -203,7 +193,15 @@ export default function ReceivingWrite({ uid, isWriteOpen, setIsWriteOpen, updat
                           </FormInputWrap>
                         )}
                       />
-
+                      <FormField
+                        control={form.control}
+                        name={`products.${idx}.brand`}
+                        render={({ field }) => (
+                          <FormInputWrap title="브랜드명">
+                            <Input placeholder="예) 페로우즈" {...field} className="bg-white" autoComplete="off" />
+                          </FormInputWrap>
+                        )}
+                      />
                       <FormField
                         control={form.control}
                         name={`products.${idx}.costPrice`}

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const ProductSchema = z.object({
   name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),
-  brand: z.string().min(1, "브랜드명은 최소 1글자 이상입니다."),
+  brand: z.string(),
   costPrice: z
     .object({
       amount: z.string(),

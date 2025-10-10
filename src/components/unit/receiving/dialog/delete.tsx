@@ -10,7 +10,6 @@ interface IReceivingDeleteProps {
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
-  // setRowSelection: Dispatch<SetStateAction<{ [key: string]: boolean }>>;
 }
 
 export default function ReceivingDelete({ isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IReceivingDeleteProps) {

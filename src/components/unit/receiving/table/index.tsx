@@ -54,7 +54,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
         const timestamp = row.getValue(key) as Timestamp;
         return <div className="capitalize">{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
       }
-      if (value == null) {
+      if (value == null || value === "") {
         return <div>-</div>;
       }
 

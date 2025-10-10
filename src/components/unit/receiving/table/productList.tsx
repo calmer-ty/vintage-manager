@@ -27,7 +27,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
         // products가 n개일 경우
         <div className="flex items-center justify-between gap-4">
           <h4 className="text-sm font-semibold">
-            {first.brand} - {first.name} 외 {rest.length} 개
+            {first.name} - {first.brand} 외 {rest.length} 개
           </h4>
           <CollapsibleTrigger asChild>
             <Button variant="ghost" size="icon" className="size-8">
@@ -40,7 +40,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
         // products가 한개일 경우
         <div key={first._id} className="flex justify-between gap-4 text-sm">
           <span>
-            {first.brand} - {first.name}
+            {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
             {Number(first.costPrice.amount).toLocaleString()} {firstCurrency.label}
@@ -57,7 +57,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
           return (
             <div key={`${p._id}_${idx}`} className="flex justify-between gap-4 px-4 py-2 border-t border-gray-300 text-sm">
               <span>
-                {p.brand} - {p.name}
+                {p.name} - {p.brand}
               </span>
               <span className="flex items-center gap-1">
                 {Number(p.costPrice.amount).toLocaleString()} {productCurrency.label}
