@@ -60,10 +60,10 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
 
       // 배송비 & 수수료
       if (key === "shipping") {
-        return <span>{shipping.currency !== "" ? `${shipping.amount.toLocaleString()} ${JSON.parse(shipping.currency).label}` : "-"}</span>;
+        return <span>{shipping.currency ? `${shipping.amount.toLocaleString()} ${JSON.parse(shipping.currency).label}` : "-"}</span>;
       }
       if (key === "fee") {
-        return <span>{fee.currency !== "" ? `${fee.amount.toLocaleString()} ${JSON.parse(fee.currency).label}` : "-"}</span>;
+        return <span>{fee.currency ? `${fee.amount.toLocaleString()} ${JSON.parse(fee.currency).label}` : "-"}</span>;
       }
 
       // products 일 때, 각 각 상품 정보 표시
@@ -82,7 +82,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
     {
       id: "select",
       header: ({ table }) => {
-        const selectableRows = table.getRowModel().rows.filter((row) => row.original.shipping.currency === "" && row.original.fee.currency === ""); // shipping이 없는 행만 선택 가능
+        const selectableRows = table.getRowModel().rows.filter((row) => !row.original.shipping.currency); // shipping이 없는 행만 선택 가능
         const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
 
         return (
@@ -97,14 +97,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
           />
         );
       },
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          disabled={row.original.shipping.currency !== "" && row.original.fee.currency !== ""}
-        />
-      ),
+      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" disabled={!!row.original.shipping.currency} />,
       enableSorting: false,
       enableHiding: false,
     },
@@ -120,8 +113,6 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       header: "설정",
       enableHiding: false,
       cell: ({ row }) => {
-        const isAddSale = row.original.shipping.currency !== "" && row.original.fee.currency !== "";
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -131,15 +122,15 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={isAddSale ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
+              <BasicTooltip content={!row.original.shipping.currency ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
                 <div className="w-full">
-                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={isAddSale}>
+                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!row.original.shipping.currency}>
                     판매 등록
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={isAddSale}>
+                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!row.original.shipping.currency}>
                     패키지 수정
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={isAddSale}>
+                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!row.original.shipping.currency}>
                     패키지 삭제
                   </DropdownMenuItem>
                 </div>
@@ -209,7 +200,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
                 ) : (
                   // 데이터가 있을 때
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.shipping.currency !== "" && row.original.fee.currency !== "" ? "text-gray-400" : ""}>
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.shipping.currency ? "bg-blue-50 text-blue-700" : ""}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}

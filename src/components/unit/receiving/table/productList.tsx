@@ -56,7 +56,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
           const productCurrency: ICurrency = JSON.parse(p.costPrice.currency);
 
           return (
-            <div key={`${p.name}_${p.brand}_${idx}`} className="flex justify-between gap-4 px-4 py-2 border-t border-gray-300 text-sm">
+            <div key={`${p.name}_${p.brand}_${idx}`} className="flex justify-between gap-4 px-4 py-2 border-t border-gray-300 text-sm text-black">
               <span>
                 {p.name} - {p.brand}
               </span>
@@ -67,7 +67,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
             </div>
           );
         })}
-        <div className="px-4 py-2 border-t-1 border-gray-500 text-right">
+        <div className="px-4 py-2 border-t-1 border-gray-500 text-right text-black">
           <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()} ₩
         </div>
       </CollapsibleContent>
