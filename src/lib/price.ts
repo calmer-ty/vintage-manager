@@ -7,7 +7,7 @@ export const getPriceInUSD = (amount: number, rate: number) => {
   return Math.round(amount / rate);
 };
 
-export const getDisplayPrice = (currency: string, price: IPrice) => {
+export const getExchangeDisplayPrice = (currency: string, price: IPrice) => {
   switch (currency) {
     case "KRW":
       return `${Math.round(price.amount * price.exchange.krw).toLocaleString()} ₩`;
