@@ -1,5 +1,4 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
-// import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Calendar } from "lucide-react";
 
@@ -17,7 +16,6 @@ const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0
 export default function YearMonthSelect({ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }: IDashboardSelectProps) {
   return (
     <div className="flex justify-end items-center gap-2 w-full">
-      {/* <Separator orientation="vertical" className="mx-2 data-[orientation=vertical]:h-4" /> */}
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="relative mr-2">

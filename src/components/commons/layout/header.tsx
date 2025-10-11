@@ -6,7 +6,8 @@ import { useDateSelector } from "@/contexts/dateSelectorContext";
 
 import { Rocket } from "lucide-react";
 
-import YearMonthSelect from "../select/yearMonth";
+import YearMonthSelect from "./ui/yearMonth";
+import CurrencySelect from "./ui/select";
 
 import { pages } from "@/lib/link";
 
@@ -25,6 +26,7 @@ export default function Header() {
         <>
           <SidebarTrigger className="-ml-1" />
           <h2 className="font-medium shrink-0">{currentPage}</h2>
+          <CurrencySelect />
           <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
         </>
       ) : (
