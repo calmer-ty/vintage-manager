@@ -1,14 +1,16 @@
-import "./globals.css";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { AuthProvider } from "@/contexts/authContext";
-import { DateSelectorProvider } from "@/contexts/dateSelectorContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 
-import Header from "@/components/commons/layout/header";
-import Nav from "@/components/commons/layout/nav";
+import { DateSelectorProvider } from "@/contexts/dateSelectorContext";
+import { CurrencyProvider } from "@/contexts/currencyContext";
 
+import LayoutHeader from "@/components/commons/layout/LayoutHeader";
+import LayoutNav from "@/components/commons/layout/LayoutNav";
+
+import "./globals.css";
 import type { Metadata } from "next";
 
 const geistSans = Geist({
@@ -35,17 +37,19 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <DateSelectorProvider>
-            <SidebarProvider>
-              <Nav />
-              <div className="flex-1 overflow-x-hidden">
-                {/* Nav 외에 유동적으로 크기 맞춤 */}
-                <Header />
-                <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
-                <Toaster position="top-center" />
-              </div>
-            </SidebarProvider>
-          </DateSelectorProvider>
+          <SidebarProvider>
+            <DateSelectorProvider>
+              <CurrencyProvider>
+                <LayoutNav />
+                <div className="flex-1 overflow-x-hidden">
+                  {/* Nav 외에 유동적으로 크기 맞춤 */}
+                  <LayoutHeader />
+                  <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
+                  <Toaster position="top-center" />
+                </div>
+              </CurrencyProvider>
+            </DateSelectorProvider>
+          </SidebarProvider>
         </AuthProvider>
       </body>
     </html>

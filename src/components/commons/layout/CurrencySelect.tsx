@@ -1,8 +1,18 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useCurrency } from "@/contexts/currencyContext";
 
 export default function CurrencySelect() {
+  const { currency, setCurrency } = useCurrency();
+
   return (
-    <Select defaultValue="KRW">
+    <Select
+      value={currency}
+      onValueChange={(value) => {
+        setCurrency(value);
+        console.log("선택된 통화:", value);
+      }}
+      defaultValue="KRW"
+    >
       <SelectTrigger className="w-30">
         <SelectValue placeholder="당신의 통화" />
       </SelectTrigger>
