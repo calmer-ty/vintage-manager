@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import BasicTooltip from "@/components/commons/tooltip/basic";
 import TableControl from "./control";
-import ReceivingTableProductList from "./productList";
+import ReceivingTableRow from "./row";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
@@ -45,10 +45,6 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
     cell: ({ row }) => {
       const value = row.getValue(key);
 
-      const products = row.original.products;
-      const shipping = row.original.shipping;
-      const fee = row.original.fee;
-
       // 날짜 정보 처리
       if (value instanceof Timestamp) {
         const timestamp = row.getValue(key) as Timestamp;
@@ -60,17 +56,17 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
 
       // 배송비 & 수수료
       if (key === "shipping") {
-        return <span>{shipping.currency ? `${shipping.amount.toLocaleString()} ${shipping.currency.label}` : "-"}</span>;
+        return <span>{row.original.shipping.amount !== 0 ? `${row.original.shipping.amount.toLocaleString()} ${row.original.shipping.currency.label}` : "-"}</span>;
       }
       if (key === "fee") {
-        return <span>{fee.currency ? `${fee.amount.toLocaleString()} ${fee.currency.label}` : "-"}</span>;
+        return <span>{row.original.fee.amount !== 0 ? `${row.original.fee.amount.toLocaleString()} ${row.original.fee.currency.label}` : "-"}</span>;
       }
 
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products") {
         return (
           <div className="flex flex-col gap-1">
-            <ReceivingTableProductList products={products} />
+            <ReceivingTableRow products={row.original.products} />
           </div>
         );
       }

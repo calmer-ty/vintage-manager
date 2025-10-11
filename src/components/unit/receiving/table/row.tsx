@@ -7,13 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 import type { IPackageProduct } from "@/types";
-interface IReceivingTableProductListProps {
+interface IReceivingTableRowProps {
   products: IPackageProduct[];
 }
 
-export default function ReceivingTableProductList({ products }: IReceivingTableProductListProps) {
+export default function ReceivingTableRow({ products }: IReceivingTableRowProps) {
   const [isOpen, setIsOpen] = useState(false);
-
   const [first, ...rest] = products;
 
   const costSum = products.reduce((acc, val) => {
