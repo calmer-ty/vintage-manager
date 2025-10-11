@@ -38,16 +38,15 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof ShippingSchema>>({
     resolver: zodResolver(ShippingSchema),
-    // prettier-ignore
     defaultValues: {
-       shipping : {
+      shipping: {
         amount: "",
         currency: "",
-       },
-       fee : {
+      },
+      fee: {
         amount: "",
         currency: "",
-       }
+      },
     },
   });
 
@@ -63,18 +62,6 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
 
     try {
       const salesData: ISalesPackage = {
-        shipping: {
-          amount: data.shipping.amount,
-          currency: data.shipping.currency,
-        },
-        fee: {
-          amount: data.fee.amount,
-          currency: data.fee.currency,
-        },
-        addSaleAt: Timestamp.fromDate(new Date()),
-      };
-
-      const products: ISalesPackage = {
         shipping: {
           amount: data.shipping.amount,
           currency: data.shipping.currency,
