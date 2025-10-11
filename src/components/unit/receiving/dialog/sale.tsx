@@ -49,7 +49,6 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
       },
     },
   });
-  console.log(form.formState.errors);
 
   const onClickSalesPackage = async (data: z.infer<typeof ShippingSchema>) => {
     if (!saleTarget) {
