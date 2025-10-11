@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck } from "lucide-react";
 
-import type { ICurrency, IProduct, IPackage } from "@/types";
+import type { IProduct, IPackage } from "@/types";
 interface IDashBoardStatusProps {
   products: IProduct[];
   productPackages: IPackage[];
@@ -18,29 +18,21 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
 
   // 합산된 패키지 배송비 계산
   const totalShipping = productPackages.reduce((acc, val) => {
-    const currency: ICurrency = val.shipping.currency !== "" && JSON.parse(val.shipping.currency);
-    const shipping = val.shipping.currency !== "" ? currency.rate * Number(val.shipping.amount) : 0;
-    return acc + shipping;
+    return acc + val.shipping.currency.rate * val.shipping.amount;
   }, 0);
   const totalFee = productPackages.reduce((acc, val) => {
-    const currency: ICurrency = val.fee.currency !== "" && JSON.parse(val.fee.currency);
-    const fee = val.fee.currency !== "" ? currency.rate * Number(val.fee.amount) : 0;
-    return acc + fee;
+    return acc + val.fee.currency.rate * val.fee.amount;
   }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((acc, val) => {
-    const currency: ICurrency = JSON.parse(val.costPrice.currency);
-    const costPrice = currency.rate * Number(val.costPrice.amount);
-    return acc + costPrice;
+    return acc + val.costPrice.currency.rate * val.costPrice.amount;
   }, 0);
 
   const totalSalePrice = soldProducts.reduce((acc, val) => {
-    const salePrice = val.salePrice !== undefined ? Number(val.salePrice) : 0;
-    return acc + salePrice;
+    return acc + val.salePrice;
   }, 0);
   const totalProfit = soldProducts.reduce((acc, val) => {
-    const profit = val.profit !== undefined ? val.profit : 0;
-    return acc + profit;
+    return acc + val.profit;
   }, 0);
 
   // 상단의 상태 값들

@@ -42,7 +42,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
             {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
-            {Number(first.costPrice.amount).toLocaleString()} {first.costPrice.currency.label}
+            {first.costPrice.amount.toLocaleString()} {first.costPrice.currency.label}
             <em className="text-xs not-italic text-gray-500">({getPriceInKRW(first.costPrice.amount, first.costPrice.currency.krw).toLocaleString()} ₩)</em>
           </span>
         </div>
@@ -57,7 +57,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
                 {p.name} - {p.brand}
               </span>
               <span className="flex items-center gap-1">
-                {Number(p.costPrice.amount).toLocaleString()} {p.costPrice.currency.label}
+                {p.costPrice.amount.toLocaleString()} {p.costPrice.currency.label}
                 <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, p.costPrice.currency.krw).toLocaleString()} ₩)</em>
               </span>
             </div>

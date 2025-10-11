@@ -62,16 +62,16 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
           <div className="flex justify-end items-center gap-1">
             <span>{getPriceInKRW(costPrice.amount, costPrice.currency.krw).toLocaleString()} ₩</span>
             <span className="text-xs text-gray-500">
-              ({Number(costPrice.amount).toLocaleString()} {costPrice.currency.label})
+              ({costPrice.amount.toLocaleString()} {costPrice.currency.label})
             </span>
           </div>
         );
       }
       if (key === "salePrice") {
-        return <div className="text-right">{Number(salePrice).toLocaleString()} ₩</div>;
+        return <div className="text-right">{salePrice.toLocaleString()} ₩</div>;
       }
       if (key === "profit") {
-        return <div className="text-right">{Number(profit).toLocaleString()} ₩</div>;
+        return <div className="text-right">{profit.toLocaleString()} ₩</div>;
       }
 
       return <div className="capitalize">{String(value)}</div>;
