@@ -7,8 +7,8 @@ import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { Separator } from "@/components/ui/separator";
 import { Rocket } from "lucide-react";
 
-import YearMonthSelect from "./ui/yearMonth";
-import CurrencySelect from "./ui/currency";
+import YearMonthSelect from "./YearMonthSelect";
+import CurrencySelect from "./CurrencySelect";
 
 import { pages } from "@/lib/link";
 
