@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
 
-import FormInputWrap from "@/components/commons/inputWrap/form";
+import FormInputWrap from "@/components/commons/FormInputWrap";
 import ReceivingSelect from "../ReceivingSelect";
 
 import { ShippingSchema } from "../schema";

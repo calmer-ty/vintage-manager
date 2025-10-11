@@ -8,9 +8,9 @@ import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useProductPackages } from "@/hooks/useProductPackages";
 
 import TableUI from "./table";
-import ReceivingWrite from "./dialog/write";
-import ReceivingDelete from "./dialog/delete";
-import ReceivingSale from "./dialog/sale";
+import ReceivingWrite from "./dialog/WriteDialog";
+import ReceivingDelete from "./dialog/DeleteDialog";
+import ReceivingSale from "./dialog/SaleDialog";
 
 import { PackageSchema } from "./schema";
 

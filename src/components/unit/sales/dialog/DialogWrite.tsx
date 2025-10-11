@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-import FormInputWrap from "@/components/commons/inputWrap/form";
+import FormInputWrap from "@/components/commons/FormInputWrap";
 
 import type { IProduct, IUpdateProductParams, IUpdateProduct } from "@/types";
 

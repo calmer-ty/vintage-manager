@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 
 // 내부 요소
+import BasicTooltip from "@/components/commons/BasicTooltip";
 import TableControl from "./TableControl";
 import TableItemState from "./TableItemState";
-import BasicTooltip from "@/components/commons/tooltip/basic";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";

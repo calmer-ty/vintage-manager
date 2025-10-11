@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import BasicTooltip from "@/components/commons/tooltip/basic";
+import BasicTooltip from "@/components/commons/BasicTooltip";
 import TableControl from "./TableControl";
 import TableItem from "./TableItem";
 

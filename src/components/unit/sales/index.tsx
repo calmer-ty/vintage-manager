@@ -4,7 +4,7 @@ import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useProducts } from "@/hooks/useProducts";
 import { useState } from "react";
 
-import SaleWrite from "./write";
+import DialogWrite from "./dialog/DialogWrite";
 
 import type { IProduct, IUserID } from "@/types";
 
@@ -29,7 +29,15 @@ export default function SalesUI({ uid }: IUserID) {
   return (
     <article className="flex-1 px-10 py-6">
       {/* 판매가 수정 모달창 */}
-      <SaleWrite uid={uid} isOpen={isWriteOpen} setIsOpen={setIsWriteOpen} updateTarget={updateTarget} setUpdateTarget={setUpdateTarget} updateProduct={updateProduct} fetchProducts={fetchProducts} />
+      <DialogWrite
+        uid={uid}
+        isOpen={isWriteOpen}
+        setIsOpen={setIsWriteOpen}
+        updateTarget={updateTarget}
+        setUpdateTarget={setUpdateTarget}
+        updateProduct={updateProduct}
+        fetchProducts={fetchProducts}
+      />
       {/* 테이블 */}
       <TableUI columnConfig={columnConfig} data={products} setIsWriteOpen={setIsWriteOpen} setUpdateTarget={setUpdateTarget} fetchProducts={fetchProducts} loading={loading} />
     </article>

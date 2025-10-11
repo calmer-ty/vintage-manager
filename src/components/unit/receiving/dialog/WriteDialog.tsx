@@ -11,7 +11,7 @@ import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PlusCircle, X } from "lucide-react";
 
-import FormInputWrap from "@/components/commons/inputWrap/form";
+import FormInputWrap from "@/components/commons/FormInputWrap";
 import ReceivingSelect from "../ReceivingSelect";
 
 import type { z } from "zod";
