@@ -97,6 +97,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
 
       toast("🔄 패키지가 성공적으로 수정되었습니다.");
       setIsWriteOpen(false);
+      setUpdateTarget(undefined);
       form.reset();
     } catch (error) {
       console.error("문서 추가 실패:", error);
