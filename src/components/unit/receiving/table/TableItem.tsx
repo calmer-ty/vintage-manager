@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useCurrency } from "@/contexts/currencyContext";
-import { getExchangeDisplayPrice, getPriceInKRW } from "@/lib/price";
+import { getExchangeDisplayPrice } from "@/lib/price";
 
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,18 +9,18 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 import type { IPackageProduct } from "@/types";
 interface ITableItemProps {
+  currency: string;
   products: IPackageProduct[];
 }
 
-export default function TableItem({ products }: ITableItemProps) {
+export default function TableItem({ currency, products }: ITableItemProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { currency } = useCurrency();
+  const { viewCurrency } = useCurrency();
 
   const [first, ...rest] = products;
 
   const costSum = products.reduce((acc, val) => {
-    return acc + getPriceInKRW(val.costPrice.amount, val.costPrice.exchange.krw);
-    // return acc + getExchangeDisplayPrice(currency, val.costPrice);
+    return acc + val.costPrice.amount * val.costPrice.exchange.rate;
   }, 0);
 
   return (
@@ -46,7 +46,7 @@ export default function TableItem({ products }: ITableItemProps) {
           </span>
           <span className="flex items-center gap-1">
             {first.costPrice.amount.toLocaleString()} {first.costPrice.exchange.label}
-            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(currency, first.costPrice)})</em>
+            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice)})</em>
           </span>
         </div>
       )}
@@ -61,13 +61,13 @@ export default function TableItem({ products }: ITableItemProps) {
               </span>
               <span className="flex items-center gap-1">
                 {p.costPrice.amount.toLocaleString()} {p.costPrice.exchange.label}
-                <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(currency, first.costPrice)})</em>
+                <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.costPrice)})</em>
               </span>
             </div>
           );
         })}
         <div className="px-4 pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
-          <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()} ₩
+          <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()} {currency}
         </div>
       </CollapsibleContent>
     </Collapsible>

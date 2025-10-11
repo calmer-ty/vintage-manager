@@ -67,7 +67,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       if (key === "products") {
         return (
           <div className="flex flex-col gap-1">
-            <TableItem products={row.original.products} />
+            <TableItem currency={row.original.currency} products={row.original.products} />
           </div>
         );
       }

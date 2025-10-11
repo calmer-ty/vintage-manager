@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
@@ -12,13 +12,14 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { PlusCircle, X } from "lucide-react";
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
-import ReceivingSelect from "../ReceivingSelect";
+// import ReceivingSelect from "../ReceivingSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { ICreatePackageParams, IPackage, IUpdatePackageParams, IUpdateProducts } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PackageSchema } from "../schema";
+import ReceivingSelect2 from "../ReceivingSelect2";
 interface IWriteDialogProps {
   uid: string;
   form: UseFormReturn<z.infer<typeof PackageSchema>>;
@@ -42,6 +43,10 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
+  // 사용할 화폐
+  const [currency, setCurrency] = useState("USD");
+  const selectedExchange = exchangeOptions.find((opt) => opt.code === currency) ?? { code: "", label: "", rate: 0, krw: 0 };
+
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PackageSchema>) => {
     try {
@@ -49,8 +54,10 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
         ...data,
         uid,
         _id: "",
+        currency,
         products: data.products.map((p) => ({
           ...p,
+          costPrice: { amount: p.costPrice.amount, exchange: selectedExchange },
         })),
         shipping: {
           amount: 0,
@@ -89,7 +96,13 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
     // }
 
     try {
-      const products: IUpdateProducts = { ...data };
+      const products: IUpdateProducts = {
+        ...data,
+        products: data.products.map((p) => ({
+          ...p,
+          costPrice: { amount: p.costPrice.amount, exchange: selectedExchange },
+        })),
+      };
 
       // 데이터 수정 및 리패치
       await updateProductPackage({ updateTargetId: updateTarget._id, products });
@@ -109,10 +122,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
     append({
       name: "",
       brand: "",
-      costPrice: {
-        amount: 0,
-        exchange: { code: "", label: "", rate: 0, krw: 0 },
-      },
+      costPrice: { amount: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
     });
   };
 
@@ -125,7 +135,12 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
           brand: p.brand,
           costPrice: {
             amount: p.costPrice?.amount,
-            exchange: { code: p.costPrice?.exchange.code, label: p.costPrice?.exchange.label, rate: p.costPrice?.exchange.rate, krw: p.costPrice?.exchange.krw },
+            exchange: {
+              code: p.costPrice?.exchange.code,
+              label: p.costPrice?.exchange.label,
+              rate: p.costPrice?.exchange.rate,
+              krw: p.costPrice?.exchange.krw,
+            },
           },
         })),
       });
@@ -135,15 +150,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
           {
             name: "",
             brand: "",
-            costPrice: {
-              amount: 0,
-              exchange: {
-                code: "",
-                label: "",
-                rate: 0,
-                krw: 0,
-              },
-            },
+            costPrice: { amount: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
           },
         ],
       });
@@ -171,6 +178,13 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
+            <ReceivingSelect2
+              onChange={(code) => {
+                setCurrency(code);
+              }}
+              value={currency}
+              disabled={!!updateTarget?.currency}
+            />
             <div className="flex-1 overflow-y-auto max-h-100">
               <ul className="space-y-8">
                 {fields.map((el, idx) => (
@@ -215,7 +229,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
                                 disabled={isEdit && idx < updateTarget.products.length}
                               />
                             </FormInputWrap>
-                            <ReceivingSelect
+                            {/* <ReceivingSelect
                               onChange={(code) => {
                                 const selected = exchangeOptions.find((opt) => opt.code === code);
                                 if (selected) {
@@ -224,7 +238,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
                               }}
                               value={field.value.exchange}
                               disabled={isEdit && idx < updateTarget.products.length}
-                            />
+                            /> */}
                           </div>
                         )}
                       ></FormField>

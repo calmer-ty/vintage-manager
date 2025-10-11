@@ -30,6 +30,7 @@ export interface IPrice {
 export interface IPackage {
   _id: string; // 문서 id 값
   uid: string;
+  currency: string;
   products: IPackageProduct[];
   shipping: IPrice;
   fee: IPrice;
