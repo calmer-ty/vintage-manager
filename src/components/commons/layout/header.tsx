@@ -4,10 +4,11 @@ import { usePathname } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 
+import { Separator } from "@/components/ui/separator";
 import { Rocket } from "lucide-react";
 
 import YearMonthSelect from "./ui/yearMonth";
-import CurrencySelect from "./ui/select";
+import CurrencySelect from "./ui/currency";
 
 import { pages } from "@/lib/link";
 
@@ -26,8 +27,12 @@ export default function Header() {
         <>
           <SidebarTrigger className="-ml-1" />
           <h2 className="font-medium shrink-0">{currentPage}</h2>
-          <CurrencySelect />
-          <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+
+          <div className="flex justify-end items-center w-full">
+            <CurrencySelect />
+            <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" />
+            <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+          </div>
         </>
       ) : (
         <>

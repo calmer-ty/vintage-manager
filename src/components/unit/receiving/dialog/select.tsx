@@ -21,7 +21,7 @@ export default function ReceivingSelect({ items, onChange, value, disabled }: IR
       <Select onValueChange={onChange} value={selectedValue} disabled={disabled}>
         <FormControl>
           <SelectTrigger className="bg-white min-w-32">
-            <SelectValue placeholder="사용한 통화" />
+            <SelectValue placeholder="당신의 통화" />
           </SelectTrigger>
         </FormControl>
         <SelectContent>

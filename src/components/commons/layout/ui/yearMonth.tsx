@@ -15,7 +15,7 @@ const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0
 
 export default function YearMonthSelect({ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }: IDashboardSelectProps) {
   return (
-    <div className="flex justify-end items-center gap-2 w-full">
+    <div className="flex items-center gap-2">
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="relative mr-2">
