@@ -68,7 +68,7 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
     try {
       const product: IUpdateProduct = {
         ...data,
-        profit: Number(data.salePrice) - getPriceInKRW(updateTarget.costPrice.amount, updateTarget.costPrice.currency.krw),
+        profit: data.salePrice - getPriceInKRW(updateTarget.costPrice.amount, updateTarget.costPrice.currency.krw),
       };
 
       // 데이터 수정 및 리패치
