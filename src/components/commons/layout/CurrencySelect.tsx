@@ -2,14 +2,13 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { useCurrency } from "@/contexts/currencyContext";
 
 export default function CurrencySelect() {
-  const { currency, setCurrency } = useCurrency();
+  const { viewCurrency, setViewCurrency } = useCurrency();
 
   return (
     <Select
-      value={currency}
+      value={viewCurrency}
       onValueChange={(value) => {
-        setCurrency(value);
-        console.log("선택된 통화:", value);
+        setViewCurrency(value);
       }}
       defaultValue="KRW"
     >

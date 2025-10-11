@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useCurrency } from "@/contexts/currencyContext";
-import { getExchangeDisplayPrice } from "@/lib/price";
+import { getDisplayPrice, getExchangeDisplayPrice } from "@/lib/price";
 
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ export default function TableItem({ currency, products }: ITableItemProps) {
   const [first, ...rest] = products;
 
   const costSum = products.reduce((acc, val) => {
-    return acc + val.costPrice.amount * val.costPrice.exchange.rate;
+    return acc + val.costPrice.amount;
   }, 0);
 
   return (
@@ -45,7 +45,7 @@ export default function TableItem({ currency, products }: ITableItemProps) {
             {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
-            {first.costPrice.amount.toLocaleString()} {first.costPrice.exchange.label}
+            {getDisplayPrice(first.costPrice.exchange.code, first.costPrice.amount)}
             <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice)})</em>
           </span>
         </div>
@@ -60,14 +60,18 @@ export default function TableItem({ currency, products }: ITableItemProps) {
                 {p.name} - {p.brand}
               </span>
               <span className="flex items-center gap-1">
-                {p.costPrice.amount.toLocaleString()} {p.costPrice.exchange.label}
+                {getDisplayPrice(p.costPrice.exchange.code, p.costPrice.amount)}
                 <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.costPrice)})</em>
               </span>
             </div>
           );
         })}
         <div className="px-4 pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
-          <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()} {currency}
+          <span className="mr-1 font-bold">총 매입가:</span>
+
+          <div className="inline-flex items-center gap-1">
+            <span>{getDisplayPrice(currency, costSum)}</span>
+          </div>
         </div>
       </CollapsibleContent>
     </Collapsible>
