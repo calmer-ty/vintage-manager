@@ -1,13 +1,13 @@
-import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-import z from "zod";
 
 // 외부 요소
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
+import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import { PackageSchema } from "../schema";
+import type { UseFormReturn } from "react-hook-form";
+import type { PackageSchema } from "../schema";
 interface IReceivingDeleteProps {
   form: UseFormReturn<z.infer<typeof PackageSchema>>;
   isDeleteOpen: boolean;

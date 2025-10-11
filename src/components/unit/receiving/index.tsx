@@ -42,7 +42,7 @@ export default function ReceivingUI({ uid }: IUserID) {
   const form = useForm<z.infer<typeof PackageSchema>>({
     resolver: zodResolver(PackageSchema),
     defaultValues: {
-      products: [{ name: "", brand: "", costPrice: { amount: "", currency: "" } }],
+      products: [{ name: "", brand: "", costPrice: { amount: 0, currency: { code: "", label: "", rate: 0, krw: 0 } } }],
     },
   });
 
