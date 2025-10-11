@@ -63,12 +63,12 @@ export default function ReceivingWrite({
           ...p,
         })),
         shipping: {
-          amount: "",
-          currency: "",
+          amount: 0,
+          currency: { code: "", label: "", rate: 0, krw: 0 },
         },
         fee: {
-          amount: "",
-          currency: "",
+          amount: 0,
+          currency: { code: "", label: "", rate: 0, krw: 0 },
         },
         createdAt: Timestamp.fromDate(new Date()),
         addSaleAt: null,
@@ -87,7 +87,6 @@ export default function ReceivingWrite({
     }
   };
 
-  console.log("form.formState.dirtyFields: ", form.formState.dirtyFields);
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof PackageSchema>) => {
     if (!isEdit) return;
@@ -119,7 +118,10 @@ export default function ReceivingWrite({
     append({
       name: "",
       brand: "",
-      costPrice: { amount: "", currency: "" },
+      costPrice: {
+        amount: 0,
+        currency: { code: "", label: "", rate: 0, krw: 0 },
+      },
     });
   };
 
@@ -128,17 +130,31 @@ export default function ReceivingWrite({
     if (isEdit) {
       form.reset({
         products: updateTarget.products.map((p) => ({
-          name: p.name ?? "",
-          brand: p.brand ?? "",
+          name: p.name,
+          brand: p.brand,
           costPrice: {
-            amount: p.costPrice?.amount ?? "",
-            currency: p.costPrice?.currency ?? "",
+            amount: p.costPrice?.amount,
+            currency: { code: p.costPrice?.currency.code ?? "USD", label: p.costPrice?.currency.label, rate: p.costPrice?.currency.rate, krw: p.costPrice?.currency.krw },
           },
         })),
       });
     } else {
       form.reset({
-        products: [{ name: "", brand: "", costPrice: { amount: "", currency: "" } }],
+        products: [
+          {
+            name: "",
+            brand: "",
+            costPrice: {
+              amount: 0,
+              currency: {
+                code: "USD",
+                label: "",
+                rate: 0,
+                krw: 0,
+              },
+            },
+          },
+        ],
       });
     }
   }, [form, isWriteOpen, isEdit, updateTarget]);
@@ -210,7 +226,7 @@ export default function ReceivingWrite({
                             </FormInputWrap>
                             <CurrencySelect
                               onChange={(code) => {
-                                const selected = currencyOptions.find((opt) => opt.value === code);
+                                const selected = currencyOptions.find((opt) => opt.code === code);
                                 if (selected) {
                                   field.onChange({ ...field.value, currency: selected });
                                 }

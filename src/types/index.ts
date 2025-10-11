@@ -1,5 +1,4 @@
 import type { Timestamp } from "firebase/firestore";
-import { UseFormReturn } from "react-hook-form";
 
 export interface IExchangeRate {
   base: string;
@@ -17,14 +16,14 @@ export interface IUserID {
   uid: string;
 }
 export interface ICurrency {
+  code: string;
   label: string;
-  value: string;
   rate: number;
   krw: number;
 }
 export interface IPrice {
-  amount: string;
-  currency: string;
+  amount: number;
+  currency: ICurrency;
 }
 
 // 패키지

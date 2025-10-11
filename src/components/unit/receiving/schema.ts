@@ -1,12 +1,19 @@
 import { z } from "zod";
 
+const currencySchema = z.object({
+  code: z.string(),
+  label: z.string(),
+  rate: z.number(),
+  krw: z.number(),
+});
+
 const ProductSchema = z.object({
   name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),
   brand: z.string(),
   costPrice: z
     .object({
-      amount: z.string(),
-      currency: z.string(),
+      amount: z.number(),
+      currency: currencySchema,
     })
     .superRefine((val, ctx) => {
       if (!val.amount || !val.currency) {
