@@ -5,15 +5,11 @@ import type { ICurrency } from "@/types";
 
 interface ICurrencySelectProps {
   onChange: (...event: unknown[]) => void;
-  // value?: string;
-  value?: ICurrency;
+  value: ICurrency;
   disabled?: boolean;
 }
 
 export default function CurrencySelect({ onChange, value, disabled }: ICurrencySelectProps) {
-  // const selectedValue: string | undefined = value ? JSON.parse(value).value : undefined;
-  console.log("value:", value);
-
   return (
     <FormItem>
       <FormLabel className="opacity-0">통화</FormLabel>

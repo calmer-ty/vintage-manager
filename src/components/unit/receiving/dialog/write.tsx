@@ -134,7 +134,7 @@ export default function ReceivingWrite({
           brand: p.brand,
           costPrice: {
             amount: p.costPrice?.amount,
-            currency: { code: p.costPrice?.currency.code ?? "USD", label: p.costPrice?.currency.label, rate: p.costPrice?.currency.rate, krw: p.costPrice?.currency.krw },
+            currency: { code: p.costPrice?.currency.code, label: p.costPrice?.currency.label, rate: p.costPrice?.currency.rate, krw: p.costPrice?.currency.krw },
           },
         })),
       });
@@ -147,7 +147,7 @@ export default function ReceivingWrite({
             costPrice: {
               amount: 0,
               currency: {
-                code: "USD",
+                code: "",
                 label: "",
                 rate: 0,
                 krw: 0,
@@ -220,7 +220,7 @@ export default function ReceivingWrite({
                                 placeholder="예) 1000"
                                 className="bg-white"
                                 value={field.value.amount}
-                                onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                                onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
                                 disabled={isEdit && idx < updateTarget.products.length}
                               />
                             </FormInputWrap>

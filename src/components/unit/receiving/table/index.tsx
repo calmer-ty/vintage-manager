@@ -60,10 +60,10 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
 
       // 배송비 & 수수료
       if (key === "shipping") {
-        return <span>{shipping.currency ? `${shipping.amount.toLocaleString()} ${JSON.parse(shipping.currency).label}` : "-"}</span>;
+        return <span>{shipping.currency ? `${shipping.amount.toLocaleString()} ${shipping.currency.label}` : "-"}</span>;
       }
       if (key === "fee") {
-        return <span>{fee.currency ? `${fee.amount.toLocaleString()} ${JSON.parse(fee.currency).label}` : "-"}</span>;
+        return <span>{fee.currency ? `${fee.amount.toLocaleString()} ${fee.currency.label}` : "-"}</span>;
       }
 
       // products 일 때, 각 각 상품 정보 표시
@@ -82,9 +82,9 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
     {
       id: "select",
       header: ({ table }) => {
-        const selectableRows = table.getRowModel().rows.filter((row) => !row.original.shipping.currency); // shipping이 없는 행만 선택 가능
+        const selectableRows = table.getRowModel().rows.filter((row) => !!row.original.shipping.currency); // shipping이 없는 행만 선택 가능
         const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
-
+        console.log(selectableRows);
         return (
           <Checkbox
             // checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
@@ -122,15 +122,15 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={row.original.shipping.currency ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
+              <BasicTooltip content={!row.original.shipping.currency ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
                 <div className="w-full">
-                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!row.original.shipping.currency}>
                     판매 등록
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!row.original.shipping.currency}>
                     패키지 수정
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!row.original.shipping.currency}>
                     패키지 삭제
                   </DropdownMenuItem>
                 </div>

@@ -6,7 +6,7 @@ import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-import type { ICurrency, IPackageProduct } from "@/types";
+import type { IPackageProduct } from "@/types";
 interface IReceivingTableProductListProps {
   products: IPackageProduct[];
 }
@@ -15,11 +15,9 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
   const [isOpen, setIsOpen] = useState(false);
 
   const [first, ...rest] = products;
-  const firstCurrency: ICurrency = JSON.parse(first.costPrice.currency);
 
   const costSum = products.reduce((acc, val) => {
-    const costPriceCurrency: ICurrency = JSON.parse(val.costPrice.currency);
-    return acc + getPriceInKRW(val.costPrice.amount, costPriceCurrency.krw);
+    return acc + getPriceInKRW(val.costPrice.amount, val.costPrice.currency.krw);
   }, 0);
 
   return (
@@ -44,8 +42,8 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
             {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
-            {Number(first.costPrice.amount).toLocaleString()} {firstCurrency.label}
-            <em className="text-xs not-italic text-gray-500">({getPriceInKRW(first.costPrice.amount, firstCurrency.krw).toLocaleString()} ₩)</em>
+            {Number(first.costPrice.amount).toLocaleString()} {first.costPrice.currency.label}
+            <em className="text-xs not-italic text-gray-500">({getPriceInKRW(first.costPrice.amount, first.costPrice.currency.krw).toLocaleString()} ₩)</em>
           </span>
         </div>
       )}
@@ -53,16 +51,14 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
       {/* 리스트 문장 */}
       <CollapsibleContent className="flex flex-col">
         {products.map((p, idx) => {
-          const productCurrency: ICurrency = JSON.parse(p.costPrice.currency);
-
           return (
             <div key={`${p.name}_${p.brand}_${idx}`} className="flex justify-between gap-4 px-4 py-2 border-t border-gray-300 text-sm text-black">
               <span>
                 {p.name} - {p.brand}
               </span>
               <span className="flex items-center gap-1">
-                {Number(p.costPrice.amount).toLocaleString()} {productCurrency.label}
-                <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, productCurrency.krw).toLocaleString()} ₩)</em>
+                {Number(p.costPrice.amount).toLocaleString()} {p.costPrice.currency.label}
+                <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, p.costPrice.currency.krw).toLocaleString()} ₩)</em>
               </span>
             </div>
           );

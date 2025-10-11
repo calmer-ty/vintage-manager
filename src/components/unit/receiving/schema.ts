@@ -16,7 +16,7 @@ const ProductSchema = z.object({
       currency: currencySchema,
     })
     .superRefine((val, ctx) => {
-      if (!val.amount || !val.currency) {
+      if (!val.amount || !val.currency.code) {
         ctx.addIssue({
           code: "custom",
           path: [],
