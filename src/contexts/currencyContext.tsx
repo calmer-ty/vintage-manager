@@ -16,7 +16,6 @@ const CurrencyContext = createContext<CurrencyContextType>({
 
 export const CurrencyProvider = ({ children }: { children: ReactNode }) => {
   const [currency, setCurrency] = useState("KRW");
-  console.log("currency: ", currency);
 
   return <CurrencyContext.Provider value={{ currency, setCurrency }}>{children}</CurrencyContext.Provider>;
 };

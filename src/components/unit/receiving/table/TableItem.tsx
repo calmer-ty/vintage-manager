@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import { getPriceInKRW } from "@/lib/price";
+import { useCurrency } from "@/contexts/currencyContext";
+import { getDisplayPrice, getPriceInKRW } from "@/lib/price";
 
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ interface ITableItemProps {
 
 export default function TableItem({ products }: ITableItemProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { currency } = useCurrency();
+
   const [first, ...rest] = products;
 
   const costSum = products.reduce((acc, val) => {
@@ -42,7 +45,7 @@ export default function TableItem({ products }: ITableItemProps) {
           </span>
           <span className="flex items-center gap-1">
             {first.costPrice.amount.toLocaleString()} {first.costPrice.currency.label}
-            <em className="text-xs not-italic text-gray-500">({getPriceInKRW(first.costPrice.amount, first.costPrice.currency.krw).toLocaleString()} ₩)</em>
+            <em className="text-xs not-italic text-gray-500">({getDisplayPrice(currency, first.costPrice)})</em>
           </span>
         </div>
       )}

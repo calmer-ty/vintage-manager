@@ -37,6 +37,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
   const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
+
   const [rowSelection, setRowSelection] = useState({});
 
   const dynamicColumns: ColumnDef<IPackage>[] = columnConfig.map(({ key, label }) => ({
