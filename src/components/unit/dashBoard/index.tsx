@@ -5,8 +5,8 @@ import { useDateSelector } from "@/contexts/dateSelectorContext";
 import { useProductPackages } from "@/hooks/useProductPackages";
 
 // 내부 요소
-import DashboardChart from "./chart";
-import DashboardStatus from "./status";
+import DashboardChart from "./DashboardChart";
+import DashboardStatus from "./DashboardStatus";
 
 import type { IUserID } from "@/types";
 

@@ -8,7 +8,7 @@ import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { PackageSchema } from "../schema";
-interface IReceivingDeleteProps {
+interface IDeleteDialogProps {
   form: UseFormReturn<z.infer<typeof PackageSchema>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
@@ -16,7 +16,7 @@ interface IReceivingDeleteProps {
   deleteProductPackage: (packageIds: string[]) => Promise<void>;
 }
 
-export default function ReceivingDelete({ form, isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IReceivingDeleteProps) {
+export default function DeleteDialog({ form, isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IDeleteDialogProps) {
   // 삭제 함수
   const onClickDelete = async () => {
     await deleteProductPackage(deleteTargets);

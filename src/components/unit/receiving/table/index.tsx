@@ -11,8 +11,8 @@ import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import BasicTooltip from "@/components/commons/tooltip/basic";
-import TableControl from "./control";
-import ReceivingTableRow from "./row";
+import TableControl from "./TableControl";
+import TableItem from "./TableItem";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
@@ -66,7 +66,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       if (key === "products") {
         return (
           <div className="flex flex-col gap-1">
-            <ReceivingTableRow products={row.original.products} />
+            <TableItem products={row.original.products} />
           </div>
         );
       }

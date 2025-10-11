@@ -13,14 +13,14 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Form, FormField } from "@/components/ui/form";
 
 import FormInputWrap from "@/components/commons/inputWrap/form";
-import ReceivingSelect from "./select";
+import ReceivingSelect from "../ReceivingSelect";
 
 import { ShippingSchema } from "../schema";
 
 import type { ICreateProductParams, IPackage, ISalesPackage, ISalesPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
-interface IReceivingSaleProps {
+interface ISaleDialogProps {
   uid: string;
   isSaleOpen: boolean;
   setIsSaleOpen: Dispatch<SetStateAction<boolean>>;
@@ -31,7 +31,7 @@ interface IReceivingSaleProps {
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
 }
 
-export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesProductPackage, fetchProductPackages }: IReceivingSaleProps) {
+export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesProductPackage, fetchProductPackages }: ISaleDialogProps) {
   // 환율 데이터
   const { currencyOptions } = useExchangeRate();
 

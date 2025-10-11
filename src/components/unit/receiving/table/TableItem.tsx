@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 import type { IPackageProduct } from "@/types";
-interface IReceivingTableRowProps {
+interface ITableItemProps {
   products: IPackageProduct[];
 }
 
-export default function ReceivingTableRow({ products }: IReceivingTableRowProps) {
+export default function TableItem({ products }: ITableItemProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [first, ...rest] = products;
 

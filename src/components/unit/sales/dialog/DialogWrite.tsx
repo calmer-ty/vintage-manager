@@ -21,7 +21,7 @@ const ProductSchema = z.object({
   salePrice: z.number().min(1, "판매가격을 입력해주세요."),
 });
 
-interface ISalesWriteProps {
+interface IDialogWriteProps {
   uid: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,7 +31,7 @@ interface ISalesWriteProps {
   fetchProducts: () => Promise<void>;
 }
 
-export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, updateProduct, fetchProducts }: ISalesWriteProps) {
+export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, updateProduct, fetchProducts }: IDialogWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정

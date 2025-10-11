@@ -11,15 +11,15 @@ import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PlusCircle, X } from "lucide-react";
 
-import ReceivingSelect from "./select";
 import FormInputWrap from "@/components/commons/inputWrap/form";
+import ReceivingSelect from "../ReceivingSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { ICreatePackageParams, IPackage, IUpdatePackageParams, IUpdateProducts } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PackageSchema } from "../schema";
-interface IReceivingFormProps {
+interface IWriteDialogProps {
   uid: string;
   form: UseFormReturn<z.infer<typeof PackageSchema>>;
   isWriteOpen: boolean;
@@ -31,17 +31,7 @@ interface IReceivingFormProps {
   fetchProductPackages: () => Promise<void>;
 }
 
-export default function ReceivingWrite({
-  uid,
-  form,
-  isWriteOpen,
-  setIsWriteOpen,
-  updateTarget,
-  setUpdateTarget,
-  createProductPackage,
-  updateProductPackage,
-  fetchProductPackages,
-}: IReceivingFormProps) {
+export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, updateTarget, setUpdateTarget, createProductPackage, updateProductPackage, fetchProductPackages }: IWriteDialogProps) {
   const isEdit = !!updateTarget;
 
   const { fields, append, remove } = useFieldArray({

@@ -7,12 +7,12 @@ import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { IProduct } from "@/types";
-interface ISalesTableItemStateProps {
+interface ITableItemStateProps {
   product: IProduct;
   refetch: () => Promise<void>;
 }
 
-export default function SalesTableItemState({ product, refetch }: ISalesTableItemStateProps) {
+export default function TableItemState({ product, refetch }: ITableItemStateProps) {
   const onUpdate = async (id: string, value: boolean) => {
     // 판매가 지정해야함
     if (!product.salePrice) {

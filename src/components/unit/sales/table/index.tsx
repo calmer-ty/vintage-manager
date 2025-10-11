@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 
 // 내부 요소
-import TableControl from "./control";
-import ItemState from "./itemState";
+import TableControl from "./TableControl";
+import TableItemState from "./TableItemState";
 import BasicTooltip from "@/components/commons/tooltip/basic";
 
 import type { Dispatch, SetStateAction } from "react";
@@ -84,7 +84,7 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        return <ItemState product={row.original} refetch={fetchProducts} />;
+        return <TableItemState product={row.original} refetch={fetchProducts} />;
       },
     },
     {

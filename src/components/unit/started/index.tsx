@@ -1,6 +1,6 @@
 // 외부 요소
-import StartedIntro from "./intro";
-import StartedFeatures from "./features";
+import StartedIntro from "./StartedIntro";
+import StartedFeatures from "./StartedFeatures";
 
 export default function StartedUI() {
   return (
