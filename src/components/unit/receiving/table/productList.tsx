@@ -39,7 +39,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
         </div>
       ) : (
         // products가 한개일 경우
-        <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 text-sm">
+        <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 text-sm text-black">
           <span>
             {first.name} - {first.brand}
           </span>
@@ -67,7 +67,7 @@ export default function ReceivingTableProductList({ products }: IReceivingTableP
             </div>
           );
         })}
-        <div className="px-4 py-2 border-t-1 border-gray-500 text-right text-black">
+        <div className="px-4 pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
           <span className="font-bold">총 매입가:</span> {costSum.toLocaleString()} ₩
         </div>
       </CollapsibleContent>
