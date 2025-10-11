@@ -3,13 +3,13 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 import type { ICurrency } from "@/types";
 
-interface ICurrencySelectProps {
+interface IReceivingSelectProps {
   onChange: (...event: unknown[]) => void;
   value: ICurrency;
   disabled?: boolean;
 }
 
-export default function CurrencySelect({ onChange, value, disabled }: ICurrencySelectProps) {
+export default function ReceivingSelect({ onChange, value, disabled }: IReceivingSelectProps) {
   return (
     <FormItem>
       <FormLabel className="opacity-0">통화</FormLabel>
