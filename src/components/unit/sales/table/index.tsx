@@ -60,10 +60,10 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       if (key === "costPrice") {
         return (
           <div className="flex justify-end items-center gap-1">
-            <span>{getPriceInKRW(costPrice.amount, costPrice.currency.krw).toLocaleString()} ₩</span>
-            <span className="text-xs text-gray-500">
-              ({costPrice.amount.toLocaleString()} {costPrice.currency.label})
+            <span>
+              {costPrice.amount.toLocaleString()} {costPrice.currency.label}
             </span>
+            <span className="text-xs text-gray-500">({getPriceInKRW(costPrice.amount, costPrice.currency.krw).toLocaleString()} ₩)</span>
           </div>
         );
       }
