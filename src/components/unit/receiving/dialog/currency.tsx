@@ -1,19 +1,15 @@
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface IReceivingSelectProps {
-  items: IItem[];
+interface ICurrencySelectProps {
   onChange: (...event: unknown[]) => void;
   value?: string;
   disabled?: boolean;
 }
-interface IItem {
-  label: string;
-  value: string;
-}
 
-export default function ReceivingSelect({ items, onChange, value, disabled }: IReceivingSelectProps) {
+export default function CurrencySelect({ onChange, value, disabled }: ICurrencySelectProps) {
   const selectedValue: string | undefined = value ? JSON.parse(value).value : undefined;
+  console.log("value:", value);
 
   return (
     <FormItem>
@@ -25,11 +21,12 @@ export default function ReceivingSelect({ items, onChange, value, disabled }: IR
           </SelectTrigger>
         </FormControl>
         <SelectContent>
-          {items.map((item) => (
-            <SelectItem key={item.value} value={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
+          <SelectGroup>
+            <SelectLabel>당신의 통화</SelectLabel>
+            <SelectItem value="USD">USD ($)</SelectItem>
+            <SelectItem value="KRW">KRW (₩)</SelectItem>
+            <SelectItem value="JPY">JPY (¥)</SelectItem>
+          </SelectGroup>
         </SelectContent>
       </Select>
     </FormItem>

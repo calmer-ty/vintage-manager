@@ -13,7 +13,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Form, FormField } from "@/components/ui/form";
 
 import FormInputWrap from "@/components/commons/inputWrap/form";
-import ReceivingSelect from "./select";
+import CurrencySelect from "./currency";
 
 import { ShippingSchema } from "../schema";
 
@@ -133,8 +133,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
                           onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
                         />
                       </FormInputWrap>
-                      <ReceivingSelect
-                        items={currencyOptions}
+                      <CurrencySelect
                         value={field.value.currency}
                         onChange={(selectedValue) => {
                           const selected = currencyOptions.find((opt) => opt.value === selectedValue);
@@ -160,8 +159,7 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
                           onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
                         />
                       </FormInputWrap>
-                      <ReceivingSelect
-                        items={currencyOptions}
+                      <CurrencySelect
                         value={field.value.currency}
                         onChange={(selectedValue) => {
                           const selected = currencyOptions.find((opt) => opt.value === selectedValue);

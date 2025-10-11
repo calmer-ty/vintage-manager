@@ -11,7 +11,7 @@ import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PlusCircle, X } from "lucide-react";
 
-import ReceivingSelect from "./select";
+import CurrencySelect from "./currency";
 import FormInputWrap from "@/components/commons/inputWrap/form";
 
 import type { z } from "zod";
@@ -208,12 +208,11 @@ export default function ReceivingWrite({
                                 disabled={isEdit && idx < updateTarget.products.length}
                               />
                             </FormInputWrap>
-                            <ReceivingSelect
-                              items={currencyOptions}
-                              onChange={(selectedValue) => {
-                                const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                            <CurrencySelect
+                              onChange={(code) => {
+                                const selected = currencyOptions.find((opt) => opt.value === code);
                                 if (selected) {
-                                  field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                                  field.onChange({ ...field.value, currency: selected });
                                 }
                               }}
                               value={field.value.currency}
