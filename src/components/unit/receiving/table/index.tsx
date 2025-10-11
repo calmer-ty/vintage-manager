@@ -57,10 +57,10 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
 
       // 배송비 & 수수료
       if (key === "shipping") {
-        return <span>{row.original.shipping.amount !== 0 ? `${row.original.shipping.amount.toLocaleString()} ${row.original.shipping.currency.label}` : "-"}</span>;
+        return <span>{row.original.shipping.amount !== 0 ? `${row.original.shipping.amount.toLocaleString()} ${row.original.shipping.exchange.label}` : "-"}</span>;
       }
       if (key === "fee") {
-        return <span>{row.original.fee.amount !== 0 ? `${row.original.fee.amount.toLocaleString()} ${row.original.fee.currency.label}` : "-"}</span>;
+        return <span>{row.original.fee.amount !== 0 ? `${row.original.fee.amount.toLocaleString()} ${row.original.fee.exchange.label}` : "-"}</span>;
       }
 
       // products 일 때, 각 각 상품 정보 표시

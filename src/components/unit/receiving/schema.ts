@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const currencySchema = z.object({
+const exchangeSchema = z.object({
   code: z.string(),
   label: z.string(),
   rate: z.number(),
@@ -13,10 +13,10 @@ const ProductSchema = z.object({
   costPrice: z
     .object({
       amount: z.number(),
-      currency: currencySchema,
+      exchange: exchangeSchema,
     })
     .superRefine((val, ctx) => {
-      if (!val.amount || !val.currency.code) {
+      if (!val.amount || !val.exchange.code) {
         ctx.addIssue({
           code: "custom",
           path: [],
@@ -32,11 +32,11 @@ export const ShippingSchema = z.object({
   shipping: z
     .object({
       amount: z.number(),
-      currency: currencySchema,
+      exchange: exchangeSchema,
     })
     .superRefine((val, ctx) => {
       // 둘 중 하나만 입력됐을 때
-      if (!val.amount || !val.currency.code) {
+      if (!val.amount || !val.exchange.code) {
         ctx.addIssue({
           code: "custom",
           path: [],
@@ -47,11 +47,11 @@ export const ShippingSchema = z.object({
   fee: z
     .object({
       amount: z.number(),
-      currency: currencySchema,
+      exchange: exchangeSchema,
     })
     .superRefine((val, ctx) => {
       // 둘 중 하나만 입력됐을 때
-      if (!val.amount || !val.currency.code) {
+      if (!val.amount || !val.exchange.code) {
         ctx.addIssue({
           code: "custom",
           path: [],

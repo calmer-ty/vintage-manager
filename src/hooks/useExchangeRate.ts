@@ -11,7 +11,7 @@ export const useExchangeRate = () => {
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
   const JPY = rates?.data.conversion_rates.JPY ?? 0;
 
-  const currencyOptions = useMemo(
+  const exchangeOptions = useMemo(
     () => [
       { code: "USD", label: "$", rate: USD, krw: USD * KRW },
       { code: "KRW", label: "₩", rate: KRW, krw: 1 },
@@ -33,6 +33,6 @@ export const useExchangeRate = () => {
   }, []);
 
   return {
-    currencyOptions,
+    exchangeOptions,
   };
 };

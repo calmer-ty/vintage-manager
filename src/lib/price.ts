@@ -10,9 +10,9 @@ export const getPriceInUSD = (amount: number, rate: number) => {
 export const getDisplayPrice = (currency: string, price: IPrice) => {
   switch (currency) {
     case "KRW":
-      return `${Math.round(price.amount * price.currency.krw).toLocaleString()} ₩`;
+      return `${Math.round(price.amount * price.exchange.krw).toLocaleString()} ₩`;
     case "USD":
-      return `${Math.round(price.amount / price.currency.rate).toLocaleString()} $`;
+      return `${Math.round(price.amount / price.exchange.rate).toLocaleString()} $`;
     default:
       return "작업중";
   }

@@ -1,11 +1,11 @@
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { ICurrency } from "@/types";
+import type { IExchange } from "@/types";
 
 interface IReceivingSelectProps {
   onChange: (...event: unknown[]) => void;
-  value: ICurrency;
+  value: IExchange;
   disabled?: boolean;
 }
 

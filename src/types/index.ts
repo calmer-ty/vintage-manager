@@ -15,7 +15,7 @@ export interface IExchangeRate {
 export interface IUserID {
   uid: string;
 }
-export interface ICurrency {
+export interface IExchange {
   code: string;
   label: string;
   rate: number;
@@ -23,7 +23,7 @@ export interface ICurrency {
 }
 export interface IPrice {
   amount: number;
-  currency: ICurrency;
+  exchange: IExchange;
 }
 
 // 패키지

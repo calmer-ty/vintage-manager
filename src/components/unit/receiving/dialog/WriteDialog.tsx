@@ -40,7 +40,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
   });
 
   // 환율 데이터
-  const { currencyOptions } = useExchangeRate();
+  const { exchangeOptions } = useExchangeRate();
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PackageSchema>) => {
@@ -54,11 +54,11 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
         })),
         shipping: {
           amount: 0,
-          currency: { code: "", label: "", rate: 0, krw: 0 },
+          exchange: { code: "", label: "", rate: 0, krw: 0 },
         },
         fee: {
           amount: 0,
-          currency: { code: "", label: "", rate: 0, krw: 0 },
+          exchange: { code: "", label: "", rate: 0, krw: 0 },
         },
         createdAt: Timestamp.fromDate(new Date()),
         addSaleAt: null,
@@ -110,7 +110,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
       brand: "",
       costPrice: {
         amount: 0,
-        currency: { code: "", label: "", rate: 0, krw: 0 },
+        exchange: { code: "", label: "", rate: 0, krw: 0 },
       },
     });
   };
@@ -124,7 +124,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
           brand: p.brand,
           costPrice: {
             amount: p.costPrice?.amount,
-            currency: { code: p.costPrice?.currency.code, label: p.costPrice?.currency.label, rate: p.costPrice?.currency.rate, krw: p.costPrice?.currency.krw },
+            exchange: { code: p.costPrice?.exchange.code, label: p.costPrice?.exchange.label, rate: p.costPrice?.exchange.rate, krw: p.costPrice?.exchange.krw },
           },
         })),
       });
@@ -136,7 +136,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
             brand: "",
             costPrice: {
               amount: 0,
-              currency: {
+              exchange: {
                 code: "",
                 label: "",
                 rate: 0,
@@ -216,12 +216,12 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
                             </FormInputWrap>
                             <ReceivingSelect
                               onChange={(code) => {
-                                const selected = currencyOptions.find((opt) => opt.code === code);
+                                const selected = exchangeOptions.find((opt) => opt.code === code);
                                 if (selected) {
-                                  field.onChange({ ...field.value, currency: selected });
+                                  field.onChange({ ...field.value, exchange: selected });
                                 }
                               }}
-                              value={field.value.currency}
+                              value={field.value.exchange}
                               disabled={isEdit && idx < updateTarget.products.length}
                             />
                           </div>

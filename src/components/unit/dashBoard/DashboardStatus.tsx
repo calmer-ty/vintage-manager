@@ -18,14 +18,14 @@ export default function DashBoardStatus({ products, productPackages }: IDashBoar
 
   // 합산된 패키지 배송비 계산
   const totalShipping = productPackages.reduce((acc, val) => {
-    return acc + val.shipping.currency.rate * val.shipping.amount;
+    return acc + val.shipping.exchange.rate * val.shipping.amount;
   }, 0);
   const totalFee = productPackages.reduce((acc, val) => {
-    return acc + val.fee.currency.rate * val.fee.amount;
+    return acc + val.fee.exchange.rate * val.fee.amount;
   }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((acc, val) => {
-    return acc + val.costPrice.currency.rate * val.costPrice.amount;
+    return acc + val.costPrice.exchange.rate * val.costPrice.amount;
   }, 0);
 
   const totalSalePrice = soldProducts.reduce((acc, val) => {

@@ -19,7 +19,7 @@ export default function TableItem({ products }: ITableItemProps) {
   const [first, ...rest] = products;
 
   const costSum = products.reduce((acc, val) => {
-    return acc + getPriceInKRW(val.costPrice.amount, val.costPrice.currency.krw);
+    return acc + getPriceInKRW(val.costPrice.amount, val.costPrice.exchange.krw);
   }, 0);
 
   return (
@@ -44,7 +44,7 @@ export default function TableItem({ products }: ITableItemProps) {
             {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
-            {first.costPrice.amount.toLocaleString()} {first.costPrice.currency.label}
+            {first.costPrice.amount.toLocaleString()} {first.costPrice.exchange.label}
             <em className="text-xs not-italic text-gray-500">({getDisplayPrice(currency, first.costPrice)})</em>
           </span>
         </div>
@@ -59,8 +59,8 @@ export default function TableItem({ products }: ITableItemProps) {
                 {p.name} - {p.brand}
               </span>
               <span className="flex items-center gap-1">
-                {p.costPrice.amount.toLocaleString()} {p.costPrice.currency.label}
-                <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, p.costPrice.currency.krw).toLocaleString()} ₩)</em>
+                {p.costPrice.amount.toLocaleString()} {p.costPrice.exchange.label}
+                <em className="text-xs not-italic text-gray-500">({getPriceInKRW(p.costPrice.amount, p.costPrice.exchange.krw).toLocaleString()} ₩)</em>
               </span>
             </div>
           );

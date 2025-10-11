@@ -68,7 +68,7 @@ export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setU
     try {
       const product: IUpdateProduct = {
         ...data,
-        profit: data.salePrice - getPriceInKRW(updateTarget.costPrice.amount, updateTarget.costPrice.currency.krw),
+        profit: data.salePrice - getPriceInKRW(updateTarget.costPrice.amount, updateTarget.costPrice.exchange.krw),
       };
 
       // 데이터 수정 및 리패치

@@ -33,7 +33,7 @@ interface ISaleDialogProps {
 
 export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesProductPackage, fetchProductPackages }: ISaleDialogProps) {
   // 환율 데이터
-  const { currencyOptions } = useExchangeRate();
+  const { exchangeOptions } = useExchangeRate();
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof ShippingSchema>>({
@@ -41,11 +41,11 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
     defaultValues: {
       shipping: {
         amount: 0,
-        currency: { code: "", label: "", rate: 0, krw: 0 },
+        exchange: { code: "", label: "", rate: 0, krw: 0 },
       },
       fee: {
         amount: 0,
-        currency: { code: "", label: "", rate: 0, krw: 0 },
+        exchange: { code: "", label: "", rate: 0, krw: 0 },
       },
     },
   });
@@ -64,11 +64,11 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
       const salesData: ISalesPackage = {
         shipping: {
           amount: data.shipping.amount,
-          currency: data.shipping.currency,
+          exchange: data.shipping.exchange,
         },
         fee: {
           amount: data.fee.amount,
-          currency: data.fee.currency,
+          exchange: data.fee.exchange,
         },
         addSaleAt: Timestamp.fromDate(new Date()),
       };
@@ -89,11 +89,11 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
     form.reset({
       shipping: {
         amount: 0,
-        currency: { code: "", label: "", rate: 0, krw: 0 },
+        exchange: { code: "", label: "", rate: 0, krw: 0 },
       },
       fee: {
         amount: 0,
-        currency: { code: "", label: "", rate: 0, krw: 0 },
+        exchange: { code: "", label: "", rate: 0, krw: 0 },
       },
     });
   }, [form, saleTarget]);
@@ -135,12 +135,12 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
                       </FormInputWrap>
                       <ReceivingSelect
                         onChange={(code) => {
-                          const selected = currencyOptions.find((opt) => opt.code === code);
+                          const selected = exchangeOptions.find((opt) => opt.code === code);
                           if (selected) {
-                            field.onChange({ ...field.value, currency: selected });
+                            field.onChange({ ...field.value, exchange: selected });
                           }
                         }}
-                        value={field.value.currency}
+                        value={field.value.exchange}
                       />
                     </div>
                   )}
@@ -160,11 +160,11 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
                         />
                       </FormInputWrap>
                       <ReceivingSelect
-                        value={field.value.currency}
+                        value={field.value.exchange}
                         onChange={(code) => {
-                          const selected = currencyOptions.find((opt) => opt.code === code);
+                          const selected = exchangeOptions.find((opt) => opt.code === code);
                           if (selected) {
-                            field.onChange({ ...field.value, currency: selected });
+                            field.onChange({ ...field.value, exchange: selected });
                           }
                         }}
                       />
