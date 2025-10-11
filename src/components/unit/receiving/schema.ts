@@ -31,12 +31,12 @@ export const PackageSchema = z.object({
 export const ShippingSchema = z.object({
   shipping: z
     .object({
-      amount: z.string(),
-      currency: z.string(),
+      amount: z.number(),
+      currency: currencySchema,
     })
     .superRefine((val, ctx) => {
       // 둘 중 하나만 입력됐을 때
-      if (!val.amount || !val.currency) {
+      if (!val.amount || !val.currency.code) {
         ctx.addIssue({
           code: "custom",
           path: [],
@@ -46,12 +46,12 @@ export const ShippingSchema = z.object({
     }),
   fee: z
     .object({
-      amount: z.string(),
-      currency: z.string(),
+      amount: z.number(),
+      currency: currencySchema,
     })
     .superRefine((val, ctx) => {
       // 둘 중 하나만 입력됐을 때
-      if (!val.amount || !val.currency) {
+      if (!val.amount || !val.currency.code) {
         ctx.addIssue({
           code: "custom",
           path: [],

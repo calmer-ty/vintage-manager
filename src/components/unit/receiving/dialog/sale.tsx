@@ -40,15 +40,16 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
     resolver: zodResolver(ShippingSchema),
     defaultValues: {
       shipping: {
-        amount: "",
-        currency: "",
+        amount: 0,
+        currency: { code: "", label: "", rate: 0, krw: 0 },
       },
       fee: {
-        amount: "",
-        currency: "",
+        amount: 0,
+        currency: { code: "", label: "", rate: 0, krw: 0 },
       },
     },
   });
+  console.log(form.formState.errors);
 
   const onClickSalesPackage = async (data: z.infer<typeof ShippingSchema>) => {
     if (!saleTarget) {
@@ -88,12 +89,12 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
   useEffect(() => {
     form.reset({
       shipping: {
-        amount: "",
-        currency: "",
+        amount: 0,
+        currency: { code: "", label: "", rate: 0, krw: 0 },
       },
       fee: {
-        amount: "",
-        currency: "",
+        amount: 0,
+        currency: { code: "", label: "", rate: 0, krw: 0 },
       },
     });
   }, [form, saleTarget]);
@@ -130,17 +131,17 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
                           className="bg-white"
                           placeholder="사용한 통화 기준으로 작성"
                           value={field.value.amount}
-                          onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                          onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
                         />
                       </FormInputWrap>
                       <CurrencySelect
-                        value={field.value.currency}
-                        onChange={(selectedValue) => {
-                          const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                        onChange={(code) => {
+                          const selected = currencyOptions.find((opt) => opt.code === code);
                           if (selected) {
-                            field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                            field.onChange({ ...field.value, currency: selected });
                           }
                         }}
+                        value={field.value.currency}
                       />
                     </div>
                   )}
@@ -156,15 +157,15 @@ export default function ReceivingSale({ uid, isSaleOpen, setIsSaleOpen, saleTarg
                           className="bg-white"
                           placeholder="사용한 통화 기준으로 작성"
                           value={field.value.amount}
-                          onChange={(e) => field.onChange({ ...field.value, amount: e.target.value })}
+                          onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
                         />
                       </FormInputWrap>
                       <CurrencySelect
                         value={field.value.currency}
-                        onChange={(selectedValue) => {
-                          const selected = currencyOptions.find((opt) => opt.value === selectedValue);
+                        onChange={(code) => {
+                          const selected = currencyOptions.find((opt) => opt.code === code);
                           if (selected) {
-                            field.onChange({ ...field.value, currency: JSON.stringify(selected) });
+                            field.onChange({ ...field.value, currency: selected });
                           }
                         }}
                       />
