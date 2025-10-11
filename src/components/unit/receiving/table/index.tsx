@@ -82,7 +82,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
     {
       id: "select",
       header: ({ table }) => {
-        const selectableRows = table.getRowModel().rows.filter((row) => !!row.original.shipping.currency); // shipping이 없는 행만 선택 가능
+        const selectableRows = table.getRowModel().rows.filter((row) => !row.original.addSaleAt); // shipping이 없는 행만 선택 가능
         const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
         console.log(selectableRows);
         return (
@@ -97,7 +97,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
           />
         );
       },
-      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" disabled={!!row.original.shipping.currency} />,
+      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" disabled={!!row.original.addSaleAt} />,
       enableSorting: false,
       enableHiding: false,
     },
@@ -122,15 +122,15 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={!row.original.shipping.currency ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
+              <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
                 <div className="w-full">
-                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.addSaleAt}>
                     판매 등록
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.addSaleAt}>
                     패키지 수정
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!row.original.shipping.currency}>
+                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.addSaleAt}>
                     패키지 삭제
                   </DropdownMenuItem>
                 </div>
@@ -200,7 +200,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
                 ) : (
                   // 데이터가 있을 때
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.shipping.currency ? "bg-blue-50 text-blue-700" : ""}>
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.addSaleAt ? "bg-blue-50 text-blue-700" : ""}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
