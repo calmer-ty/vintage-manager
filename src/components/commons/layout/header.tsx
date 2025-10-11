@@ -15,11 +15,11 @@ export default function Header() {
   const currentPage = pages.find((el) => pathname === el.url)?.title;
 
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
-
+  //
   return (
     <header
-      className="fixed z-50 flex items-center w-full h-16 border-b px-6 bg-white
-        gap-1 lg:gap-2"
+      className="sticky t-0 z-50 flex items-center gap-1 w-full h-16 border-b px-6 bg-white
+        lg:gap-2"
     >
       {pathname !== "/" ? (
         <>
