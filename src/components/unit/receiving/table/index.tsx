@@ -84,7 +84,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       header: ({ table }) => {
         const selectableRows = table.getRowModel().rows.filter((row) => !row.original.addSaleAt); // shipping이 없는 행만 선택 가능
         const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
-        console.log(selectableRows);
+
         return (
           <Checkbox
             // checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}

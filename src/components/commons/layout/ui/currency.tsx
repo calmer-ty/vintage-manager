@@ -1,8 +1,6 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function CurrencySelect() {
-  // const selectedValue: string | undefined = value ? JSON.parse(value).value : undefined;
-
   return (
     <Select defaultValue="USD">
       <SelectTrigger className="w-30">

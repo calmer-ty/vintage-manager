@@ -18,7 +18,7 @@ import BasicTooltip from "@/components/commons/tooltip/basic";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICurrency, IProduct } from "@/types";
+import type { IProduct } from "@/types";
 interface ISalesTableProps {
   data: IProduct[];
   columnConfig: {
@@ -45,7 +45,6 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       const value = row.getValue(key);
 
       const costPrice = row.original.costPrice;
-      const costPriceCurrency: ICurrency = JSON.parse(costPrice.currency);
       const salePrice = row.original.salePrice;
       const profit = row.original.profit;
 
@@ -61,9 +60,9 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
       if (key === "costPrice") {
         return (
           <div className="flex justify-end items-center gap-1">
-            <span>{getPriceInKRW(costPrice.amount, costPriceCurrency.krw).toLocaleString()} ₩</span>
+            <span>{getPriceInKRW(costPrice.amount, costPrice.currency.krw).toLocaleString()} ₩</span>
             <span className="text-xs text-gray-500">
-              ({Number(costPrice.amount).toLocaleString()} {costPriceCurrency.label})
+              ({Number(costPrice.amount).toLocaleString()} {costPrice.currency.label})
             </span>
           </div>
         );

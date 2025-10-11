@@ -54,13 +54,13 @@ export interface IProduct {
   brand: string;
   name: string;
   costPrice: IPrice;
-  salePrice: string;
+  salePrice: number;
   profit: number;
   soldAt: Timestamp | null;
   createdAt: Timestamp;
 }
 export interface IUpdateProduct {
-  salePrice: string;
+  salePrice: number;
   profit: number;
 }
 export interface IUpdateProducts {

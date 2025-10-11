@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { getPriceInKRW } from "@/lib/price";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -9,16 +13,12 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import FormInputWrap from "@/components/commons/inputWrap/form";
 
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import type { IProduct, ICurrency, IUpdateProductParams, IUpdateProduct } from "@/types";
-import { getPriceInKRW } from "@/lib/price";
+import type { IProduct, IUpdateProductParams, IUpdateProduct } from "@/types";
 
 const ProductSchema = z.object({
   brand: z.string().optional(),
   name: z.string().optional(),
-  salePrice: z.string().min(1, "판매가격을 입력해주세요."),
+  salePrice: z.number().min(1, "판매가격을 입력해주세요."),
 });
 
 interface ISalesWriteProps {
@@ -40,7 +40,7 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
     defaultValues: {
       name: "",
       brand: "",
-      salePrice: "",
+      salePrice: 0,
     },
   });
 
@@ -56,7 +56,7 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
       form.reset({
         brand: "",
         name: "",
-        salePrice: "",
+        salePrice: 0,
       });
     }
   }, [form, isOpen, isEdit, updateTarget]);
@@ -66,11 +66,9 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
     if (!uid || !isEdit) return;
 
     try {
-      const costPriceCurrency: ICurrency = JSON.parse(updateTarget.costPrice.currency);
-
       const product: IUpdateProduct = {
         ...data,
-        profit: Number(data.salePrice) - getPriceInKRW(updateTarget.costPrice.amount, costPriceCurrency.krw),
+        profit: Number(data.salePrice) - getPriceInKRW(updateTarget.costPrice.amount, updateTarget.costPrice.currency.krw),
       };
 
       // 데이터 수정 및 리패치
@@ -133,7 +131,7 @@ export default function SalesWrite({ uid, isOpen, setIsOpen, updateTarget, setUp
                   name="salePrice"
                   render={({ field }) => (
                     <FormInputWrap title="판매가">
-                      <Input type="number" placeholder="예) 1000" {...field} className="bg-white" />
+                      <Input type="number" placeholder="예) 1000" {...field} className="bg-white" onChange={(e) => field.onChange(Number(e.target.value))} />
                     </FormInputWrap>
                   )}
                 />
