@@ -2,7 +2,7 @@
 import { useProducts } from "@/hooks/useProducts";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
 
-import { usePurchase } from "@/hooks/usePurchase";
+import { usePurchasePackage } from "@/hooks/usePurchasePackage";
 
 // 내부 요소
 import DashboardChart from "./DashboardChart";
@@ -13,7 +13,7 @@ import type { IUserID } from "@/types";
 export default function DashBoardUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { products } = useProducts({ uid, selectedYear, selectedMonth });
-  const { purchase } = usePurchase({ uid, selectedYear, selectedMonth });
+  const { purchase } = usePurchasePackage({ uid, selectedYear, selectedMonth });
 
   return (
     <article className="p-10">

@@ -15,13 +15,13 @@ interface IDeleteDialogProps {
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
-  deletePurchaseSingle: (packageIds: string[]) => Promise<void>;
+  deletePurchasePackage: (itemIds: string[]) => Promise<void>;
 }
 
-export default function DeleteDialog({ form, setRowSelection, isDeleteOpen, setIsDeleteOpen, deleteTargets, deletePurchaseSingle }: IDeleteDialogProps) {
+export default function DeleteDialog({ form, setRowSelection, isDeleteOpen, setIsDeleteOpen, deleteTargets, deletePurchasePackage }: IDeleteDialogProps) {
   // 삭제 함수
   const onClickDelete = async () => {
-    await deletePurchaseSingle(deleteTargets);
+    await deletePurchasePackage(deleteTargets);
 
     toast("🗑️ 선택한 항목이 삭제되었습니다.");
     setIsDeleteOpen(false);
@@ -35,8 +35,8 @@ export default function DeleteDialog({ form, setRowSelection, isDeleteOpen, setI
       <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
         <DialogContent className="sm:max-w-100">
           <DialogHeader>
-            <DialogTitle>매입한 상품을 폐기하셨습니까?</DialogTitle>
-            <DialogDescription>선택한 상품을 삭제하면 복구할 수 없습니다.</DialogDescription>
+            <DialogTitle>패키지를 폐기하셨습니까?</DialogTitle>
+            <DialogDescription>선택한 패키지를 삭제하면 복구할 수 없습니다.</DialogDescription>
           </DialogHeader>
 
           <DialogFooter>

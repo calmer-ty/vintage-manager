@@ -30,21 +30,20 @@ export interface IPrice {
 }
 
 // 매입 타입
-export interface IPurchaseSingle {
+export interface IPurchaseItem {
   _id: string; // 문서 id 값
   uid: string;
   name: string;
   brand: string;
   costPrice: IPrice;
-  createdAt: Timestamp;
-  isBundle: boolean;
 }
-export interface IPurchaseBundle {
+export interface IPurchasePackage {
   _id: string; // 문서 id 값
   uid: string;
-  products: IPurchaseSingle[];
+  products: IPurchaseItem[];
   createdAt: Timestamp;
 }
+
 export interface ISalesPackage {
   shipping: IPrice;
   fee: IPrice;
@@ -52,11 +51,11 @@ export interface ISalesPackage {
 }
 
 // 상품
-export interface IPackageProduct {
-  name: string;
-  brand: string;
-  costPrice: IPrice;
-}
+// export interface IPackageProduct {
+//   name: string;
+//   brand: string;
+//   costPrice: IPrice;
+// }
 export interface IProduct {
   uid: string;
   _id: string;
@@ -72,28 +71,18 @@ export interface IUpdateProduct {
   salePrice: number;
   profit: number;
 }
-// export interface IUpdateProducts {
-//   products: IPackageProduct[];
-// }
 
 // Hooks Params
-export interface ICreatePurchaseSingleParams {
-  purchaseDoc: IPurchaseSingle;
+export interface ICreatePurchasePackageParams {
+  packageDoc: IPurchasePackage;
 }
-export interface ICreatePurchaseBundleParams {
-  purchaseDoc: IPurchaseBundle;
-}
-export interface IupdateSingleToBundledParams {
-  updateTargetIds: string[];
-  // products: IUpdateProducts; // 패키지에서 수정할건 상품 데이터 뿐이기 때문
+export interface IMergePurchasePackageParams {
+  deleteTargets: string[];
+  packageDoc: IPurchasePackage;
 }
 export interface ISalesPackageParams {
   updateTargetId: string;
   salesData: ISalesPackage;
-}
-export interface ICreateProductParams {
-  uid: string;
-  products: IPackageProduct[];
 }
 export interface IUpdateProductParams {
   targetId: string;

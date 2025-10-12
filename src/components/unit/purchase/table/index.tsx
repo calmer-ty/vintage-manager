@@ -11,14 +11,14 @@ import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 // import BasicTooltip from "@/components/commons/BasicTooltip";
-// import TableItem from "./TableItem";
+import TableItem from "./TableItem";
 import TableControl from "./TableControl";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, RowSelectionState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICreateProductParams, IPurchaseSingle } from "@/types";
+import type { IPurchasePackage } from "@/types";
 interface IReceivingTableProps {
-  data: IPurchaseSingle[];
+  data: IPurchasePackage[];
   columnConfig: {
     key: string;
     label: string;
@@ -27,7 +27,7 @@ interface IReceivingTableProps {
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   onClickMoveToCreate: () => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
-  onClickMoveToBundle: (rowData: IPurchaseSingle[]) => void;
+  onClickMoveToMerge: (rowData: IPurchasePackage[]) => void;
   onClickMoveToSale: (rowId: string) => void;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
   fetchLoading: boolean;
@@ -40,7 +40,7 @@ export default function ReceivingTable({
   setRowSelection,
   onClickMoveToCreate,
   onClickMoveToDelete,
-  onClickMoveToBundle,
+  onClickMoveToMerge,
   onClickMoveToSale,
   fetchLoading,
 }: IReceivingTableProps) {
@@ -48,9 +48,8 @@ export default function ReceivingTable({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
-  // const [rowSelection, setRowSelection] = useState({});
 
-  const dynamicColumns: ColumnDef<IPurchaseSingle>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<IPurchasePackage>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
@@ -65,13 +64,13 @@ export default function ReceivingTable({
         return <div>-</div>;
       }
 
-      if (key === "costPrice") {
-        return (
-          <span>
-            {row.original.costPrice.amount} {row.original.costPrice.exchange.label}
-          </span>
-        );
-      }
+      // if (key === "costPrice") {
+      //   return (
+      //     <span>
+      //       {row.original.costPrice.amount} {row.original.costPrice.exchange.label}
+      //     </span>
+      //   );
+      // }
 
       // 배송비 & 수수료
       // if (key === "shipping") {
@@ -82,18 +81,18 @@ export default function ReceivingTable({
       // }
 
       // products 일 때, 각 각 상품 정보 표시
-      // if (key === "products") {
-      //   return (
-      //     <div className="flex flex-col gap-1">
-      //       <TableItem currency={row.original.currency} products={row.original.products} />
-      //     </div>
-      //   );
-      // }
+      if (key === "products") {
+        return (
+          <div className="flex flex-col gap-1">
+            <TableItem products={row.original.products} />
+          </div>
+        );
+      }
 
       return <div className="capitalize">{String(value)}</div>;
     },
   }));
-  const columns: ColumnDef<IPurchaseSingle>[] = [
+  const columns: ColumnDef<IPurchasePackage>[] = [
     {
       id: "select",
       header: ({ table }) => {
@@ -171,7 +170,7 @@ export default function ReceivingTable({
   return (
     <>
       <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
-        <TableControl table={table} columnConfig={columnConfig} onClickMoveToCreate={onClickMoveToCreate} onClickMoveToDelete={onClickMoveToDelete} onClickMoveToBundle={onClickMoveToBundle} />
+        <TableControl table={table} columnConfig={columnConfig} onClickMoveToCreate={onClickMoveToCreate} onClickMoveToDelete={onClickMoveToDelete} onClickMoveToMerge={onClickMoveToMerge} />
         <div className="border rounded-md">
           <Table>
             <TableHeader>

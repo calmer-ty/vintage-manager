@@ -4,20 +4,20 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Settings } from "lucide-react";
 
-import type { IPurchaseSingle } from "@/types";
+import type { IPurchasePackage } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface ITableControlProps {
-  table: Table<IPurchaseSingle>;
+  table: Table<IPurchasePackage>;
   columnConfig: {
     key: string;
     label: string;
   }[];
   onClickMoveToCreate: () => void;
-  onClickMoveToBundle: (rowData: IPurchaseSingle[]) => void;
+  onClickMoveToMerge: (rowData: IPurchasePackage[]) => void;
   onClickMoveToDelete: (selectedPurchasesId: string[]) => void;
 }
 
-export default function TableControl({ table, columnConfig, onClickMoveToCreate, onClickMoveToBundle, onClickMoveToDelete }: ITableControlProps) {
+export default function TableControl({ table, columnConfig, onClickMoveToCreate, onClickMoveToMerge, onClickMoveToDelete }: ITableControlProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
   const selectedData = table.getSelectedRowModel().rows.map((row) => row.original);
@@ -28,14 +28,14 @@ export default function TableControl({ table, columnConfig, onClickMoveToCreate,
     <div className="flex justify-between items-center gap-2 w-full py-3">
       <div className="flex items-center gap-2">
         <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToDelete(selectedIds)}>
-          <span className="hidden sm:block">상품 폐기</span>
+          <span className="hidden sm:block">패키지 폐기</span>
           <Trash
             className="w-4 h-4 
               block sm:hidden"
           />
         </Button>
-        <Button variant="default" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToBundle(selectedData)}>
-          <span className="hidden sm:block">번들로 묶음</span>
+        <Button variant="default" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToMerge(selectedData)}>
+          <span className="hidden sm:block">패키지 통합</span>
           <Trash
             className="w-4 h-4 
               block sm:hidden"

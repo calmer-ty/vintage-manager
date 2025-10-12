@@ -7,7 +7,7 @@ const exchangeSchema = z.object({
   krw: z.number(),
 });
 
-export const PurchaseSchema = z.object({
+const ProductSchema = z.object({
   name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),
   brand: z.string(),
   costPrice: z
@@ -25,9 +25,9 @@ export const PurchaseSchema = z.object({
       }
     }),
 });
-// export const PurchaseSchema = z.object({
-//   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
-// });
+export const PurchaseSchema = z.object({
+  products: z.array(ProductSchema),
+});
 export const ShippingSchema = z.object({
   shipping: z
     .object({

@@ -7,21 +7,20 @@ import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-import type { IPackageProduct } from "@/types";
+import type { IPurchaseItem } from "@/types";
 interface ITableItemProps {
-  currency: string;
-  products: IPackageProduct[];
+  products: IPurchaseItem[];
 }
 
-export default function TableItem({ currency, products }: ITableItemProps) {
+export default function TableItem({ products }: ITableItemProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { viewCurrency } = useCurrency();
 
   const [first, ...rest] = products;
 
-  const costSum = products.reduce((acc, val) => {
-    return acc + val.costPrice.amount;
-  }, 0);
+  // const costSum = products.reduce((acc, val) => {
+  //   return acc + val.costPrice.amount;
+  // }, 0);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen} className="flex w-full flex-col px-4 py-2 border border-gray-300 rounded-md bg-white">
@@ -69,9 +68,9 @@ export default function TableItem({ currency, products }: ITableItemProps) {
         <div className="px-4 pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
           <span className="mr-1 font-bold">총 매입가:</span>
 
-          <div className="inline-flex items-center gap-1">
+          {/* <div className="inline-flex items-center gap-1">
             <span>{getDisplayPrice(currency, costSum)}</span>
-          </div>
+          </div> */}
         </div>
       </CollapsibleContent>
     </Collapsible>
