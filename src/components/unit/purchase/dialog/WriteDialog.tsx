@@ -37,17 +37,17 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
     try {
-      const purchaseDoc = {
-        ...data,
-        uid,
+      const singleItem = {
         _id: "",
+        uid,
+        ...data,
         costPrice: { amount: data.costPrice.amount, exchange: selectedExchange },
         createdAt: Timestamp.fromDate(new Date()),
         isBundle: false,
       };
 
       // 데이터 생성 및 리패치
-      await createPurchaseSingle({ purchaseDoc });
+      await createPurchaseSingle({ purchaseDoc: singleItem });
       await fetchPurchaseSingle();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기

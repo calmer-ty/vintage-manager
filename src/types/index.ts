@@ -14,7 +14,7 @@ export interface IExchangeRate {
   time_last_update_utc: string;
 }
 
-// 기본 // API 타입
+// 기본 타입
 export interface IUserID {
   uid: string;
 }
@@ -29,7 +29,7 @@ export interface IPrice {
   exchange: IExchange;
 }
 
-// 매입 // API 타입
+// 매입 타입
 export interface IPurchaseSingle {
   _id: string; // 문서 id 값
   uid: string;
@@ -38,6 +38,12 @@ export interface IPurchaseSingle {
   costPrice: IPrice;
   createdAt: Timestamp;
   isBundle: boolean;
+}
+export interface IPurchaseBundle {
+  _id: string; // 문서 id 값
+  uid: string;
+  products: IPurchaseSingle[];
+  createdAt: Timestamp;
 }
 export interface ISalesPackage {
   shipping: IPrice;
@@ -74,10 +80,13 @@ export interface IUpdateProduct {
 export interface ICreatePurchaseSingleParams {
   purchaseDoc: IPurchaseSingle;
 }
-// export interface IUpdatePackageParams {
-//   updateTargetId: string;
-//   products: IUpdateProducts; // 패키지에서 수정할건 상품 데이터 뿐이기 때문
-// }
+export interface ICreatePurchaseBundleParams {
+  purchaseDoc: IPurchaseBundle;
+}
+export interface IupdateSingleToBundledParams {
+  updateTargetIds: string[];
+  // products: IUpdateProducts; // 패키지에서 수정할건 상품 데이터 뿐이기 때문
+}
 export interface ISalesPackageParams {
   updateTargetId: string;
   salesData: ISalesPackage;

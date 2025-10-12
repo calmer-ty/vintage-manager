@@ -12,25 +12,30 @@ interface ITableControlProps {
     key: string;
     label: string;
   }[];
-  setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onClickMoveToCreate: () => void;
+  onClickMoveToBundle: (rowData: IPurchaseSingle[]) => void;
   onClickMoveToDelete: (selectedPurchasesId: string[]) => void;
 }
 
-export default function TableControl({ table, columnConfig, setIsWriteOpen, onClickMoveToDelete }: ITableControlProps) {
+export default function TableControl({ table, columnConfig, onClickMoveToCreate, onClickMoveToBundle, onClickMoveToDelete }: ITableControlProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
+  const selectedData = table.getSelectedRowModel().rows.map((row) => row.original);
   //  보기 설정용 객체 코드
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
-
-  const onClickCreate = () => {
-    setIsWriteOpen(true);
-  };
 
   return (
     <div className="flex justify-between items-center gap-2 w-full py-3">
       <div className="flex items-center gap-2">
         <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToDelete(selectedIds)}>
-          <span className="hidden sm:block">선택 삭제</span>
+          <span className="hidden sm:block">상품 선택 폐기</span>
+          <Trash
+            className="w-4 h-4 
+              block sm:hidden"
+          />
+        </Button>
+        <Button variant="default" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToBundle(selectedData)}>
+          <span className="hidden sm:block">번들로 묶음</span>
           <Trash
             className="w-4 h-4 
               block sm:hidden"
@@ -70,7 +75,7 @@ export default function TableControl({ table, columnConfig, setIsWriteOpen, onCl
           </DropdownMenuContent>
         </DropdownMenu>
 
-        <Button variant="default" onClick={onClickCreate}>
+        <Button variant="default" onClick={onClickMoveToCreate}>
           <span className="hidden sm:block">패키지 등록</span>
           <Pencil
             className="w-4 h-4 

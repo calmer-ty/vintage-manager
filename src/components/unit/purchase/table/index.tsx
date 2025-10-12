@@ -15,7 +15,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import TableControl from "./TableControl";
 
 import type { Dispatch, SetStateAction } from "react";
-import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
+import type { ColumnDef, ColumnFiltersState, RowSelectionState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ICreateProductParams, IPurchaseSingle } from "@/types";
 interface IReceivingTableProps {
   data: IPurchaseSingle[];
@@ -23,20 +23,32 @@ interface IReceivingTableProps {
     key: string;
     label: string;
   }[];
-  setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
+  rowSelection: RowSelectionState;
+  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
+  onClickMoveToCreate: () => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
+  onClickMoveToBundle: (rowData: IPurchaseSingle[]) => void;
   onClickMoveToSale: (rowId: string) => void;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
   fetchLoading: boolean;
 }
 
-export default function ReceivingTable({ setIsWriteOpen, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, fetchLoading }: IReceivingTableProps) {
+export default function ReceivingTable({
+  data,
+  columnConfig,
+  rowSelection,
+  setRowSelection,
+  onClickMoveToCreate,
+  onClickMoveToDelete,
+  onClickMoveToBundle,
+  onClickMoveToSale,
+  fetchLoading,
+}: IReceivingTableProps) {
   // const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
-
-  const [rowSelection, setRowSelection] = useState({});
+  // const [rowSelection, setRowSelection] = useState({});
 
   const dynamicColumns: ColumnDef<IPurchaseSingle>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
@@ -127,7 +139,6 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToDelete, on
             <DropdownMenuContent align="end">
               {/* <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}> */}
               <div className="w-full">
-                <DropdownMenuItem>패키지 등록</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)}>판매 등록</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
               </div>
@@ -160,7 +171,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToDelete, on
   return (
     <>
       <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
-        <TableControl table={table} columnConfig={columnConfig} setIsWriteOpen={setIsWriteOpen} onClickMoveToDelete={onClickMoveToDelete} />
+        <TableControl table={table} columnConfig={columnConfig} onClickMoveToCreate={onClickMoveToCreate} onClickMoveToDelete={onClickMoveToDelete} onClickMoveToBundle={onClickMoveToBundle} />
         <div className="border rounded-md">
           <Table>
             <TableHeader>

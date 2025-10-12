@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreatePurchaseSingleParams, IPurchaseSingle, ISalesPackageParams } from "@/types";
+import type { ICreatePurchaseBundleParams, ICreatePurchaseSingleParams, IPurchaseSingle, ISalesPackageParams, IupdateSingleToBundledParams } from "@/types";
 interface IUsePurchaseParams {
   uid: string;
   selectedYear: number;
@@ -30,7 +30,35 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
       console.error(err);
     }
   };
+  // [등록]
+  const createPurchaseBundle = async ({ purchaseDoc }: ICreatePurchaseBundleParams) => {
+    if (!uid) return;
 
+    try {
+      const docRef = await addDoc(collection(db, "purchaseBundle"), { ...purchaseDoc });
+
+      // 문서 ID를 포함한 데이터로 업데이트
+      await updateDoc(docRef, {
+        _id: docRef.id,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // [번들 변경]
+  const updateSingleToBundled = async ({ updateTargetIds }: IupdateSingleToBundledParams) => {
+    if (!uid) return;
+
+    try {
+      for (const id of updateTargetIds) {
+        const docRef = doc(db, "purchaseSingle", id);
+        await updateDoc(docRef, { isBundled: true });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   // [수정] - 상품 데이터를 수정
   // const updatePurchase = async ({ updateTargetId, products }: IUpdatePackageParams) => {
   //   if (!uid) return;
@@ -70,7 +98,7 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
 
     for (const id of itemIds) {
       try {
-        await deleteDoc(doc(db, "purchase", id));
+        await deleteDoc(doc(db, "purchaseSingle", id));
       } catch (error) {
         console.error(`ID ${id} 삭제 실패`, error);
       }
@@ -108,9 +136,11 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
   return {
     purchase,
     createPurchaseSingle,
+    updateSingleToBundled,
     deletePurchaseSingle,
     fetchPurchaseSingle,
     salesPurchase,
+    createPurchaseBundle,
     fetchLoading,
   };
 };
