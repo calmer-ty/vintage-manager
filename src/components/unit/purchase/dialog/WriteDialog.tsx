@@ -14,7 +14,7 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreatePurchaseParams } from "@/types";
+import type { ICreateSingleParams } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 interface IWriteDialogProps {
@@ -22,11 +22,11 @@ interface IWriteDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  createPurchase: ({ purchase }: ICreatePurchaseParams) => Promise<void>;
-  fetchPurchases: () => Promise<void>;
+  createSingle: ({ purchaseDoc }: ICreateSingleParams) => Promise<void>;
+  fetchSingle: () => Promise<void>;
 }
 
-export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, createPurchase, fetchPurchases }: IWriteDialogProps) {
+export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, createSingle, fetchSingle }: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -37,7 +37,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
     try {
-      const purchase = {
+      const purchaseDoc = {
         ...data,
         uid,
         _id: "",
@@ -46,8 +46,8 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
       };
 
       // 데이터 생성 및 리패치
-      await createPurchase({ purchase });
-      await fetchPurchases();
+      await createSingle({ purchaseDoc });
+      await fetchSingle();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       toast("✅ 상품이 성공적으로 등록되었습니다.");

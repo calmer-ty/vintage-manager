@@ -72,8 +72,8 @@ export interface IUpdateProduct {
 // }
 
 // Hooks Params
-export interface ICreatePurchaseParams {
-  purchase: IPurchase;
+export interface ICreateSingleParams {
+  purchaseDoc: IPurchase;
 }
 // export interface IUpdatePackageParams {
 //   updateTargetId: string;

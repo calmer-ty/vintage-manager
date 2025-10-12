@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreatePurchaseParams, IPurchase, ISalesPackageParams } from "@/types";
+import type { ICreateSingleParams, IPurchase, ISalesPackageParams } from "@/types";
 interface IUsePurchaseParams {
   uid: string;
   selectedYear: number;
@@ -16,11 +16,11 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
   const [fetchLoading, setFetchLoading] = useState(false);
 
   // [등록]
-  const createPurchase = async ({ purchase }: ICreatePurchaseParams) => {
+  const createSingle = async ({ purchaseDoc }: ICreateSingleParams) => {
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "purchase"), { ...purchase });
+      const docRef = await addDoc(collection(db, "purchaseSingle"), { ...purchaseDoc });
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
@@ -65,27 +65,27 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
   };
 
   // [삭제]
-  const deletePurchase = async (packageIds: string[]) => {
+  const deleteSingle = async (itemIds: string[]) => {
     if (!uid) return;
 
-    for (const id of packageIds) {
+    for (const id of itemIds) {
       try {
         await deleteDoc(doc(db, "purchase", id));
       } catch (error) {
         console.error(`ID ${id} 삭제 실패`, error);
       }
     }
-    await fetchPurchases();
+    await fetchSingle();
   };
 
   // 조회 함수
-  const fetchPurchases = useCallback(async () => {
+  const fetchSingle = useCallback(async () => {
     if (!uid) return;
     setFetchLoading(true);
 
     try {
       // 년/월 데이터를 제한하여 한정적으로 데이터 쿼리
-      const q = getUserDateQuery(uid, "purchase", selectedYear, selectedMonth);
+      const q = getUserDateQuery(uid, "purchaseSingle", selectedYear, selectedMonth);
 
       const querySnapshot = await getDocs(q);
       const dataArray = querySnapshot.docs.map((doc) => ({
@@ -102,16 +102,15 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
   }, [uid, selectedYear, selectedMonth]);
 
   useEffect(() => {
-    fetchPurchases();
-  }, [fetchPurchases]);
+    fetchSingle();
+  }, [fetchSingle]);
 
   return {
     purchase,
-    createPurchase,
-    // updatePurchase,
+    createSingle,
     salesPurchase,
-    deletePurchase,
-    fetchPurchases,
+    deleteSingle,
+    fetchSingle,
     fetchLoading,
   };
 };

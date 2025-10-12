@@ -27,11 +27,11 @@ interface ISaleDialogProps {
   saleTarget: IPurchase | undefined;
   setSaleTarget: Dispatch<SetStateAction<IPurchase | undefined>>;
   salesPurchase: ({ updateTargetId, salesData }: ISalesPackageParams) => Promise<void>;
-  fetchPurchases: () => Promise<void>;
+  fetchSingle: () => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
 }
 
-export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesPurchase, fetchPurchases }: ISaleDialogProps) {
+export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesPurchase, fetchSingle }: ISaleDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -73,9 +73,9 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
         addSaleAt: Timestamp.fromDate(new Date()),
       };
 
-      await fetchPurchases();
       await salesPurchase({ updateTargetId: saleTarget._id, salesData });
-      await createProduct({ uid, products: saleTarget.products });
+      // await createProduct({ uid, products: saleTarget.products });
+      await fetchSingle();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
       setIsSaleOpen(false);
       form.reset();

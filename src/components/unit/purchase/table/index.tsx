@@ -26,7 +26,6 @@ interface IReceivingTableProps {
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   onClickMoveToDelete: (rowIds: string[]) => void;
   onClickMoveToSale: (rowId: string) => void;
-  deletePurchase: (packageIds: string[]) => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
   fetchLoading: boolean;
 }

@@ -29,7 +29,7 @@ const columnConfig = [
 
 export default function PurchaseUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { purchase, createPurchase, salesPurchase, deletePurchase, fetchPurchases, fetchLoading } = usePurchase({ uid, selectedYear, selectedMonth });
+  const { purchase, createSingle, salesPurchase, deleteSingle, fetchSingle, fetchLoading } = usePurchase({ uid, selectedYear, selectedMonth });
   const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   // ✍️ 폼 설정
@@ -70,14 +70,13 @@ export default function PurchaseUI({ uid }: IUserID) {
         setIsWriteOpen={setIsWriteOpen}
         onClickMoveToDelete={onClickMoveToDelete}
         onClickMoveToSale={onClickMoveToSale}
-        deletePurchase={deletePurchase}
         createProduct={createProduct}
         fetchLoading={fetchLoading}
       />
 
       {/* 모달 */}
-      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createPurchase={createPurchase} fetchPurchases={fetchPurchases} />
-      <DeleteDialog form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deletePurchase={deletePurchase} />
+      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createSingle={createSingle} fetchSingle={fetchSingle} />
+      <DeleteDialog form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteSingle={deleteSingle} />
       <SaleDialog
         uid={uid}
         isSaleOpen={isSaleOpen}
@@ -85,7 +84,7 @@ export default function PurchaseUI({ uid }: IUserID) {
         saleTarget={saleTarget}
         setSaleTarget={setSaleTarget}
         salesPurchase={salesPurchase}
-        fetchPurchases={fetchPurchases}
+        fetchSingle={fetchSingle}
         createProduct={createProduct}
       />
     </article>
