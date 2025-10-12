@@ -4,16 +4,16 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Settings } from "lucide-react";
 
-import type { IPackage } from "@/types";
+import type { IPurchase } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface ITableControlProps {
-  table: Table<IPackage>;
+  table: Table<IPurchase>;
   columnConfig: {
     key: string;
     label: string;
   }[];
   setIsWriteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onClickMoveToDelete: (selectedProductPackagesId: string[]) => void;
+  onClickMoveToDelete: (selectedPurchasesId: string[]) => void;
 }
 
 export default function TableControl({ table, columnConfig, setIsWriteOpen, onClickMoveToDelete }: ITableControlProps) {

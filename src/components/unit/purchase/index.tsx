@@ -5,16 +5,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProducts } from "@/hooks/useProducts";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
-import { useProductPackages } from "@/hooks/useProductPackages";
+import { usePurchase } from "@/hooks/usePurchase";
 
 import TableUI from "./table";
-import ReceivingWrite from "./dialog/WriteDialog";
-import ReceivingDelete from "./dialog/DeleteDialog";
-import ReceivingSale from "./dialog/SaleDialog";
+import WriteDialog from "./dialog/WriteDialog";
+import DeleteDialog from "./dialog/DeleteDialog";
+import SaleDialog from "./dialog/SaleDialog";
 
-import { PackageSchema } from "./schema";
+import { PurchaseSchema } from "./schema";
 
-import type { IPackage, IUserID } from "@/types";
+import type { IPurchase, IUserID } from "@/types";
 import type { z } from "zod";
 
 const columnConfig = [
@@ -25,22 +25,14 @@ const columnConfig = [
   { key: "products", label: "개별 상품명 / 매입가" },
 ];
 
-export default function ReceivingUI({ uid }: IUserID) {
+export default function PurchaseUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const {
-    productPackages,
-    createProductPackage,
-    updateProductPackage,
-    salesProductPackage,
-    deleteProductPackage,
-    fetchProductPackages,
-    loading: packagesLoading,
-  } = useProductPackages({ uid, selectedYear, selectedMonth });
+  const { purchase, createPurchase, salesPurchase, deletePurchase, fetchPurchases, fetchLoading } = usePurchase({ uid, selectedYear, selectedMonth });
   const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof PackageSchema>>({
-    resolver: zodResolver(PackageSchema),
+  const form = useForm<z.infer<typeof PurchaseSchema>>({
+    resolver: zodResolver(PurchaseSchema),
     defaultValues: {
       products: [{ name: "", brand: "", costPrice: { amount: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } } }],
     },
@@ -48,15 +40,15 @@ export default function ReceivingUI({ uid }: IUserID) {
 
   // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IPackage | undefined>(undefined);
+  const [updateTarget, setUpdateTarget] = useState<IPurchase | undefined>(undefined);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
   const [isSaleOpen, setIsSaleOpen] = useState(false);
-  const [saleTarget, setSaleTarget] = useState<IPackage | undefined>(undefined);
+  const [saleTarget, setSaleTarget] = useState<IPurchase | undefined>(undefined);
 
   const onClickMoveToUpdate = (rowId: string) => {
-    const selectedRow = productPackages.find((p) => p._id === rowId);
+    const selectedRow = purchase.find((p) => p._id === rowId);
     setUpdateTarget(selectedRow);
     setIsWriteOpen(true);
   };
@@ -67,7 +59,7 @@ export default function ReceivingUI({ uid }: IUserID) {
   };
 
   const onClickMoveToSale = (rowId: string) => {
-    const selectedRow = productPackages.find((p) => p._id === rowId);
+    const selectedRow = purchase.find((p) => p._id === rowId);
     setSaleTarget(selectedRow);
     setIsSaleOpen(true);
   };
@@ -76,39 +68,38 @@ export default function ReceivingUI({ uid }: IUserID) {
     <article className="px-10 py-6">
       {/* 테이블 */}
       <TableUI
-        data={productPackages}
+        data={purchase}
         columnConfig={columnConfig}
         setIsWriteOpen={setIsWriteOpen}
         setUpdateTarget={setUpdateTarget}
         onClickMoveToUpdate={onClickMoveToUpdate}
         onClickMoveToDelete={onClickMoveToDelete}
         onClickMoveToSale={onClickMoveToSale}
-        deleteProductPackage={deleteProductPackage}
+        deletePurchase={deletePurchase}
         createProduct={createProduct}
-        packagesLoading={packagesLoading}
+        fetchLoading={fetchLoading}
       />
 
       {/* 모달 */}
-      <ReceivingWrite
+      <WriteDialog
         uid={uid}
         form={form}
         isWriteOpen={isWriteOpen}
         setIsWriteOpen={setIsWriteOpen}
         updateTarget={updateTarget}
         setUpdateTarget={setUpdateTarget}
-        createProductPackage={createProductPackage}
-        updateProductPackage={updateProductPackage}
-        fetchProductPackages={fetchProductPackages}
+        createPurchase={createPurchase}
+        fetchPurchases={fetchPurchases}
       />
-      <ReceivingDelete form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteProductPackage={deleteProductPackage} />
-      <ReceivingSale
+      <DeleteDialog form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deletePurchase={deletePurchase} />
+      <SaleDialog
         uid={uid}
         isSaleOpen={isSaleOpen}
         setIsSaleOpen={setIsSaleOpen}
         saleTarget={saleTarget}
         setSaleTarget={setSaleTarget}
-        salesProductPackage={salesProductPackage}
-        fetchProductPackages={fetchProductPackages}
+        salesPurchase={salesPurchase}
+        fetchPurchases={fetchPurchases}
         createProduct={createProduct}
       />
     </article>

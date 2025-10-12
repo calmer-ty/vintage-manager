@@ -13,25 +13,25 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Form, FormField } from "@/components/ui/form";
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
-import ReceivingSelect from "../ReceivingSelect";
+import PurchaseSelect from "../PurchaseSelect";
 
 import { ShippingSchema } from "../schema";
 
-import type { ICreateProductParams, IPackage, ISalesPackage, ISalesPackageParams } from "@/types";
+import type { ICreateProductParams, IPurchase, ISalesPackage, ISalesPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 interface ISaleDialogProps {
   uid: string;
   isSaleOpen: boolean;
   setIsSaleOpen: Dispatch<SetStateAction<boolean>>;
-  saleTarget: IPackage | undefined;
-  setSaleTarget: Dispatch<SetStateAction<IPackage | undefined>>;
-  salesProductPackage: ({ updateTargetId, salesData }: ISalesPackageParams) => Promise<void>;
-  fetchProductPackages: () => Promise<void>;
+  saleTarget: IPurchase | undefined;
+  setSaleTarget: Dispatch<SetStateAction<IPurchase | undefined>>;
+  salesPurchase: ({ updateTargetId, salesData }: ISalesPackageParams) => Promise<void>;
+  fetchPurchases: () => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
 }
 
-export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesProductPackage, fetchProductPackages }: ISaleDialogProps) {
+export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget, setSaleTarget, createProduct, salesPurchase, fetchPurchases }: ISaleDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -73,9 +73,9 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
         addSaleAt: Timestamp.fromDate(new Date()),
       };
 
-      await salesProductPackage({ updateTargetId: saleTarget._id, salesData });
+      await fetchPurchases();
+      await salesPurchase({ updateTargetId: saleTarget._id, salesData });
       await createProduct({ uid, products: saleTarget.products });
-      await fetchProductPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
       setIsSaleOpen(false);
       form.reset();
@@ -133,7 +133,7 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
                           onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
                         />
                       </FormInputWrap>
-                      <ReceivingSelect
+                      <PurchaseSelect
                         onChange={(code) => {
                           const selected = exchangeOptions.find((opt) => opt.code === code);
                           if (selected) {
@@ -159,7 +159,7 @@ export default function SaleDialog({ uid, isSaleOpen, setIsSaleOpen, saleTarget,
                           onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
                         />
                       </FormInputWrap>
-                      <ReceivingSelect
+                      <PurchaseSelect
                         value={field.value.exchange}
                         onChange={(code) => {
                           const selected = exchangeOptions.find((opt) => opt.code === code);

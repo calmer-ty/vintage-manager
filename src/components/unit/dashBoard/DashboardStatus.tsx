@@ -5,22 +5,22 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck } from "lucide-react";
 
-import type { IProduct, IPackage } from "@/types";
+import type { IProduct, IPurchase } from "@/types";
 interface IDashBoardStatusProps {
   products: IProduct[];
-  productPackages: IPackage[];
+  purchase: IPurchase[];
 }
 
-export default function DashBoardStatus({ products, productPackages }: IDashBoardStatusProps) {
+export default function DashBoardStatus({ products, purchase }: IDashBoardStatusProps) {
   // soldAt null이 아닌 item 데이터들
   const soldProducts = products.filter((product) => product.soldAt !== null);
   const saleProducts = products.filter((product) => product.soldAt === null);
 
   // 합산된 패키지 배송비 계산
-  const totalShipping = productPackages.reduce((acc, val) => {
+  const totalShipping = purchase.reduce((acc, val) => {
     return acc + val.shipping.exchange.rate * val.shipping.amount;
   }, 0);
-  const totalFee = productPackages.reduce((acc, val) => {
+  const totalFee = purchase.reduce((acc, val) => {
     return acc + val.fee.exchange.rate * val.fee.amount;
   }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산

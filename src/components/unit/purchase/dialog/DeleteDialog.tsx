@@ -7,19 +7,19 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import type { PackageSchema } from "../schema";
+import type { PurchaseSchema } from "../schema";
 interface IDeleteDialogProps {
-  form: UseFormReturn<z.infer<typeof PackageSchema>>;
+  form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
-  deleteProductPackage: (packageIds: string[]) => Promise<void>;
+  deletePurchase: (packageIds: string[]) => Promise<void>;
 }
 
-export default function DeleteDialog({ form, isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteProductPackage }: IDeleteDialogProps) {
+export default function DeleteDialog({ form, isDeleteOpen, setIsDeleteOpen, deleteTargets, deletePurchase }: IDeleteDialogProps) {
   // 삭제 함수
   const onClickDelete = async () => {
-    await deleteProductPackage(deleteTargets);
+    await deletePurchase(deleteTargets);
 
     toast("🗑️ 선택한 항목이 삭제되었습니다.");
     setIsDeleteOpen(false);

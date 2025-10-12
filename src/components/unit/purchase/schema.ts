@@ -24,7 +24,7 @@ const ProductSchema = z.object({
   //   }
   // }),
 });
-export const PackageSchema = z.object({
+export const PurchaseSchema = z.object({
   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),
 });
 export const ShippingSchema = z.object({

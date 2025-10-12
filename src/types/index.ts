@@ -27,7 +27,7 @@ export interface IPrice {
 }
 
 // 패키지
-export interface IPackage {
+export interface IPurchase {
   _id: string; // 문서 id 값
   uid: string;
   currency: string;
@@ -64,18 +64,18 @@ export interface IUpdateProduct {
   salePrice: number;
   profit: number;
 }
-export interface IUpdateProducts {
-  products: IPackageProduct[];
-}
+// export interface IUpdateProducts {
+//   products: IPackageProduct[];
+// }
 
 // Hooks Params
-export interface ICreatePackageParams {
-  productPackage: IPackage;
+export interface ICreatePurchaseParams {
+  purchase: IPurchase;
 }
-export interface IUpdatePackageParams {
-  updateTargetId: string;
-  products: IUpdateProducts; // 패키지에서 수정할건 상품 데이터 뿐이기 때문
-}
+// export interface IUpdatePackageParams {
+//   updateTargetId: string;
+//   products: IUpdateProducts; // 패키지에서 수정할건 상품 데이터 뿐이기 때문
+// }
 export interface ISalesPackageParams {
   updateTargetId: string;
   salesData: ISalesPackage;

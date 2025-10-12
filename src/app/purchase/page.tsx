@@ -2,11 +2,11 @@
 
 import { useAuth } from "@/contexts/authContext";
 
-import ReceivingUI from "@/components/unit/receiving";
+import PurchaseUI from "@/components/unit/purchase";
 
 import { Loader } from "lucide-react";
 
-export default function ReceivingPage() {
+export default function PurchasePage() {
   const { loading, uid } = useAuth();
 
   if (loading) {
@@ -18,5 +18,5 @@ export default function ReceivingPage() {
     return <div>로그인이 필요합니다.</div>;
   }
 
-  return <ReceivingUI uid={uid} />;
+  return <PurchaseUI uid={uid} />;
 }

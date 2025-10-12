@@ -16,31 +16,31 @@ import TableItem from "./TableItem";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICreateProductParams, IPackage } from "@/types";
+import type { ICreateProductParams, IPurchase } from "@/types";
 interface IReceivingTableProps {
-  data: IPackage[];
+  data: IPurchase[];
   columnConfig: {
     key: string;
     label: string;
   }[];
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  setUpdateTarget: Dispatch<SetStateAction<IPackage | undefined>>;
+  setUpdateTarget: Dispatch<SetStateAction<IPurchase | undefined>>;
   onClickMoveToUpdate: (rowId: string) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
   onClickMoveToSale: (rowId: string) => void;
-  deleteProductPackage: (packageIds: string[]) => Promise<void>;
+  deletePurchase: (packageIds: string[]) => Promise<void>;
   createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
-  packagesLoading: boolean;
+  fetchLoading: boolean;
 }
 
-export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, packagesLoading }: IReceivingTableProps) {
+export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, fetchLoading }: IReceivingTableProps) {
   const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
 
   const [rowSelection, setRowSelection] = useState({});
 
-  const dynamicColumns: ColumnDef<IPackage>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<IPurchase>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
@@ -75,7 +75,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
       return <div className="capitalize">{String(value)}</div>;
     },
   }));
-  const columns: ColumnDef<IPackage>[] = [
+  const columns: ColumnDef<IPurchase>[] = [
     {
       id: "select",
       header: ({ table }) => {
@@ -177,7 +177,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
             <TableBody>
               {
                 // 로딩 중일 때
-                packagesLoading ? (
+                fetchLoading ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="text-center h-50">
                       <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />

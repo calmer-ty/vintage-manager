@@ -8,8 +8,8 @@ export const pages = [
     icon: Layout,
   },
   {
-    title: "입고관리",
-    url: "/receiving",
+    title: "매입관리",
+    url: "/purchase",
     icon: Package,
   },
   {

@@ -12,27 +12,26 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { PlusCircle, X } from "lucide-react";
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
+import PurchaseSelect2 from "../PurchaseSelect2";
 // import ReceivingSelect from "../ReceivingSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreatePackageParams, IPackage, IUpdatePackageParams, IUpdateProducts } from "@/types";
+import type { ICreatePurchaseParams, IPurchase } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
-import type { PackageSchema } from "../schema";
-import ReceivingSelect2 from "../ReceivingSelect2";
+import type { PurchaseSchema } from "../schema";
 interface IWriteDialogProps {
   uid: string;
-  form: UseFormReturn<z.infer<typeof PackageSchema>>;
+  form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  updateTarget: IPackage | undefined;
-  setUpdateTarget: Dispatch<SetStateAction<IPackage | undefined>>;
-  createProductPackage: ({ productPackage }: ICreatePackageParams) => Promise<void>;
-  updateProductPackage: ({ updateTargetId, products }: IUpdatePackageParams) => Promise<void>;
-  fetchProductPackages: () => Promise<void>;
+  updateTarget: IPurchase | undefined;
+  setUpdateTarget: Dispatch<SetStateAction<IPurchase | undefined>>;
+  createPurchase: ({ purchase }: ICreatePurchaseParams) => Promise<void>;
+  fetchPurchases: () => Promise<void>;
 }
 
-export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, updateTarget, setUpdateTarget, createProductPackage, updateProductPackage, fetchProductPackages }: IWriteDialogProps) {
+export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, updateTarget, setUpdateTarget, createPurchase, fetchPurchases }: IWriteDialogProps) {
   const isEdit = !!updateTarget;
 
   const { fields, append, remove } = useFieldArray({
@@ -48,9 +47,9 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
   const selectedExchange = exchangeOptions.find((opt) => opt.code === currency) ?? { code: "", label: "", rate: 0, krw: 0 };
 
   // 등록 함수
-  const onClickCreate = async (data: z.infer<typeof PackageSchema>) => {
+  const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
     try {
-      const productPackage = {
+      const purchase = {
         ...data,
         uid,
         _id: "",
@@ -72,8 +71,8 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
       };
 
       // 데이터 생성 및 리패치
-      await createProductPackage({ productPackage });
-      await fetchProductPackages();
+      await createPurchase({ purchase });
+      await fetchPurchases();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       toast("✅ 상품이 성공적으로 등록되었습니다.");
@@ -85,37 +84,37 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
   };
 
   // 수정 함수
-  const onClickUpdate = async (data: z.infer<typeof PackageSchema>) => {
-    if (!isEdit) return;
+  // const onClickUpdate = async (data: z.infer<typeof PurchaseSchema>) => {
+  //   if (!isEdit) return;
 
-    // 추후 개발 필요
-    // const hasChanges = Object.keys(form.formState.dirtyFields).length > 0;
-    // if (!hasChanges) {
-    //   toast("✨ 변경된 내용이 없습니다.");
-    //   return;
-    // }
+  // 추후 개발 필요
+  //   const hasChanges = Object.keys(form.formState.dirtyFields).length > 0;
+  //   if (!hasChanges) {
+  //     toast("✨ 변경된 내용이 없습니다.");
+  //     return;
+  //   }
 
-    try {
-      const products: IUpdateProducts = {
-        ...data,
-        products: data.products.map((p) => ({
-          ...p,
-          costPrice: { amount: p.costPrice.amount, exchange: selectedExchange },
-        })),
-      };
+  //   try {
+  //     const products: IUpdateProducts = {
+  //       ...data,
+  //       products: data.products.map((p) => ({
+  //         ...p,
+  //         costPrice: { amount: p.costPrice.amount, exchange: selectedExchange },
+  //       })),
+  //     };
 
-      // 데이터 수정 및 리패치
-      await updateProductPackage({ updateTargetId: updateTarget._id, products });
-      await fetchProductPackages();
+  //     // 데이터 수정 및 리패치
+  //     await updateProductPackage({ updateTargetId: updateTarget._id, products });
+  //     await fetchProductPackages();
 
-      toast("🔄 패키지가 성공적으로 수정되었습니다.");
-      setIsWriteOpen(false);
-      setUpdateTarget(undefined);
-      form.reset();
-    } catch (error) {
-      console.error("문서 추가 실패:", error);
-    }
-  };
+  //     toast("🔄 패키지가 성공적으로 수정되었습니다.");
+  //     setIsWriteOpen(false);
+  //     setUpdateTarget(undefined);
+  //     form.reset();
+  //   } catch (error) {
+  //     console.error("문서 추가 실패:", error);
+  //   }
+  // };
 
   // 상품 추가 버튼
   const onClickAddProduct = () => {
@@ -172,13 +171,13 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, up
     >
       <DialogContent className="max-w-120">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(isEdit ? onClickUpdate : onClickCreate)} className="flex flex-col gap-4">
+          <form onSubmit={form.handleSubmit(onClickCreate)} className="flex flex-col gap-4">
             <DialogHeader>
               <DialogTitle>패키지 {isEdit ? "수정" : "등록"}</DialogTitle>
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
-            <ReceivingSelect2
+            <PurchaseSelect2
               onChange={(code) => {
                 setCurrency(code);
               }}
