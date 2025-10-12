@@ -10,9 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import BasicTooltip from "@/components/commons/BasicTooltip";
+// import BasicTooltip from "@/components/commons/BasicTooltip";
+// import TableItem from "./TableItem";
 import TableControl from "./TableControl";
-import TableItem from "./TableItem";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
@@ -24,8 +24,6 @@ interface IReceivingTableProps {
     label: string;
   }[];
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  setUpdateTarget: Dispatch<SetStateAction<IPurchase | undefined>>;
-  onClickMoveToUpdate: (rowId: string) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
   onClickMoveToSale: (rowId: string) => void;
   deletePurchase: (packageIds: string[]) => Promise<void>;
@@ -33,8 +31,9 @@ interface IReceivingTableProps {
   fetchLoading: boolean;
 }
 
-export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, fetchLoading }: IReceivingTableProps) {
-  const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
+export default function ReceivingTable({ setIsWriteOpen, onClickMoveToDelete, onClickMoveToSale, data, columnConfig, fetchLoading }: IReceivingTableProps) {
+  // const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
 
@@ -55,22 +54,30 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
         return <div>-</div>;
       }
 
-      // 배송비 & 수수료
-      if (key === "shipping") {
-        return <span>{row.original.shipping.amount !== 0 ? `${row.original.shipping.amount.toLocaleString()} ${row.original.shipping.exchange.label}` : "-"}</span>;
-      }
-      if (key === "fee") {
-        return <span>{row.original.fee.amount !== 0 ? `${row.original.fee.amount.toLocaleString()} ${row.original.fee.exchange.label}` : "-"}</span>;
-      }
-
-      // products 일 때, 각 각 상품 정보 표시
-      if (key === "products") {
+      if (key === "costPrice") {
         return (
-          <div className="flex flex-col gap-1">
-            <TableItem currency={row.original.currency} products={row.original.products} />
-          </div>
+          <span>
+            {row.original.costPrice.amount} {row.original.costPrice.exchange.label}
+          </span>
         );
       }
+
+      // 배송비 & 수수료
+      // if (key === "shipping") {
+      //   return <span>{row.original.shipping.amount !== 0 ? `${row.original.shipping.amount.toLocaleString()} ${row.original.shipping.exchange.label}` : "-"}</span>;
+      // }
+      // if (key === "fee") {
+      //   return <span>{row.original.fee.amount !== 0 ? `${row.original.fee.amount.toLocaleString()} ${row.original.fee.exchange.label}` : "-"}</span>;
+      // }
+
+      // products 일 때, 각 각 상품 정보 표시
+      // if (key === "products") {
+      //   return (
+      //     <div className="flex flex-col gap-1">
+      //       <TableItem currency={row.original.currency} products={row.original.products} />
+      //     </div>
+      //   );
+      // }
 
       return <div className="capitalize">{String(value)}</div>;
     },
@@ -79,31 +86,31 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
     {
       id: "select",
       header: ({ table }) => {
-        const selectableRows = table.getRowModel().rows.filter((row) => !row.original.addSaleAt); // shipping이 없는 행만 선택 가능
-        const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
+        // const selectableRows = table.getRowModel().rows.filter((row) => !row.original.addSaleAt); // shipping이 없는 행만 선택 가능
+        // const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
 
         return (
           <Checkbox
-            // checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-            checked={allSelected}
+            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+            // checked={allSelected}
             onCheckedChange={(value) => {
-              // table.toggleAllPageRowsSelected(!!value)
-              selectableRows.forEach((row) => row.toggleSelected(!!value));
+              table.toggleAllPageRowsSelected(!!value);
+              // selectableRows.forEach((row) => row.toggleSelected(!!value));
             }}
             aria-label="Select all"
           />
         );
       },
-      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" disabled={!!row.original.addSaleAt} />,
+      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
       enableSorting: false,
       enableHiding: false,
     },
-    {
-      id: "shippingSort",
-      accessorFn: (row) => (row.shipping ? 1 : 0), // shipping 있으면 1, 없으면 0
-      enableSorting: true,
-      enableHiding: false, // shippingSort UI에서 숨김
-    },
+    // {
+    //   id: "shippingSort",
+    //   accessorFn: (row) => (row.shipping ? 1 : 0), // shipping 있으면 1, 없으면 0
+    //   enableSorting: true,
+    //   enableHiding: false, // shippingSort UI에서 숨김
+    // },
     ...dynamicColumns,
     {
       id: "actions",
@@ -119,19 +126,13 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
-                <div className="w-full">
-                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)} disabled={!!row.original.addSaleAt}>
-                    판매 등록
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.addSaleAt}>
-                    패키지 수정
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.addSaleAt}>
-                    패키지 삭제
-                  </DropdownMenuItem>
-                </div>
-              </BasicTooltip>
+              {/* <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}> */}
+              <div className="w-full">
+                <DropdownMenuItem>패키지 등록</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)}>판매 등록</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
+              </div>
+              {/* </BasicTooltip> */}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -197,7 +198,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToUpdate, on
                 ) : (
                   // 데이터가 있을 때
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.addSaleAt ? "bg-blue-50 text-blue-700" : ""}>
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}

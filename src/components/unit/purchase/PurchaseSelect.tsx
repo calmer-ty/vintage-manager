@@ -1,19 +1,17 @@
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { IExchange } from "@/types";
-
-interface IReceivingSelectProps {
-  onChange: (...event: unknown[]) => void;
-  value: IExchange;
+interface IPurchaseSelectProps {
+  onChange: (code: string) => void;
+  value: string;
   disabled?: boolean;
 }
 
-export default function ReceivingSelect({ onChange, value, disabled }: IReceivingSelectProps) {
+export default function PurchaseSelect({ onChange, value, disabled }: IPurchaseSelectProps) {
   return (
     <FormItem>
       <FormLabel className="opacity-0">통화</FormLabel>
-      <Select onValueChange={onChange} value={value?.code} disabled={disabled}>
+      <Select onValueChange={onChange} value={value} disabled={disabled}>
         <FormControl>
           <SelectTrigger className="bg-white min-w-32">
             <SelectValue placeholder="당신의 통화" />

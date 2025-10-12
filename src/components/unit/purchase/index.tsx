@@ -19,10 +19,12 @@ import type { z } from "zod";
 
 const columnConfig = [
   { key: "createdAt", label: "패키지 등록 일자" },
-  { key: "addSaleAt", label: "판매 등록 일자" },
-  { key: "shipping", label: "배송비" },
-  { key: "fee", label: "수수료" },
-  { key: "products", label: "개별 상품명 / 매입가" },
+  { key: "name", label: "상품명" },
+  { key: "brand", label: "브랜드명" },
+  { key: "costPrice", label: "매입가" },
+  // { key: "addSaleAt", label: "판매 등록 일자" },
+  // { key: "shipping", label: "배송비" },
+  // { key: "fee", label: "수수료" },
 ];
 
 export default function PurchaseUI({ uid }: IUserID) {
@@ -34,24 +36,19 @@ export default function PurchaseUI({ uid }: IUserID) {
   const form = useForm<z.infer<typeof PurchaseSchema>>({
     resolver: zodResolver(PurchaseSchema),
     defaultValues: {
-      products: [{ name: "", brand: "", costPrice: { amount: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } } }],
+      name: "",
+      brand: "",
+      costPrice: { amount: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
     },
   });
 
   // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IPurchase | undefined>(undefined);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
   const [isSaleOpen, setIsSaleOpen] = useState(false);
   const [saleTarget, setSaleTarget] = useState<IPurchase | undefined>(undefined);
-
-  const onClickMoveToUpdate = (rowId: string) => {
-    const selectedRow = purchase.find((p) => p._id === rowId);
-    setUpdateTarget(selectedRow);
-    setIsWriteOpen(true);
-  };
 
   const onClickMoveToDelete = (rowIds: string[]) => {
     setDeleteTargets(rowIds);
@@ -71,8 +68,6 @@ export default function PurchaseUI({ uid }: IUserID) {
         data={purchase}
         columnConfig={columnConfig}
         setIsWriteOpen={setIsWriteOpen}
-        setUpdateTarget={setUpdateTarget}
-        onClickMoveToUpdate={onClickMoveToUpdate}
         onClickMoveToDelete={onClickMoveToDelete}
         onClickMoveToSale={onClickMoveToSale}
         deletePurchase={deletePurchase}
@@ -81,16 +76,7 @@ export default function PurchaseUI({ uid }: IUserID) {
       />
 
       {/* 모달 */}
-      <WriteDialog
-        uid={uid}
-        form={form}
-        isWriteOpen={isWriteOpen}
-        setIsWriteOpen={setIsWriteOpen}
-        updateTarget={updateTarget}
-        setUpdateTarget={setUpdateTarget}
-        createPurchase={createPurchase}
-        fetchPurchases={fetchPurchases}
-      />
+      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createPurchase={createPurchase} fetchPurchases={fetchPurchases} />
       <DeleteDialog form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deletePurchase={deletePurchase} />
       <SaleDialog
         uid={uid}

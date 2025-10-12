@@ -30,12 +30,15 @@ export interface IPrice {
 export interface IPurchase {
   _id: string; // 문서 id 값
   uid: string;
-  currency: string;
-  products: IPackageProduct[];
-  shipping: IPrice;
-  fee: IPrice;
+  name: string;
+  brand: string;
+  costPrice: IPrice;
   createdAt: Timestamp;
-  addSaleAt: Timestamp | null;
+  // products: IPackageProduct[];
+  // currency: string;
+  // shipping: IPrice;
+  // fee: IPrice;
+  // addSaleAt: Timestamp | null;
 }
 export interface ISalesPackage {
   shipping: IPrice;
