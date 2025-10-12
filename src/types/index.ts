@@ -1,5 +1,6 @@
 import type { Timestamp } from "firebase/firestore";
 
+// API 타입
 export interface IExchangeRate {
   base: string;
   data: {
@@ -12,6 +13,8 @@ export interface IExchangeRate {
   };
   time_last_update_utc: string;
 }
+
+// 기본 // API 타입
 export interface IUserID {
   uid: string;
 }
@@ -26,19 +29,15 @@ export interface IPrice {
   exchange: IExchange;
 }
 
-// 패키지
-export interface IPurchase {
+// 매입 // API 타입
+export interface IPurchaseSingle {
   _id: string; // 문서 id 값
   uid: string;
   name: string;
   brand: string;
   costPrice: IPrice;
   createdAt: Timestamp;
-  // products: IPackageProduct[];
-  // currency: string;
-  // shipping: IPrice;
-  // fee: IPrice;
-  // addSaleAt: Timestamp | null;
+  isBundle: boolean;
 }
 export interface ISalesPackage {
   shipping: IPrice;
@@ -72,8 +71,8 @@ export interface IUpdateProduct {
 // }
 
 // Hooks Params
-export interface ICreateSingleParams {
-  purchaseDoc: IPurchase;
+export interface ICreatePurchaseSingleParams {
+  purchaseDoc: IPurchaseSingle;
 }
 // export interface IUpdatePackageParams {
 //   updateTargetId: string;

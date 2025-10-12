@@ -13,13 +13,13 @@ interface IDeleteDialogProps {
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
-  deleteSingle: (packageIds: string[]) => Promise<void>;
+  deletePurchaseSingle: (packageIds: string[]) => Promise<void>;
 }
 
-export default function DeleteDialog({ form, isDeleteOpen, setIsDeleteOpen, deleteTargets, deleteSingle }: IDeleteDialogProps) {
+export default function DeleteDialog({ form, isDeleteOpen, setIsDeleteOpen, deleteTargets, deletePurchaseSingle }: IDeleteDialogProps) {
   // 삭제 함수
   const onClickDelete = async () => {
-    await deleteSingle(deleteTargets);
+    await deletePurchaseSingle(deleteTargets);
 
     toast("🗑️ 선택한 항목이 삭제되었습니다.");
     setIsDeleteOpen(false);

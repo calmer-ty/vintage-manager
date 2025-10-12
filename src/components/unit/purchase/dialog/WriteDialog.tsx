@@ -14,7 +14,7 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreateSingleParams } from "@/types";
+import type { ICreatePurchaseSingleParams } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 interface IWriteDialogProps {
@@ -22,11 +22,11 @@ interface IWriteDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  createSingle: ({ purchaseDoc }: ICreateSingleParams) => Promise<void>;
-  fetchSingle: () => Promise<void>;
+  createPurchaseSingle: ({ purchaseDoc }: ICreatePurchaseSingleParams) => Promise<void>;
+  fetchPurchaseSingle: () => Promise<void>;
 }
 
-export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, createSingle, fetchSingle }: IWriteDialogProps) {
+export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, createPurchaseSingle, fetchPurchaseSingle }: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -43,11 +43,12 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
         _id: "",
         costPrice: { amount: data.costPrice.amount, exchange: selectedExchange },
         createdAt: Timestamp.fromDate(new Date()),
+        isBundle: false,
       };
 
       // 데이터 생성 및 리패치
-      await createSingle({ purchaseDoc });
-      await fetchSingle();
+      await createPurchaseSingle({ purchaseDoc });
+      await fetchPurchaseSingle();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       toast("✅ 상품이 성공적으로 등록되었습니다.");

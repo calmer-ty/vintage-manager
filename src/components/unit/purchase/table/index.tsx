@@ -16,9 +16,9 @@ import TableControl from "./TableControl";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICreateProductParams, IPurchase } from "@/types";
+import type { ICreateProductParams, IPurchaseSingle } from "@/types";
 interface IReceivingTableProps {
-  data: IPurchase[];
+  data: IPurchaseSingle[];
   columnConfig: {
     key: string;
     label: string;
@@ -38,7 +38,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToDelete, on
 
   const [rowSelection, setRowSelection] = useState({});
 
-  const dynamicColumns: ColumnDef<IPurchase>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<IPurchaseSingle>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
@@ -81,7 +81,7 @@ export default function ReceivingTable({ setIsWriteOpen, onClickMoveToDelete, on
       return <div className="capitalize">{String(value)}</div>;
     },
   }));
-  const columns: ColumnDef<IPurchase>[] = [
+  const columns: ColumnDef<IPurchaseSingle>[] = [
     {
       id: "select",
       header: ({ table }) => {

@@ -14,7 +14,7 @@ import SaleDialog from "./dialog/SaleDialog";
 
 import { PurchaseSchema } from "./schema";
 
-import type { IPurchase, IUserID } from "@/types";
+import type { IPurchaseSingle, IUserID } from "@/types";
 import type { z } from "zod";
 
 const columnConfig = [
@@ -29,7 +29,7 @@ const columnConfig = [
 
 export default function PurchaseUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { purchase, createSingle, salesPurchase, deleteSingle, fetchSingle, fetchLoading } = usePurchase({ uid, selectedYear, selectedMonth });
+  const { purchase, createPurchaseSingle, salesPurchase, deletePurchaseSingle, fetchPurchaseSingle, fetchLoading } = usePurchase({ uid, selectedYear, selectedMonth });
   const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
   // ✍️ 폼 설정
@@ -48,7 +48,7 @@ export default function PurchaseUI({ uid }: IUserID) {
   const [deleteTargets, setDeleteTargets] = useState<string[]>([]);
 
   const [isSaleOpen, setIsSaleOpen] = useState(false);
-  const [saleTarget, setSaleTarget] = useState<IPurchase | undefined>(undefined);
+  const [saleTarget, setSaleTarget] = useState<IPurchaseSingle | undefined>(undefined);
 
   const onClickMoveToDelete = (rowIds: string[]) => {
     setDeleteTargets(rowIds);
@@ -75,8 +75,8 @@ export default function PurchaseUI({ uid }: IUserID) {
       />
 
       {/* 모달 */}
-      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createSingle={createSingle} fetchSingle={fetchSingle} />
-      <DeleteDialog form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deleteSingle={deleteSingle} />
+      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createPurchaseSingle={createPurchaseSingle} fetchPurchaseSingle={fetchPurchaseSingle} />
+      <DeleteDialog form={form} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deletePurchaseSingle={deletePurchaseSingle} />
       <SaleDialog
         uid={uid}
         isSaleOpen={isSaleOpen}
@@ -84,7 +84,7 @@ export default function PurchaseUI({ uid }: IUserID) {
         saleTarget={saleTarget}
         setSaleTarget={setSaleTarget}
         salesPurchase={salesPurchase}
-        fetchSingle={fetchSingle}
+        fetchPurchaseSingle={fetchPurchaseSingle}
         createProduct={createProduct}
       />
     </article>

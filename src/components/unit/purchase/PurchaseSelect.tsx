@@ -1,13 +1,13 @@
 import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface IPurchaseSelectProps {
+interface IPurchaseSingleSelectProps {
   onChange: (code: string) => void;
   value: string;
   disabled?: boolean;
 }
 
-export default function PurchaseSelect({ onChange, value, disabled }: IPurchaseSelectProps) {
+export default function PurchaseSelect({ onChange, value, disabled }: IPurchaseSingleSelectProps) {
   return (
     <FormItem>
       <FormLabel className="opacity-0">통화</FormLabel>

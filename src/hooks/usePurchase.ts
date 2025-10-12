@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateSingleParams, IPurchase, ISalesPackageParams } from "@/types";
+import type { ICreatePurchaseSingleParams, IPurchaseSingle, ISalesPackageParams } from "@/types";
 interface IUsePurchaseParams {
   uid: string;
   selectedYear: number;
@@ -12,11 +12,11 @@ interface IUsePurchaseParams {
 }
 
 export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchaseParams) => {
-  const [purchase, setPurchase] = useState<IPurchase[]>([]);
+  const [purchase, setPurchase] = useState<IPurchaseSingle[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
 
   // [등록]
-  const createSingle = async ({ purchaseDoc }: ICreateSingleParams) => {
+  const createPurchaseSingle = async ({ purchaseDoc }: ICreatePurchaseSingleParams) => {
     if (!uid) return;
 
     try {
@@ -65,7 +65,7 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
   };
 
   // [삭제]
-  const deleteSingle = async (itemIds: string[]) => {
+  const deletePurchaseSingle = async (itemIds: string[]) => {
     if (!uid) return;
 
     for (const id of itemIds) {
@@ -75,11 +75,11 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
         console.error(`ID ${id} 삭제 실패`, error);
       }
     }
-    await fetchSingle();
+    await fetchPurchaseSingle();
   };
 
   // 조회 함수
-  const fetchSingle = useCallback(async () => {
+  const fetchPurchaseSingle = useCallback(async () => {
     if (!uid) return;
     setFetchLoading(true);
 
@@ -93,7 +93,7 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
         ...doc.data(),
       }));
 
-      setPurchase(dataArray as IPurchase[]);
+      setPurchase(dataArray as IPurchaseSingle[]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -102,15 +102,15 @@ export const usePurchase = ({ uid, selectedYear, selectedMonth }: IUsePurchasePa
   }, [uid, selectedYear, selectedMonth]);
 
   useEffect(() => {
-    fetchSingle();
-  }, [fetchSingle]);
+    fetchPurchaseSingle();
+  }, [fetchPurchaseSingle]);
 
   return {
     purchase,
-    createSingle,
+    createPurchaseSingle,
+    deletePurchaseSingle,
+    fetchPurchaseSingle,
     salesPurchase,
-    deleteSingle,
-    fetchSingle,
     fetchLoading,
   };
 };
