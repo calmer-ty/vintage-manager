@@ -28,7 +28,7 @@ export default function TableControl({ table, columnConfig, onClickMoveToCreate,
     <div className="flex justify-between items-center gap-2 w-full py-3">
       <div className="flex items-center gap-2">
         <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToDelete(selectedIds)}>
-          <span className="hidden sm:block">상품 선택 폐기</span>
+          <span className="hidden sm:block">상품 폐기</span>
           <Trash
             className="w-4 h-4 
               block sm:hidden"

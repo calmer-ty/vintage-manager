@@ -10,19 +10,20 @@ const exchangeSchema = z.object({
 export const PurchaseSchema = z.object({
   name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),
   brand: z.string(),
-  costPrice: z.object({
-    amount: z.number(),
-    exchange: exchangeSchema,
-  }),
-  // .superRefine((val, ctx) => {
-  //   if (!val.amount || !val.exchange.code) {
-  //     ctx.addIssue({
-  //       code: "custom",
-  //       path: [],
-  //       message: "매입가와 사용된 통화를 모두 입력해주세요.",
-  //     });
-  //   }
-  // }),
+  costPrice: z
+    .object({
+      amount: z.number().min(1, "가격은 1 이상이어야 합니다."),
+      exchange: exchangeSchema,
+    })
+    .superRefine((val, ctx) => {
+      if (!val.amount || !val.exchange.code) {
+        ctx.addIssue({
+          code: "custom",
+          path: [],
+          message: "매입가와 사용된 통화를 모두 입력해주세요.",
+        });
+      }
+    }),
 });
 // export const PurchaseSchema = z.object({
 //   products: z.array(ProductSchema).min(1, "상품을 최소 1개 입력해주세요."),

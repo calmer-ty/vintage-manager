@@ -30,7 +30,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
-  // 사용할 화폐
+  // 데이터베이스로 넘겨줄 화폐
   const [currency, setCurrency] = useState("USD");
   const selectedExchange = exchangeOptions.find((opt) => opt.code === currency) ?? { code: "", label: "", rate: 0, krw: 0 };
 
@@ -87,12 +87,6 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
               <DialogDescription>패키지 정보를 입력하고 등록하세요.</DialogDescription>
             </DialogHeader>
 
-            <PurchaseSelect
-              onChange={(code) => {
-                setCurrency(code);
-              }}
-              value={currency}
-            />
             <div className="flex-1 overflow-y-auto max-h-100">
               <h3 className="flex justify-between items-center mb-4 px-3 py-1 border-t bg-gray-200">
                 <span className="text-sm font-bold">매입 상품</span>
@@ -117,6 +111,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                     </FormInputWrap>
                   )}
                 />
+
                 <FormField
                   control={form.control}
                   name="costPrice"
@@ -131,6 +126,16 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                           onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
                         />
                       </FormInputWrap>
+                      <PurchaseSelect
+                        onChange={(code) => {
+                          setCurrency(code);
+                          const selected = exchangeOptions.find((opt) => opt.code === code);
+                          if (currency) {
+                            field.onChange({ ...field.value, exchange: selected });
+                          }
+                        }}
+                        value={field.value.exchange}
+                      />
                     </div>
                   )}
                 ></FormField>
