@@ -4,16 +4,16 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Settings } from "lucide-react";
 
-import type { IPurchasePackage } from "@/types";
+import type { IPackage } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface ITableControlProps {
-  table: Table<IPurchasePackage>;
+  table: Table<IPackage>;
   columnConfig: {
     key: string;
     label: string;
   }[];
   onClickMoveToCreate: () => void;
-  onClickMoveToMerge: (rowData: IPurchasePackage[]) => void;
+  onClickMoveToMerge: (rowData: IPackage[]) => void;
   onClickMoveToDelete: (selectedPurchasesId: string[]) => void;
 }
 

@@ -18,19 +18,19 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import { ShippingSchema } from "../schema";
 
-import type { ICreateProductParams, IPurchasePackage, ISalesPackage, ISalesPackageParams } from "@/types";
+import type { ICreateProductParams, IPackage, ISalesDoc, ISalesPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 interface ISaleDialogProps {
   isSaleOpen: boolean;
   setIsSaleOpen: Dispatch<SetStateAction<boolean>>;
-  salesTarget: IPurchasePackage | undefined;
-  fetchPurchasePackages: () => Promise<void>;
+  salesTarget: IPackage | undefined;
+  fetchPackages: () => Promise<void>;
   salesPackage: ({ salesTarget, salesDoc }: ISalesPackageParams) => Promise<void>;
   createProduct: ({ products }: ICreateProductParams) => Promise<void>;
 }
 
-export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, salesPackage, fetchPurchasePackages, createProduct }: ISaleDialogProps) {
+export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, salesPackage, fetchPackages, createProduct }: ISaleDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -53,7 +53,7 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
     }
 
     try {
-      const salesDoc: ISalesPackage = {
+      const salesDoc: ISalesDoc = {
         shipping: {
           amount: data.shipping.amount,
           exchange: data.shipping.exchange,
@@ -63,7 +63,7 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
 
       await salesPackage({ salesTarget: salesTarget._id, salesDoc });
       await createProduct({ products: salesTarget.products });
-      await fetchPurchasePackages();
+      await fetchPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
       setIsSaleOpen(false);
       form.reset();

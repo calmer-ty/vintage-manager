@@ -10,7 +10,7 @@ import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
-import type { IMergePurchasePackageParams, IPurchasePackage } from "@/types";
+import type { IMergePackageParams, IPackage } from "@/types";
 import type { RowSelectionState } from "@tanstack/react-table";
 interface IMergeDialogProps {
   uid: string;
@@ -18,11 +18,11 @@ interface IMergeDialogProps {
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isMergeOpen: boolean;
   setIsMergeOpen: Dispatch<SetStateAction<boolean>>;
-  mergeTargets: IPurchasePackage[];
-  mergePurchasePackage: ({ packageDoc }: IMergePurchasePackageParams) => Promise<void>;
+  mergeTargets: IPackage[];
+  mergePackage: ({ packageDoc }: IMergePackageParams) => Promise<void>;
 }
 
-export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, setIsMergeOpen, mergeTargets, mergePurchasePackage }: IMergeDialogProps) {
+export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, setIsMergeOpen, mergeTargets, mergePackage }: IMergeDialogProps) {
   const mergeTargetIds = mergeTargets.map((target) => target._id);
   const mergeTargetProducts = mergeTargets.flatMap((target) => target.products);
   // console.log("mergeTargets: ", mergeTargets);
@@ -38,7 +38,7 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
       };
 
       // 데이터 생성 및 리패치
-      await mergePurchasePackage({ deleteTargets: mergeTargetIds, packageDoc });
+      await mergePackage({ deleteTargets: mergeTargetIds, packageDoc });
       // await createPurchaseBundle({ purchaseDoc: bundleItem });
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기

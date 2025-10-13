@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProducts } from "@/hooks/useProducts";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
-import { usePurchasePackage } from "@/hooks/usePurchasePackage";
+import { usePackage } from "@/hooks/usePackage";
 
 import TableUI from "./table";
 import WriteDialog from "./dialog/WriteDialog";
@@ -15,7 +15,7 @@ import MergeDialog from "./dialog/MergeDialog";
 
 import { PurchaseSchema } from "./schema";
 
-import type { IPurchasePackage, IUserID } from "@/types";
+import type { IPackage, IUserID } from "@/types";
 import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";
 
@@ -28,7 +28,7 @@ const columnConfig = [
 
 export default function PurchaseUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { purchasePackages, createPurchasePackage, mergePurchasePackage, salesPackage, deletePurchasePackage, fetchPurchasePackages, fetchLoading } = usePurchasePackage({
+  const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackage({
     uid,
     selectedYear,
     selectedMonth,
@@ -57,10 +57,10 @@ export default function PurchaseUI({ uid }: IUserID) {
 
   // 묶음 스테이트
   const [isMergeOpen, setIsMergeOpen] = useState(false);
-  const [mergeTargets, setMergeTargets] = useState<IPurchasePackage[]>([]);
+  const [mergeTargets, setMergeTargets] = useState<IPackage[]>([]);
 
   const [isSaleOpen, setIsSaleOpen] = useState(false);
-  const [salesTarget, setSalesTarget] = useState<IPurchasePackage>();
+  const [salesTarget, setSalesTarget] = useState<IPackage>();
 
   // 테이블 스테이트
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -68,11 +68,11 @@ export default function PurchaseUI({ uid }: IUserID) {
   const onClickMoveToCreate = () => {
     setIsWriteOpen(true);
   };
-  const onClickMoveToMerge = (rowData: IPurchasePackage[]) => {
+  const onClickMoveToMerge = (rowData: IPackage[]) => {
     setIsMergeOpen(true);
     setMergeTargets(rowData);
   };
-  const onClickMoveToSale = (rowData: IPurchasePackage) => {
+  const onClickMoveToSale = (rowData: IPackage) => {
     setIsSaleOpen(true);
     setSalesTarget(rowData);
   };
@@ -85,7 +85,7 @@ export default function PurchaseUI({ uid }: IUserID) {
     <article className="px-10 py-6">
       {/* 테이블 */}
       <TableUI
-        data={purchasePackages}
+        data={packages}
         columnConfig={columnConfig}
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
@@ -98,32 +98,10 @@ export default function PurchaseUI({ uid }: IUserID) {
       />
 
       {/* 모달 */}
-      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createPurchasePackage={createPurchasePackage} fetchPurchasePackages={fetchPurchasePackages} />
-      <DeleteDialog
-        form={form}
-        setRowSelection={setRowSelection}
-        isDeleteOpen={isDeleteOpen}
-        setIsDeleteOpen={setIsDeleteOpen}
-        deleteTargets={deleteTargets}
-        deletePurchasePackage={deletePurchasePackage}
-      />
-      <MergeDialog
-        uid={uid}
-        form={form}
-        setRowSelection={setRowSelection}
-        isMergeOpen={isMergeOpen}
-        setIsMergeOpen={setIsMergeOpen}
-        mergeTargets={mergeTargets}
-        mergePurchasePackage={mergePurchasePackage}
-      />
-      <SaleDialog
-        isSaleOpen={isSaleOpen}
-        setIsSaleOpen={setIsSaleOpen}
-        salesTarget={salesTarget}
-        salesPackage={salesPackage}
-        fetchPurchasePackages={fetchPurchasePackages}
-        createProduct={createProduct}
-      />
+      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createPackage={createPackage} fetchPackages={fetchPackages} />
+      <DeleteDialog form={form} setRowSelection={setRowSelection} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deletePackage={deletePackage} />
+      <MergeDialog uid={uid} form={form} setRowSelection={setRowSelection} isMergeOpen={isMergeOpen} setIsMergeOpen={setIsMergeOpen} mergeTargets={mergeTargets} mergePackage={mergePackage} />
+      <SaleDialog isSaleOpen={isSaleOpen} setIsSaleOpen={setIsSaleOpen} salesTarget={salesTarget} salesPackage={salesPackage} fetchPackages={fetchPackages} createProduct={createProduct} />
     </article>
   );
 }

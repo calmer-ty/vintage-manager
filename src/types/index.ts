@@ -30,31 +30,21 @@ export interface IPrice {
 }
 
 // 매입 타입
-export interface IPurchaseItem {
+export interface IPurchaseProduct {
   _id: string; // 문서 id 값
   uid: string;
   name: string;
   brand: string;
   costPrice: IPrice;
 }
-export interface IPurchasePackage {
+export interface IPackage {
   _id: string; // 문서 id 값
   uid: string;
-  products: IPurchaseItem[];
+  products: IPurchaseProduct[];
   createdAt: Timestamp;
 }
 
-export interface ISalesPackage {
-  shipping: IPrice;
-  addSaleAt: Timestamp;
-}
-
 // 상품
-// export interface IPackageProduct {
-//   name: string;
-//   brand: string;
-//   costPrice: IPrice;
-// }
 export interface IProduct {
   uid: string;
   _id: string;
@@ -66,29 +56,35 @@ export interface IProduct {
   soldAt: Timestamp | null;
   createdAt: Timestamp;
 }
+
+// 업데이트 타입
 export interface IUpdateProduct {
   salePrice: number;
   profit: number;
+}
+export interface ISalesDoc {
+  shipping: IPrice;
+  addSaleAt: Timestamp;
 }
 
 // Hooks Params
 
 // 패키지
-export interface ICreatePurchasePackageParams {
-  packageDoc: IPurchasePackage;
+export interface ICreatePackageParams {
+  packageDoc: IPackage;
 }
-export interface IMergePurchasePackageParams {
+export interface IMergePackageParams {
   deleteTargets: string[];
-  packageDoc: IPurchasePackage;
+  packageDoc: IPackage;
 }
 export interface ISalesPackageParams {
   salesTarget: string;
-  salesDoc: ISalesPackage;
+  salesDoc: ISalesDoc;
 }
 
 // 상품
 export interface ICreateProductParams {
-  products: IPurchaseItem[];
+  products: IPurchaseProduct[];
 }
 export interface IUpdateProductParams {
   targetId: string;

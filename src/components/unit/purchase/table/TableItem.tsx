@@ -7,9 +7,9 @@ import { ChevronsUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-import type { IPurchaseItem } from "@/types";
+import type { IPurchaseProduct } from "@/types";
 interface ITableItemProps {
-  products: IPurchaseItem[];
+  products: IPurchaseProduct[];
 }
 
 export default function TableItem({ products }: ITableItemProps) {

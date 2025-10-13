@@ -4,23 +4,23 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreatePurchasePackageParams, IMergePurchasePackageParams, IPurchasePackage, ISalesPackageParams } from "@/types";
-interface IUsePurchasePackageParams {
+import type { ICreatePackageParams, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
+interface IUsePackageParams {
   uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
-export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePurchasePackageParams) => {
-  const [purchasePackages, setPurchasePackages] = useState<IPurchasePackage[]>([]);
+export const usePackage = ({ uid, selectedYear, selectedMonth }: IUsePackageParams) => {
+  const [packages, setPackages] = useState<IPackage[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
 
   // [등록]
-  const createPurchasePackage = async ({ packageDoc }: ICreatePurchasePackageParams) => {
+  const createPackage = async ({ packageDoc }: ICreatePackageParams) => {
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "purchasePackage"), { ...packageDoc });
+      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc });
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
@@ -31,11 +31,11 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
     }
   };
   // [번들 등록]
-  const mergePurchasePackage = async ({ deleteTargets, packageDoc }: IMergePurchasePackageParams) => {
+  const mergePackage = async ({ deleteTargets, packageDoc }: IMergePackageParams) => {
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "purchasePackage"), { ...packageDoc });
+      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc });
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
         _id: docRef.id,
@@ -44,7 +44,7 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
       // 머지된 데이터는 삭제
       for (const id of deleteTargets) {
         try {
-          await deleteDoc(doc(db, "purchasePackage", id));
+          await deleteDoc(doc(db, "packages", id));
         } catch (error) {
           console.error(`ID ${id} 삭제 실패`, error);
         }
@@ -60,7 +60,7 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
 
   //   try {
   //     for (const id of updateTargetIds) {
-  //       const docRef = doc(db, "purchasePackage", id);
+  //       const docRef = doc(db, "packages", id);
   //       await updateDoc(docRef, { isBundled: true });
   //     }
   //   } catch (err) {
@@ -86,7 +86,7 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
     if (!uid) return;
 
     try {
-      const docRef = doc(db, "purchasePackage", salesTarget);
+      const docRef = doc(db, "packages", salesTarget);
 
       await updateDoc(docRef, { ...salesDoc });
     } catch (err) {
@@ -95,27 +95,27 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
   };
 
   // [삭제]
-  const deletePurchasePackage = async (itemIds: string[]) => {
+  const deletePackage = async (itemIds: string[]) => {
     if (!uid) return;
 
     for (const id of itemIds) {
       try {
-        await deleteDoc(doc(db, "purchasePackage", id));
+        await deleteDoc(doc(db, "packages", id));
       } catch (error) {
         console.error(`ID ${id} 삭제 실패`, error);
       }
     }
-    await fetchPurchasePackages();
+    await fetchPackages();
   };
 
   // 조회 함수
-  const fetchPurchasePackages = useCallback(async () => {
+  const fetchPackages = useCallback(async () => {
     if (!uid) return;
     setFetchLoading(true);
 
     try {
       // 년/월 데이터를 제한하여 한정적으로 데이터 쿼리
-      const q = getUserDateQuery(uid, "purchasePackage", selectedYear, selectedMonth);
+      const q = getUserDateQuery(uid, "packages", selectedYear, selectedMonth);
 
       const querySnapshot = await getDocs(q);
       const dataArray = querySnapshot.docs.map((doc) => ({
@@ -123,7 +123,7 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
         ...doc.data(),
       }));
 
-      setPurchasePackages(dataArray as IPurchasePackage[]);
+      setPackages(dataArray as IPackage[]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -132,16 +132,16 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
   }, [uid, selectedYear, selectedMonth]);
 
   useEffect(() => {
-    fetchPurchasePackages();
-  }, [fetchPurchasePackages]);
+    fetchPackages();
+  }, [fetchPackages]);
 
   return {
-    purchasePackages,
-    createPurchasePackage,
-    mergePurchasePackage,
+    packages,
+    createPackage,
+    mergePackage,
     salesPackage,
-    deletePurchasePackage,
-    fetchPurchasePackages,
+    deletePackage,
+    fetchPackages,
     fetchLoading,
   };
 };

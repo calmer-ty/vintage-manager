@@ -16,9 +16,9 @@ import TableControl from "./TableControl";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, RowSelectionState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICreateProductParams, IPurchasePackage } from "@/types";
+import type { ICreateProductParams, IPackage } from "@/types";
 interface IReceivingTableProps {
-  data: IPurchasePackage[];
+  data: IPackage[];
   columnConfig: {
     key: string;
     label: string;
@@ -26,8 +26,8 @@ interface IReceivingTableProps {
   rowSelection: RowSelectionState;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   onClickMoveToCreate: () => void;
-  onClickMoveToMerge: (rowData: IPurchasePackage[]) => void;
-  onClickMoveToSale: (rowData: IPurchasePackage) => void;
+  onClickMoveToMerge: (rowData: IPackage[]) => void;
+  onClickMoveToSale: (rowData: IPackage) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
   createProduct: ({ products }: ICreateProductParams) => Promise<void>;
   fetchLoading: boolean;
@@ -49,7 +49,7 @@ export default function ReceivingTable({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({ shippingSort: false }); // shippingSort 컬럼 숨기기
 
-  const dynamicColumns: ColumnDef<IPurchasePackage>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<IPackage>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
@@ -92,7 +92,7 @@ export default function ReceivingTable({
       return <div className="capitalize">{String(value)}</div>;
     },
   }));
-  const columns: ColumnDef<IPurchasePackage>[] = [
+  const columns: ColumnDef<IPackage>[] = [
     {
       id: "select",
       header: ({ table }) => {

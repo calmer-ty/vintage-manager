@@ -15,7 +15,7 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreatePurchasePackageParams } from "@/types";
+import type { ICreatePackageParams } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 interface IWriteDialogProps {
@@ -23,11 +23,11 @@ interface IWriteDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  createPurchasePackage: ({ packageDoc }: ICreatePurchasePackageParams) => Promise<void>;
-  fetchPurchasePackages: () => Promise<void>;
+  createPackage: ({ packageDoc }: ICreatePackageParams) => Promise<void>;
+  fetchPackages: () => Promise<void>;
 }
 
-export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, createPurchasePackage, fetchPurchasePackages }: IWriteDialogProps) {
+export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, createPackage, fetchPackages }: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -51,8 +51,8 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
       };
 
       // 데이터 생성 및 리패치
-      await createPurchasePackage({ packageDoc });
-      await fetchPurchasePackages();
+      await createPackage({ packageDoc });
+      await fetchPackages();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       toast("✅ 상품이 성공적으로 등록되었습니다.");
