@@ -20,15 +20,31 @@ interface IMergeDialogProps {
   setIsMergeOpen: Dispatch<SetStateAction<boolean>>;
   mergeTargets: IPackage[];
   mergePackage: ({ packageDoc }: IMergePackageParams) => Promise<void>;
+  fetchPackages: () => Promise<void>;
 }
 
-export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, setIsMergeOpen, mergeTargets, mergePackage }: IMergeDialogProps) {
+export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, setIsMergeOpen, mergeTargets, mergePackage, fetchPackages }: IMergeDialogProps) {
   const mergeTargetIds = mergeTargets.map((target) => target._id);
   const mergeTargetProducts = mergeTargets.flatMap((target) => target.products);
-  // console.log("mergeTargets: ", mergeTargets);
-  // console.log("mergeTargetProducts: ", mergeTargetProducts);
 
   const onClickMerge = async () => {
+    // 다른 화폐로 결제된 패키지끼리 묶을 때 취소 처리
+    const currencies = mergeTargetProducts.map((p) => p.exchange?.code);
+    const uniqueCurrencies = Array.from(new Set(currencies));
+
+    if (uniqueCurrencies.length > 1) {
+      toast("❌ 서로 다른 화폐로 결제한 패키지가 있습니다.");
+      setIsMergeOpen(false);
+      setRowSelection({});
+      return;
+    }
+    if (mergeTargets.length === 1) {
+      toast("❌ 한 개의 패키지는 통합할 수 없습니다.");
+      setIsMergeOpen(false);
+      setRowSelection({});
+      return;
+    }
+
     try {
       const packageDoc = {
         _id: "",
@@ -39,7 +55,7 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
 
       // 데이터 생성 및 리패치
       await mergePackage({ deleteTargets: mergeTargetIds, packageDoc });
-      // await createPurchaseBundle({ purchaseDoc: bundleItem });
+      await fetchPackages();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       toast("✅ 상품이 성공적으로 통합되었습니다.");
@@ -67,7 +83,7 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
               <Item variant="outline" key={target._id} className="flex-col justify-start">
                 {target.products.map((p) => (
                   <ItemContent key={p._id} className="w-full">
-                    {p.name} - {p.brand} / {p.costPrice.amount} {p.costPrice.exchange.label}
+                    {p.name} - {p.brand} / {p.costPrice} {p.exchange.label}
                   </ItemContent>
                 ))}
               </Item>
