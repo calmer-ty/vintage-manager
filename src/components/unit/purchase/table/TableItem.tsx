@@ -13,9 +13,9 @@ interface ITableItemProps {
 }
 
 export default function TableItem({ products }: ITableItemProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const { viewCurrency } = useCurrency();
 
+  const [isOpen, setIsOpen] = useState(false);
   const [first, ...rest] = products;
 
   // const costSum = products.reduce((acc, val) => {
@@ -44,8 +44,8 @@ export default function TableItem({ products }: ITableItemProps) {
             {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
-            {/* {getDisplayPrice(first.costPrice.exchange.code, first.costPrice.amount)} */}
-            {/* <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice)})</em> */}
+            {getDisplayPrice(first.exchange.code, first.costPrice)}
+            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice, first.exchange)})</em>
           </span>
         </div>
       )}

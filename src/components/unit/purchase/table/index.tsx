@@ -19,10 +19,6 @@ import type { ColumnDef, ColumnFiltersState, RowSelectionState, SortingState, Vi
 import type { ICreateProductParams, IPackage } from "@/types";
 interface IReceivingTableProps {
   data: IPackage[];
-  columnConfig: {
-    key: string;
-    label: string;
-  }[];
   rowSelection: RowSelectionState;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   onClickMoveToCreate: () => void;
@@ -33,9 +29,14 @@ interface IReceivingTableProps {
   fetchLoading: boolean;
 }
 
+const columnConfig = [
+  { key: "createdAt", label: "등록 일자" },
+  { key: "products", label: "패키지 정보" },
+];
+
 export default function ReceivingTable({
   data,
-  columnConfig,
+
   rowSelection,
   setRowSelection,
   onClickMoveToCreate,

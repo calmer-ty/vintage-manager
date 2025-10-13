@@ -36,6 +36,9 @@ export interface IPurchaseProduct {
   name: string;
   brand: string;
   costPrice: number;
+  shipping: number;
+  fee: number;
+  exchange: IExchange;
 }
 export interface IPackage {
   _id: string; // 문서 id 값

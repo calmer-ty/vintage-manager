@@ -1,4 +1,4 @@
-import type { IPrice } from "@/types";
+import type { IExchange } from "@/types";
 
 export const getPriceInKRW = (amount: number, rate: number) => {
   return Math.round(amount * rate);
@@ -15,16 +15,16 @@ export const getDisplayPrice = (currency: string, amount: number) => {
   }).format(amount);
 };
 
-export const getExchangeDisplayPrice = (viewCurrency: string, price: IPrice) => {
+export const getExchangeDisplayPrice = (viewCurrency: string, price: number, exchange: IExchange) => {
   // 변환된 금액 계산
   let convertedAmount = 0;
 
   switch (viewCurrency) {
     case "KRW":
-      convertedAmount = price.amount * price.exchange.krw;
+      convertedAmount = price * exchange.krw;
       break;
     case "USD":
-      convertedAmount = price.amount / price.exchange.rate;
+      convertedAmount = price / exchange.rate;
       break;
     default:
       return "작업중";
