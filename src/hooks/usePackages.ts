@@ -81,7 +81,7 @@ export const usePackages = ({ uid, selectedYear, selectedMonth }: IusePackagesPa
   //   }
   // };
 
-  // [수정] - 상품 패키지의 배송비 추가
+  // [수정] - 상품 패키지의 배송료 추가
   const salesPackage = async ({ salesTarget, salesDoc }: ISalesPackageParams) => {
     if (!uid) return;
 

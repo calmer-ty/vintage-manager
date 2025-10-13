@@ -34,17 +34,7 @@ const columnConfig = [
   { key: "products", label: "패키지 정보" },
 ];
 
-export default function ReceivingTable({
-  data,
-
-  rowSelection,
-  setRowSelection,
-  onClickMoveToCreate,
-  onClickMoveToDelete,
-  onClickMoveToMerge,
-  onClickMoveToSale,
-  fetchLoading,
-}: IReceivingTableProps) {
+export default function ReceivingTable({ data, rowSelection, setRowSelection, onClickMoveToCreate, onClickMoveToDelete, onClickMoveToMerge, onClickMoveToSale, fetchLoading }: IReceivingTableProps) {
   // const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -65,26 +55,10 @@ export default function ReceivingTable({
         return <div>-</div>;
       }
 
-      // if (key === "costPrice") {
-      //   return (
-      //     <span>
-      //       {row.original.costPrice.amount} {row.original.costPrice.exchange.label}
-      //     </span>
-      //   );
-      // }
-
-      // 배송비 & 수수료
-      // if (key === "shipping") {
-      //   return <span>{row.original.shipping.amount !== 0 ? `${row.original.shipping.amount.toLocaleString()} ${row.original.shipping.exchange.label}` : "-"}</span>;
-      // }
-      // if (key === "fee") {
-      //   return <span>{row.original.fee.amount !== 0 ? `${row.original.fee.amount.toLocaleString()} ${row.original.fee.exchange.label}` : "-"}</span>;
-      // }
-
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products") {
         return (
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col">
             <TableItem products={row.original.products} />
           </div>
         );

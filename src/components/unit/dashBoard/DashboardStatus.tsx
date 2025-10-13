@@ -16,7 +16,7 @@ export default function DashBoardStatus({ products, packages }: IDashBoardStatus
   const soldProducts = products.filter((product) => product.soldAt !== null);
   const saleProducts = products.filter((product) => product.soldAt === null);
 
-  // 합산된 패키지 배송비 계산
+  // 합산된 패키지 배송료 계산
   // const totalShipping = packages.reduce((acc, val) => {
   //   return acc + val.shipping.exchange.rate * val.shipping.amount;
   // }, 0);
@@ -43,7 +43,7 @@ export default function DashBoardStatus({ products, packages }: IDashBoardStatus
       icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
     // {
-    //   title: "배송비 & 수수료",
+    //   title: "배송료 & 수수료",
     //   value: `₩ ${Math.round(totalShipping + totalFee).toLocaleString()}`,
     //   icon: <Truck className="shrink-0 text-red-500" />,
     // },

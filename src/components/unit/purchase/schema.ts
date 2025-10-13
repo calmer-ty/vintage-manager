@@ -14,7 +14,7 @@ const ProductSchema = z.object({
   brand: z.string(),
   cost: z.object({
     price: z.number().min(1, "가격은 1 이상이어야 합니다."),
-    shipping: z.number().min(0, "배송비는 0 이상이어야 합니다."),
+    shipping: z.number().min(0, "배송료는 0 이상이어야 합니다."),
     fee: z.number().min(0, "수수료는 0 이상이어야 합니다."),
     exchange: exchangeSchema,
   }),
@@ -52,7 +52,7 @@ export const SalesSchema = z.object({
         ctx.addIssue({
           code: "custom",
           path: [],
-          message: "배송비와 사용된 통화를 모두 입력해주세요.",
+          message: "배송료와 사용된 통화를 모두 입력해주세요.",
         });
       }
     }),

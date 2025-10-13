@@ -108,7 +108,7 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
                   name="cost"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="국제 배송비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
+                      <FormInputWrap title="국제 배송료" tooltip="배송료 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
                         <Input
                           type="number"
                           className="bg-white"

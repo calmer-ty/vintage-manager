@@ -29,7 +29,7 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
 
   const onClickMerge = async () => {
     // 다른 화폐로 결제된 패키지끼리 묶을 때 취소 처리
-    const currencies = mergeTargetProducts.map((p) => p.exchange?.code);
+    const currencies = mergeTargetProducts.map((p) => p.cost.exchange.code);
     const uniqueCurrencies = Array.from(new Set(currencies));
 
     if (uniqueCurrencies.length > 1) {
@@ -46,11 +46,12 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
     }
 
     try {
-      const packageDoc = {
+      const packageDoc: IPackage = {
         _id: "",
         uid,
         products: mergeTargetProducts,
         createdAt: Timestamp.fromDate(new Date()),
+        addSaleAt: null,
       };
 
       // 데이터 생성 및 리패치
@@ -83,7 +84,7 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
               <Item variant="outline" key={target._id} className="flex-col justify-start">
                 {target.products.map((p) => (
                   <ItemContent key={p._id} className="w-full">
-                    {p.name} - {p.brand} / {p.costPrice} {p.exchange.label}
+                    {p.name} - {p.brand} / {p.cost.price} {p.cost.exchange.label}
                   </ItemContent>
                 ))}
               </Item>

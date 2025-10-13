@@ -7,12 +7,12 @@ export const getPriceInUSD = (amount: number, rate: number) => {
   return Math.round(amount / rate);
 };
 
-export const getDisplayPrice = (currency: string, amount: number) => {
+export const getDisplayPrice = (currency: string, price: number) => {
   return new Intl.NumberFormat("ko-KR", {
     style: "currency",
     currency: currency,
     minimumFractionDigits: currency === "USD" ? 2 : 0, // 달러만 소수점 둘째자리
-  }).format(amount);
+  }).format(price);
 };
 
 export const getExchangeDisplayPrice = (viewCurrency: string, price: number, exchange: IExchange) => {

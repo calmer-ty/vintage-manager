@@ -137,7 +137,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   name="products.0.cost.shipping"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="국내 배송비" tooltip="배송비는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
+                      <FormInputWrap title="국내 배송료" tooltip="배송료는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
                         <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))} />
                       </FormInputWrap>
                     </div>
