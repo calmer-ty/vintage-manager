@@ -13,11 +13,11 @@ export default function CurrencySelect() {
       defaultValue="KRW"
     >
       <SelectTrigger className="w-30">
-        <SelectValue placeholder="당신의 통화" />
+        <SelectValue placeholder="기준 통화" />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectLabel>당신의 통화</SelectLabel>
+          <SelectLabel>통화 선택</SelectLabel>
           <SelectItem value="KRW">KRW (₩)</SelectItem>
           <SelectItem value="USD">USD ($)</SelectItem>
           <SelectItem value="JPY">JPY (¥)</SelectItem>
