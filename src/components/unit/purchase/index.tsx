@@ -19,13 +19,6 @@ import type { IPackage, IUserID } from "@/types";
 import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";
 
-const columnConfig = [
-  { key: "createdAt", label: "등록 일자" },
-  { key: "products", label: "패키지 정보" },
-  // { key: "shipping", label: "배송비" },
-  // { key: "fee", label: "수수료" },
-];
-
 export default function PurchaseUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
   const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackage({
@@ -40,7 +33,6 @@ export default function PurchaseUI({ uid }: IUserID) {
   const form = useForm<z.infer<typeof PurchaseSchema>>({
     resolver: zodResolver(PurchaseSchema),
     defaultValues: {
-      exchange: { code: "", label: "", rate: 0, krw: 0 },
       products: [
         {
           name: "",
@@ -48,6 +40,7 @@ export default function PurchaseUI({ uid }: IUserID) {
           costPrice: 0,
           shipping: 0,
           fee: 0,
+          exchange: { code: "", label: "", rate: 0, krw: 0 },
         },
       ],
     },
@@ -89,7 +82,6 @@ export default function PurchaseUI({ uid }: IUserID) {
       {/* 테이블 */}
       <TableUI
         data={packages}
-        columnConfig={columnConfig}
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
         onClickMoveToCreate={onClickMoveToCreate}

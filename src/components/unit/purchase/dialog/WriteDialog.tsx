@@ -86,7 +86,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
               <fieldset className="flex flex-col gap-4 px-2">
                 <FormField
                   control={form.control}
-                  name="exchange"
+                  name="products.0.exchange"
                   render={({ field }) => (
                     <PurchaseSelect
                       onChange={(code) => {
