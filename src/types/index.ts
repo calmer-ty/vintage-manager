@@ -24,10 +24,10 @@ export interface IExchange {
   rate: number;
   krw: number;
 }
-export interface IPrice {
-  amount: number;
-  exchange: IExchange;
-}
+// export interface IPrice {
+//   amount: number;
+//   exchange: IExchange;
+// }
 
 // 매입 타입
 export interface IPurchaseProduct {
@@ -35,7 +35,7 @@ export interface IPurchaseProduct {
   uid: string;
   name: string;
   brand: string;
-  costPrice: IPrice;
+  costPrice: number;
 }
 export interface IPackage {
   _id: string; // 문서 id 값
@@ -50,7 +50,7 @@ export interface IProduct {
   _id: string;
   brand: string;
   name: string;
-  costPrice: IPrice;
+  costPrice: number;
   salePrice: number;
   profit: number;
   soldAt: Timestamp | null;
@@ -63,7 +63,8 @@ export interface IUpdateProduct {
   profit: number;
 }
 export interface ISalesDoc {
-  shipping: IPrice;
+  exchange: IExchange;
+  shipping: number;
   addSaleAt: Timestamp;
 }
 

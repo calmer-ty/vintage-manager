@@ -1,4 +1,4 @@
-import { FormControl, FormItem, FormLabel } from "@/components/ui/form";
+import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { IExchange } from "@/types";
 
@@ -10,9 +10,10 @@ interface IPurchaseSingleSelectProps {
 }
 
 export default function PurchaseSelect({ onChange, value, disabled }: IPurchaseSingleSelectProps) {
+  console.log("value: ", value);
   return (
     <FormItem>
-      <FormLabel className="opacity-0">통화</FormLabel>
+      <FormLabel className="">당신이 사용한 통화를 선택해주세요.</FormLabel>
       <Select onValueChange={onChange} value={value.code} disabled={disabled}>
         <FormControl>
           <SelectTrigger className="bg-white min-w-32">
@@ -28,6 +29,7 @@ export default function PurchaseSelect({ onChange, value, disabled }: IPurchaseS
           </SelectGroup>
         </SelectContent>
       </Select>
+      <FormMessage />
     </FormItem>
   );
 }

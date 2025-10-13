@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
@@ -31,21 +30,17 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
-  // 데이터베이스로 넘겨줄 화폐
-  const [currency, setCurrency] = useState("USD");
-  const selectedExchange = exchangeOptions.find((opt) => opt.code === currency) ?? { code: "", label: "", rate: 0, krw: 0 };
-
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
     try {
       const packageDoc = {
         _id: "",
         uid,
+        ...data,
         products: data.products.map((p) => ({
           _id: uuid(),
           uid,
           ...p,
-          costPrice: { amount: p.costPrice.amount, exchange: selectedExchange },
         })),
         createdAt: Timestamp.fromDate(new Date()),
       };
@@ -62,18 +57,6 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
       console.error("문서 추가 실패:", error);
     }
   };
-
-  useEffect(() => {
-    form.reset({
-      products: [
-        {
-          name: "",
-          brand: "",
-          costPrice: { amount: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
-        },
-      ],
-    });
-  }, [form]);
 
   return (
     <Dialog
@@ -103,7 +86,24 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
               <fieldset className="flex flex-col gap-4 px-2">
                 <FormField
                   control={form.control}
-                  name={`products.0.name`}
+                  name="exchange"
+                  render={({ field }) => (
+                    <PurchaseSelect
+                      onChange={(code) => {
+                        // setCurrency(code);
+                        const selected = exchangeOptions.find((opt) => opt.code === code);
+                        if (selected) {
+                          field.onChange(selected);
+                        }
+                      }}
+                      value={field.value}
+                    />
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="products.0.name"
                   render={({ field }) => (
                     <FormInputWrap title="제품명">
                       <Input placeholder="예) 럭비 셔츠" {...field} className="bg-white" autoComplete="off" />
@@ -125,25 +125,31 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   name="products.0.costPrice"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="매입가" tooltip="매입가는 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
-                        <Input
-                          type="number"
-                          placeholder="예) 1000"
-                          className="bg-white"
-                          value={field.value.amount}
-                          onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
-                        />
+                      <FormInputWrap title="매입가" tooltip="매입가는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
+                        <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
                       </FormInputWrap>
-                      <PurchaseSelect
-                        onChange={(code) => {
-                          setCurrency(code);
-                          const selected = exchangeOptions.find((opt) => opt.code === code);
-                          if (currency) {
-                            field.onChange({ ...field.value, exchange: selected });
-                          }
-                        }}
-                        value={field.value.exchange}
-                      />
+                    </div>
+                  )}
+                ></FormField>
+                <FormField
+                  control={form.control}
+                  name="products.0.shipping"
+                  render={({ field }) => (
+                    <div className="flex items-start gap-2">
+                      <FormInputWrap title="배송비" tooltip="배송비는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
+                        <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))} />
+                      </FormInputWrap>
+                    </div>
+                  )}
+                ></FormField>
+                <FormField
+                  control={form.control}
+                  name="products.0.fee"
+                  render={({ field }) => (
+                    <div className="flex items-start gap-2">
+                      <FormInputWrap title="수수료" tooltip="수수료는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
+                        <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))} />
+                      </FormInputWrap>
                     </div>
                   )}
                 ></FormField>

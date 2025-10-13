@@ -44,8 +44,8 @@ export default function TableItem({ products }: ITableItemProps) {
             {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
-            {getDisplayPrice(first.costPrice.exchange.code, first.costPrice.amount)}
-            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice)})</em>
+            {/* {getDisplayPrice(first.costPrice.exchange.code, first.costPrice.amount)} */}
+            {/* <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice)})</em> */}
           </span>
         </div>
       )}
@@ -59,8 +59,8 @@ export default function TableItem({ products }: ITableItemProps) {
                 {p.name} - {p.brand}
               </span>
               <span className="flex items-center gap-1">
-                {getDisplayPrice(p.costPrice.exchange.code, p.costPrice.amount)}
-                <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.costPrice)})</em>
+                {/* {getDisplayPrice(p.costPrice.exchange.code, p.costPrice.amount)} */}
+                {/* <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.costPrice)})</em> */}
               </span>
             </div>
           );

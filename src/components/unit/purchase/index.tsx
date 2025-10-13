@@ -40,11 +40,14 @@ export default function PurchaseUI({ uid }: IUserID) {
   const form = useForm<z.infer<typeof PurchaseSchema>>({
     resolver: zodResolver(PurchaseSchema),
     defaultValues: {
+      exchange: { code: "", label: "", rate: 0, krw: 0 },
       products: [
         {
           name: "",
           brand: "",
-          costPrice: { amount: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
+          costPrice: 0,
+          shipping: 0,
+          fee: 0,
         },
       ],
     },
