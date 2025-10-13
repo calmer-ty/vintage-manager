@@ -12,12 +12,12 @@ import type { IUserID } from "@/types";
 
 export default function DashBoardUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
+  const { purchasePackages } = usePurchasePackage({ uid, selectedYear, selectedMonth });
   const { products } = useProducts({ uid, selectedYear, selectedMonth });
-  const { purchase } = usePurchasePackage({ uid, selectedYear, selectedMonth });
 
   return (
     <article className="p-10">
-      <DashboardStatus products={products} purchase={purchase} />
+      <DashboardStatus products={products} purchasePackages={purchasePackages} />
       <DashboardChart products={products} selectedYear={selectedYear} selectedMonth={selectedMonth} />
     </article>
   );

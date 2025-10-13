@@ -5,24 +5,24 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck } from "lucide-react";
 
-import type { IProduct, IPurchaseSingle } from "@/types";
+import type { IProduct, IPurchasePackage } from "@/types";
 interface IDashBoardStatusProps {
   products: IProduct[];
-  purchase: IPurchaseSingle[];
+  purchasePackages: IPurchasePackage[];
 }
 
-export default function DashBoardStatus({ products, purchase }: IDashBoardStatusProps) {
+export default function DashBoardStatus({ products, purchasePackages }: IDashBoardStatusProps) {
   // soldAt null이 아닌 item 데이터들
   const soldProducts = products.filter((product) => product.soldAt !== null);
   const saleProducts = products.filter((product) => product.soldAt === null);
 
   // 합산된 패키지 배송비 계산
-  const totalShipping = purchase.reduce((acc, val) => {
-    return acc + val.shipping.exchange.rate * val.shipping.amount;
-  }, 0);
-  const totalFee = purchase.reduce((acc, val) => {
-    return acc + val.fee.exchange.rate * val.fee.amount;
-  }, 0);
+  // const totalShipping = purchasePackages.reduce((acc, val) => {
+  //   return acc + val.shipping.exchange.rate * val.shipping.amount;
+  // }, 0);
+  // const totalFee = purchasePackages.reduce((acc, val) => {
+  //   return acc + val.fee.exchange.rate * val.fee.amount;
+  // }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((acc, val) => {
     return acc + val.costPrice.exchange.rate * val.costPrice.amount;
@@ -42,11 +42,11 @@ export default function DashBoardStatus({ products, purchase }: IDashBoardStatus
       value: `₩ ${Math.round(totalCost).toLocaleString()}`,
       icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
-    {
-      title: "배송비 & 수수료",
-      value: `₩ ${Math.round(totalShipping + totalFee).toLocaleString()}`,
-      icon: <Truck className="shrink-0 text-red-500" />,
-    },
+    // {
+    //   title: "배송비 & 수수료",
+    //   value: `₩ ${Math.round(totalShipping + totalFee).toLocaleString()}`,
+    //   icon: <Truck className="shrink-0 text-red-500" />,
+    // },
     {
       title: "총 매출",
       value: `₩ ${Math.round(totalSalePrice).toLocaleString()}`,
