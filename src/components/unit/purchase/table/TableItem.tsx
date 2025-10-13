@@ -19,7 +19,7 @@ export default function TableItem({ products }: ITableItemProps) {
   const [first, ...rest] = products;
 
   const costPriceSum = products.reduce((acc, val) => {
-    return acc + val.costPrice;
+    return acc + val.cost.price;
   }, 0);
 
   return (
@@ -32,8 +32,8 @@ export default function TableItem({ products }: ITableItemProps) {
               {first.name} - {first.brand}
             </span>
             <span className="flex items-center gap-1">
-              {getDisplayPrice(first.exchange.code, first.costPrice)}
-              <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice, first.exchange)})</em>
+              {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
+              <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})</em>
             </span>
           </div>
 
@@ -46,15 +46,15 @@ export default function TableItem({ products }: ITableItemProps) {
                     {p.name} - {p.brand}
                   </span>
                   <span className="flex items-center gap-1">
-                    {getDisplayPrice(p.exchange.code, p.costPrice)}
-                    <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.costPrice, p.exchange)})</em>
+                    {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
+                    <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.cost.price, p.cost.exchange)})</em>
                   </span>
                 </div>
               );
             })}
             <div className="px-4 pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
               <span className="mr-1 font-bold">총 매입가:</span>
-              <span>{getDisplayPrice(products[0].exchange.code, costPriceSum)}</span>
+              <span>{getDisplayPrice(products[0].cost.exchange.code, costPriceSum)}</span>
             </div>
           </CollapsibleContent>
 
@@ -72,8 +72,8 @@ export default function TableItem({ products }: ITableItemProps) {
             {first.name} - {first.brand}
           </span>
           <span className="flex items-center gap-1">
-            {getDisplayPrice(first.exchange.code, first.costPrice)}
-            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.costPrice, first.exchange)})</em>
+            {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
+            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})</em>
           </span>
         </div>
       )}

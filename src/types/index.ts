@@ -24,10 +24,6 @@ export interface IExchange {
   rate: number;
   krw: number;
 }
-// export interface IPrice {
-//   amount: number;
-//   exchange: IExchange;
-// }
 
 // 매입 타입
 export interface IPurchaseProduct {
@@ -35,10 +31,12 @@ export interface IPurchaseProduct {
   uid: string;
   name: string;
   brand: string;
-  costPrice: number;
-  shipping: number;
-  fee: number;
-  exchange: IExchange;
+  cost: {
+    price: number;
+    shipping: number;
+    fee: number;
+    exchange: IExchange;
+  };
 }
 export interface IPackage {
   _id: string; // 문서 id 값

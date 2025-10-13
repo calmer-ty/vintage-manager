@@ -12,10 +12,12 @@ const exchangeSchema = z
 const ProductSchema = z.object({
   name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),
   brand: z.string(),
-  costPrice: z.number().min(1, "가격은 1 이상이어야 합니다."),
-  shipping: z.number().min(0, "배송비는 0 이상이어야 합니다."),
-  fee: z.number().min(0, "수수료는 0 이상이어야 합니다."),
-  exchange: exchangeSchema,
+  cost: z.object({
+    price: z.number().min(1, "가격은 1 이상이어야 합니다."),
+    shipping: z.number().min(0, "배송비는 0 이상이어야 합니다."),
+    fee: z.number().min(0, "수수료는 0 이상이어야 합니다."),
+    exchange: exchangeSchema,
+  }),
 });
 // const ProductSchema = z.object({
 //   name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),

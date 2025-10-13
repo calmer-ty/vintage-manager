@@ -86,11 +86,10 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
               <fieldset className="flex flex-col gap-4 px-2">
                 <FormField
                   control={form.control}
-                  name="products.0.exchange"
+                  name="products.0.cost.exchange"
                   render={({ field }) => (
                     <PurchaseSelect
                       onChange={(code) => {
-                        // setCurrency(code);
                         const selected = exchangeOptions.find((opt) => opt.code === code);
                         if (selected) {
                           field.onChange(selected);
@@ -122,7 +121,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
 
                 <FormField
                   control={form.control}
-                  name="products.0.costPrice"
+                  name="products.0.cost.price"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
                       <FormInputWrap title="매입가" tooltip="매입가는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
@@ -133,7 +132,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                 ></FormField>
                 <FormField
                   control={form.control}
-                  name="products.0.shipping"
+                  name="products.0.cost.shipping"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
                       <FormInputWrap title="배송비" tooltip="배송비는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
@@ -144,7 +143,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                 ></FormField>
                 <FormField
                   control={form.control}
-                  name="products.0.fee"
+                  name="products.0.cost.fee"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
                       <FormInputWrap title="수수료" tooltip="수수료는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
