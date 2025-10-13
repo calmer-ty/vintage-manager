@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProducts } from "@/hooks/useProducts";
 import { useDateSelector } from "@/contexts/dateSelectorContext";
-import { usePackage } from "@/hooks/usePackage";
+import { usePackages } from "@/hooks/usePackages";
 
 import TableUI from "./table";
 import WriteDialog from "./dialog/WriteDialog";
@@ -21,7 +21,7 @@ import type { RowSelectionState } from "@tanstack/react-table";
 
 export default function PurchaseUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackage({
+  const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackages({
     uid,
     selectedYear,
     selectedMonth,

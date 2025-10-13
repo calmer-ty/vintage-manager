@@ -5,13 +5,13 @@ import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { ICreatePackageParams, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
-interface IUsePackageParams {
+interface IusePackagesParams {
   uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
-export const usePackage = ({ uid, selectedYear, selectedMonth }: IUsePackageParams) => {
+export const usePackages = ({ uid, selectedYear, selectedMonth }: IusePackagesParams) => {
   const [packages, setPackages] = useState<IPackage[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
 
