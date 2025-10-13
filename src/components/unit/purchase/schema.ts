@@ -40,15 +40,15 @@ const ProductSchema = z.object({
 export const PurchaseSchema = z.object({
   products: z.array(ProductSchema),
 });
-export const ShippingSchema = z.object({
-  shipping: z
+export const SalesSchema = z.object({
+  cost: z
     .object({
-      amount: z.number(),
+      shipping: z.number(),
       exchange: exchangeSchema,
     })
     .superRefine((val, ctx) => {
       // 둘 중 하나만 입력됐을 때
-      if (!val.amount || !val.exchange.code) {
+      if (!val.shipping || !val.exchange.code) {
         ctx.addIssue({
           code: "custom",
           path: [],

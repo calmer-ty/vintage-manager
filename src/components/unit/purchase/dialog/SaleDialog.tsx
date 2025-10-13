@@ -1,10 +1,10 @@
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { Timestamp } from "firebase/firestore";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { getDisplayPrice } from "@/lib/price";
 
 // 외부 요소
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import { Item } from "@/components/ui/item";
 import FormInputWrap from "@/components/commons/FormInputWrap";
 import PurchaseSelect from "../PurchaseSelect";
 
-import { ShippingSchema } from "../schema";
+import { SalesSchema } from "../schema";
 
 import type { ICreateProductParams, IPackage, ISalesDoc, ISalesPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
@@ -35,17 +35,17 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
   const { exchangeOptions } = useExchangeRate();
 
   // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof ShippingSchema>>({
-    resolver: zodResolver(ShippingSchema),
+  const form = useForm<z.infer<typeof SalesSchema>>({
+    resolver: zodResolver(SalesSchema),
     defaultValues: {
-      shipping: {
-        amount: 0,
+      cost: {
+        shipping: 0,
         exchange: { code: "", label: "", rate: 0, krw: 0 },
       },
     },
   });
 
-  const onClickSales = async (data: z.infer<typeof ShippingSchema>) => {
+  const onClickSales = async (data: z.infer<typeof SalesSchema>) => {
     console.log("salesTarget: ", salesTarget);
     if (!salesTarget) {
       toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
@@ -54,9 +54,9 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
 
     try {
       const salesDoc: ISalesDoc = {
-        shipping: {
-          amount: data.shipping.amount,
-          exchange: data.shipping.exchange,
+        cost: {
+          shipping: data.cost.shipping,
+          exchange: data.cost.exchange,
         },
         addSaleAt: Timestamp.fromDate(new Date()),
       };
@@ -71,16 +71,6 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
       console.error("문서 추가 실패:", error);
     }
   };
-
-  // updateTarget 변경 시 form 값을 리셋
-  useEffect(() => {
-    form.reset({
-      shipping: {
-        amount: 0,
-        exchange: { code: "", label: "", rate: 0, krw: 0 },
-      },
-    });
-  }, [form, salesTarget]);
 
   return (
     <>
@@ -101,10 +91,9 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
           </DialogHeader>
           <div className="flex flex-col gap-2">
             <Item variant="outline" className="flex-col justify-start">
-              {/* {salesTarget?.products[0].name} - {salesTarget?.products[0].brand} */}
               {salesTarget?.products.map((p) => (
                 <div key={p._id} className="w-full">
-                  {p.brand} - {p.name} / {p.costPrice.amount} {p.costPrice.exchange.label}
+                  {p.brand} - {p.name} / {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
                 </div>
               ))}
             </Item>
@@ -116,16 +105,16 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
               <fieldset className="flex flex-col gap-4">
                 <FormField
                   control={form.control}
-                  name="shipping"
+                  name="cost"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="배송비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
+                      <FormInputWrap title="국제 배송비" tooltip="배송비 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
                         <Input
                           type="number"
                           className="bg-white"
                           placeholder="사용한 통화 기준으로 작성"
-                          value={field.value.amount}
-                          onChange={(e) => field.onChange({ ...field.value, amount: Number(e.target.value) })}
+                          value={field.value.shipping}
+                          onChange={(e) => field.onChange({ ...field.value, shipping: Number(e.target.value) })}
                         />
                       </FormInputWrap>
                       <PurchaseSelect
@@ -136,6 +125,8 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
                           }
                         }}
                         value={field.value.exchange}
+                        label="통화"
+                        messageStyles="opacity-0"
                       />
                     </div>
                   )}

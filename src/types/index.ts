@@ -43,6 +43,14 @@ export interface IPackage {
   uid: string;
   products: IPurchaseProduct[];
   createdAt: Timestamp;
+  addSaleAt: Timestamp | null;
+}
+export interface ISalesDoc {
+  cost: {
+    shipping: number;
+    exchange: IExchange;
+  };
+  addSaleAt: Timestamp;
 }
 
 // 상품
@@ -58,15 +66,9 @@ export interface IProduct {
   createdAt: Timestamp;
 }
 
-// 업데이트 타입
 export interface IUpdateProduct {
   salePrice: number;
   profit: number;
-}
-export interface ISalesDoc {
-  exchange: IExchange;
-  shipping: number;
-  addSaleAt: Timestamp;
 }
 
 // Hooks Params

@@ -2,16 +2,18 @@ import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/f
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { IExchange } from "@/types";
 
-interface IPurchaseSingleSelectProps {
+interface IPurchaseSelectProps {
   onChange: (code: string) => void;
   value: IExchange;
   disabled?: boolean;
+  label?: string;
+  messageStyles?: string;
 }
 
-export default function PurchaseSelect({ onChange, value, disabled }: IPurchaseSingleSelectProps) {
+export default function PurchaseSelect({ onChange, value, disabled, label, messageStyles }: IPurchaseSelectProps) {
   return (
     <FormItem>
-      <FormLabel className="">당신이 사용한 통화를 선택해주세요.</FormLabel>
+      <FormLabel>{label}</FormLabel>
       <Select onValueChange={onChange} value={value.code} disabled={disabled}>
         <FormControl>
           <SelectTrigger className="bg-white min-w-32">
@@ -27,7 +29,7 @@ export default function PurchaseSelect({ onChange, value, disabled }: IPurchaseS
           </SelectGroup>
         </SelectContent>
       </Select>
-      <FormMessage />
+      <FormMessage className={messageStyles} />
     </FormItem>
   );
 }
