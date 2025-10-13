@@ -19,12 +19,12 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createProduct = async ({ uid, products }: ICreateProductParams) => {
+  const createProduct = async ({ products }: ICreateProductParams) => {
     if (!uid) return;
 
     try {
       for (const product of products) {
-        const docRef = await addDoc(collection(db, "products"), { uid, ...product, _id: uuid(), salePrice: "", profit: null, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
+        const docRef = await addDoc(collection(db, "products"), { ...product, _id: uuid(), salePrice: "", profit: null, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
 
         await updateDoc(docRef, {
           _id: docRef.id,

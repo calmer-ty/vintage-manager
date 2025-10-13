@@ -16,7 +16,7 @@ import TableControl from "./TableControl";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, RowSelectionState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { IPurchasePackage } from "@/types";
+import type { ICreateProductParams, IPurchasePackage } from "@/types";
 interface IReceivingTableProps {
   data: IPurchasePackage[];
   columnConfig: {
@@ -26,10 +26,10 @@ interface IReceivingTableProps {
   rowSelection: RowSelectionState;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   onClickMoveToCreate: () => void;
-  onClickMoveToDelete: (rowIds: string[]) => void;
   onClickMoveToMerge: (rowData: IPurchasePackage[]) => void;
-  onClickMoveToSale: (rowId: string) => void;
-  createProduct: ({ uid, products }: ICreateProductParams) => Promise<void>;
+  onClickMoveToSale: (rowData: IPurchasePackage) => void;
+  onClickMoveToDelete: (rowIds: string[]) => void;
+  createProduct: ({ products }: ICreateProductParams) => Promise<void>;
   fetchLoading: boolean;
 }
 
@@ -138,7 +138,7 @@ export default function ReceivingTable({
             <DropdownMenuContent align="end">
               {/* <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}> */}
               <div className="w-full">
-                <DropdownMenuItem onClick={() => onClickMoveToSale(row.original._id)}>판매 등록</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onClickMoveToSale(row.original)}>판매 등록</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
               </div>
               {/* </BasicTooltip> */}
@@ -170,7 +170,7 @@ export default function ReceivingTable({
   return (
     <>
       <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
-        <TableControl table={table} columnConfig={columnConfig} onClickMoveToCreate={onClickMoveToCreate} onClickMoveToDelete={onClickMoveToDelete} onClickMoveToMerge={onClickMoveToMerge} />
+        <TableControl table={table} columnConfig={columnConfig} onClickMoveToCreate={onClickMoveToCreate} onClickMoveToMerge={onClickMoveToMerge} onClickMoveToDelete={onClickMoveToDelete} />
         <div className="border rounded-md">
           <Table>
             <TableHeader>

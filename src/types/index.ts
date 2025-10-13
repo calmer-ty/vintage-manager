@@ -46,7 +46,6 @@ export interface IPurchasePackage {
 
 export interface ISalesPackage {
   shipping: IPrice;
-  fee: IPrice;
   addSaleAt: Timestamp;
 }
 
@@ -73,6 +72,8 @@ export interface IUpdateProduct {
 }
 
 // Hooks Params
+
+// 패키지
 export interface ICreatePurchasePackageParams {
   packageDoc: IPurchasePackage;
 }
@@ -81,8 +82,13 @@ export interface IMergePurchasePackageParams {
   packageDoc: IPurchasePackage;
 }
 export interface ISalesPackageParams {
-  updateTargetId: string;
-  salesData: ISalesPackage;
+  salesTarget: string;
+  salesDoc: ISalesPackage;
+}
+
+// 상품
+export interface ICreateProductParams {
+  products: IPurchaseItem[];
 }
 export interface IUpdateProductParams {
   targetId: string;

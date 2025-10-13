@@ -28,7 +28,7 @@ const columnConfig = [
 
 export default function PurchaseUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
-  const { purchasePackages, createPurchasePackage, mergePurchasePackage, salesPurchase, deletePurchasePackage, fetchPurchasePackages, fetchLoading } = usePurchasePackage({
+  const { purchasePackages, createPurchasePackage, mergePurchasePackage, salesPackage, deletePurchasePackage, fetchPurchasePackages, fetchLoading } = usePurchasePackage({
     uid,
     selectedYear,
     selectedMonth,
@@ -60,7 +60,7 @@ export default function PurchaseUI({ uid }: IUserID) {
   const [mergeTargets, setMergeTargets] = useState<IPurchasePackage[]>([]);
 
   const [isSaleOpen, setIsSaleOpen] = useState(false);
-  const [saleTarget, setSaleTarget] = useState<IPurchasePackage | undefined>(undefined);
+  const [salesTarget, setSalesTarget] = useState<IPurchasePackage>();
 
   // 테이블 스테이트
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -68,18 +68,17 @@ export default function PurchaseUI({ uid }: IUserID) {
   const onClickMoveToCreate = () => {
     setIsWriteOpen(true);
   };
-  const onClickMoveToDelete = (rowIds: string[]) => {
-    setIsDeleteOpen(true);
-    setDeleteTargets(rowIds);
-  };
   const onClickMoveToMerge = (rowData: IPurchasePackage[]) => {
     setIsMergeOpen(true);
     setMergeTargets(rowData);
   };
-  const onClickMoveToSale = (rowId: string) => {
-    const selectedRow = purchasePackages.find((p) => p._id === rowId);
-    setSaleTarget(selectedRow);
+  const onClickMoveToSale = (rowData: IPurchasePackage) => {
     setIsSaleOpen(true);
+    setSalesTarget(rowData);
+  };
+  const onClickMoveToDelete = (rowIds: string[]) => {
+    setIsDeleteOpen(true);
+    setDeleteTargets(rowIds);
   };
 
   return (
@@ -91,9 +90,9 @@ export default function PurchaseUI({ uid }: IUserID) {
         rowSelection={rowSelection}
         setRowSelection={setRowSelection}
         onClickMoveToCreate={onClickMoveToCreate}
-        onClickMoveToDelete={onClickMoveToDelete}
         onClickMoveToMerge={onClickMoveToMerge}
         onClickMoveToSale={onClickMoveToSale}
+        onClickMoveToDelete={onClickMoveToDelete}
         createProduct={createProduct}
         fetchLoading={fetchLoading}
       />
@@ -118,12 +117,10 @@ export default function PurchaseUI({ uid }: IUserID) {
         mergePurchasePackage={mergePurchasePackage}
       />
       <SaleDialog
-        uid={uid}
         isSaleOpen={isSaleOpen}
         setIsSaleOpen={setIsSaleOpen}
-        saleTarget={saleTarget}
-        setSaleTarget={setSaleTarget}
-        salesPurchase={salesPurchase}
+        salesTarget={salesTarget}
+        salesPackage={salesPackage}
         fetchPurchasePackages={fetchPurchasePackages}
         createProduct={createProduct}
       />

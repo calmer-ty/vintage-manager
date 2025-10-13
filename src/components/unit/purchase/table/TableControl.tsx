@@ -27,15 +27,15 @@ export default function TableControl({ table, columnConfig, onClickMoveToCreate,
   return (
     <div className="flex justify-between items-center gap-2 w-full py-3">
       <div className="flex items-center gap-2">
-        <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToDelete(selectedIds)}>
-          <span className="hidden sm:block">패키지 폐기</span>
+        <Button variant="default" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToMerge(selectedData)}>
+          <span className="hidden sm:block">패키지 통합</span>
           <Trash
             className="w-4 h-4 
               block sm:hidden"
           />
         </Button>
-        <Button variant="default" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToMerge(selectedData)}>
-          <span className="hidden sm:block">패키지 통합</span>
+        <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToDelete(selectedIds)}>
+          <span className="hidden sm:block">패키지 폐기</span>
           <Trash
             className="w-4 h-4 
               block sm:hidden"

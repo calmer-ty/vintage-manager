@@ -62,16 +62,14 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
           </DialogHeader>
 
           <div className="flex flex-col gap-2">
+            <h3 className="text-sm font-bold">패키지 목록</h3>
             {mergeTargets.map((target) => (
               <Item variant="outline" key={target._id} className="flex-col justify-start">
-                {target.products.map((p) => {
-                  console.log("p:", p);
-                  return (
-                    <ItemContent key={p._id} className="w-full">
-                      {p.name} - {p.brand} / {p.costPrice.amount} {p.costPrice.exchange.label}
-                    </ItemContent>
-                  );
-                })}
+                {target.products.map((p) => (
+                  <ItemContent key={p._id} className="w-full">
+                    {p.name} - {p.brand} / {p.costPrice.amount} {p.costPrice.exchange.label}
+                  </ItemContent>
+                ))}
               </Item>
             ))}
           </div>

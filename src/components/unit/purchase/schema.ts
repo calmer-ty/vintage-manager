@@ -44,19 +44,4 @@ export const ShippingSchema = z.object({
         });
       }
     }),
-  fee: z
-    .object({
-      amount: z.number(),
-      exchange: exchangeSchema,
-    })
-    .superRefine((val, ctx) => {
-      // 둘 중 하나만 입력됐을 때
-      if (!val.amount || !val.exchange.code) {
-        ctx.addIssue({
-          code: "custom",
-          path: [],
-          message: "수수료와 사용된 통화를 모두 입력해주세요.",
-        });
-      }
-    }),
 });

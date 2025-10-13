@@ -81,20 +81,14 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
   //   }
   // };
 
-  // [수정] - 상품 패키지의 배송비&수수료 추가
-  const salesPurchase = async ({ updateTargetId, salesData }: ISalesPackageParams) => {
+  // [수정] - 상품 패키지의 배송비 추가
+  const salesPackage = async ({ salesTarget, salesDoc }: ISalesPackageParams) => {
     if (!uid) return;
 
     try {
-      const docRef = doc(db, "purchase", updateTargetId);
-      // ...object를 써서 업데이트할 경우
-      // → Firestore는 그 객체를 “새로운 전체 상태”로 인식
-      // → 기존 객체와 병합하지 않고, 그 필드 전체를 교체함
-      await updateDoc(docRef, {
-        shipping: salesData.shipping,
-        fee: salesData.fee,
-        addSaleAt: salesData.addSaleAt,
-      });
+      const docRef = doc(db, "purchasePackage", salesTarget);
+
+      await updateDoc(docRef, { ...salesDoc });
     } catch (err) {
       console.error(err);
     }
@@ -145,9 +139,9 @@ export const usePurchasePackage = ({ uid, selectedYear, selectedMonth }: IUsePur
     purchasePackages,
     createPurchasePackage,
     mergePurchasePackage,
+    salesPackage,
     deletePurchasePackage,
     fetchPurchasePackages,
-    salesPurchase,
     fetchLoading,
   };
 };
