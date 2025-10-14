@@ -31,12 +31,13 @@ export default function TableItem({ products }: ITableItemProps) {
   }, 0);
 
   return (
-    <div className="overflow-hidden border border-gray-300 rounded-md">
+    <div className="overflow-hidden border border-gray-300">
       {/* 패키지 기본 정보 */}
-      <Collapsible open={isBasicOpen} onOpenChange={setIsBasicOpen} className="flex w-full flex-col px-4 py-2">
+      <Collapsible open={isBasicOpen} onOpenChange={setIsBasicOpen} className="flex flex-col px-4 py-2">
+        <h3 className="pb-1 border-b border-dotted border-gray-300 text-left">상품 목록</h3>
         {rest.length !== 0 ? (
           // products가 n개일 경우
-          <div className="">
+          <>
             <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
               <span>
                 {first.name} - {first.brand}
@@ -56,30 +57,33 @@ export default function TableItem({ products }: ITableItemProps) {
                       <span>
                         {p.name} - {p.brand}
                       </span>
-                      <span className="flex items-center gap-1">
+                      <span className="">
                         {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
-                        <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.cost.price, p.cost.exchange)})</em>
+                        <em className="ml-1 text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.cost.price, p.cost.exchange)})</em>
                       </span>
                     </div>
                   );
                 })}
-                <div className="px-4 pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
+                <div className="pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
                   <span className="mr-1 font-bold">총 매입가:</span>
-                  <span>{getDisplayPrice(products[0].cost.exchange.code, priceSum)}</span>
+                  <span>
+                    {getDisplayPrice(products[0].cost.exchange.code, priceSum)}
+                    <em className="ml-1 text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, priceSum, products[0].cost.exchange)})</em>
+                  </span>
                 </div>
               </CollapsibleContent>
             </motion.div>
 
             <CollapsibleTrigger asChild>
-              <Button variant="secondary" size="icon" className="w-auto mt-2 px-2">
+              <Button variant="secondary" size="icon" className="self-center w-fit mt-2 px-2">
                 {isBasicOpen ? <ChevronUp /> : <ChevronDown />}
                 <span className="">{isBasicOpen ? "닫기" : "더보기"}</span>
               </Button>
             </CollapsibleTrigger>
-          </div>
+          </>
         ) : (
           // products가 한개일 경우
-          <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 text-sm text-black">
+          <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
             <span>
               {first.name} - {first.brand}
             </span>
@@ -131,7 +135,7 @@ export default function TableItem({ products }: ITableItemProps) {
                 </div>
               );
             })}
-            <div className="px-4 pt-2 pb-1 text-right">
+            <div className="pt-2 pb-1 text-right">
               <span className="mr-1 font-bold">{isDetailsOpen === "shipping" ? "총 배송료" : isDetailsOpen === "fee" ? "총 수수료" : "정보 없음"}</span>
               <span>
                 {isDetailsOpen === "shipping"
