@@ -98,7 +98,7 @@ export interface ICreateProductDoc {
     exchange: IExchange;
   };
 }
-export interface IUpdateProduct {
+export interface IUpdateProductDoc {
   sales: number;
   profit: number;
 }
@@ -124,5 +124,5 @@ export interface ICreateProductParams {
 }
 export interface ISalesProductParams {
   salesTarget: string;
-  productDoc: IUpdateProduct;
+  productDoc: IUpdateProductDoc;
 }
