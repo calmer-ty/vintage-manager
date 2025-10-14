@@ -31,7 +31,7 @@ export default function TableItem({ products }: ITableItemProps) {
   }, 0);
 
   return (
-    <div className="overflow-hidden border border-gray-300">
+    <div className="overflow-hidden border border-gray-300 bg-white">
       {/* 패키지 기본 정보 */}
       <Collapsible open={isBasicOpen} onOpenChange={setIsBasicOpen} className="flex flex-col px-4 py-2">
         <h3 className="pb-1 border-b border-dotted border-gray-300 text-left">상품 목록</h3>

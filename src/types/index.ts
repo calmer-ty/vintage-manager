@@ -43,6 +43,10 @@ export interface IPackage {
   uid: string;
   products: IPurchaseProduct[];
   createdAt: Timestamp;
+  shipping: {
+    amount: number;
+    exchange: IExchange;
+  } | null;
   addSaleAt: Timestamp | null;
 }
 export interface ISalesDoc {

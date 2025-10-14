@@ -43,6 +43,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
           ...p,
         })),
         createdAt: Timestamp.fromDate(new Date()),
+        shipping: null,
         addSaleAt: null,
       };
 
@@ -126,7 +127,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   name="products.0.cost.price"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="매입가" tooltip="매입가는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
+                      <FormInputWrap title="매입가">
                         <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
                       </FormInputWrap>
                     </div>
@@ -137,7 +138,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   name="products.0.cost.shipping"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="국내 배송료" tooltip="배송료는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
+                      <FormInputWrap title="국내 배송료" tooltip="현지에서 발생된 배송료입니다.">
                         <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))} />
                       </FormInputWrap>
                     </div>
@@ -148,7 +149,7 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   name="products.0.cost.fee"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="수수료" tooltip="수수료는 일일 환율이 적용되므로 추후 수정이 불가합니다.">
+                      <FormInputWrap title="수수료">
                         <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))} />
                       </FormInputWrap>
                     </div>

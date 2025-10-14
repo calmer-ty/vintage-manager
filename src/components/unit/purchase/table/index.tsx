@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
+import { getDisplayPrice } from "@/lib/price";
+
 // 외부 요소
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -10,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-// import BasicTooltip from "@/components/commons/BasicTooltip";
+import BasicTooltip from "@/components/commons/BasicTooltip";
 import TableItem from "./TableItem";
 import TableControl from "./TableControl";
 
@@ -32,7 +34,7 @@ interface IReceivingTableProps {
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
   { key: "products", label: "패키지 정보" },
-  { key: "cost", label: "국제 배송료" },
+  { key: "shipping", label: "국제 배송료" },
 ];
 
 export default function ReceivingTable({ data, rowSelection, setRowSelection, onClickMoveToCreate, onClickMoveToDelete, onClickMoveToMerge, onClickMoveToSale, fetchLoading }: IReceivingTableProps) {
@@ -55,7 +57,9 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
       if (value == null || value === "") {
         return <div>-</div>;
       }
-
+      if (key === "shipping" && row.original.shipping !== null) {
+        return <div className="flex flex-col">{getDisplayPrice(row.original.shipping.exchange.code, row.original.shipping.amount)}</div>;
+      }
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products") {
         return (
@@ -112,12 +116,16 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              {/* <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}> */}
-              <div className="w-full">
-                <DropdownMenuItem onClick={() => onClickMoveToSale(row.original)}>판매 등록</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])}>패키지 삭제</DropdownMenuItem>
-              </div>
-              {/* </BasicTooltip> */}
+              <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
+                <div className="w-full">
+                  <DropdownMenuItem onClick={() => onClickMoveToSale(row.original)} disabled={!!row.original.addSaleAt}>
+                    판매 등록
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onClickMoveToDelete([row.original._id])} disabled={!!row.original.addSaleAt}>
+                    패키지 삭제
+                  </DropdownMenuItem>
+                </div>
+              </BasicTooltip>
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -183,7 +191,7 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
                 ) : (
                   // 데이터가 있을 때
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.addSaleAt ? "bg-red-50" : ""}>
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
