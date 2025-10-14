@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { Timestamp } from "firebase/firestore";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { getDisplayPrice } from "@/lib/price";
@@ -18,7 +17,7 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import { SalesSchema } from "../schema";
 
-import type { ICreateProductParams, IPackage, ISalesDoc, ISalesPackageParams } from "@/types";
+import type { ICreateProductDoc, ICreateProductParams, IPackage, ISalesPackageDoc, ISalesPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 interface ISaleDialogProps {
@@ -27,7 +26,7 @@ interface ISaleDialogProps {
   salesTarget: IPackage | undefined;
   fetchPackages: () => Promise<void>;
   salesPackage: ({ salesTarget, salesDoc }: ISalesPackageParams) => Promise<void>;
-  createProduct: ({ products }: ICreateProductParams) => Promise<void>;
+  createProduct: ({ productDocs }: ICreateProductParams) => Promise<void>;
 }
 
 export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, salesPackage, fetchPackages, createProduct }: ISaleDialogProps) {
@@ -46,23 +45,28 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
   });
 
   const onClickSales = async (data: z.infer<typeof SalesSchema>) => {
-    console.log("salesTarget: ", salesTarget);
     if (!salesTarget) {
       toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
       return;
     }
 
     try {
-      const salesDoc: ISalesDoc = {
+      const salesDoc: ISalesPackageDoc = {
         shipping: {
           amount: data.cost.shipping,
           exchange: data.cost.exchange,
         },
-        addSaleAt: Timestamp.fromDate(new Date()),
       };
+      const productDocs: ICreateProductDoc[] = salesTarget.products.map((p) => ({
+        ...p,
+        cost: {
+          price: p.cost.price,
+          exchange: p.cost.exchange,
+        },
+      }));
 
       await salesPackage({ salesTarget: salesTarget._id, salesDoc });
-      await createProduct({ products: salesTarget.products });
+      await createProduct({ productDocs });
       await fetchPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
       setIsSaleOpen(false);

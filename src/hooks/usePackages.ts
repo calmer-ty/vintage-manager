@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
@@ -88,7 +88,7 @@ export const usePackages = ({ uid, selectedYear, selectedMonth }: IusePackagesPa
     try {
       const docRef = doc(db, "packages", salesTarget);
 
-      await updateDoc(docRef, { ...salesDoc });
+      await updateDoc(docRef, { ...salesDoc, addSaleAt: Timestamp.fromDate(new Date()) });
     } catch (err) {
       console.error(err);
     }

@@ -27,7 +27,7 @@ interface IReceivingTableProps {
   onClickMoveToMerge: (rowData: IPackage[]) => void;
   onClickMoveToSale: (rowData: IPackage) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
-  createProduct: ({ productDoc }: ICreateProductParams) => Promise<void>;
+  createProduct: ({ productDocs }: ICreateProductParams) => Promise<void>;
   fetchLoading: boolean;
 }
 

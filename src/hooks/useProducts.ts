@@ -1,12 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
-import { v4 as uuid } from "uuid";
 
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductParams, IProduct, ISalesProductParams } from "@/types";
+import type { ICreateProductParams, ISalesProduct, ISalesProductParams } from "@/types";
 interface IUseProductsParams {
   uid: string;
   selectedYear: number;
@@ -15,16 +14,16 @@ interface IUseProductsParams {
 
 // 패키지 상태에 따라 종속적으로 데이터 처리
 export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsParams) => {
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<ISalesProduct[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createProduct = async ({ products }: ICreateProductParams) => {
+  const createProduct = async ({ productDocs }: ICreateProductParams) => {
     if (!uid) return;
 
     try {
-      for (const product of products) {
-        const docRef = await addDoc(collection(db, "products"), { ...product, _id: uuid(), sales: 0, profit: null, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
+      for (const product of productDocs) {
+        const docRef = await addDoc(collection(db, "products"), { ...product, sales: 0, profit: 0, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
 
         await updateDoc(docRef, {
           _id: docRef.id,
@@ -82,7 +81,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
         ...doc.data(),
       }));
 
-      setProducts(dataArray as IProduct[]);
+      setProducts(dataArray as ISalesProduct[]);
     } catch (err) {
       console.error(err);
     } finally {
