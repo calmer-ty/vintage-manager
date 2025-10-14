@@ -4,7 +4,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } fro
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreatePackageParams, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
+import type { ICreatePackageParams, IDeletePackageParams, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
 interface IUsePackagesParams {
   uid: string;
   selectedYear: number;
@@ -102,10 +102,10 @@ export const usePackages = ({ uid, selectedYear, selectedMonth }: IUsePackagesPa
   };
 
   // [삭제]
-  const deletePackage = async (itemIds: string[]) => {
+  const deletePackage = async ({ deleteTargets }: IDeletePackageParams) => {
     if (!uid) return;
 
-    for (const id of itemIds) {
+    for (const id of deleteTargets) {
       try {
         await deleteDoc(doc(db, "packages", id));
       } catch (error) {

@@ -14,10 +14,16 @@ interface ITableControlProps {
   }[];
   onClickMoveToCreate: () => void;
   onClickMoveToMerge: (rowData: IPackage[]) => void;
-  onClickMoveToDelete: (selectedPurchasesId: string[]) => void;
+  onClickMoveToDelete: (rowData: string[]) => void;
 }
 
-export default function TableControl({ table, columnConfig, onClickMoveToCreate, onClickMoveToMerge, onClickMoveToDelete }: ITableControlProps) {
+export default function TableControl({
+  table,
+  columnConfig,
+  onClickMoveToCreate,
+  onClickMoveToMerge,
+  onClickMoveToDelete,
+}: ITableControlProps) {
   //  선택한 체크박스
   const selectedIds = table.getSelectedRowModel().rows.map((row) => row.original._id);
   const selectedData = table.getSelectedRowModel().rows.map((row) => row.original);
@@ -67,7 +73,12 @@ export default function TableControl({ table, columnConfig, onClickMoveToCreate,
               .filter((column) => column.getCanHide())
               .map((column) => {
                 return (
-                  <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
                     {columnLabelMap[column.id] ?? column.id}
                   </DropdownMenuCheckboxItem>
                 );

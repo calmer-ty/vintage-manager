@@ -9,19 +9,26 @@ import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
+import type { IDeletePackageParams } from "@/types";
 interface IDeleteDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
-  deletePackage: (itemIds: string[]) => Promise<void>;
+  deletePackage: ({ deleteTargets }: IDeletePackageParams) => Promise<void>;
 }
 
-export default function DeleteDialog({ form, setRowSelection, isDeleteOpen, setIsDeleteOpen, deleteTargets, deletePackage }: IDeleteDialogProps) {
-  // 삭제 함수
+export default function DeleteDialog({
+  form,
+  setRowSelection,
+  isDeleteOpen,
+  setIsDeleteOpen,
+  deleteTargets,
+  deletePackage,
+}: IDeleteDialogProps) {
   const onClickDelete = async () => {
-    await deletePackage(deleteTargets);
+    await deletePackage({ deleteTargets });
 
     toast("🗑️ 선택한 항목이 삭제되었습니다.");
     setIsDeleteOpen(false);

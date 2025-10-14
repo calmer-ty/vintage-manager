@@ -117,6 +117,9 @@ export interface ISalesPackageParams {
   salesTarget: string;
   salesDoc: ISalesPackageDoc;
 }
+export interface IDeletePackageParams {
+  deleteTargets: string[];
+}
 
 // 상품
 export interface ICreateProductParams {

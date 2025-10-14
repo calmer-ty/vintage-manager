@@ -1,7 +1,14 @@
 // 라이브러리
 import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
-import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
 import { getDisplayPrice } from "@/lib/price";
 
@@ -37,7 +44,16 @@ const columnConfig = [
   { key: "shipping", label: "국제 배송료" },
 ];
 
-export default function ReceivingTable({ data, rowSelection, setRowSelection, onClickMoveToCreate, onClickMoveToDelete, onClickMoveToMerge, onClickMoveToSale, fetchLoading }: IReceivingTableProps) {
+export default function PurchaseTable({
+  data,
+  rowSelection,
+  setRowSelection,
+  onClickMoveToCreate,
+  onClickMoveToDelete,
+  onClickMoveToMerge,
+  onClickMoveToSale,
+  fetchLoading,
+}: IReceivingTableProps) {
   // const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -76,22 +92,32 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
     {
       id: "select",
       header: ({ table }) => {
-        // const selectableRows = table.getRowModel().rows.filter((row) => !row.original.addSaleAt); // shipping이 없는 행만 선택 가능
-        // const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
+        const selectableRows = table.getRowModel().rows.filter((row) => !row.original.addSaleAt); // addSaleAt 없는 행만 선택 가능
+        const allSelected = selectableRows.length > 0 && selectableRows.every((row) => row.getIsSelected()); // 선택 가능한 행이 모두 선택되었는지 확인
 
         return (
           <Checkbox
-            checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
-            // checked={allSelected}
+            // 기존 코드
+            // checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+            // onCheckedChange={(value) => {
+            // table.toggleAllPageRowsSelected(!!value);
+            // }}
+            checked={allSelected}
             onCheckedChange={(value) => {
-              table.toggleAllPageRowsSelected(!!value);
-              // selectableRows.forEach((row) => row.toggleSelected(!!value));
+              selectableRows.forEach((row) => row.toggleSelected(!!value));
             }}
             aria-label="Select all"
           />
         );
       },
-      cell: ({ row }) => <Checkbox checked={row.getIsSelected()} onCheckedChange={(value) => row.toggleSelected(!!value)} aria-label="Select row" />,
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          disabled={!!row.original.addSaleAt}
+          aria-label="Select row"
+        />
+      ),
       enableSorting: false,
       enableHiding: false,
     },
@@ -154,7 +180,13 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
   return (
     <>
       <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
-        <TableControl table={table} columnConfig={columnConfig} onClickMoveToCreate={onClickMoveToCreate} onClickMoveToMerge={onClickMoveToMerge} onClickMoveToDelete={onClickMoveToDelete} />
+        <TableControl
+          table={table}
+          columnConfig={columnConfig}
+          onClickMoveToCreate={onClickMoveToCreate}
+          onClickMoveToMerge={onClickMoveToMerge}
+          onClickMoveToDelete={onClickMoveToDelete}
+        />
         <div className="border rounded-md">
           <Table>
             <TableHeader>
@@ -162,7 +194,9 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead key={header.id}>
-                      <div className="px-4 text-center">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
+                      <div className="px-4 text-center">
+                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      </div>
                     </TableHead>
                   ))}
                 </TableRow>
@@ -174,7 +208,10 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
                 fetchLoading ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="text-center h-50">
-                      <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />
+                      <Loader2
+                        className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground"
+                        aria-label="Loading"
+                      />
                     </TableCell>
                   </TableRow>
                 ) : // 데이터가 없을 때
@@ -191,7 +228,11 @@ export default function ReceivingTable({ data, rowSelection, setRowSelection, on
                 ) : (
                   // 데이터가 있을 때
                   table.getRowModel().rows.map((row) => (
-                    <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.addSaleAt ? "bg-red-50" : ""}>
+                    <TableRow
+                      key={row.id}
+                      data-state={row.getIsSelected() && "selected"}
+                      className={row.original.addSaleAt ? "bg-red-50" : ""}
+                    >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
