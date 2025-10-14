@@ -46,8 +46,8 @@ export interface IPackage {
   addSaleAt: Timestamp | null;
 }
 export interface ISalesDoc {
-  cost: {
-    shipping: number;
+  shipping: {
+    amount: number;
     exchange: IExchange;
   };
   addSaleAt: Timestamp;

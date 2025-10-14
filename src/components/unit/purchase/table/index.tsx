@@ -32,6 +32,7 @@ interface IReceivingTableProps {
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
   { key: "products", label: "패키지 정보" },
+  { key: "cost", label: "국제 배송료" },
 ];
 
 export default function ReceivingTable({ data, rowSelection, setRowSelection, onClickMoveToCreate, onClickMoveToDelete, onClickMoveToMerge, onClickMoveToSale, fetchLoading }: IReceivingTableProps) {

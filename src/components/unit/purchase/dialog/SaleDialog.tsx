@@ -54,8 +54,8 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
 
     try {
       const salesDoc: ISalesDoc = {
-        cost: {
-          shipping: data.cost.shipping,
+        shipping: {
+          amount: data.cost.shipping,
           exchange: data.cost.exchange,
         },
         addSaleAt: Timestamp.fromDate(new Date()),
