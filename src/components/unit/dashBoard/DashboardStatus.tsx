@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck } from "lucide-react";
 
-import type { IProduct, IPackage } from "@/types";
+import type { ISalesProduct, IPackage } from "@/types";
 interface IDashBoardStatusProps {
-  products: IProduct[];
+  products: ISalesProduct[];
   packages: IPackage[];
 }
 

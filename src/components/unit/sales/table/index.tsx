@@ -19,11 +19,11 @@ import TableItemState from "./TableItemState";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { IProduct } from "@/types";
+import type { ISalesProduct } from "@/types";
 interface ISalesTableProps {
-  data: IProduct[];
+  data: ISalesProduct[];
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  setUpdateTarget: Dispatch<SetStateAction<IProduct | undefined>>;
+  setUpdateTarget: Dispatch<SetStateAction<ISalesProduct | undefined>>;
   fetchProducts: () => Promise<void>;
   loading: boolean;
 }
@@ -46,7 +46,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
 
   const { viewCurrency } = useCurrency();
 
-  const dynamicColumns: ColumnDef<IProduct>[] = columnConfig.map(({ key, label }) => ({
+  const dynamicColumns: ColumnDef<ISalesProduct>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
@@ -79,7 +79,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       return <div className="capitalize">{String(value)}</div>;
     },
   }));
-  const columns: ColumnDef<IProduct>[] = [
+  const columns: ColumnDef<ISalesProduct>[] = [
     ...dynamicColumns,
     {
       id: "status",

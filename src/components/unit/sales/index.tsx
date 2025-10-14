@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import DialogWrite from "./dialog/DialogWrite";
 
-import type { IProduct, IUserID } from "@/types";
+import type { ISalesProduct, IUserID } from "@/types";
 
 export default function SalesUI({ uid }: IUserID) {
   const { selectedYear, selectedMonth } = useDateSelector();
@@ -14,7 +14,7 @@ export default function SalesUI({ uid }: IUserID) {
 
   // 수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
-  const [updateTarget, setUpdateTarget] = useState<IProduct | undefined>(undefined);
+  const [updateTarget, setUpdateTarget] = useState<ISalesProduct | undefined>(undefined);
 
   return (
     <article className="flex-1 px-10 py-6">

@@ -13,7 +13,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
 
-import type { IProduct, ISalesProductParams, IUpdateProduct } from "@/types";
+import type { ISalesProduct, ISalesProductParams, IUpdateProduct } from "@/types";
 
 const ProductSchema = z.object({
   brand: z.string().optional(),
@@ -25,8 +25,8 @@ interface IDialogWriteProps {
   uid: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  updateTarget: IProduct | undefined;
-  setUpdateTarget: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
+  updateTarget: ISalesProduct | undefined;
+  setUpdateTarget: React.Dispatch<React.SetStateAction<ISalesProduct | undefined>>;
   salesProduct: ({ salesTarget, productDoc }: ISalesProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
 }

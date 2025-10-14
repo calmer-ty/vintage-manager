@@ -6,9 +6,9 @@ import { toast } from "sonner";
 // 외부 요소
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { IProduct } from "@/types";
+import type { ISalesProduct } from "@/types";
 interface ITableItemStateProps {
-  product: IProduct;
+  product: ISalesProduct;
   refetch: () => Promise<void>;
 }
 
