@@ -23,7 +23,14 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
     try {
       for (const product of productDocs) {
-        const docRef = await addDoc(collection(db, "products"), { ...product, sales: 0, profit: 0, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
+        const docRef = await addDoc(collection(db, "products"), {
+          ...product,
+          uid,
+          sales: 0,
+          profit: 0,
+          createdAt: Timestamp.fromDate(new Date()),
+          soldAt: null,
+        });
 
         await updateDoc(docRef, {
           _id: docRef.id,

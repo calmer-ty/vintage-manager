@@ -7,32 +7,37 @@ import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck } from "lu
 
 import type { ISalesProduct, IPackage } from "@/types";
 interface IDashBoardStatusProps {
-  products: ISalesProduct[];
   packages: IPackage[];
+  products: ISalesProduct[];
 }
 
-export default function DashBoardStatus({ products, packages }: IDashBoardStatusProps) {
+export default function DashBoardStatus({ packages, products }: IDashBoardStatusProps) {
   // soldAt null이 아닌 item 데이터들
   const soldProducts = products.filter((product) => product.soldAt !== null);
-  const saleProducts = products.filter((product) => product.soldAt === null);
+  const salesProducts = products.filter((product) => product.soldAt === null);
+  const allPackages = packages.flatMap((pkg) => pkg.products);
 
-  // 합산된 패키지 배송료 계산
-  // const totalShipping = packages.reduce((acc, val) => {
-  //   return acc + val.shipping.exchange.rate * val.shipping.amount;
-  // }, 0);
-  // const totalFee = packages.reduce((acc, val) => {
-  //   return acc + val.fee.exchange.rate * val.fee.amount;
-  // }, 0);
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((acc, val) => {
-    return acc + val.costPrice.exchange.rate * val.costPrice.amount;
+    return acc + val.cost.exchange.krw * val.cost.price;
   }, 0);
-
-  const totalSalePrice = soldProducts.reduce((acc, val) => {
-    return acc + val.salePrice;
+  const totalSoldPrice = soldProducts.reduce((acc, val) => {
+    return acc + val.sales;
   }, 0);
   const totalProfit = soldProducts.reduce((acc, val) => {
     return acc + val.profit;
+  }, 0);
+
+  // 국내 배송료
+  const totalDomesticShipping = allPackages.reduce((acc, val) => {
+    return acc + val.cost.exchange.krw * val.cost.shipping;
+  }, 0);
+  // 국제 배송료
+  const totalIntlShipping = packages.reduce((acc, val) => {
+    return acc + (val.shipping?.exchange.krw ?? 0) * (val.shipping?.amount ?? 0);
+  }, 0);
+  const totalFee = allPackages.reduce((acc, val) => {
+    return acc + val.cost.exchange.krw * val.cost.fee;
   }, 0);
 
   // 상단의 상태 값들
@@ -42,14 +47,14 @@ export default function DashBoardStatus({ products, packages }: IDashBoardStatus
       value: `₩ ${Math.round(totalCost).toLocaleString()}`,
       icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
-    // {
-    //   title: "배송료 & 수수료",
-    //   value: `₩ ${Math.round(totalShipping + totalFee).toLocaleString()}`,
-    //   icon: <Truck className="shrink-0 text-red-500" />,
-    // },
+    {
+      title: "배송료 & 수수료",
+      value: `₩ ${Math.round(totalDomesticShipping + totalIntlShipping + totalFee).toLocaleString()}`,
+      icon: <Truck className="shrink-0 text-red-500" />,
+    },
     {
       title: "총 매출",
-      value: `₩ ${Math.round(totalSalePrice).toLocaleString()}`,
+      value: `₩ ${Math.round(totalSoldPrice).toLocaleString()}`,
       icon: <DollarSign className="shrink-0 text-green-500" />,
     },
     {
@@ -64,7 +69,7 @@ export default function DashBoardStatus({ products, packages }: IDashBoardStatus
     },
     {
       title: "남은 재고",
-      value: `${saleProducts.length} 개`,
+      value: `${salesProducts.length} 개`,
       icon: <Boxes className="shrink-0 text-yellow-500" />,
     },
   ];
