@@ -5,13 +5,13 @@ import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } fro
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { ICreatePackageParams, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
-interface IusePackagesParams {
+interface IUsePackagesParams {
   uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
-export const usePackages = ({ uid, selectedYear, selectedMonth }: IusePackagesParams) => {
+export const usePackages = ({ uid, selectedYear, selectedMonth }: IUsePackagesParams) => {
   const [packages, setPackages] = useState<IPackage[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
 
@@ -42,7 +42,7 @@ export const usePackages = ({ uid, selectedYear, selectedMonth }: IusePackagesPa
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc, uid });
+      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc, uid, createdAt: Timestamp.fromDate(new Date()) });
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
         _id: docRef.id,

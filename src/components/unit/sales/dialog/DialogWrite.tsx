@@ -13,7 +13,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
 
-import type { ISalesProduct, ISalesProductParams, IUpdateProduct } from "@/types";
+import type { ISalesProduct, ISalesProductParams, IUpdateProductDoc } from "@/types";
 
 const ProductSchema = z.object({
   brand: z.string().optional(),
@@ -31,7 +31,15 @@ interface IDialogWriteProps {
   fetchProducts: () => Promise<void>;
 }
 
-export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, salesProduct, fetchProducts }: IDialogWriteProps) {
+export default function DialogWrite({
+  uid,
+  isOpen,
+  setIsOpen,
+  updateTarget,
+  setUpdateTarget,
+  salesProduct,
+  fetchProducts,
+}: IDialogWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
@@ -66,7 +74,7 @@ export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setU
     if (!uid || !isEdit) return;
 
     try {
-      const productDoc: IUpdateProduct = {
+      const productDoc: IUpdateProductDoc = {
         ...data,
         profit: data.sales - getPriceInKRW(updateTarget.cost.price, updateTarget.cost.exchange.krw),
       };
@@ -131,7 +139,13 @@ export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setU
                   name="sales"
                   render={({ field }) => (
                     <FormInputWrap title="판매가">
-                      <Input type="number" placeholder="예) 1000" {...field} className="bg-white" onChange={(e) => field.onChange(Number(e.target.value))} />
+                      <Input
+                        type="number"
+                        placeholder="예) 1000"
+                        {...field}
+                        className="bg-white"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                      />
                     </FormInputWrap>
                   )}
                 />
