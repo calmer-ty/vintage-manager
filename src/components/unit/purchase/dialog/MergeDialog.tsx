@@ -11,6 +11,7 @@ import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { IMargePackageDoc, IMergePackageParams, IPackage } from "@/types";
 import type { RowSelectionState } from "@tanstack/react-table";
+import { getDisplayPrice } from "@/lib/price";
 interface IMergeDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
@@ -21,7 +22,15 @@ interface IMergeDialogProps {
   fetchPackages: () => Promise<void>;
 }
 
-export default function MergeDialog({ form, setRowSelection, isMergeOpen, setIsMergeOpen, mergeTargets, mergePackage, fetchPackages }: IMergeDialogProps) {
+export default function MergeDialog({
+  form,
+  setRowSelection,
+  isMergeOpen,
+  setIsMergeOpen,
+  mergeTargets,
+  mergePackage,
+  fetchPackages,
+}: IMergeDialogProps) {
   const mergeTargetIds = mergeTargets.map((target) => target._id);
   const mergeTargetProducts = mergeTargets.flatMap((target) => target.products);
 
@@ -78,7 +87,7 @@ export default function MergeDialog({ form, setRowSelection, isMergeOpen, setIsM
               <Item variant="outline" key={target._id} className="flex-col justify-start">
                 {target.products.map((p) => (
                   <ItemContent key={p._id} className="w-full">
-                    {p.name} - {p.brand} / {p.cost.price} {p.cost.exchange.label}
+                    {p.name} - {p.brand} / {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
                   </ItemContent>
                 ))}
               </Item>

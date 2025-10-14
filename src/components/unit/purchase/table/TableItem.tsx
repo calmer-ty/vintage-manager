@@ -44,22 +44,33 @@ export default function TableItem({ products }: ITableItemProps) {
               </span>
               <span className="flex items-center gap-1">
                 {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
-                <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})</em>
+                <em className="text-xs not-italic text-gray-500">
+                  ({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})
+                </em>
               </span>
             </div>
 
             {/* 패키지 리스트 문장 */}
-            <motion.div animate={{ height: isBasicOpen ? "auto" : 0, opacity: isBasicOpen ? 1 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
+            <motion.div
+              animate={{ height: isBasicOpen ? "auto" : 0, opacity: isBasicOpen ? 1 : 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
               <CollapsibleContent className="flex flex-col">
                 {rest.map((p, idx) => {
                   return (
-                    <div key={`${p.name}_${p.brand}_${idx}`} className="flex justify-between gap-4 py-2 border-t border-dotted border-gray-300 text-sm text-black">
+                    <div
+                      key={`${p.name}_${p.brand}_${idx}`}
+                      className="flex justify-between gap-4 py-2 border-t border-dotted border-gray-300 text-sm text-black"
+                    >
                       <span>
                         {p.name} - {p.brand}
                       </span>
                       <span className="">
                         {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
-                        <em className="ml-1 text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, p.cost.price, p.cost.exchange)})</em>
+                        <em className="ml-1 text-xs not-italic text-gray-500">
+                          ({getExchangeDisplayPrice(viewCurrency, p.cost.price, p.cost.exchange)})
+                        </em>
                       </span>
                     </div>
                   );
@@ -68,7 +79,9 @@ export default function TableItem({ products }: ITableItemProps) {
                   <span className="mr-1 font-bold">총 매입가:</span>
                   <span>
                     {getDisplayPrice(products[0].cost.exchange.code, priceSum)}
-                    <em className="ml-1 text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, priceSum, products[0].cost.exchange)})</em>
+                    <em className="ml-1 text-xs not-italic text-gray-500">
+                      ({getExchangeDisplayPrice(viewCurrency, priceSum, products[0].cost.exchange)})
+                    </em>
                   </span>
                 </div>
               </CollapsibleContent>
@@ -90,7 +103,9 @@ export default function TableItem({ products }: ITableItemProps) {
             <div className="flex flex-col gap-0.5 text-left">
               <span>
                 {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
-                <em className="text-xs not-italic text-gray-500 ml-1">({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})</em>
+                <em className="text-xs not-italic text-gray-500 ml-1">
+                  ({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})
+                </em>
               </span>
             </div>
           </div>
@@ -115,34 +130,70 @@ export default function TableItem({ products }: ITableItemProps) {
             <span>배송료</span>
           </Button>
 
-          <Button variant={isDetailsOpen === "fee" ? "secondary" : "ghost"} size="icon" className="w-auto px-1 " onClick={() => setIsDetailsOpen((prev) => (prev === "fee" ? null : "fee"))}>
+          <Button
+            variant={isDetailsOpen === "fee" ? "secondary" : "ghost"}
+            size="icon"
+            className="w-auto px-1 "
+            onClick={() => setIsDetailsOpen((prev) => (prev === "fee" ? null : "fee"))}
+          >
             {isDetailsOpen === "fee" ? <ChevronUp /> : <ChevronDown />}
             <span>수수료</span>
           </Button>
         </div>
 
-        <motion.div animate={{ height: isDetailsOpen ? "auto" : 0, opacity: isDetailsOpen ? 1 : 0 }} transition={{ duration: 0.3, ease: "easeInOut" }} className="overflow-hidden">
+        <motion.div
+          animate={{ height: isDetailsOpen ? "auto" : 0, opacity: isDetailsOpen ? 1 : 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="overflow-hidden"
+        >
           <CollapsibleContent className="flex flex-col px-4 py-2">
             {products.map((p, idx) => {
               return (
-                <div key={`${p.name}_${p.brand}_${idx}`} className="flex justify-between gap-4 py-2 border-b border-dotted border-gray-300 text-sm text-black">
+                <div
+                  key={`${p.name}_${p.brand}_${idx}`}
+                  className="flex justify-between gap-4 py-2 border-b border-dotted border-gray-300 text-sm text-black"
+                >
                   <span>
                     {p.name} - {p.brand}
                   </span>
                   <span className="flex items-center gap-1">
-                    {isDetailsOpen === "shipping" ? getDisplayPrice(p.cost.exchange.code, p.cost.shipping) : isDetailsOpen === "fee" ? getDisplayPrice(p.cost.exchange.code, p.cost.fee) : "정보 없음"}
+                    {isDetailsOpen === "shipping"
+                      ? getDisplayPrice(p.cost.exchange.code, p.cost.shipping)
+                      : isDetailsOpen === "fee"
+                      ? getDisplayPrice(p.cost.exchange.code, p.cost.fee)
+                      : "정보 없음"}
+                    <em className="text-xs not-italic text-gray-500 ml-1">
+                      (
+                      {isDetailsOpen === "shipping"
+                        ? getExchangeDisplayPrice(viewCurrency, p.cost.shipping, p.cost.exchange)
+                        : isDetailsOpen === "fee"
+                        ? getExchangeDisplayPrice(viewCurrency, p.cost.fee, p.cost.exchange)
+                        : "정보 없음"}
+                      )
+                    </em>
                   </span>
                 </div>
               );
             })}
             <div className="pt-2 pb-1 text-right">
-              <span className="mr-1 font-bold">{isDetailsOpen === "shipping" ? "총 배송료" : isDetailsOpen === "fee" ? "총 수수료" : "정보 없음"}</span>
+              <span className="mr-1 font-bold">
+                {isDetailsOpen === "shipping" ? "총 배송료" : isDetailsOpen === "fee" ? "총 수수료" : "정보 없음"}
+              </span>
               <span>
                 {isDetailsOpen === "shipping"
                   ? getDisplayPrice(products[0].cost.exchange.code, shippingSum)
                   : isDetailsOpen === "fee"
                   ? getDisplayPrice(products[0].cost.exchange.code, feeSum)
                   : "정보 없음"}
+                <em className="text-xs not-italic text-gray-500 ml-1">
+                  (
+                  {isDetailsOpen === "shipping"
+                    ? getExchangeDisplayPrice(viewCurrency, shippingSum, products[0].cost.exchange)
+                    : isDetailsOpen === "fee"
+                    ? getExchangeDisplayPrice(viewCurrency, feeSum, products[0].cost.exchange)
+                    : "정보 없음"}
+                  )
+                </em>
               </span>
             </div>
           </CollapsibleContent>
