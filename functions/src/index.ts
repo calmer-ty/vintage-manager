@@ -6,7 +6,7 @@ import next from "next";
 admin.initializeApp();
 
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev, conf: { distDir: "../.next" } });
+const app = next({ dev, conf: { distDir: ".next" } });
 
 const handle = app.getRequestHandler();
 
