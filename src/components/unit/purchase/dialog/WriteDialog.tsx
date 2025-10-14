@@ -16,15 +16,24 @@ import type { Dispatch, SetStateAction } from "react";
 import type { ICreatePackageDoc, ICreatePackageParams } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
+import type { RowSelectionState } from "@tanstack/react-table";
 interface IWriteDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
+  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   createPackage: ({ packageDoc }: ICreatePackageParams) => Promise<void>;
   fetchPackages: () => Promise<void>;
 }
 
-export default function WriteDialog({ form, isWriteOpen, setIsWriteOpen, createPackage, fetchPackages }: IWriteDialogProps) {
+export default function WriteDialog({
+  form,
+  setRowSelection,
+  isWriteOpen,
+  setIsWriteOpen,
+  createPackage,
+  fetchPackages,
+}: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -44,6 +53,7 @@ export default function WriteDialog({ form, isWriteOpen, setIsWriteOpen, createP
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기
       toast("✅ 상품이 성공적으로 등록되었습니다.");
+      setRowSelection({});
       setIsWriteOpen(false);
       form.reset();
     } catch (error) {

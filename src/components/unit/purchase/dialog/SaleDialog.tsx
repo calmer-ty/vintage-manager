@@ -20,7 +20,9 @@ import { SalesSchema } from "../schema";
 import type { ICreateProductDoc, ICreateProductParams, IPackage, ISalesPackageDoc, ISalesPackageParams } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
+import type { RowSelectionState } from "@tanstack/react-table";
 interface ISaleDialogProps {
+  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isSaleOpen: boolean;
   setIsSaleOpen: Dispatch<SetStateAction<boolean>>;
   salesTarget: IPackage | undefined;
@@ -29,7 +31,15 @@ interface ISaleDialogProps {
   createProduct: ({ productDocs }: ICreateProductParams) => Promise<void>;
 }
 
-export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, salesPackage, fetchPackages, createProduct }: ISaleDialogProps) {
+export default function SaleDialog({
+  setRowSelection,
+  isSaleOpen,
+  setIsSaleOpen,
+  salesTarget,
+  salesPackage,
+  fetchPackages,
+  createProduct,
+}: ISaleDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -70,6 +80,7 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
       await fetchPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
       setIsSaleOpen(false);
+      setRowSelection({});
       form.reset();
     } catch (error) {
       console.error("문서 추가 실패:", error);
@@ -112,7 +123,10 @@ export default function SaleDialog({ isSaleOpen, setIsSaleOpen, salesTarget, sal
                   name="cost"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="국제 배송료" tooltip="배송료 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다.">
+                      <FormInputWrap
+                        title="국제 배송료"
+                        tooltip="배송료 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다."
+                      >
                         <Input
                           type="number"
                           className="bg-white"

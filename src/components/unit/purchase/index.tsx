@@ -97,6 +97,7 @@ export default function PurchaseUI({ uid }: IUserID) {
       {/* 모달 */}
       <WriteDialog
         form={form}
+        setRowSelection={setRowSelection}
         isWriteOpen={isWriteOpen}
         setIsWriteOpen={setIsWriteOpen}
         createPackage={createPackage}
@@ -121,6 +122,7 @@ export default function PurchaseUI({ uid }: IUserID) {
       />
       <SaleDialog
         isSaleOpen={isSaleOpen}
+        setRowSelection={setRowSelection}
         setIsSaleOpen={setIsSaleOpen}
         salesTarget={salesTarget}
         salesPackage={salesPackage}
