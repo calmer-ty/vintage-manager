@@ -1,8 +1,8 @@
-import { ChevronDown, Pencil, Trash } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Settings } from "lucide-react";
+import { ChevronDown, Pencil, Trash, Settings } from "lucide-react";
+
+import CurrencySelect from "@/components/commons/CurrencySelect";
 
 import type { IPackage } from "@/types";
 import type { Table } from "@tanstack/react-table";
@@ -57,6 +57,7 @@ export default function TableControl({
 
       <div className="flex gap-2">
         <DropdownMenu>
+          <CurrencySelect />
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
               <span className="hidden sm:block">보기 설정</span>

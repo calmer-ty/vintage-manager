@@ -1,9 +1,9 @@
-import { ChevronDown } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Settings } from "lucide-react";
+import { ChevronDown, Settings } from "lucide-react";
+
+import CurrencySelect from "@/components/commons/CurrencySelect";
 
 import type { ISalesProduct } from "@/types";
 import type { Table } from "@tanstack/react-table";
@@ -32,6 +32,7 @@ export default function TableControl({ table, columnConfig }: ITableControlProps
 
       <div className="flex gap-2">
         <DropdownMenu>
+          <CurrencySelect />
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
               <span className="hidden sm:block">보기 설정</span>
@@ -48,7 +49,12 @@ export default function TableControl({ table, columnConfig }: ITableControlProps
               .filter((column) => column.getCanHide())
               .map((column) => {
                 return (
-                  <DropdownMenuCheckboxItem key={column.id} className="capitalize" checked={column.getIsVisible()} onCheckedChange={(value) => column.toggleVisibility(!!value)}>
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                  >
                     {columnLabelMap[column.id] ?? column.id}
                   </DropdownMenuCheckboxItem>
                 );

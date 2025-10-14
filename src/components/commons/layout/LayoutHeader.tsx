@@ -8,7 +8,6 @@ import { Separator } from "@/components/ui/separator";
 import { Rocket } from "lucide-react";
 
 import YearMonthSelect from "./YearMonthSelect";
-import CurrencySelect from "./CurrencySelect";
 
 import { pages } from "@/lib/link";
 
@@ -29,9 +28,13 @@ export default function Header() {
           <h2 className="font-medium shrink-0">{currentPage}</h2>
 
           <div className="flex justify-end items-center w-full">
-            <CurrencySelect />
             <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" />
-            <YearMonthSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+            <YearMonthSelect
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              selectedMonth={selectedMonth}
+              setSelectedMonth={setSelectedMonth}
+            />
           </div>
         </>
       ) : (
