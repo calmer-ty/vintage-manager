@@ -1,5 +1,4 @@
 import { toast } from "sonner";
-import { Timestamp } from "firebase/firestore";
 
 // 외부 요소
 import { Button } from "@/components/ui/button";
@@ -10,10 +9,9 @@ import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
-import type { IMergePackageParams, IPackage } from "@/types";
+import type { IMargePackageDoc, IMergePackageParams, IPackage } from "@/types";
 import type { RowSelectionState } from "@tanstack/react-table";
 interface IMergeDialogProps {
-  uid: string;
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isMergeOpen: boolean;
@@ -23,7 +21,7 @@ interface IMergeDialogProps {
   fetchPackages: () => Promise<void>;
 }
 
-export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, setIsMergeOpen, mergeTargets, mergePackage, fetchPackages }: IMergeDialogProps) {
+export default function MergeDialog({ form, setRowSelection, isMergeOpen, setIsMergeOpen, mergeTargets, mergePackage, fetchPackages }: IMergeDialogProps) {
   const mergeTargetIds = mergeTargets.map((target) => target._id);
   const mergeTargetProducts = mergeTargets.flatMap((target) => target.products);
 
@@ -46,12 +44,8 @@ export default function MergeDialog({ uid, form, setRowSelection, isMergeOpen, s
     }
 
     try {
-      const packageDoc: IPackage = {
-        _id: "",
-        uid,
+      const packageDoc: IMargePackageDoc = {
         products: mergeTargetProducts,
-        createdAt: Timestamp.fromDate(new Date()),
-        addSaleAt: null,
       };
 
       // 데이터 생성 및 리패치

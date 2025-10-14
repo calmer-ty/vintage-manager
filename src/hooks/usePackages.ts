@@ -20,7 +20,14 @@ export const usePackages = ({ uid, selectedYear, selectedMonth }: IusePackagesPa
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc });
+      const docRef = await addDoc(collection(db, "packages"), {
+        ...packageDoc,
+        uid,
+        _id: "",
+        createdAt: Timestamp.fromDate(new Date()),
+        shipping: null,
+        addSaleAt: null,
+      });
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
@@ -35,7 +42,7 @@ export const usePackages = ({ uid, selectedYear, selectedMonth }: IusePackagesPa
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc });
+      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc, uid });
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
         _id: docRef.id,

@@ -95,10 +95,22 @@ export default function PurchaseUI({ uid }: IUserID) {
       />
 
       {/* 모달 */}
-      <WriteDialog uid={uid} form={form} isWriteOpen={isWriteOpen} setIsWriteOpen={setIsWriteOpen} createPackage={createPackage} fetchPackages={fetchPackages} />
-      <DeleteDialog form={form} setRowSelection={setRowSelection} isDeleteOpen={isDeleteOpen} setIsDeleteOpen={setIsDeleteOpen} deleteTargets={deleteTargets} deletePackage={deletePackage} />
+      <WriteDialog
+        form={form}
+        isWriteOpen={isWriteOpen}
+        setIsWriteOpen={setIsWriteOpen}
+        createPackage={createPackage}
+        fetchPackages={fetchPackages}
+      />
+      <DeleteDialog
+        form={form}
+        setRowSelection={setRowSelection}
+        isDeleteOpen={isDeleteOpen}
+        setIsDeleteOpen={setIsDeleteOpen}
+        deleteTargets={deleteTargets}
+        deletePackage={deletePackage}
+      />
       <MergeDialog
-        uid={uid}
         form={form}
         setRowSelection={setRowSelection}
         isMergeOpen={isMergeOpen}
@@ -107,7 +119,14 @@ export default function PurchaseUI({ uid }: IUserID) {
         mergePackage={mergePackage}
         fetchPackages={fetchPackages}
       />
-      <SaleDialog isSaleOpen={isSaleOpen} setIsSaleOpen={setIsSaleOpen} salesTarget={salesTarget} salesPackage={salesPackage} fetchPackages={fetchPackages} createProduct={createProduct} />
+      <SaleDialog
+        isSaleOpen={isSaleOpen}
+        setIsSaleOpen={setIsSaleOpen}
+        salesTarget={salesTarget}
+        salesPackage={salesPackage}
+        fetchPackages={fetchPackages}
+        createProduct={createProduct}
+      />
     </article>
   );
 }

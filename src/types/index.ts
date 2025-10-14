@@ -52,12 +52,22 @@ export interface IPackage {
   shipping: IShipping | null;
   addSaleAt: Timestamp | null;
 }
+
+export interface ICreatePackageDoc {
+  products: {
+    _id: string;
+    name: string;
+    brand: string;
+    cost: {
+      price: number;
+      shipping: number;
+      fee: number;
+      exchange: IExchange;
+    };
+  }[];
+}
 export interface IMargePackageDoc {
-  uid: string;
   products: IPurchaseProduct[];
-  createdAt: Timestamp;
-  shipping: IShipping | null;
-  addSaleAt: Timestamp | null;
 }
 export interface ISalesPackageDoc {
   shipping: IShipping;
@@ -97,11 +107,11 @@ export interface IUpdateProduct {
 
 // 패키지
 export interface ICreatePackageParams {
-  packageDoc: IPackage;
+  packageDoc: ICreatePackageDoc;
 }
 export interface IMergePackageParams {
   deleteTargets: string[];
-  packageDoc: IPackage;
+  packageDoc: IMargePackageDoc;
 }
 export interface ISalesPackageParams {
   salesTarget: string;

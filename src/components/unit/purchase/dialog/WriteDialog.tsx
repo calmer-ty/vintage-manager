@@ -1,4 +1,3 @@
-import { Timestamp } from "firebase/firestore";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
@@ -14,11 +13,10 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreatePackageParams } from "@/types";
+import type { ICreatePackageDoc, ICreatePackageParams } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 interface IWriteDialogProps {
-  uid: string;
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
@@ -26,25 +24,18 @@ interface IWriteDialogProps {
   fetchPackages: () => Promise<void>;
 }
 
-export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, createPackage, fetchPackages }: IWriteDialogProps) {
+export default function WriteDialog({ form, isWriteOpen, setIsWriteOpen, createPackage, fetchPackages }: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
     try {
-      const packageDoc = {
-        _id: "",
-        uid,
-        ...data,
+      const packageDoc: ICreatePackageDoc = {
         products: data.products.map((p) => ({
           _id: uuid(),
-          uid,
           ...p,
         })),
-        createdAt: Timestamp.fromDate(new Date()),
-        shipping: null,
-        addSaleAt: null,
       };
 
       // 데이터 생성 및 리패치
@@ -128,7 +119,13 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
                       <FormInputWrap title="매입가">
-                        <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
+                        <Input
+                          type="number"
+                          placeholder="예) 1000"
+                          className="bg-white"
+                          value={field.value}
+                          onChange={(e) => field.onChange(Number(e.target.value))}
+                        />
                       </FormInputWrap>
                     </div>
                   )}
@@ -139,7 +136,13 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
                       <FormInputWrap title="국내 배송료" tooltip="현지에서 발생된 배송료입니다.">
-                        <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))} />
+                        <Input
+                          type="number"
+                          placeholder="예) 1000"
+                          className="bg-white"
+                          value={field.value}
+                          onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))}
+                        />
                       </FormInputWrap>
                     </div>
                   )}
@@ -150,7 +153,13 @@ export default function WriteDialog({ uid, form, isWriteOpen, setIsWriteOpen, cr
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
                       <FormInputWrap title="수수료">
-                        <Input type="number" placeholder="예) 1000" className="bg-white" value={field.value} onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))} />
+                        <Input
+                          type="number"
+                          placeholder="예) 1000"
+                          className="bg-white"
+                          value={field.value}
+                          onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))}
+                        />
                       </FormInputWrap>
                     </div>
                   )}
