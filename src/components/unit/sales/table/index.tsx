@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
 import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 
-import { getPriceInKRW } from "@/lib/price";
+import { useCurrency } from "@/contexts/currencyContext";
+import { getDisplayPrice, getExchangeDisplayPrice } from "@/lib/price";
 
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -21,32 +22,35 @@ import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } fro
 import type { IProduct } from "@/types";
 interface ISalesTableProps {
   data: IProduct[];
-  columnConfig: {
-    key: string;
-    label: string;
-  }[];
-
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   setUpdateTarget: Dispatch<SetStateAction<IProduct | undefined>>;
   fetchProducts: () => Promise<void>;
   loading: boolean;
 }
 
-export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpdateTarget, fetchProducts, loading }: ISalesTableProps) {
+const columnConfig = [
+  { key: "createdAt", label: "등록 일자" },
+  { key: "soldAt", label: "판매 일자" },
+  { key: "brand", label: "브랜드명" },
+  { key: "name", label: "상품명" },
+  { key: "cost", label: "매입가" },
+  { key: "sales", label: "판매가" },
+  { key: "profit", label: "예상 이익" },
+];
+
+export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetchProducts, loading }: ISalesTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+
+  const { viewCurrency } = useCurrency();
 
   const dynamicColumns: ColumnDef<IProduct>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
     header: label,
     cell: ({ row }) => {
       const value = row.getValue(key);
-
-      const costPrice = row.original.costPrice;
-      const salePrice = row.original.salePrice;
-      const profit = row.original.profit;
 
       if (value instanceof Timestamp) {
         // Timestamp일 때만 처리
@@ -57,21 +61,19 @@ export default function SalesTable({ data, columnConfig, setIsWriteOpen, setUpda
         return <div>-</div>;
       }
 
-      if (key === "costPrice") {
+      if (key === "cost") {
         return (
           <div className="flex justify-end items-center gap-1">
-            <span>
-              {costPrice.amount.toLocaleString()} {costPrice.exchange.label}
-            </span>
-            <span className="text-xs text-gray-500">({getPriceInKRW(costPrice.amount, costPrice.exchange.krw).toLocaleString()} ₩)</span>
+            <span>{getDisplayPrice(row.original.cost.exchange.code, row.original.cost.price)}</span>
+            <span className="text-xs text-gray-500">({getExchangeDisplayPrice(viewCurrency, row.original.cost.price, row.original.cost.exchange).toLocaleString()} ₩)</span>
           </div>
         );
       }
-      if (key === "salePrice") {
-        return <div className="text-right">{salePrice.toLocaleString()} ₩</div>;
+      if (key === "sales") {
+        return <div className="text-right">{row.original.sales.toLocaleString()} ₩</div>;
       }
       if (key === "profit") {
-        return <div className="text-right">{profit.toLocaleString()} ₩</div>;
+        return <div className="text-right">{row.original.profit.toLocaleString()} ₩</div>;
       }
 
       return <div className="capitalize">{String(value)}</div>;

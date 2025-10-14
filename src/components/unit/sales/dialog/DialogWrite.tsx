@@ -13,12 +13,12 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
 
-import type { IProduct, IUpdateProductParams, IUpdateProduct } from "@/types";
+import type { IProduct, ISalesProductParams, IUpdateProduct } from "@/types";
 
 const ProductSchema = z.object({
   brand: z.string().optional(),
   name: z.string().optional(),
-  salePrice: z.number().min(1, "판매가격을 입력해주세요."),
+  sales: z.number().min(1, "판매가격을 입력해주세요."),
 });
 
 interface IDialogWriteProps {
@@ -27,11 +27,11 @@ interface IDialogWriteProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   updateTarget: IProduct | undefined;
   setUpdateTarget: React.Dispatch<React.SetStateAction<IProduct | undefined>>;
-  updateProduct: ({ targetId, product }: IUpdateProductParams) => Promise<void>;
+  salesProduct: ({ salesTarget, productDoc }: ISalesProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
 }
 
-export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, updateProduct, fetchProducts }: IDialogWriteProps) {
+export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setUpdateTarget, salesProduct, fetchProducts }: IDialogWriteProps) {
   const isEdit = !!updateTarget;
 
   // ✍️ 폼 설정
@@ -40,7 +40,7 @@ export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setU
     defaultValues: {
       name: "",
       brand: "",
-      salePrice: 0,
+      sales: 0,
     },
   });
 
@@ -50,29 +50,29 @@ export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setU
       form.reset({
         brand: updateTarget.brand,
         name: updateTarget.name,
-        salePrice: updateTarget.salePrice,
+        sales: updateTarget.sales,
       });
     } else {
       form.reset({
         brand: "",
         name: "",
-        salePrice: 0,
+        sales: 0,
       });
     }
-  }, [form, isOpen, isEdit, updateTarget]);
+  }, [form, isEdit, updateTarget]);
 
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof ProductSchema>) => {
     if (!uid || !isEdit) return;
 
     try {
-      const product: IUpdateProduct = {
+      const productDoc: IUpdateProduct = {
         ...data,
-        profit: data.salePrice - getPriceInKRW(updateTarget.costPrice.amount, updateTarget.costPrice.exchange.krw),
+        profit: data.sales - getPriceInKRW(updateTarget.cost.price, updateTarget.cost.exchange.krw),
       };
 
       // 데이터 수정 및 리패치
-      await updateProduct({ targetId: updateTarget?._id, product });
+      await salesProduct({ salesTarget: updateTarget?._id, productDoc });
       await fetchProducts();
 
       toast("🔄 상품 판매가가 변경되었습니다.");
@@ -128,7 +128,7 @@ export default function DialogWrite({ uid, isOpen, setIsOpen, updateTarget, setU
               <div className="flex gap-2">
                 <FormField
                   control={form.control}
-                  name="salePrice"
+                  name="sales"
                   render={({ field }) => (
                     <FormInputWrap title="판매가">
                       <Input type="number" placeholder="예) 1000" {...field} className="bg-white" onChange={(e) => field.onChange(Number(e.target.value))} />

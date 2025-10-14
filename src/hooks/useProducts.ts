@@ -6,7 +6,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDo
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductParams, IProduct, IUpdateProductParams } from "@/types";
+import type { ICreateProductParams, IProduct, ISalesProductParams } from "@/types";
 interface IUseProductsParams {
   uid: string;
   selectedYear: number;
@@ -24,7 +24,7 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
 
     try {
       for (const product of products) {
-        const docRef = await addDoc(collection(db, "products"), { ...product, _id: uuid(), salePrice: "", profit: null, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
+        const docRef = await addDoc(collection(db, "products"), { ...product, _id: uuid(), sales: 0, profit: null, createdAt: Timestamp.fromDate(new Date()), soldAt: null });
 
         await updateDoc(docRef, {
           _id: docRef.id,
@@ -36,13 +36,13 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
   };
 
   // [수정]
-  const updateProduct = async ({ targetId, product }: IUpdateProductParams) => {
+  const salesProduct = async ({ salesTarget, productDoc }: ISalesProductParams) => {
     if (!uid) return;
 
     try {
-      const docRef = doc(db, "products", targetId);
+      const docRef = doc(db, "products", salesTarget);
 
-      await updateDoc(docRef, { ...product });
+      await updateDoc(docRef, { ...productDoc });
     } catch (err) {
       console.error(err);
     }
@@ -94,5 +94,5 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
     fetchProducts();
   }, [fetchProducts]);
 
-  return { products, loading, createProduct, updateProduct, deleteProduct, fetchProducts };
+  return { products, loading, createProduct, salesProduct, deleteProduct, fetchProducts };
 };

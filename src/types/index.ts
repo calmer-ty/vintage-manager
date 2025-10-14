@@ -25,35 +25,36 @@ export interface IExchange {
   krw: number;
 }
 
+// 재사용 타입
+export interface ICost {
+  price: number;
+  shipping: number;
+  fee: number;
+  exchange: IExchange;
+}
+export interface IShipping {
+  amount: number;
+  exchange: IExchange;
+}
+
 // 매입 타입
 export interface IPurchaseProduct {
   _id: string; // 문서 id 값
   uid: string;
   name: string;
   brand: string;
-  cost: {
-    price: number;
-    shipping: number;
-    fee: number;
-    exchange: IExchange;
-  };
+  cost: ICost;
 }
 export interface IPackage {
   _id: string; // 문서 id 값
   uid: string;
   products: IPurchaseProduct[];
   createdAt: Timestamp;
-  shipping: {
-    amount: number;
-    exchange: IExchange;
-  } | null;
+  shipping: IShipping | null;
   addSaleAt: Timestamp | null;
 }
 export interface ISalesDoc {
-  shipping: {
-    amount: number;
-    exchange: IExchange;
-  };
+  shipping: IShipping;
   addSaleAt: Timestamp;
 }
 
@@ -63,15 +64,16 @@ export interface IProduct {
   _id: string;
   brand: string;
   name: string;
-  costPrice: number;
-  salePrice: number;
+  cost: ICost;
+  sales: number;
   profit: number;
+  // salePrice: number;
   soldAt: Timestamp | null;
   createdAt: Timestamp;
 }
 
 export interface IUpdateProduct {
-  salePrice: number;
+  sales: number;
   profit: number;
 }
 
@@ -94,7 +96,7 @@ export interface ISalesPackageParams {
 export interface ICreateProductParams {
   products: IPurchaseProduct[];
 }
-export interface IUpdateProductParams {
-  targetId: string;
-  product: IUpdateProduct;
+export interface ISalesProductParams {
+  salesTarget: string;
+  productDoc: IUpdateProduct;
 }
