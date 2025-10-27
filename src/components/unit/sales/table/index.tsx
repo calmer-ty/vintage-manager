@@ -58,14 +58,14 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       if (value instanceof Timestamp) {
         // Timestamp일 때만 처리
         const timestamp = value as Timestamp;
-        return <div>{timestamp.toDate().toLocaleDateString() ?? "-"}</div>;
+        return <span>{timestamp.toDate().toLocaleDateString() ?? "-"}</span>;
       }
       if (value == null || value === "") {
-        return <div>-</div>;
+        return <span>-</span>;
       }
 
       if (key === "brand") {
-        return <div>{row.original.brand || "브랜드 없음"}</div>;
+        return <span>{row.original.brand || "브랜드 없음"}</span>;
       }
       if (key === "sales") {
         const s = row.original.sales;

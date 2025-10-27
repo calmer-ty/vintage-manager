@@ -10,7 +10,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { getDisplayPrice } from "@/lib/price";
+import { useCurrency } from "@/contexts/currencyContext";
+import { getDisplayPrice, getExchangeDisplayPrice } from "@/lib/price";
 
 // 외부 요소
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -54,6 +55,8 @@ export default function PurchaseTable({
   onClickMoveToSale,
   fetchLoading,
 }: IReceivingTableProps) {
+  const { viewCurrency } = useCurrency();
+
   // const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -68,21 +71,23 @@ export default function PurchaseTable({
       // 날짜 정보 처리
       if (value instanceof Timestamp) {
         const timestamp = row.getValue(key) as Timestamp;
-        return <div className="capitalize">{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
+        return <span className="capitalize">{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</span>;
       }
       if (value == null || value === "") {
-        return <div>-</div>;
+        return <span>-</span>;
       }
-      if (key === "shipping" && row.original.shipping !== null) {
-        return <div className="flex flex-col">{getDisplayPrice(row.original.shipping.exchange.code, row.original.shipping.amount)}</div>;
+      if (key === "shipping" && row.original.shipping != null) {
+        const s = row.original.shipping;
+        return (
+          <span>
+            {getDisplayPrice(s.exchange.code, s.amount)}
+            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, s.amount, s.exchange)})</em>
+          </span>
+        );
       }
       // products 일 때, 각 각 상품 정보 표시
       if (key === "products") {
-        return (
-          <div className="flex flex-col">
-            <TableItem products={row.original.products} />
-          </div>
-        );
+        return <TableItem products={row.original.products} viewCurrency={viewCurrency} />;
       }
 
       return <div className="capitalize">{String(value)}</div>;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 
-import { useCurrency } from "@/contexts/currencyContext";
 import { getDisplayPrice, getExchangeDisplayPrice } from "@/lib/price";
 
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,11 +11,10 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import type { IPurchaseProduct } from "@/types";
 interface ITableItemProps {
   products: IPurchaseProduct[];
+  viewCurrency: string;
 }
 
-export default function TableItem({ products }: ITableItemProps) {
-  const { viewCurrency } = useCurrency();
-
+export default function TableItem({ products, viewCurrency }: ITableItemProps) {
   const [isBasicOpen, setIsBasicOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState<"shipping" | "fee" | null>(null);
   const [first, ...rest] = products;

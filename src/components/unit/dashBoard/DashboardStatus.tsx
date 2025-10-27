@@ -1,12 +1,13 @@
 // 라이브러리
 import { motion } from "framer-motion";
 
+import { getDisplayPrice } from "@/lib/price";
+
 // 외부 요소
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck } from "lucide-react";
 
 import type { ISalesProduct, IPackage } from "@/types";
-import { getDisplayPrice } from "@/lib/price";
 interface IDashBoardStatusProps {
   packages: IPackage[];
   products: ISalesProduct[];
@@ -17,7 +18,6 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
   const soldProducts = products.filter((product) => product.soldAt !== null);
   const salesProducts = products.filter((product) => product.soldAt === null);
   const allPackages = packages.flatMap((pkg) => pkg.products);
-  console.log("products: ", products);
 
   // 합산된 상품 매입가/판매가/예상이익 계산
   const totalCost = products.reduce((acc, val) => {
@@ -31,11 +31,11 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
   }, 0);
 
   // 매입시 상품 각각 배송료
-  const totalProductShipping = allPackages.reduce((acc, val) => {
+  const totalLocalShipping = allPackages.reduce((acc, val) => {
     return acc + val.cost.exchange.krw * val.cost.shipping;
   }, 0);
   // 매입시 패키지 배송료
-  const totalPackageShipping = packages.reduce((acc, val) => {
+  const totalIntlShipping = packages.reduce((acc, val) => {
     return acc + (val.shipping?.exchange.krw ?? 0) * (val.shipping?.amount ?? 0);
   }, 0);
   // 매입시 수수료
@@ -60,7 +60,7 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
     },
     {
       title: "배송료 & 수수료",
-      value: getDisplayPrice("KRW", totalProductShipping + totalPackageShipping + totalFee + totalSalesShipping + totalSalesFee),
+      value: getDisplayPrice("KRW", totalLocalShipping + totalIntlShipping + totalFee + totalSalesShipping + totalSalesFee),
       icon: <Truck className="shrink-0 text-red-500" />,
     },
     {
