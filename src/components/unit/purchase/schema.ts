@@ -19,41 +19,29 @@ const ProductSchema = z.object({
     exchange: exchangeSchema,
   }),
 });
-// const ProductSchema = z.object({
-//   name: z.string().min(1, "상품명은 최소 1글자 이상입니다."),
-//   brand: z.string(),
-//   costPrice: z
+export const PurchaseSchema = z.object({
+  products: z.array(ProductSchema),
+});
+// export const SalesSchema = z.object({
+//   cost: z
 //     .object({
-//       amount: z.number().min(1, "가격은 1 이상이어야 합니다."),
+//       shipping: z.number(),
 //       exchange: exchangeSchema,
 //     })
 //     .superRefine((val, ctx) => {
-//       if (!val.amount || !val.exchange.code) {
+//       // 둘 중 하나만 입력됐을 때
+//       if (!val.shipping || !val.exchange.code) {
 //         ctx.addIssue({
 //           code: "custom",
 //           path: [],
-//           message: "매입가와 사용된 통화를 모두 입력해주세요.",
+//           message: "배송료와 사용된 통화를 모두 입력해주세요.",
 //         });
 //       }
 //     }),
 // });
-export const PurchaseSchema = z.object({
-  products: z.array(ProductSchema),
-});
 export const SalesSchema = z.object({
-  cost: z
-    .object({
-      shipping: z.number(),
-      exchange: exchangeSchema,
-    })
-    .superRefine((val, ctx) => {
-      // 둘 중 하나만 입력됐을 때
-      if (!val.shipping || !val.exchange.code) {
-        ctx.addIssue({
-          code: "custom",
-          path: [],
-          message: "배송료와 사용된 통화를 모두 입력해주세요.",
-        });
-      }
-    }),
+  cost: z.object({
+    shipping: z.number().optional(),
+    exchange: exchangeSchema,
+  }),
 });

@@ -98,7 +98,7 @@ export default function WriteDialog({
                           field.onChange(selected);
                         }
                       }}
-                      value={field.value}
+                      value={field.value.code}
                       label="당신이 사용한 통화를 선택해주세요."
                     />
                   )}
@@ -146,7 +146,7 @@ export default function WriteDialog({
                   name="products.0.cost.shipping"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="국내 배송료" tooltip="현지에서 발생된 배송료입니다.">
+                      <FormInputWrap title="국내 배송료" tooltip="매입 시 현지에서 발생된 배송료입니다.">
                         <Input
                           type="number"
                           placeholder="예) 1000"
@@ -164,7 +164,7 @@ export default function WriteDialog({
                   name="products.0.cost.fee"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap title="수수료">
+                      <FormInputWrap title="수수료" tooltip="매입 시 발생된 배송료입니다.">
                         <Input
                           type="number"
                           placeholder="예) 1000"

@@ -49,8 +49,8 @@ export interface IPackage {
   uid: string;
   products: IPurchaseProduct[];
   createdAt: Timestamp;
-  shipping: IShipping | null;
   addSaleAt: Timestamp | null;
+  shipping?: IShipping;
 }
 
 export interface ICreatePackageDoc {
@@ -70,7 +70,7 @@ export interface IMargePackageDoc {
   products: IPurchaseProduct[];
 }
 export interface ISalesPackageDoc {
-  shipping: IShipping;
+  shipping?: IShipping;
 }
 
 // 상품
@@ -87,7 +87,7 @@ export interface ISalesProduct {
     price: number;
     fee: number;
     shipping: number;
-    profit: number | null;
+    profit: number;
   };
   soldAt: Timestamp | null;
   createdAt: Timestamp;

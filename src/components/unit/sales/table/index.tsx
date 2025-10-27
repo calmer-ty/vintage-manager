@@ -70,7 +70,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       if (key === "sales") {
         const s = row.original.sales;
         const c = row.original.cost;
-        return s.profit == null ? (
+        return !s.profit ? (
           <Card className="py-4 gap-2">
             <CardHeader className="font-bold">판매 정보를 입력해주세요.</CardHeader>
             <CardContent>
