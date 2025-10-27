@@ -109,7 +109,7 @@ export default function WriteDialog({
               <DialogDescription>상품의 판매 정보를 입력하세요.</DialogDescription>
             </DialogHeader>
 
-            <div className="flex flex-col gap-4">
+            <fieldset className="flex flex-col gap-4">
               <div className="flex gap-4">
                 <FormField
                   control={form.control}
@@ -131,60 +131,58 @@ export default function WriteDialog({
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
-                <FormField
-                  control={form.control}
-                  name="sales.price"
-                  render={({ field }) => (
-                    <FormInputWrap title="판매가">
-                      <Input
-                        type="number"
-                        placeholder="예) 1000"
-                        {...field}
-                        className="bg-white"
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        onWheel={(e) => e.currentTarget.blur()}
-                        value={field.value}
-                      />
-                    </FormInputWrap>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="sales.shipping"
-                  render={({ field }) => (
-                    <FormInputWrap title="판매 배송료">
-                      <Input
-                        type="number"
-                        placeholder="예) 1000"
-                        {...field}
-                        className="bg-white"
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        onWheel={(e) => e.currentTarget.blur()}
-                        value={field.value}
-                      />
-                    </FormInputWrap>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="sales.fee"
-                  render={({ field }) => (
-                    <FormInputWrap title="판매 수수료">
-                      <Input
-                        type="number"
-                        placeholder="예) 1000"
-                        {...field}
-                        className="bg-white"
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        onWheel={(e) => e.currentTarget.blur()}
-                        value={field.value}
-                      />
-                    </FormInputWrap>
-                  )}
-                />
-              </div>
-            </div>
+              <FormField
+                control={form.control}
+                name="sales.price"
+                render={({ field }) => (
+                  <FormInputWrap title="판매가(₩)">
+                    <Input
+                      type="number"
+                      placeholder="예) 1000"
+                      {...field}
+                      className="bg-white"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onWheel={(e) => e.currentTarget.blur()}
+                      value={field.value}
+                    />
+                  </FormInputWrap>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="sales.shipping"
+                render={({ field }) => (
+                  <FormInputWrap title="판매 배송료(₩)">
+                    <Input
+                      type="number"
+                      placeholder="예) 1000"
+                      {...field}
+                      className="bg-white"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onWheel={(e) => e.currentTarget.blur()}
+                      value={field.value}
+                    />
+                  </FormInputWrap>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="sales.fee"
+                render={({ field }) => (
+                  <FormInputWrap title="판매 수수료(₩)">
+                    <Input
+                      type="number"
+                      placeholder="예) 1000"
+                      {...field}
+                      className="bg-white"
+                      onChange={(e) => field.onChange(Number(e.target.value))}
+                      onWheel={(e) => e.currentTarget.blur()}
+                      value={field.value}
+                    />
+                  </FormInputWrap>
+                )}
+              />
+            </fieldset>
 
             <DialogFooter className="mt-4">
               <DialogClose asChild>
