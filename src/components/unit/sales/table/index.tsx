@@ -66,18 +66,9 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       if (key === "name") {
         const n = row.original.name;
         return (
-          <Card className="py-4 gap-2">
-            <CardContent className="flex flex-col gap-4 text-left text-gray-700">
-              <div className="font-medium">
-                <span className="mr-1 font-semibold">제품명:</span>
-                {n.product}
-              </div>
-              <div className="font-medium">
-                <span className="mr-1 font-semibold">브랜드명:</span>
-                {n.brand}
-              </div>
-            </CardContent>
-          </Card>
+          <div>
+            {n.product}({n.brand || "브랜드 없음"})
+          </div>
         );
       }
       if (key === "sales") {

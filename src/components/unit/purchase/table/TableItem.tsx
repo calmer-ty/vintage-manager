@@ -42,7 +42,7 @@ export default function TableItem({ products }: ITableItemProps) {
             <>
               <div key={`${first.name.product}_${first.name.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
                 <span>
-                  {first.name.product} - {first.name.brand === "" ? "없음" : first.name.brand}
+                  {first.name.product} ({first.name.brand || "브랜드 없음"})
                 </span>
                 <span className="flex items-center gap-1">
                   {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
@@ -66,7 +66,7 @@ export default function TableItem({ products }: ITableItemProps) {
                         className="flex justify-between gap-4 py-2 border-t border-dotted border-gray-300 text-sm text-black"
                       >
                         <span>
-                          {p.name.product} - {p.name.brand === "" ? "없음" : p.name.brand}
+                          {p.name.product}({p.name.brand || "브랜드 없음"})
                         </span>
                         <span className="">
                           {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
@@ -100,7 +100,7 @@ export default function TableItem({ products }: ITableItemProps) {
             // products가 한개일 경우
             <div key={`${first.name.product}_${first.name.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
               <span>
-                {first.name.product} - {first.name.brand === "" ? "없음" : first.name.brand}
+                {first.name.product}({first.name.brand || "브랜드 없음"})
               </span>
               <div className="flex flex-col gap-0.5 text-left">
                 <span>

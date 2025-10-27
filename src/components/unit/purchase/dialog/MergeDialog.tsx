@@ -1,5 +1,7 @@
 import { toast } from "sonner";
 
+import { getDisplayPrice } from "@/lib/price";
+
 // 외부 요소
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -11,7 +13,6 @@ import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { IMargePackageDoc, IMergePackageParams, IPackage } from "@/types";
 import type { RowSelectionState } from "@tanstack/react-table";
-import { getDisplayPrice } from "@/lib/price";
 interface IMergeDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
@@ -87,7 +88,12 @@ export default function MergeDialog({
               <Item variant="outline" key={target._id} className="flex-col justify-start">
                 {target.products.map((p) => (
                   <ItemContent key={p._id} className="w-full">
-                    {p.name} - {p.brand} / {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
+                    <div>
+                      <span className="font-semibold">상품명:</span> {p.name.product}({p.name.brand || "브랜드 없음"})
+                    </div>
+                    <div>
+                      <span className="font-semibold">매입가:</span> {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
+                    </div>
                   </ItemContent>
                 ))}
               </Item>
