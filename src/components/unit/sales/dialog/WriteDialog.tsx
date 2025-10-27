@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { getPriceInKRW } from "@/lib/price";
+// import { getPriceInKRW } from "@/lib/price";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -69,13 +69,7 @@ export default function WriteDialog({
       const productDoc: IUpdateProductDoc = {
         sales: {
           ...data.sales,
-          profit:
-            data.sales.price -
-            data.sales.fee -
-            data.sales.shipping -
-            getPriceInKRW(updateTarget.cost.fee, updateTarget.cost.exchange.krw) -
-            getPriceInKRW(updateTarget.cost.shipping, updateTarget.cost.exchange.krw) -
-            getPriceInKRW(updateTarget.cost.price, updateTarget.cost.exchange.krw),
+          profit: data.sales.price - data.sales.fee - data.sales.shipping, // 이익 = 판매가 - 판매 수수료 - 판매 배송료
         },
       };
 

@@ -10,7 +10,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { getDisplayPrice } from "@/lib/price";
+import { getDisplayPrice, getPriceInKRW } from "@/lib/price";
 
 // 외부 요소
 import { Card, CardContent } from "@/components/ui/card";
@@ -70,6 +70,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       if (key === "sales") {
         const s = row.original.sales;
         const c = row.original.cost;
+
         return (
           <Card className="py-4 gap-2">
             <CardContent>
@@ -104,7 +105,15 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
               {/* 순이익 */}
               <div className="flex justify-between font-semibold text-green-600 border-t border-gray-200 mt-1 pt-1">
                 <span>예상 순이익</span>
-                <span>{getDisplayPrice("KRW", s.profit)}</span>
+                <span>
+                  {getDisplayPrice(
+                    "KRW",
+                    s.profit -
+                      getPriceInKRW(c.price, c.exchange.krw) -
+                      getPriceInKRW(c.shipping, c.exchange.krw) -
+                      getPriceInKRW(c.fee, c.exchange.krw)
+                  )}
+                </span>
               </div>
             </CardContent>
           </Card>

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/c
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck, Receipt } from "lucide-react";
 
 import type { ISalesProduct, IPackage } from "@/types";
+import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
 interface IDashBoardStatusProps {
   packages: IPackage[];
   products: ISalesProduct[];
@@ -19,55 +20,53 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
   const salesProducts = products.filter((product) => product.soldAt === null);
   const allPackages = packages.flatMap((pkg) => pkg.products);
 
-  // 합산된 상품 매입가/판매가/예상이익 계산
-  const totalCost = products.reduce((acc, val) => acc + val.cost.exchange.krw * val.cost.price, 0);
-  const totalSoldPrice = soldProducts.reduce((acc, val) => acc + val.sales.price, 0);
-
-  // 매입시 상품 각각 배송료
+  // 1. 총 매입 관련
+  const totalPurchaseCost = products.reduce((acc, val) => acc + val.cost.exchange.krw * val.cost.price, 0);
   const totalPurchaseShipping = allPackages.reduce((acc, val) => acc + val.cost.exchange.krw * val.cost.shipping, 0);
-  // 매입시 국제 배송료
-  const totalIntlShipping = packages.reduce((acc, val) => acc + (val.shipping?.exchange.krw ?? 0) * (val.shipping?.amount ?? 0), 0);
-  // 판매시 배송료
-  const totalSalesShipping = products.reduce((acc, val) => acc + val.sales.shipping, 0);
-
-  // 매입시 수수료
   const totalPurchaseFee = allPackages.reduce((acc, val) => acc + val.cost.exchange.krw * val.cost.fee, 0);
-  // 판매시 수수료
-  const totalSalesFee = products.reduce((acc, val) => acc + val.sales.fee, 0);
+  const totalIntlShipping = packages.reduce((acc, val) => acc + (val.shipping?.exchange.krw ?? 0) * (val.shipping?.amount ?? 0), 0);
 
-  // 총 이익
-  const totalProfit = soldProducts.reduce((acc, val) => acc + val.sales.profit, 0);
-  const totalProfitWithIntl = totalProfit - totalIntlShipping;
+  // 2. 총 판매 완료 관련
+  const totalSoldFee = soldProducts.reduce((acc, val) => acc + val.sales.fee, 0);
+  const totalSoldShipping = soldProducts.reduce((acc, val) => acc + val.sales.shipping, 0);
+  const totalSoldRevenue = soldProducts.reduce((acc, val) => acc + val.sales.price, 0);
+  const soldProfit = soldProducts.reduce((acc, val) => acc + val.sales.profit, 0);
 
-  // console.log("총 이익: ", totalProfit);
-  console.log("총 국제 배송비: ", getDisplayPrice("KRW", totalIntlShipping));
-  console.log("총 예상 이익 (국제배송비 포함): ", getDisplayPrice("KRW", totalProfitWithIntl));
+  // 3. 총 이익 - 판매된 제품 이익(profit은 판매 관련 비용만 뺌) - 매입 제품 비용 - 매입 제품 배송료 - 매입 제품 수수료 - 매입 국제 수수료
+  const totalProfit = soldProfit - totalPurchaseCost - totalPurchaseShipping - totalPurchaseFee - totalIntlShipping;
 
   // 상단의 상태 값들
   const infoStatus = [
     {
       title: "총 매입 금액",
-      value: getDisplayPrice("KRW", totalCost),
+      value: getDisplayPrice("KRW", totalPurchaseCost),
       icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
     {
-      title: "총 배송료 (매입 + 판매 배송료)",
-      value: getDisplayPrice("KRW", totalPurchaseShipping + totalIntlShipping + totalSalesShipping),
+      title: "총 배송료",
+      value: getDisplayPrice("KRW", totalPurchaseShipping + totalIntlShipping + totalSoldShipping),
       icon: <Truck className="shrink-0 text-red-500" />,
+      tooltip: `
+        매입 배송료: ${getDisplayPrice("KRW", totalPurchaseShipping)} +
+        국제 배송료: ${getDisplayPrice("KRW", totalIntlShipping)} +
+        판매 배송료: ${getDisplayPrice("KRW", totalSoldShipping)}`,
     },
     {
-      title: "총 수수료 (매입 + 판매 수수료)",
-      value: getDisplayPrice("KRW", totalPurchaseFee + totalSalesFee),
+      title: "총 수수료",
+      value: getDisplayPrice("KRW", totalPurchaseFee + totalSoldFee),
       icon: <Receipt className="shrink-0 text-red-500" />,
+      tooltip: `
+        매입 수수료: ${getDisplayPrice("KRW", totalPurchaseFee)} +
+        판매 수수료: ${getDisplayPrice("KRW", totalSoldFee)}`,
     },
     {
       title: "총 매출",
-      value: getDisplayPrice("KRW", totalSoldPrice),
+      value: getDisplayPrice("KRW", totalSoldRevenue),
       icon: <DollarSign className="shrink-0 text-green-500" />,
     },
     {
       title: "총 이익",
-      value: getDisplayPrice("KRW", totalProfitWithIntl),
+      value: getDisplayPrice("KRW", totalProfit),
       icon: <TrendingUp className="shrink-0 text-blue-500" />,
     },
     {
@@ -104,22 +103,24 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1, duration: 0.4 }}
         >
-          <CardContent
-            className="flex items-center gap-x-6 gap-y-2 
+          <ChildrenTooltip content={el.tooltip}>
+            <CardContent
+              className="flex items-center gap-x-6 gap-y-2 
               flex-col lg:flex-row"
-          >
-            <div
-              className="rounded-lg
+            >
+              <div
+                className="rounded-lg
                 p-2 lg:p-3
                 transition-bg duration-300 ease-in-out bg-gray-100 group-hover:bg-gray-200 shadow-md"
-            >
-              {el.icon}
-            </div>
-            <div className="grid gap-1 w-full text-center lg:text-left">
-              <CardTitle className="text-xl lg:text-2xl">{el.value}</CardTitle>
-              <CardDescription>{el.title}</CardDescription>
-            </div>
-          </CardContent>
+              >
+                {el.icon}
+              </div>
+              <div className="grid gap-1 w-full text-center lg:text-left">
+                <CardTitle className="text-xl lg:text-2xl">{el.value}</CardTitle>
+                <CardDescription>{el.title}</CardDescription>
+              </div>
+            </CardContent>
+          </ChildrenTooltip>
         </MotionCard>
       ))}
     </div>
