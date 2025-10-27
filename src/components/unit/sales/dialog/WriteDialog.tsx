@@ -56,7 +56,7 @@ export default function WriteDialog({
       form.reset({
         name: updateTarget.name,
         brand: updateTarget.brand,
-        sales: { price: updateTarget.sales.price ?? 0, fee: updateTarget.sales.fee ?? 0, shipping: updateTarget.sales.shipping ?? 0 },
+        sales: { price: updateTarget.sales.price, fee: updateTarget.sales.fee, shipping: updateTarget.sales.shipping },
       });
     }
   }, [form, updateTarget]);
@@ -73,6 +73,8 @@ export default function WriteDialog({
             data.sales.price -
             data.sales.fee -
             data.sales.shipping -
+            getPriceInKRW(updateTarget.cost.fee, updateTarget.cost.exchange.krw) -
+            getPriceInKRW(updateTarget.cost.shipping, updateTarget.cost.exchange.krw) -
             getPriceInKRW(updateTarget.cost.price, updateTarget.cost.exchange.krw),
         },
       };

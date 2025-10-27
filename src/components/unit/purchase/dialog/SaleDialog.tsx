@@ -65,10 +65,6 @@ export default function SaleDialog({
       };
       const productDocs: ICreateProductDoc[] = salesTarget.products.map((p) => ({
         ...p,
-        cost: {
-          price: p.cost.price,
-          exchange: p.cost.exchange,
-        },
       }));
 
       await salesPackage({ salesTarget: salesTarget._id, salesDoc });

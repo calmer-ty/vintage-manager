@@ -81,6 +81,8 @@ export interface ISalesProduct {
   brand: string;
   cost: {
     price: number;
+    shipping: number;
+    fee: number;
     exchange: IExchange;
   };
   sales: {
@@ -99,6 +101,8 @@ export interface ICreateProductDoc {
   brand: string;
   cost: {
     price: number;
+    shipping: number;
+    fee: number;
     exchange: IExchange;
   };
 }

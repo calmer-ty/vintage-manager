@@ -3,8 +3,6 @@ import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Settings } from "lucide-react";
 
-import CurrencySelect from "@/components/commons/CurrencySelect";
-
 import type { ISalesProduct } from "@/types";
 import type { Table } from "@tanstack/react-table";
 interface ITableControlProps {
@@ -32,7 +30,6 @@ export default function TableControl({ table, columnConfig }: ITableControlProps
 
       <div className="flex gap-2">
         <DropdownMenu>
-          <CurrencySelect />
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
               <span className="hidden sm:block">보기 설정</span>

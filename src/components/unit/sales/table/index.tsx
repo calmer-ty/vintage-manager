@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 
 // 내부 요소
-import BasicTooltip from "@/components/commons/BasicTooltip";
+import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
 import TableControl from "./TableControl";
 import TableItemState from "./TableItemState";
 
@@ -77,7 +77,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
               <span className="mr-1 font-medium">매입가: </span>
               <span className="text-blue-600 font-semibold">
                 {getDisplayPrice("KRW", c.price * c.exchange.krw)}
-                <em className="text-xs text-gray-400 font-normal not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em>
+                {/* <em className="text-xs text-gray-400 font-normal not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em> */}
               </span>
             </CardContent>
           </Card>
@@ -92,18 +92,26 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
 
               {/* 비용 항목들 */}
               <div className="flex justify-between gap-2 ml-3 text-gray-500">
-                <span>수수료</span>
-                <span>- {getDisplayPrice("KRW", s.fee)}</span>
+                <ChildrenTooltip content="매입 배송료 + 매입 수수료">
+                  <span>
+                    매입 서비스 비용<em className="text-red-700 cursor-help">*</em>
+                  </span>
+                </ChildrenTooltip>
+                <span>- {getDisplayPrice("KRW", c.shipping + c.fee)}</span>
               </div>
               <div className="flex justify-between gap-2 ml-3 text-gray-500">
-                <span>배송료</span>
-                <span>- {getDisplayPrice("KRW", s.shipping)}</span>
+                <ChildrenTooltip content="판매 배송료 + 판매 수수료">
+                  <span>
+                    판매 서비스 비용<em className="text-red-700 cursor-help">*</em>
+                  </span>
+                </ChildrenTooltip>
+                <span>- {getDisplayPrice("KRW", s.fee + s.shipping)}</span>
               </div>
               <div className="flex justify-between gap-2 ml-3 text-gray-500">
                 <span>매입가</span>
                 <span>
                   - {getDisplayPrice("KRW", c.price * c.exchange.krw)}
-                  <em className="text-xs text-gray-400 not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em>
+                  {/* <em className="text-xs text-gray-400 not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em> */}
                 </span>
               </div>
               {/* 순이익 */}
@@ -143,13 +151,13 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={row.original.soldAt ? "상품이 판매되어 판매가를 지정할 수 없습니다." : undefined}>
+              <ChildrenTooltip content={row.original.soldAt ? "상품이 판매되어 판매가를 지정할 수 없습니다." : undefined}>
                 <div className="w-full">
                   <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.soldAt}>
                     상품 판매 정보 등록
                   </DropdownMenuItem>
                 </div>
-              </BasicTooltip>
+              </ChildrenTooltip>
             </DropdownMenuContent>
           </DropdownMenu>
         );
