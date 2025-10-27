@@ -1,10 +1,16 @@
 // 라이브러리
 import { useState } from "react";
 import { Timestamp } from "firebase/firestore";
-import { flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import {
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 
-import { useCurrency } from "@/contexts/currencyContext";
-import { getDisplayPrice, getExchangeDisplayPrice } from "@/lib/price";
+import { getDisplayPrice } from "@/lib/price";
 
 // 외부 요소
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -33,9 +39,7 @@ const columnConfig = [
   { key: "soldAt", label: "판매 일자" },
   { key: "brand", label: "브랜드명" },
   { key: "name", label: "상품명" },
-  { key: "cost", label: "매입가" },
-  { key: "sales", label: "판매가" },
-  { key: "profit", label: "예상 이익" },
+  { key: "sales", label: "판매 정보" },
 ];
 
 export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetchProducts, loading }: ISalesTableProps) {
@@ -43,8 +47,6 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
-
-  const { viewCurrency } = useCurrency();
 
   const dynamicColumns: ColumnDef<ISalesProduct>[] = columnConfig.map(({ key, label }) => ({
     accessorKey: key,
@@ -61,19 +63,40 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
         return <div>-</div>;
       }
 
-      if (key === "cost") {
+      if (key === "sales") {
+        const s = row.original.sales;
+        const c = row.original.cost;
         return (
-          <div className="flex justify-end items-center gap-1">
-            <span>{getDisplayPrice(row.original.cost.exchange.code, row.original.cost.price)}</span>
-            <span className="text-xs text-gray-500">({getExchangeDisplayPrice(viewCurrency, row.original.cost.price, row.original.cost.exchange).toLocaleString()} ₩)</span>
+          <div className="flex flex-col text-sm leading-relaxed w-full">
+            {/* 판매가 */}
+            <div className="flex justify-between font-medium text-blue-600">
+              <span>판매가</span>
+              <span className="font-semibold">{getDisplayPrice("KRW", s.price)}</span>
+            </div>
+
+            {/* 비용 항목들 */}
+            <div className="ml-4 flex justify-between text-gray-500">
+              <span>수수료</span>
+              <span>- {getDisplayPrice("KRW", s.fee)}</span>
+            </div>
+            <div className="ml-4 flex justify-between text-gray-500">
+              <span>배송료</span>
+              <span>- {getDisplayPrice("KRW", s.shipping)}</span>
+            </div>
+            <div className="ml-4 flex justify-between text-gray-500">
+              <span>매입가</span>
+              <span>
+                - {getDisplayPrice("KRW", c.price * c.exchange.krw)}
+                <em className="text-xs text-gray-400 not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em>
+              </span>
+            </div>
+            {/* 순이익 */}
+            <div className="flex justify-between font-semibold text-green-600 border-t border-gray-200 mt-1 pt-1">
+              <span>예상 순이익</span>
+              <span>{getDisplayPrice("KRW", s.profit)} ₩</span>
+            </div>
           </div>
         );
-      }
-      if (key === "sales") {
-        return <div className="text-right">{row.original.sales.toLocaleString()} ₩</div>;
-      }
-      if (key === "profit") {
-        return <div className="text-right">{row.original.profit.toLocaleString()} ₩</div>;
       }
 
       return <div className="capitalize">{String(value)}</div>;
@@ -106,7 +129,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
               <BasicTooltip content={row.original.soldAt ? "상품이 판매되어 판매가를 지정할 수 없습니다." : undefined}>
                 <div className="w-full">
                   <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.soldAt}>
-                    상품 판매가 지정
+                    상품 판매 정보 등록
                   </DropdownMenuItem>
                 </div>
               </BasicTooltip>
@@ -152,7 +175,9 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead key={header.id}>
-                    <div className="px-4 text-center">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</div>
+                    <div className="px-4 text-center">
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </div>
                   </TableHead>
                 ))}
               </TableRow>
@@ -162,7 +187,10 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
             {loading ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="text-center h-50">
-                  <Loader2 className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground" aria-label="Loading" />
+                  <Loader2
+                    className="absolute top-1/1.8 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 animate-spin text-muted-foreground"
+                    aria-label="Loading"
+                  />
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length === 0 ? (
@@ -177,7 +205,11 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
               </TableRow>
             ) : (
               table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.soldAt ? "bg-green-50 text-green-700" : ""}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                  className={row.original.soldAt ? "bg-green-50 text-green-700" : ""}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

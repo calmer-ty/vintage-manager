@@ -83,8 +83,12 @@ export interface ISalesProduct {
     price: number;
     exchange: IExchange;
   };
-  sales: number;
-  profit: number;
+  sales: {
+    price: number;
+    fee: number;
+    shipping: number;
+    profit: number;
+  };
   soldAt: Timestamp | null;
   createdAt: Timestamp;
 }
@@ -99,8 +103,12 @@ export interface ICreateProductDoc {
   };
 }
 export interface IUpdateProductDoc {
-  sales: number;
-  profit: number;
+  sales: {
+    price: number;
+    fee: number;
+    shipping: number;
+    profit: number;
+  };
 }
 
 // Hooks Params

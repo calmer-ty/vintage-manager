@@ -26,8 +26,11 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
         const docRef = await addDoc(collection(db, "products"), {
           ...product,
           uid,
-          sales: 0,
-          profit: 0,
+          sales: {
+            price: 0,
+            fee: 0,
+            shipping: 0,
+          },
           createdAt: Timestamp.fromDate(new Date()),
           soldAt: null,
         });

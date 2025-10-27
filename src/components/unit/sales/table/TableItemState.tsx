@@ -15,7 +15,7 @@ interface ITableItemStateProps {
 export default function TableItemState({ product, refetch }: ITableItemStateProps) {
   const onUpdate = async (id: string, value: boolean) => {
     // 판매가 지정해야함
-    if (!product.sales) {
+    if (!product.price) {
       toast("⛔ 판매가를 지정해주세요.");
       return;
     }

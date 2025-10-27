@@ -15,10 +15,14 @@ import FormInputWrap from "@/components/commons/FormInputWrap";
 
 import type { ISalesProduct, ISalesProductParams, IUpdateProductDoc } from "@/types";
 
-const ProductSchema = z.object({
+const SalesSchema = z.object({
   brand: z.string().optional(),
   name: z.string().optional(),
-  sales: z.number().min(1, "판매가격을 입력해주세요."),
+  sales: z.object({
+    price: z.number().min(1, "판매가격을 입력해주세요."),
+    fee: z.number().min(1, "수수료를 입력해주세요."),
+    shipping: z.number().min(1, "배송료를 입력해주세요."),
+  }),
 });
 
 interface IDialogWriteProps {
@@ -40,50 +44,56 @@ export default function DialogWrite({
   salesProduct,
   fetchProducts,
 }: IDialogWriteProps) {
-  const isEdit = !!updateTarget;
-
   // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof ProductSchema>>({
-    resolver: zodResolver(ProductSchema),
+  const form = useForm<z.infer<typeof SalesSchema>>({
+    resolver: zodResolver(SalesSchema),
     defaultValues: {
       name: "",
       brand: "",
-      sales: 0,
+      sales: {
+        price: 0,
+        fee: 0,
+        shipping: 0,
+      },
     },
   });
 
   // updateTarget 변경 시 form 값을 리셋
   useEffect(() => {
-    if (isEdit) {
+    if (updateTarget) {
       form.reset({
         brand: updateTarget.brand,
         name: updateTarget.name,
-        sales: updateTarget.sales,
-      });
-    } else {
-      form.reset({
-        brand: "",
-        name: "",
-        sales: 0,
+        sales: {
+          price: updateTarget.sales.price ?? 0,
+          fee: updateTarget.sales.fee ?? 0,
+          shipping: updateTarget.sales.shipping ?? 0,
+        },
       });
     }
-  }, [form, isEdit, updateTarget]);
+  }, [form, updateTarget]);
 
   // 수정 함수
-  const onClickUpdate = async (data: z.infer<typeof ProductSchema>) => {
-    if (!uid || !isEdit) return;
+  const onClickUpdate = async (data: z.infer<typeof SalesSchema>) => {
+    if (!uid || !updateTarget) return;
 
     try {
       const productDoc: IUpdateProductDoc = {
-        ...data,
-        profit: data.sales - getPriceInKRW(updateTarget.cost.price, updateTarget.cost.exchange.krw),
+        sales: {
+          ...data.sales,
+          profit:
+            data.sales.price -
+            data.sales.fee -
+            data.sales.shipping -
+            getPriceInKRW(updateTarget.cost.price, updateTarget.cost.exchange.krw),
+        },
       };
 
       // 데이터 수정 및 리패치
       await salesProduct({ salesTarget: updateTarget?._id, productDoc });
       await fetchProducts();
 
-      toast("🔄 상품 판매가가 변경되었습니다.");
+      toast("🔄 상품 판매 정보가 변경되었습니다.");
       setIsOpen(false);
     } catch (error) {
       console.error("문서 추가 실패:", error);
@@ -107,8 +117,8 @@ export default function DialogWrite({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onClickUpdate)} className="">
             <DialogHeader className="mb-4">
-              <DialogTitle>상품 판매가 지정</DialogTitle>
-              <DialogDescription>상품의 판매가를 지정하세요.</DialogDescription>
+              <DialogTitle>상품 판매 정보 입력</DialogTitle>
+              <DialogDescription>상품의 판매 정보를 입력하세요.</DialogDescription>
             </DialogHeader>
 
             <div className="flex flex-col gap-4">
@@ -118,7 +128,7 @@ export default function DialogWrite({
                   name="brand"
                   render={({ field }) => (
                     <FormInputWrap title="브랜드명">
-                      <Input placeholder="예) 페로우즈" {...field} className="bg-white" disabled />
+                      <Input {...field} className="bg-white" disabled />
                     </FormInputWrap>
                   )}
                 />
@@ -128,15 +138,15 @@ export default function DialogWrite({
                 name="name"
                 render={({ field }) => (
                   <FormInputWrap title="제품명">
-                    <Input placeholder="예) 1940s 복각 청남방" {...field} className="bg-white" disabled />
+                    <Input {...field} className="bg-white" disabled />
                   </FormInputWrap>
                 )}
               />
 
-              <div className="flex gap-2">
+              <div className="flex flex-col gap-2">
                 <FormField
                   control={form.control}
-                  name="sales"
+                  name="sales.price"
                   render={({ field }) => (
                     <FormInputWrap title="판매가">
                       <Input
@@ -145,6 +155,39 @@ export default function DialogWrite({
                         {...field}
                         className="bg-white"
                         onChange={(e) => field.onChange(Number(e.target.value))}
+                        value={field.value}
+                      />
+                    </FormInputWrap>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sales.fee"
+                  render={({ field }) => (
+                    <FormInputWrap title="수수료">
+                      <Input
+                        type="number"
+                        placeholder="예) 1000"
+                        {...field}
+                        className="bg-white"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        value={field.value}
+                      />
+                    </FormInputWrap>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="sales.shipping"
+                  render={({ field }) => (
+                    <FormInputWrap title="배송료">
+                      <Input
+                        type="number"
+                        placeholder="예) 1000"
+                        {...field}
+                        className="bg-white"
+                        onChange={(e) => field.onChange(Number(e.target.value))}
+                        value={field.value}
                       />
                     </FormInputWrap>
                   )}
@@ -156,7 +199,7 @@ export default function DialogWrite({
               <DialogClose asChild>
                 <Button variant="outline">취소</Button>
               </DialogClose>
-              <Button type="submit">수정</Button>
+              <Button type="submit">입력완료</Button>
             </DialogFooter>
           </form>
         </Form>
