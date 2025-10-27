@@ -25,7 +25,7 @@ const SalesSchema = z.object({
   }),
 });
 
-interface IDialogWriteProps {
+interface IWriteDialogProps {
   uid: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,7 +35,7 @@ interface IDialogWriteProps {
   fetchProducts: () => Promise<void>;
 }
 
-export default function DialogWrite({
+export default function WriteDialog({
   uid,
   isOpen,
   setIsOpen,
@@ -43,19 +43,11 @@ export default function DialogWrite({
   setUpdateTarget,
   salesProduct,
   fetchProducts,
-}: IDialogWriteProps) {
+}: IWriteDialogProps) {
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof SalesSchema>>({
     resolver: zodResolver(SalesSchema),
-    defaultValues: {
-      name: "",
-      brand: "",
-      sales: {
-        price: 0,
-        fee: 0,
-        shipping: 0,
-      },
-    },
+    defaultValues: { name: "", brand: "", sales: { price: 0, fee: 0, shipping: 0 } },
   });
 
   // updateTarget 변경 시 form 값을 리셋
@@ -64,11 +56,7 @@ export default function DialogWrite({
       form.reset({
         name: updateTarget.name,
         brand: updateTarget.brand,
-        sales: {
-          price: updateTarget.sales.price ?? 0,
-          fee: updateTarget.sales.fee ?? 0,
-          shipping: updateTarget.sales.shipping ?? 0,
-        },
+        sales: { price: updateTarget.sales.price ?? 0, fee: updateTarget.sales.fee ?? 0, shipping: updateTarget.sales.shipping ?? 0 },
       });
     }
   }, [form, updateTarget]);
@@ -163,9 +151,9 @@ export default function DialogWrite({
                 />
                 <FormField
                   control={form.control}
-                  name="sales.fee"
+                  name="sales.shipping"
                   render={({ field }) => (
-                    <FormInputWrap title="수수료">
+                    <FormInputWrap title="판매 배송료">
                       <Input
                         type="number"
                         placeholder="예) 1000"
@@ -180,9 +168,9 @@ export default function DialogWrite({
                 />
                 <FormField
                   control={form.control}
-                  name="sales.shipping"
+                  name="sales.fee"
                   render={({ field }) => (
-                    <FormInputWrap title="배송료">
+                    <FormInputWrap title="판매 수수료">
                       <Input
                         type="number"
                         placeholder="예) 1000"

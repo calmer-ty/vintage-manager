@@ -37,13 +37,7 @@ export default function PurchaseUI({ uid }: IUserID) {
         {
           name: "",
           brand: "",
-
-          cost: {
-            price: 0,
-            shipping: 0,
-            fee: 0,
-            exchange: { code: "", label: "", rate: 0, krw: 0 },
-          },
+          cost: { price: 0, shipping: 0, fee: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
         },
       ],
     },

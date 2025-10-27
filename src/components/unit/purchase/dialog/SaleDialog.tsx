@@ -42,16 +42,12 @@ export default function SaleDialog({
 }: ISaleDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
+  const krwExchange = exchangeOptions.find((opt) => opt.code === "KRW");
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof SalesSchema>>({
     resolver: zodResolver(SalesSchema),
-    defaultValues: {
-      cost: {
-        shipping: 0,
-        exchange: { code: "", label: "", rate: 0, krw: 0 },
-      },
-    },
+    defaultValues: { cost: { shipping: 0, exchange: krwExchange } },
   });
 
   const onClickSales = async (data: z.infer<typeof SalesSchema>) => {
@@ -63,7 +59,7 @@ export default function SaleDialog({
     try {
       const salesDoc: ISalesPackageDoc = {
         shipping: {
-          amount: data.cost.shipping,
+          amount: data.cost.shipping ?? 0,
           exchange: data.cost.exchange,
         },
       };
@@ -121,7 +117,6 @@ export default function SaleDialog({
             </Item>
           </div>
 
-          <p className="text-muted-foreground text-sm">패키지에 대한 배송료를 입력해주세요.</p>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onClickSales)} className="flex flex-col gap-6">
               <fieldset className="flex flex-col gap-4">
@@ -130,10 +125,7 @@ export default function SaleDialog({
                   name="cost"
                   render={({ field }) => (
                     <div className="flex items-start gap-2">
-                      <FormInputWrap
-                        title="국제 배송료"
-                        tooltip="배송료 발생 시 입력하세요. 실시간 환율이 적용되므로 추후 수정이 불가합니다."
-                      >
+                      <FormInputWrap title="국제 배송료" tooltip="국제 배송료 발생 시 입력하세요.">
                         <Input
                           type="number"
                           className="bg-white"
@@ -150,7 +142,7 @@ export default function SaleDialog({
                             field.onChange({ ...field.value, exchange: selected });
                           }
                         }}
-                        value={field.value.exchange}
+                        value={field.value?.exchange?.code}
                         label="통화"
                         messageStyles="opacity-0"
                       />
