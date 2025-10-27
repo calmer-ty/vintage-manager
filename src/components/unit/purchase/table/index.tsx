@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
-import BasicTooltip from "@/components/commons/BasicTooltip";
+import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
 import TableItem from "./TableItem";
 import TableControl from "./TableControl";
 
@@ -147,7 +147,7 @@ export default function PurchaseTable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <BasicTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
+              <ChildrenTooltip content={!!row.original.addSaleAt ? "패키지가 판매 등록되어 설정할 수 없습니다." : ""}>
                 <div className="w-full">
                   <DropdownMenuItem onClick={() => onClickMoveToSale(row.original)} disabled={!!row.original.addSaleAt}>
                     판매 등록
@@ -156,7 +156,7 @@ export default function PurchaseTable({
                     패키지 삭제
                   </DropdownMenuItem>
                 </div>
-              </BasicTooltip>
+              </ChildrenTooltip>
             </DropdownMenuContent>
           </DropdownMenu>
         );

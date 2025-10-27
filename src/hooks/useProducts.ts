@@ -30,7 +30,11 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
             price: 0,
             fee: 0,
             shipping: 0,
-            profit: 0,
+            profit:
+              0 -
+              product.cost.exchange.krw * product.cost.price -
+              product.cost.exchange.krw * product.cost.shipping -
+              product.cost.exchange.krw * product.cost.fee,
           },
           createdAt: Timestamp.fromDate(new Date()),
           soldAt: null,

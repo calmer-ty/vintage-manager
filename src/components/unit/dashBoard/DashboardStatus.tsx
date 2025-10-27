@@ -20,59 +20,43 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
   const allPackages = packages.flatMap((pkg) => pkg.products);
 
   // 합산된 상품 매입가/판매가/예상이익 계산
-  const totalCost = products.reduce((acc, val) => {
-    return acc + val.cost.exchange.krw * val.cost.price;
-  }, 0);
-  const totalSoldPrice = soldProducts.reduce((acc, val) => {
-    return acc + val.sales.price;
-  }, 0);
+  const totalCost = products.reduce((acc, val) => acc + val.cost.exchange.krw * val.cost.price, 0);
+  const totalSoldPrice = soldProducts.reduce((acc, val) => acc + val.sales.price, 0);
 
   // 매입시 상품 각각 배송료
-  const totalPurchaseShipping = allPackages.reduce((acc, val) => {
-    return acc + val.cost.exchange.krw * val.cost.shipping;
-  }, 0);
+  const totalPurchaseShipping = allPackages.reduce((acc, val) => acc + val.cost.exchange.krw * val.cost.shipping, 0);
   // 매입시 국제 배송료
-  const totalIntlShipping = packages.reduce((acc, val) => {
-    return acc + (val.shipping?.exchange.krw ?? 0) * (val.shipping?.amount ?? 0);
-  }, 0);
+  const totalIntlShipping = packages.reduce((acc, val) => acc + (val.shipping?.exchange.krw ?? 0) * (val.shipping?.amount ?? 0), 0);
   // 판매시 배송료
-  const totalSalesShipping = products.reduce((acc, val) => {
-    return acc + val.sales.shipping;
-  }, 0);
+  const totalSalesShipping = products.reduce((acc, val) => acc + val.sales.shipping, 0);
 
   // 매입시 수수료
-  const totalPurchaseFee = allPackages.reduce((acc, val) => {
-    return acc + val.cost.exchange.krw * val.cost.fee;
-  }, 0);
+  const totalPurchaseFee = allPackages.reduce((acc, val) => acc + val.cost.exchange.krw * val.cost.fee, 0);
   // 판매시 수수료
-  const totalSalesFee = products.reduce((acc, val) => {
-    return acc + val.sales.fee;
-  }, 0);
+  const totalSalesFee = products.reduce((acc, val) => acc + val.sales.fee, 0);
 
-  // 총 예상 이익
-  const totalProfit = soldProducts.reduce((acc, val) => {
-    return acc + val.sales.profit;
-  }, 0);
+  // 총 이익
+  const totalProfit = soldProducts.reduce((acc, val) => acc + val.sales.profit, 0);
   const totalProfitWithIntl = totalProfit - totalIntlShipping;
 
-  console.log("총 예상 이익: ", getDisplayPrice("KRW", totalProfit));
-  // console.log("총 국제 배송비: ", getDisplayPrice("KRW", totalIntlShipping));
-  // console.log("총 예상 이익 (국제배송비 포함): ", getDisplayPrice("KRW", totalProfitWithIntl));
+  // console.log("총 이익: ", totalProfit);
+  console.log("총 국제 배송비: ", getDisplayPrice("KRW", totalIntlShipping));
+  console.log("총 예상 이익 (국제배송비 포함): ", getDisplayPrice("KRW", totalProfitWithIntl));
 
   // 상단의 상태 값들
   const infoStatus = [
     {
-      title: "총 매입금액",
+      title: "총 매입 금액",
       value: getDisplayPrice("KRW", totalCost),
       icon: <ShoppingCart className="shrink-0 text-red-500" />,
     },
     {
-      title: "총 배송료",
+      title: "총 배송료 (매입 + 판매 배송료)",
       value: getDisplayPrice("KRW", totalPurchaseShipping + totalIntlShipping + totalSalesShipping),
       icon: <Truck className="shrink-0 text-red-500" />,
     },
     {
-      title: "총 수수료",
+      title: "총 수수료 (매입 + 판매 수수료)",
       value: getDisplayPrice("KRW", totalPurchaseFee + totalSalesFee),
       icon: <Receipt className="shrink-0 text-red-500" />,
     },
@@ -82,7 +66,7 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
       icon: <DollarSign className="shrink-0 text-green-500" />,
     },
     {
-      title: "총 예상 이익",
+      title: "총 이익",
       value: getDisplayPrice("KRW", totalProfitWithIntl),
       icon: <TrendingUp className="shrink-0 text-blue-500" />,
     },

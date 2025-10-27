@@ -13,7 +13,7 @@ import {
 import { getDisplayPrice } from "@/lib/price";
 
 // 외부 요소
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -70,18 +70,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       if (key === "sales") {
         const s = row.original.sales;
         const c = row.original.cost;
-        return !s.profit ? (
-          <Card className="py-4 gap-2">
-            <CardHeader className="font-bold">판매 정보를 입력해주세요.</CardHeader>
-            <CardContent>
-              <span className="mr-1 font-medium">매입가: </span>
-              <span className="text-blue-600 font-semibold">
-                {getDisplayPrice("KRW", c.price * c.exchange.krw)}
-                {/* <em className="text-xs text-gray-400 font-normal not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em> */}
-              </span>
-            </CardContent>
-          </Card>
-        ) : (
+        return (
           <Card className="py-4 gap-2">
             <CardContent>
               {/* 판매가 */}
@@ -91,6 +80,10 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
               </div>
 
               {/* 비용 항목들 */}
+              <div className="flex justify-between gap-2 ml-3 text-gray-500">
+                <span>매입가</span>
+                <span>- {getDisplayPrice("KRW", c.price * c.exchange.krw)}</span>
+              </div>
               <div className="flex justify-between gap-2 ml-3 text-gray-500">
                 <ChildrenTooltip content="매입 배송료 + 매입 수수료">
                   <span>
@@ -107,13 +100,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
                 </ChildrenTooltip>
                 <span>- {getDisplayPrice("KRW", s.fee + s.shipping)}</span>
               </div>
-              <div className="flex justify-between gap-2 ml-3 text-gray-500">
-                <span>매입가</span>
-                <span>
-                  - {getDisplayPrice("KRW", c.price * c.exchange.krw)}
-                  {/* <em className="text-xs text-gray-400 not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em> */}
-                </span>
-              </div>
+
               {/* 순이익 */}
               <div className="flex justify-between font-semibold text-green-600 border-t border-gray-200 mt-1 pt-1">
                 <span>예상 순이익</span>
