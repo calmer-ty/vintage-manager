@@ -35,8 +35,10 @@ export default function PurchaseUI({ uid }: IUserID) {
     defaultValues: {
       products: [
         {
-          name: "",
-          brand: "",
+          name: {
+            product: "",
+            brand: "",
+          },
           cost: {
             price: 0,
             shipping: 0,

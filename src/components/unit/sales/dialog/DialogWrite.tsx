@@ -16,8 +16,10 @@ import FormInputWrap from "@/components/commons/FormInputWrap";
 import type { ISalesProduct, ISalesProductParams, IUpdateProductDoc } from "@/types";
 
 const SalesSchema = z.object({
-  brand: z.string().optional(),
-  name: z.string().optional(),
+  name: z.object({
+    brand: z.string().optional(),
+    product: z.string().optional(),
+  }),
   sales: z.object({
     price: z.number().min(1, "판매가격을 입력해주세요."),
     fee: z.number().min(1, "수수료를 입력해주세요."),
@@ -48,8 +50,10 @@ export default function DialogWrite({
   const form = useForm<z.infer<typeof SalesSchema>>({
     resolver: zodResolver(SalesSchema),
     defaultValues: {
-      name: "",
-      brand: "",
+      name: {
+        brand: "",
+        product: "",
+      },
       sales: {
         price: 0,
         fee: 0,
@@ -62,8 +66,10 @@ export default function DialogWrite({
   useEffect(() => {
     if (updateTarget) {
       form.reset({
-        brand: updateTarget.brand,
-        name: updateTarget.name,
+        name: {
+          brand: updateTarget.name.brand,
+          product: updateTarget.name.product,
+        },
         sales: {
           price: updateTarget.sales.price ?? 0,
           fee: updateTarget.sales.fee ?? 0,
@@ -125,7 +131,7 @@ export default function DialogWrite({
               <div className="flex gap-4">
                 <FormField
                   control={form.control}
-                  name="brand"
+                  name="name.brand"
                   render={({ field }) => (
                     <FormInputWrap title="브랜드명">
                       <Input {...field} className="bg-white" disabled />
@@ -135,7 +141,7 @@ export default function DialogWrite({
               </div>
               <FormField
                 control={form.control}
-                name="name"
+                name="name.product"
                 render={({ field }) => (
                   <FormInputWrap title="제품명">
                     <Input {...field} className="bg-white" disabled />

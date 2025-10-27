@@ -106,7 +106,7 @@ export default function WriteDialog({
 
                 <FormField
                   control={form.control}
-                  name="products.0.name"
+                  name="products.0.name.product"
                   render={({ field }) => (
                     <FormInputWrap title="제품명">
                       <Input placeholder="예) 럭비 셔츠" {...field} className="bg-white" autoComplete="off" />
@@ -115,7 +115,7 @@ export default function WriteDialog({
                 />
                 <FormField
                   control={form.control}
-                  name="products.0.brand"
+                  name="products.0.name.brand"
                   render={({ field }) => (
                     <FormInputWrap title="브랜드명">
                       <Input placeholder="예) 엘엘빈" {...field} className="bg-white" autoComplete="off" />

@@ -108,7 +108,7 @@ export default function SaleDialog({
             <Item variant="outline" className="flex-col justify-start">
               {salesTarget?.products.map((p) => (
                 <div key={p._id} className="w-full">
-                  {p.brand} - {p.name} / {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
+                  {p.name.product} - {p.name.brand} / {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
                 </div>
               ))}
             </Item>

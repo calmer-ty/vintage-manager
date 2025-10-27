@@ -22,10 +22,10 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
     return acc + val.cost.exchange.krw * val.cost.price;
   }, 0);
   const totalSoldPrice = soldProducts.reduce((acc, val) => {
-    return acc + val.price;
+    return acc + val.sales.price;
   }, 0);
   const totalProfit = soldProducts.reduce((acc, val) => {
-    return acc + val.profit;
+    return acc + val.sales.profit;
   }, 0);
 
   // 국내 배송료

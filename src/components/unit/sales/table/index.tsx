@@ -26,6 +26,7 @@ import TableItemState from "./TableItemState";
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ISalesProduct } from "@/types";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 interface ISalesTableProps {
   data: ISalesProduct[];
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
@@ -37,8 +38,7 @@ interface ISalesTableProps {
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
   { key: "soldAt", label: "판매 일자" },
-  { key: "brand", label: "브랜드명" },
-  { key: "name", label: "상품명" },
+  { key: "name", label: "상품 정보" },
   { key: "sales", label: "판매 정보" },
 ];
 
@@ -57,21 +57,49 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       if (value instanceof Timestamp) {
         // Timestamp일 때만 처리
         const timestamp = value as Timestamp;
-        return <div>{timestamp.toDate().toLocaleDateString() ?? "판매되지 않음"}</div>;
+        return <div>{timestamp.toDate().toLocaleDateString() ?? "-"}</div>;
       }
       if (value == null || value === "") {
         return <div>-</div>;
       }
 
+      if (key === "name") {
+        const n = row.original.name;
+        return (
+          <Card className="py-4 gap-2">
+            <CardContent className="flex flex-col gap-4 text-left text-gray-700">
+              <div className="font-medium">
+                <span className="mr-1 font-semibold">제품명:</span>
+                {n.product}
+              </div>
+              <div className="font-medium">
+                <span className="mr-1 font-semibold">브랜드명:</span>
+                {n.brand}
+              </div>
+            </CardContent>
+          </Card>
+        );
+      }
       if (key === "sales") {
         const s = row.original.sales;
         const c = row.original.cost;
-        return (
+        return s.profit == null ? (
+          <Card className="py-4 gap-2">
+            <CardHeader className="font-bold">판매 정보를 입력해주세요.</CardHeader>
+            <CardContent>
+              <span className="mr-1 font-medium">매입가: </span>
+              <span className="text-blue-600 font-semibold">
+                {getDisplayPrice("KRW", c.price * c.exchange.krw)}
+                <em className="text-xs text-gray-400 font-normal not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em>
+              </span>
+            </CardContent>
+          </Card>
+        ) : (
           <div className="flex flex-col text-sm leading-relaxed w-full">
             {/* 판매가 */}
             <div className="flex justify-between font-medium text-blue-600">
               <span>판매가</span>
-              <span className="font-semibold">{getDisplayPrice("KRW", s.price)}</span>
+              <span className="font-semibold">+ {getDisplayPrice("KRW", s.price)}</span>
             </div>
 
             {/* 비용 항목들 */}
@@ -93,7 +121,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
             {/* 순이익 */}
             <div className="flex justify-between font-semibold text-green-600 border-t border-gray-200 mt-1 pt-1">
               <span>예상 순이익</span>
-              <span>{getDisplayPrice("KRW", s.profit)} ₩</span>
+              <span>{getDisplayPrice("KRW", s.profit)}</span>
             </div>
           </div>
         );
