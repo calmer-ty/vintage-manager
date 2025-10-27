@@ -13,6 +13,7 @@ import {
 import { getDisplayPrice } from "@/lib/price";
 
 // 외부 요소
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,6 @@ import TableItemState from "./TableItemState";
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
 import type { ISalesProduct } from "@/types";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
 interface ISalesTableProps {
   data: ISalesProduct[];
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
@@ -95,35 +95,37 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
             </CardContent>
           </Card>
         ) : (
-          <div className="flex flex-col text-sm leading-relaxed w-full">
-            {/* 판매가 */}
-            <div className="flex justify-between font-medium text-blue-600">
-              <span>판매가</span>
-              <span className="font-semibold">+ {getDisplayPrice("KRW", s.price)}</span>
-            </div>
+          <Card className="py-4 gap-2">
+            <CardContent>
+              {/* 판매가 */}
+              <div className="flex justify-between font-medium text-blue-600">
+                <span>판매가</span>
+                <span className="font-semibold">+ {getDisplayPrice("KRW", s.price)}</span>
+              </div>
 
-            {/* 비용 항목들 */}
-            <div className="ml-4 flex justify-between text-gray-500">
-              <span>수수료</span>
-              <span>- {getDisplayPrice("KRW", s.fee)}</span>
-            </div>
-            <div className="ml-4 flex justify-between text-gray-500">
-              <span>배송료</span>
-              <span>- {getDisplayPrice("KRW", s.shipping)}</span>
-            </div>
-            <div className="ml-4 flex justify-between text-gray-500">
-              <span>매입가</span>
-              <span>
-                - {getDisplayPrice("KRW", c.price * c.exchange.krw)}
-                <em className="text-xs text-gray-400 not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em>
-              </span>
-            </div>
-            {/* 순이익 */}
-            <div className="flex justify-between font-semibold text-green-600 border-t border-gray-200 mt-1 pt-1">
-              <span>예상 순이익</span>
-              <span>{getDisplayPrice("KRW", s.profit)}</span>
-            </div>
-          </div>
+              {/* 비용 항목들 */}
+              <div className="flex justify-between gap-2 ml-3 text-gray-500">
+                <span>수수료</span>
+                <span>- {getDisplayPrice("KRW", s.fee)}</span>
+              </div>
+              <div className="flex justify-between gap-2 ml-3 text-gray-500">
+                <span>배송료</span>
+                <span>- {getDisplayPrice("KRW", s.shipping)}</span>
+              </div>
+              <div className="flex justify-between gap-2 ml-3 text-gray-500">
+                <span>매입가</span>
+                <span>
+                  - {getDisplayPrice("KRW", c.price * c.exchange.krw)}
+                  <em className="text-xs text-gray-400 not-italic">({getDisplayPrice(c.exchange.code, c.price)})</em>
+                </span>
+              </div>
+              {/* 순이익 */}
+              <div className="flex justify-between font-semibold text-green-600 border-t border-gray-200 mt-1 pt-1">
+                <span>예상 순이익</span>
+                <span>{getDisplayPrice("KRW", s.profit)}</span>
+              </div>
+            </CardContent>
+          </Card>
         );
       }
 
