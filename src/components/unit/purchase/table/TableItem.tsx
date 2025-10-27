@@ -32,7 +32,7 @@ export default function TableItem({ products }: ITableItemProps) {
   }, 0);
 
   return (
-    <Card key={`${first.name.product}_${first.name.brand}`} className="overflow-hidden p-0">
+    <Card key={`${first.name}_${first.brand}`} className="overflow-hidden p-0">
       <CardContent className="p-0">
         {/* 패키지 기본 정보 */}
         <Collapsible open={isBasicOpen} onOpenChange={setIsBasicOpen} className="flex flex-col px-4 py-2">
@@ -40,9 +40,9 @@ export default function TableItem({ products }: ITableItemProps) {
           {rest.length !== 0 ? (
             // products가 n개일 경우
             <>
-              <div key={`${first.name.product}_${first.name.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
+              <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
                 <span>
-                  {first.name.product} ({first.name.brand || "브랜드 없음"})
+                  {first.name} ({first.brand || "브랜드 없음"})
                 </span>
                 <span className="flex items-center gap-1">
                   {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
@@ -62,11 +62,11 @@ export default function TableItem({ products }: ITableItemProps) {
                   {rest.map((p, idx) => {
                     return (
                       <div
-                        key={`${p.name.product}_${p.name.brand}_${idx}`}
+                        key={`${p.name}_${p.brand}_${idx}`}
                         className="flex justify-between gap-4 py-2 border-t border-dotted border-gray-300 text-sm text-black"
                       >
                         <span>
-                          {p.name.product}({p.name.brand || "브랜드 없음"})
+                          {p.name}({p.brand || "브랜드 없음"})
                         </span>
                         <span className="">
                           {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
@@ -98,9 +98,9 @@ export default function TableItem({ products }: ITableItemProps) {
             </>
           ) : (
             // products가 한개일 경우
-            <div key={`${first.name.product}_${first.name.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
+            <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
               <span>
-                {first.name.product}({first.name.brand || "브랜드 없음"})
+                {first.name}({first.brand || "브랜드 없음"})
               </span>
               <div className="flex flex-col gap-0.5 text-left">
                 <span>
@@ -152,11 +152,11 @@ export default function TableItem({ products }: ITableItemProps) {
               {products.map((p, idx) => {
                 return (
                   <div
-                    key={`${p.name.product}_${p.name.brand}_${idx}`}
+                    key={`${p.name}_${p.brand}_${idx}`}
                     className="flex justify-between gap-4 py-2 border-b border-dotted border-gray-300 text-sm text-black"
                   >
                     <span>
-                      {p.name.product} - {p.name.brand}
+                      {p.name} - {p.brand}
                     </span>
                     <span className="flex items-center gap-1">
                       {isDetailsOpen === "shipping"

@@ -89,7 +89,7 @@ export default function MergeDialog({
                 {target.products.map((p) => (
                   <ItemContent key={p._id} className="w-full">
                     <div>
-                      <span className="font-semibold">상품명:</span> {p.name.product}({p.name.brand || "브랜드 없음"})
+                      <span className="font-semibold">상품명:</span> {p.name}({p.brand || "브랜드 없음"})
                     </div>
                     <div>
                       <span className="font-semibold">매입가:</span> {getDisplayPrice(p.cost.exchange.code, p.cost.price)}

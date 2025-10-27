@@ -35,10 +35,8 @@ export interface IShipping {
 export interface IPurchaseProduct {
   _id: string;
   uid: string;
-  name: {
-    brand: string;
-    product: string;
-  };
+  name: string;
+  brand: string;
   cost: {
     price: number;
     shipping: number;
@@ -58,10 +56,8 @@ export interface IPackage {
 export interface ICreatePackageDoc {
   products: {
     _id: string;
-    name: {
-      product: string;
-      brand: string;
-    };
+    name: string;
+    brand: string;
     cost: {
       price: number;
       shipping: number;
@@ -81,10 +77,8 @@ export interface ISalesPackageDoc {
 export interface ISalesProduct {
   uid: string;
   _id: string;
-  name: {
-    product: string;
-    brand: string;
-  };
+  name: string;
+  brand: string;
   cost: {
     price: number;
     exchange: IExchange;
@@ -101,10 +95,8 @@ export interface ISalesProduct {
 export interface ICreateProductDoc {
   uid: string;
   _id: string;
-  name: {
-    product: string;
-    brand: string;
-  };
+  name: string;
+  brand: string;
   cost: {
     price: number;
     exchange: IExchange;

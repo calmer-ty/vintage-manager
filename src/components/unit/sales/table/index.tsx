@@ -38,7 +38,8 @@ interface ISalesTableProps {
 const columnConfig = [
   { key: "createdAt", label: "등록 일자" },
   { key: "soldAt", label: "판매 일자" },
-  { key: "name", label: "상품 정보" },
+  { key: "name", label: "상품명" },
+  { key: "brand", label: "브랜드명" },
   { key: "sales", label: "판매 정보" },
 ];
 
@@ -63,13 +64,8 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
         return <div>-</div>;
       }
 
-      if (key === "name") {
-        const n = row.original.name;
-        return (
-          <div>
-            {n.product}({n.brand || "브랜드 없음"})
-          </div>
-        );
+      if (key === "brand") {
+        return <div>{row.original.brand || "브랜드 없음"}</div>;
       }
       if (key === "sales") {
         const s = row.original.sales;

@@ -35,10 +35,9 @@ export default function PurchaseUI({ uid }: IUserID) {
     defaultValues: {
       products: [
         {
-          name: {
-            product: "",
-            brand: "",
-          },
+          name: "",
+          brand: "",
+
           cost: {
             price: 0,
             shipping: 0,
@@ -75,6 +74,7 @@ export default function PurchaseUI({ uid }: IUserID) {
   const onClickMoveToSale = (rowData: IPackage) => {
     setIsSaleOpen(true);
     setSalesTarget(rowData);
+    setRowSelection({});
   };
   const onClickMoveToDelete = (rowIds: string[]) => {
     setIsDeleteOpen(true);

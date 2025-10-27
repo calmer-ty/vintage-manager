@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormField } from "@/components/ui/form";
-import { Item } from "@/components/ui/item";
+import { Item, ItemContent } from "@/components/ui/item";
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
 import PurchaseSelect from "../PurchaseSelect";
@@ -105,12 +105,19 @@ export default function SaleDialog({
             <DialogDescription>선택한 패키지를 판매 등록하면 수정할 수 없습니다.</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
-            <Item variant="outline" className="flex-col justify-start">
-              {salesTarget?.products.map((p) => (
-                <div key={p._id} className="w-full">
-                  {p.name.product} - {p.name.brand} / {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
-                </div>
-              ))}
+            <Item variant="outline">
+              <ItemContent className="w-full">
+                {salesTarget?.products.map((p) => (
+                  <div key={p._id} className="p-2 rounded-md bg-gray-100">
+                    <div>
+                      <span className="font-semibold">상품명:</span> {p.name}({p.brand || "브랜드 없음"})
+                    </div>
+                    <div>
+                      <span className="font-semibold">매입가:</span> {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
+                    </div>
+                  </div>
+                ))}
+              </ItemContent>
             </Item>
           </div>
 
@@ -133,6 +140,7 @@ export default function SaleDialog({
                           placeholder="사용한 통화 기준으로 작성"
                           value={field.value.shipping}
                           onChange={(e) => field.onChange({ ...field.value, shipping: Number(e.target.value) })}
+                          onWheel={(e) => e.currentTarget.blur()}
                         />
                       </FormInputWrap>
                       <PurchaseSelect

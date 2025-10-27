@@ -16,10 +16,8 @@ import FormInputWrap from "@/components/commons/FormInputWrap";
 import type { ISalesProduct, ISalesProductParams, IUpdateProductDoc } from "@/types";
 
 const SalesSchema = z.object({
-  name: z.object({
-    brand: z.string().optional(),
-    product: z.string().optional(),
-  }),
+  name: z.string().optional(),
+  brand: z.string().optional(),
   sales: z.object({
     price: z.number().min(1, "판매가격을 입력해주세요."),
     fee: z.number().min(1, "수수료를 입력해주세요."),
@@ -50,10 +48,8 @@ export default function DialogWrite({
   const form = useForm<z.infer<typeof SalesSchema>>({
     resolver: zodResolver(SalesSchema),
     defaultValues: {
-      name: {
-        brand: "",
-        product: "",
-      },
+      name: "",
+      brand: "",
       sales: {
         price: 0,
         fee: 0,
@@ -66,10 +62,8 @@ export default function DialogWrite({
   useEffect(() => {
     if (updateTarget) {
       form.reset({
-        name: {
-          brand: updateTarget.name.brand,
-          product: updateTarget.name.product,
-        },
+        name: updateTarget.name,
+        brand: updateTarget.brand,
         sales: {
           price: updateTarget.sales.price ?? 0,
           fee: updateTarget.sales.fee ?? 0,
@@ -131,7 +125,16 @@ export default function DialogWrite({
               <div className="flex gap-4">
                 <FormField
                   control={form.control}
-                  name="name.brand"
+                  name="name"
+                  render={({ field }) => (
+                    <FormInputWrap title="제품명">
+                      <Input {...field} className="bg-white" disabled />
+                    </FormInputWrap>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="brand"
                   render={({ field }) => (
                     <FormInputWrap title="브랜드명">
                       <Input {...field} className="bg-white" disabled />
@@ -139,15 +142,6 @@ export default function DialogWrite({
                   )}
                 />
               </div>
-              <FormField
-                control={form.control}
-                name="name.product"
-                render={({ field }) => (
-                  <FormInputWrap title="제품명">
-                    <Input {...field} className="bg-white" disabled />
-                  </FormInputWrap>
-                )}
-              />
 
               <div className="flex flex-col gap-2">
                 <FormField
@@ -161,6 +155,7 @@ export default function DialogWrite({
                         {...field}
                         className="bg-white"
                         onChange={(e) => field.onChange(Number(e.target.value))}
+                        onWheel={(e) => e.currentTarget.blur()}
                         value={field.value}
                       />
                     </FormInputWrap>
@@ -177,6 +172,7 @@ export default function DialogWrite({
                         {...field}
                         className="bg-white"
                         onChange={(e) => field.onChange(Number(e.target.value))}
+                        onWheel={(e) => e.currentTarget.blur()}
                         value={field.value}
                       />
                     </FormInputWrap>
@@ -193,6 +189,7 @@ export default function DialogWrite({
                         {...field}
                         className="bg-white"
                         onChange={(e) => field.onChange(Number(e.target.value))}
+                        onWheel={(e) => e.currentTarget.blur()}
                         value={field.value}
                       />
                     </FormInputWrap>

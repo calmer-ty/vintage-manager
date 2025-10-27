@@ -106,7 +106,7 @@ export default function WriteDialog({
 
                 <FormField
                   control={form.control}
-                  name="products.0.name.product"
+                  name="products.0.name"
                   render={({ field }) => (
                     <FormInputWrap title="제품명">
                       <Input placeholder="예) 럭비 셔츠" {...field} className="bg-white" autoComplete="off" />
@@ -115,7 +115,7 @@ export default function WriteDialog({
                 />
                 <FormField
                   control={form.control}
-                  name="products.0.name.brand"
+                  name="products.0.brand"
                   render={({ field }) => (
                     <FormInputWrap title="브랜드명">
                       <Input placeholder="예) 엘엘빈" {...field} className="bg-white" autoComplete="off" />
@@ -135,6 +135,7 @@ export default function WriteDialog({
                           className="bg-white"
                           value={field.value}
                           onChange={(e) => field.onChange(Number(e.target.value))}
+                          onWheel={(e) => e.currentTarget.blur()}
                         />
                       </FormInputWrap>
                     </div>
@@ -152,6 +153,7 @@ export default function WriteDialog({
                           className="bg-white"
                           value={field.value}
                           onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))}
+                          onWheel={(e) => e.currentTarget.blur()}
                         />
                       </FormInputWrap>
                     </div>
@@ -169,6 +171,7 @@ export default function WriteDialog({
                           className="bg-white"
                           value={field.value}
                           onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))}
+                          onWheel={(e) => e.currentTarget.blur()}
                         />
                       </FormInputWrap>
                     </div>
