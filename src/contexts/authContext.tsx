@@ -3,12 +3,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth, db, googleProvider } from "@/lib/firebase/firebaseApp";
+import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 
 import type { User } from "firebase/auth";
 import type { ReactNode } from "react";
-import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 interface AuthContextType {
   user: User | null;

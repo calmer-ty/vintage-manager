@@ -3,7 +3,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 import { Lock } from "lucide-react";
 
-import { IUserData } from "@/types";
+import type { IUserData } from "@/types";
 
 interface IPurchaseSelectProps {
   userData: IUserData | undefined;

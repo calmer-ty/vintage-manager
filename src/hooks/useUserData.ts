@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
-import { IUserData } from "@/types";
+import type { IUserData } from "@/types";
 
 export const useUserData = (uid: string | undefined) => {
   const [userData, setUserData] = useState<IUserData>();
@@ -32,8 +32,6 @@ export const useUserData = (uid: string | undefined) => {
         ...userData,
         grade: "pro",
       });
-
-      console.log("updateGrade 성공");
     } catch (err) {
       console.error(err);
     }
@@ -48,8 +46,6 @@ export const useUserData = (uid: string | undefined) => {
         ...userData,
         grade: "free",
       });
-
-      console.log("updateGrade 성공");
     } catch (err) {
       console.error(err);
     }
