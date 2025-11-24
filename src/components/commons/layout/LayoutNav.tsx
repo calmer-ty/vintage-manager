@@ -3,13 +3,23 @@
 import { usePathname } from "next/navigation";
 import { useAuth } from "@/contexts/authContext";
 
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronUp, User2 } from "lucide-react";
 
 import Link from "next/link";
 
-import { pages } from "@/lib/link";
+import { productPages, userPages } from "@/lib/link";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -21,15 +31,38 @@ export default function Nav() {
         <Sidebar>
           <SidebarContent>
             <SidebarGroup>
-              <SidebarGroupLabel>상품 확인하기</SidebarGroupLabel>
+              <SidebarGroupLabel>상품 관리</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {pages.map((page) => {
+                  {productPages.map((page) => {
                     const isActive = pathname === page.url;
                     return (
                       <SidebarMenuItem key={page.title}>
                         <SidebarMenuButton asChild>
                           <Link href={page.url} className={isActive ? "!bg-blue-100" : ""}>
+                            <page.icon className="text-blue-600" />
+                            <span className={isActive ? "font-bold" : ""}>{page.title}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+            <SidebarGroup>
+              <SidebarGroupLabel>계정 관리</SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {userPages.map((page) => {
+                    const isActive = pathname === page.url;
+                    return (
+                      <SidebarMenuItem key={page.title}>
+                        <SidebarMenuButton asChild>
+                          <Link
+                            href={page.url}
+                            className={isActive ? "!bg-blue-100" : "" + (page.isDisabled ? " pointer-events-none opacity-50" : "")}
+                          >
                             <page.icon className="text-blue-600" />
                             <span className={isActive ? "font-bold" : ""}>{page.title}</span>
                           </Link>

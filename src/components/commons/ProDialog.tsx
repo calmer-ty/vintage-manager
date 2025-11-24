@@ -1,3 +1,4 @@
+import { useRouter } from "next/navigation";
 // 외부 요소
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -8,6 +9,12 @@ interface IProDialogProps {
 }
 
 export default function ProDialog({ isProOpen, setIsProOpen }: IProDialogProps) {
+  const router = useRouter();
+
+  const onClickUpgrade = () => {
+    router.push("/pro");
+  };
+
   return (
     <Dialog open={isProOpen} onOpenChange={setIsProOpen}>
       <DialogContent className="sm:max-w-md">
@@ -19,7 +26,9 @@ export default function ProDialog({ isProOpen, setIsProOpen }: IProDialogProps) 
         </DialogHeader>
 
         <DialogFooter className="sm:justify-center">
-          <Button variant="confirm">지금 Pro 업그레이드</Button>
+          <Button variant="confirm" onClick={onClickUpgrade}>
+            지금 Pro 업그레이드
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

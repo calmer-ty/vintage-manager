@@ -4,9 +4,9 @@ import { Loader } from "lucide-react";
 
 import { useAuth } from "@/contexts/authContext";
 
-import SalesUI from "@/components/unit/sales";
+import ProUI from "@/components/unit/pro";
 
-export default function SalesPage() {
+export default function ProPage() {
   const { loading, uid } = useAuth();
 
   if (loading) {
@@ -23,5 +23,5 @@ export default function SalesPage() {
     return <div>로그인이 필요합니다.</div>;
   }
 
-  return <SalesUI uid={uid} />;
+  return <ProUI uid={uid} />;
 }

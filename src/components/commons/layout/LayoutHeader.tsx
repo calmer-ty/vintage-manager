@@ -9,11 +9,11 @@ import { Rocket } from "lucide-react";
 
 import YearMonthSelect from "./YearMonthSelect";
 
-import { pages } from "@/lib/link";
+import { productPages } from "@/lib/link";
 
 export default function Header() {
   const pathname = usePathname();
-  const currentPage = pages.find((el) => pathname === el.url)?.title;
+  const currentPage = productPages.find((el) => pathname === el.url)?.title;
 
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
   //
