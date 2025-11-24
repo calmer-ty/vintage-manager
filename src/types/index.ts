@@ -146,6 +146,6 @@ export interface ISalesProductParams {
 export interface IUserData {
   name: string;
   email: string;
-  grade: string;
+  grade: "free" | "pro";
   createdAt: FieldValue;
 }

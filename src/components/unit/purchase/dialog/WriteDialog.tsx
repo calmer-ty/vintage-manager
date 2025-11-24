@@ -3,6 +3,7 @@ import { useState } from "react";
 import { v4 as uuid } from "uuid";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
+import { useUserData } from "@/hooks/useUserData";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,8 +13,6 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import FormInputWrap from "@/components/commons/FormInputWrap";
 import ProDialog from "@/components/commons/ProDialog";
 import PurchaseSelect from "../PurchaseSelect";
-
-import { useUserData } from "@/hooks/useUserData";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
@@ -42,7 +41,7 @@ export default function WriteDialog({
 }: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
-  const { userData } = useUserData(uid);
+  const { userData, upgradeGrade, downgradeGrade } = useUserData(uid);
 
   // 프로 업그레이드 상태
   const [isProOpen, setIsProOpen] = useState(false);
@@ -209,7 +208,13 @@ export default function WriteDialog({
         </DialogContent>
       </Dialog>
 
-      <ProDialog isProOpen={isProOpen} setIsProOpen={setIsProOpen} />
+      <ProDialog
+        isProOpen={isProOpen}
+        setIsProOpen={setIsProOpen}
+        userData={userData}
+        upgradeGrade={upgradeGrade}
+        downgradeGrade={downgradeGrade}
+      />
     </>
   );
 }

@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/authContext";
 import SalesUI from "@/components/unit/sales";
 
 export default function SalesPage() {
-  const { loading, uid } = useAuth();
+  const { uid, loading } = useAuth();
 
   if (loading) {
     return (

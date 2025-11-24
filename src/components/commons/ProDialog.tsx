@@ -1,17 +1,20 @@
-import { useRouter } from "next/navigation";
 // 외부 요소
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
+import { IUserData } from "@/types";
+
 interface IProDialogProps {
   isProOpen: boolean;
   setIsProOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userData: IUserData | undefined;
+  upgradeGrade: () => Promise<void>;
+  downgradeGrade: () => Promise<void>;
 }
 
-export default function ProDialog({ isProOpen, setIsProOpen }: IProDialogProps) {
-  const router = useRouter();
-
+export default function ProDialog({ isProOpen, setIsProOpen, userData, upgradeGrade, downgradeGrade }: IProDialogProps) {
+  console.log(userData?.grade);
   return (
     <Dialog open={isProOpen} onOpenChange={setIsProOpen}>
       <DialogContent className="overflow-auto w-full sm:max-w-2xl max-h-180">
@@ -31,9 +34,16 @@ export default function ProDialog({ isProOpen, setIsProOpen }: IProDialogProps) 
             </CardHeader>
             <CardContent className="px-0 pb-6 border-b border-muted-foreground/20 text-center">
               <p className="mb-2 text-2xl font-bold">무료</p>
-              <p className="mb-4 text-muted-foreground text-sm break-keep">국내 제품을구입하거나 가볍게 사용하시는 분에게 적합합니다.</p>
-              <Button variant="outline" size="lg" disabled>
-                현재 이용중
+              <p className="mb-4 text-muted-foreground text-sm break-keep leading-6">
+                국내 제품을구입하거나 가볍게 사용하시는 분에게 적합합니다.
+              </p>
+              <Button
+                variant={userData?.grade === "free" ? "outline" : "confirm"}
+                size="lg"
+                onClick={downgradeGrade}
+                className={userData?.grade === "free" ? "pointer-events-none text-muted-foreground" : ""}
+              >
+                {userData?.grade === "free" ? "현재 이용중" : "요금제 선택"}
               </Button>
             </CardContent>
             <CardFooter className="block">
@@ -48,16 +58,21 @@ export default function ProDialog({ isProOpen, setIsProOpen }: IProDialogProps) 
           <Card className="relative px-8 py-8 transition-colors hover:bg-gray-50">
             <span className="absolute top-4 right-4 px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium">추천</span>
             <CardHeader className="px-0">
-              {/* <div className="flex items-center justify-between"> */}
               <CardTitle>Pro</CardTitle>
-              {/* </div> */}
               <CardDescription>다양한 통화로 거래 내역을 한눈에.</CardDescription>
             </CardHeader>
             <CardContent className="px-0 pb-6 border-b border-muted-foreground/20 text-center">
               <p className="mb-2 text-2xl font-bold">기간 한정 무료</p>
-              <p className="mb-4 text-muted-foreground text-sm break-keep">다양한 국가에서 제품을 구매하여 관리하시는 분에게 적합합니다.</p>
-              <Button variant="confirm" size="lg" onClick={() => console.log("Upgrade Click:")}>
-                Pro 업그레이드하기
+              <p className="mb-4 text-muted-foreground text-sm break-keep leading-6">
+                다양한 국가에서 제품을 구매하여 관리하시는 분에게 적합합니다.
+              </p>
+              <Button
+                variant={userData?.grade === "pro" ? "outline" : "confirm"}
+                size="lg"
+                onClick={upgradeGrade}
+                className={userData?.grade === "pro" ? "pointer-events-none text-muted-foreground" : ""}
+              >
+                {userData?.grade === "pro" ? "현재 이용중" : "요금제 선택"}
               </Button>
             </CardContent>
             <CardFooter className="block">

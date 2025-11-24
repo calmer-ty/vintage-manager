@@ -7,10 +7,15 @@ import DashboardUI from "@/components/unit/dashboard";
 import { Loader } from "lucide-react";
 
 export default function NewPage() {
-  const { loading, uid } = useAuth();
+  const { uid, loading } = useAuth();
 
   if (loading) {
-    return <Loader className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 animate-spin text-muted-foreground" aria-label="Loading" />;
+    return (
+      <Loader
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-6 w-6 animate-spin text-muted-foreground"
+        aria-label="Loading"
+      />
+    );
   }
 
   if (!uid) {

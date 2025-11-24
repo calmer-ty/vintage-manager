@@ -1,19 +1,24 @@
 "use client";
 
+import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+
+import { useAuth } from "@/contexts/authContext";
 
 import { Rocket } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-
 import ProDialog from "../ProDialog";
 
 import { pages } from "@/lib/link";
-import { useState } from "react";
+import { useUserData } from "@/hooks/useUserData";
 
 export default function Header() {
   const pathname = usePathname();
+  const { uid } = useAuth();
+  const { userData, upgradeGrade, downgradeGrade } = useUserData(uid);
+
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
 
   // 프로 업그레이드 상태
@@ -49,7 +54,13 @@ export default function Header() {
         )}
       </header>
 
-      <ProDialog isProOpen={isProOpen} setIsProOpen={setIsProOpen} />
+      <ProDialog
+        isProOpen={isProOpen}
+        setIsProOpen={setIsProOpen}
+        userData={userData}
+        upgradeGrade={upgradeGrade}
+        downgradeGrade={downgradeGrade}
+      />
     </>
   );
 }

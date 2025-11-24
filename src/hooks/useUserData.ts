@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
 import { IUserData } from "@/types";
@@ -23,5 +23,37 @@ export const useUserData = (uid: string | undefined) => {
     return () => unsubscribe(); // 메모리 누수 방지
   }, [uid]);
 
-  return { userData, loading };
+  const upgradeGrade = async () => {
+    if (!uid) return;
+
+    try {
+      const docRef = doc(db, "users", uid);
+      await updateDoc(docRef, {
+        ...userData,
+        grade: "pro",
+      });
+
+      console.log("updateGrade 성공");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const downgradeGrade = async () => {
+    if (!uid) return;
+
+    try {
+      const docRef = doc(db, "users", uid);
+      await updateDoc(docRef, {
+        ...userData,
+        grade: "free",
+      });
+
+      console.log("updateGrade 성공");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return { userData, loading, upgradeGrade, downgradeGrade };
 };
