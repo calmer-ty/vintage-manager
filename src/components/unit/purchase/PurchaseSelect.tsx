@@ -1,7 +1,12 @@
 import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
+import { Lock } from "lucide-react";
+
+import { IUserData } from "@/types";
+
 interface IPurchaseSelectProps {
+  userData: IUserData | undefined;
   onChange: (code: string) => void;
   value: string;
   disabled?: boolean;
@@ -9,7 +14,7 @@ interface IPurchaseSelectProps {
   messageStyles?: string;
 }
 
-export default function PurchaseSelect({ onChange, value, label, messageStyles, disabled }: IPurchaseSelectProps) {
+export default function PurchaseSelect({ userData, onChange, value, label, messageStyles, disabled }: IPurchaseSelectProps) {
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>
@@ -22,9 +27,17 @@ export default function PurchaseSelect({ onChange, value, label, messageStyles, 
         <SelectContent>
           <SelectGroup>
             <SelectLabel>통화 선택</SelectLabel>
-            <SelectItem value="KRW">KRW (₩)</SelectItem>
-            <SelectItem value="USD">USD ($)</SelectItem>
-            <SelectItem value="JPY">JPY (¥)</SelectItem>
+            <SelectItem value="KRW" className="cursor-pointer">
+              KRW (₩)
+            </SelectItem>
+            <SelectItem value="USD" className="cursor-pointer">
+              {userData?.grade === "free" && <Lock className="!w-3 !h-3" />}
+              USD ($)
+            </SelectItem>
+            <SelectItem value="JPY" className="cursor-pointer">
+              {userData?.grade === "free" && <Lock className="!w-3 !h-3" />}
+              JPY (¥)
+            </SelectItem>
           </SelectGroup>
         </SelectContent>
       </Select>

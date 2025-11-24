@@ -1,4 +1,4 @@
-import type { Timestamp } from "firebase/firestore";
+import type { FieldValue, Timestamp } from "firebase/firestore";
 
 // API 타입
 export interface IExchangeRate {
@@ -140,4 +140,12 @@ export interface ICreateProductParams {
 export interface ISalesProductParams {
   salesTarget: string;
   productDoc: IUpdateProductDoc;
+}
+
+// 유저 데이터
+export interface IUserData {
+  name: string;
+  email: string;
+  grade: string;
+  createdAt: FieldValue;
 }

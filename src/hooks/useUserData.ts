@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import { doc, FieldValue, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
 
-interface IUserData {
-  name: string;
-  email: string;
-  grade: string;
-  createdAt: FieldValue;
-}
+import { IUserData } from "@/types";
 
 export const useUserData = (uid: string | undefined) => {
   const [userData, setUserData] = useState<IUserData>();
