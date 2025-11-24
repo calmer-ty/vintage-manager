@@ -12,6 +12,7 @@ export default function ProDialog({ isProOpen, setIsProOpen }: IProDialogProps) 
   const router = useRouter();
 
   const onClickUpgrade = () => {
+    setIsProOpen(false);
     router.push("/pro");
   };
 

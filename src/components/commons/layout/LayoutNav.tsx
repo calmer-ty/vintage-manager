@@ -50,29 +50,6 @@ export default function Nav() {
                 </SidebarMenu>
               </SidebarGroupContent>
             </SidebarGroup>
-            <SidebarGroup>
-              <SidebarGroupLabel>계정 관리</SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {pages.user.map((page) => {
-                    const isActive = pathname === page.url;
-                    return (
-                      <SidebarMenuItem key={page.title}>
-                        <SidebarMenuButton asChild>
-                          <Link
-                            href={page.url}
-                            className={isActive ? "!bg-blue-100" : "" + (page.isDisabled ? " pointer-events-none opacity-50" : "")}
-                          >
-                            <page.icon className="text-blue-600" />
-                            <span className={isActive ? "font-bold" : ""}>{page.title}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
           </SidebarContent>
 
           <SidebarFooter>

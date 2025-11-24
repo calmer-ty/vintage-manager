@@ -44,6 +44,7 @@ export default function WriteDialog({
   const { exchangeOptions } = useExchangeRate();
   const { userData } = useUserData(uid);
 
+  // 프로 업그레이드 상태
   const [isProOpen, setIsProOpen] = useState(false);
 
   // 등록 함수
