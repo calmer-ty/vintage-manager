@@ -2,12 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useDateSelector } from "@/contexts/dateSelectorContext";
 
 import { Separator } from "@/components/ui/separator";
 import { Rocket } from "lucide-react";
-
-import YearMonthSelect from "./YearMonthSelect";
 
 import { pages } from "@/lib/link";
 
@@ -15,7 +12,6 @@ export default function Header() {
   const pathname = usePathname();
   const currentPage = [...pages.product, ...pages.user].find((el) => pathname === el.url)?.title;
 
-  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelector();
   //
   return (
     <header
@@ -29,12 +25,6 @@ export default function Header() {
 
           <div className="flex justify-end items-center w-full">
             <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" />
-            <YearMonthSelect
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
-              selectedMonth={selectedMonth}
-              setSelectedMonth={setSelectedMonth}
-            />
           </div>
         </>
       ) : (

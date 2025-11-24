@@ -1,10 +1,10 @@
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { AuthProvider } from "@/contexts/authContext";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/authContext";
 
-import { DateSelectorProvider } from "@/contexts/dateSelectorContext";
+import { DateSelectProvider } from "@/contexts/dateSelect";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { CurrencyProvider } from "@/contexts/currencyContext";
 
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
@@ -38,7 +38,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <SidebarProvider>
-            <DateSelectorProvider>
+            <DateSelectProvider>
               <CurrencyProvider>
                 <LayoutNav />
                 <div className="flex-1 overflow-x-hidden">
@@ -48,7 +48,7 @@ export default function RootLayout({
                   <Toaster position="top-center" />
                 </div>
               </CurrencyProvider>
-            </DateSelectorProvider>
+            </DateSelectProvider>
           </SidebarProvider>
         </AuthProvider>
       </body>

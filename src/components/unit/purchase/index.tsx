@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useProducts } from "@/hooks/useProducts";
-import { useDateSelector } from "@/contexts/dateSelectorContext";
+import { useDateSelect } from "@/contexts/dateSelect";
 import { usePackages } from "@/hooks/usePackages";
 
+import YearMonthSelect from "@/components/commons/YearMonthSelect";
 import TableUI from "./table";
 import WriteDialog from "./dialog/WriteDialog";
 import DeleteDialog from "./dialog/DeleteDialog";
@@ -20,7 +20,7 @@ import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";
 
 export default function PurchaseUI({ uid }: IUserID) {
-  const { selectedYear, selectedMonth } = useDateSelector();
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
   const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackages({
     uid,
     selectedYear,
@@ -77,6 +77,14 @@ export default function PurchaseUI({ uid }: IUserID) {
 
   return (
     <article className="px-10 py-6">
+      <header className="flex justify-end mb-6">
+        <YearMonthSelect
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+        />
+      </header>
       {/* 테이블 */}
       <TableUI
         data={packages}

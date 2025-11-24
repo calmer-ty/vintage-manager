@@ -1,15 +1,16 @@
-import TableUI from "./table";
-
-import { useDateSelector } from "@/contexts/dateSelectorContext";
-import { useProducts } from "@/hooks/useProducts";
 import { useState } from "react";
 
+import { useDateSelect } from "@/contexts/dateSelect";
+import { useProducts } from "@/hooks/useProducts";
+
+import TableUI from "./table";
 import WriteDialog from "./dialog/WriteDialog";
+import YearMonthSelect from "@/components/commons/YearMonthSelect";
 
 import type { ISalesProduct, IUserID } from "@/types";
 
 export default function SalesUI({ uid }: IUserID) {
-  const { selectedYear, selectedMonth } = useDateSelector();
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
   const { products, salesProduct, fetchProducts, loading } = useProducts({ uid, selectedYear, selectedMonth });
 
   // 수정 스테이트
@@ -18,6 +19,14 @@ export default function SalesUI({ uid }: IUserID) {
 
   return (
     <article className="flex-1 px-10 py-6">
+      <header className="flex justify-end mb-6">
+        <YearMonthSelect
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+        />
+      </header>
       {/* 판매가 수정 모달창 */}
       <WriteDialog
         uid={uid}
