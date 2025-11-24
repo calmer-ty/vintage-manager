@@ -17,7 +17,9 @@ import type { ICreatePackageDoc, ICreatePackageParams } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
+import { useUserData } from "@/hooks/useUserData";
 interface IWriteDialogProps {
+  uid: string;
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isWriteOpen: boolean;
@@ -27,6 +29,7 @@ interface IWriteDialogProps {
 }
 
 export default function WriteDialog({
+  uid,
   form,
   setRowSelection,
   isWriteOpen,
@@ -36,6 +39,8 @@ export default function WriteDialog({
 }: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
+  const { userData } = useUserData(uid);
+  console.log("userData in WriteDialog:", userData);
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {

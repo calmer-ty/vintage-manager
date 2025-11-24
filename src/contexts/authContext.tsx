@@ -2,12 +2,13 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth, googleProvider } from "@/lib/firebase/firebaseApp";
+import { auth, db, googleProvider } from "@/lib/firebase/firebaseApp";
 
 import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 
 import type { User } from "firebase/auth";
 import type { ReactNode } from "react";
+import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 interface AuthContextType {
   user: User | null;
@@ -49,10 +50,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Google 로그인 처리
   const handleLogin = async (): Promise<void> => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+
+      await createUser({ user });
       router.push("/dashboard"); // 로그인 시 첫 진입 페이지
     } catch (error) {
       console.error("로그인 실패:", error);
+    }
+  };
+
+  // 유저 데이터 등록 함수
+  const createUser = async ({ user }: { user: User }) => {
+    if (!user) return;
+
+    const docRef = doc(db, "users", user.uid);
+    try {
+      await setDoc(
+        docRef,
+        {
+          name: user.displayName,
+          email: user.email,
+          grade: "free",
+          createdAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+    } catch (err) {
+      console.error("Error creating user:", err);
     }
   };
 

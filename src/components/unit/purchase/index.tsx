@@ -92,6 +92,7 @@ export default function PurchaseUI({ uid }: IUserID) {
 
       {/* 모달 */}
       <WriteDialog
+        uid={uid}
         form={form}
         setRowSelection={setRowSelection}
         isWriteOpen={isWriteOpen}
