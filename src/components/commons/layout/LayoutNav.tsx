@@ -19,7 +19,7 @@ import { ChevronUp, User2 } from "lucide-react";
 
 import Link from "next/link";
 
-import { productPages, userPages } from "@/lib/link";
+import { pages } from "@/lib/link";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -34,7 +34,7 @@ export default function Nav() {
               <SidebarGroupLabel>상품 관리</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {productPages.map((page) => {
+                  {pages.product.map((page) => {
                     const isActive = pathname === page.url;
                     return (
                       <SidebarMenuItem key={page.title}>
@@ -54,7 +54,7 @@ export default function Nav() {
               <SidebarGroupLabel>계정 관리</SidebarGroupLabel>
               <SidebarGroupContent>
                 <SidebarMenu>
-                  {userPages.map((page) => {
+                  {pages.user.map((page) => {
                     const isActive = pathname === page.url;
                     return (
                       <SidebarMenuItem key={page.title}>
