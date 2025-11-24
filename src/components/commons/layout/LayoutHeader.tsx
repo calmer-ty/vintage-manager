@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 
 import { Rocket } from "lucide-react";
@@ -36,7 +36,7 @@ export default function Header() {
 
             <div className="flex justify-end items-center w-full">
               <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" />
-              <Button variant="confirm" onClick={onClickUpgrade}>
+              <Button variant="default" onClick={onClickUpgrade}>
                 Pro 업그레이드
               </Button>
             </div>
