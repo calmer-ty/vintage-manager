@@ -1,7 +1,7 @@
 import { toast } from "sonner";
-import { useState } from "react";
 import { v4 as uuid } from "uuid";
 
+import { useGradeDialog } from "@/contexts/gradeModalContext";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { useUserData } from "@/hooks/useUserData";
 
@@ -11,7 +11,6 @@ import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
-import GradeDialog from "@/components/commons/gradeDialog";
 import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
@@ -41,10 +40,9 @@ export default function WriteDialog({
 }: IWriteDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
-  const { userData, upgradeGrade, downgradeGrade } = useUserData(uid);
 
-  // 프로 업그레이드 상태
-  const [isProOpen, setIsProOpen] = useState(false);
+  const { userData } = useUserData(uid);
+  const { setIsOpenGrade } = useGradeDialog();
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
@@ -106,7 +104,7 @@ export default function WriteDialog({
                         onChange={(code) => {
                           // grade 체크
                           if (userData?.grade === "free" && (code === "USD" || code === "JPY")) {
-                            setIsProOpen(true); // ProDialog 열기
+                            setIsOpenGrade(true); // ProDialog 열기
                             return; // 선택 변경 막기
                           }
 
@@ -207,16 +205,6 @@ export default function WriteDialog({
           </Form>
         </DialogContent>
       </Dialog>
-
-      {userData && (
-        <GradeDialog
-          isProOpen={isProOpen}
-          setIsProOpen={setIsProOpen}
-          userData={userData}
-          upgradeGrade={upgradeGrade}
-          downgradeGrade={downgradeGrade}
-        />
-      )}
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { toast } from "sonner";
 import clsx from "clsx";
 
 import { ArrowLeft } from "lucide-react";
@@ -11,6 +12,7 @@ interface IGradeConfirmProps {
   setStep: Dispatch<SetStateAction<"select" | "confirm">>;
   selectGrade: "free" | "pro" | null;
   setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
+  closeGrade: () => void;
   upgradeGrade: () => Promise<void>;
   downgradeGrade: () => Promise<void>;
 }
@@ -49,10 +51,14 @@ const features = [
   },
 ];
 
-export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, upgradeGrade, downgradeGrade }: IGradeConfirmProps) {
-  // const isUpgrade = userData.grade === "free" && selectGrade === "pro";
-  // const isDowngrade = userData.grade === "pro" && selectGrade === "free";
-
+export default function GradeConfirm({
+  setStep,
+  selectGrade,
+  setSelectGrade,
+  closeGrade,
+  upgradeGrade,
+  downgradeGrade,
+}: IGradeConfirmProps) {
   return (
     <>
       <Button variant="outline" className="absolute left-4 top-4 border-none shadow-none" onClick={() => setStep("select")}>
@@ -81,7 +87,7 @@ export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, upg
                   <TableCell className={clsx("text-center", feature.freeColor, selectGrade === "free" && "bg-blue-100")}>
                     {feature.freeIcon}
                   </TableCell>
-                  <TableCell className={clsx("text-center", feature.freeColor, selectGrade === "pro" && "bg-blue-100")}>
+                  <TableCell className={clsx("text-center", feature.proColor, selectGrade === "pro" && "bg-blue-100")}>
                     {feature.proIcon}
                   </TableCell>
                 </TableRow>
@@ -98,10 +104,17 @@ export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, upg
               if (selectGrade === "pro") upgradeGrade();
               else downgradeGrade();
 
+              closeGrade();
+              toast(
+                <span>
+                  ✅ <strong className="capitalize">{selectGrade}</strong> 요금제가 성공적으로 변경되었습니다.
+                </span>
+              );
+
               setTimeout(() => {
                 setStep("select");
                 setSelectGrade(null);
-              }, 500);
+              }, 1000);
             }}
           >
             {selectGrade === "pro" ? "업그레이드 확정하기" : "변경 확정하기"}

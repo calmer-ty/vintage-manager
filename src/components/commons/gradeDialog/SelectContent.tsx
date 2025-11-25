@@ -7,7 +7,7 @@ import type { IUserData } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 
 interface IGradeSelectProps {
-  userData: IUserData;
+  userData: IUserData | undefined;
   setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
   setStep: Dispatch<SetStateAction<"select" | "confirm">>;
 }

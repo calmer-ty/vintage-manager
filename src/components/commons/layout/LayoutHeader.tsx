@@ -1,32 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { usePathname } from "next/navigation";
-
-import { useAuth } from "@/contexts/authContext";
+import { useGradeDialog } from "@/contexts/gradeModalContext";
 
 import { Rocket } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import GradeDialog from "../gradeDialog";
 
 import { pages } from "@/lib/link";
-import { useUserData } from "@/hooks/useUserData";
 
-export default function Header() {
+export default function LayoutHeader() {
   const pathname = usePathname();
-  const { uid } = useAuth();
-  const { userData, upgradeGrade, downgradeGrade } = useUserData(uid);
+  const { openGrade } = useGradeDialog();
 
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
-
-  // 프로 업그레이드 상태
-  const [isProOpen, setIsProOpen] = useState(false);
-
-  const onClickUpgrade = () => {
-    setIsProOpen(true);
-  };
 
   return (
     <>
@@ -41,7 +29,7 @@ export default function Header() {
 
             <div className="flex justify-end items-center w-full">
               <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" />
-              <Button variant="default" onClick={onClickUpgrade}>
+              <Button variant="default" onClick={openGrade}>
                 Pro 업그레이드
               </Button>
             </div>
@@ -53,16 +41,6 @@ export default function Header() {
           </>
         )}
       </header>
-
-      {userData && (
-        <GradeDialog
-          isProOpen={isProOpen}
-          setIsProOpen={setIsProOpen}
-          userData={userData}
-          upgradeGrade={upgradeGrade}
-          downgradeGrade={downgradeGrade}
-        />
-      )}
     </>
   );
 }

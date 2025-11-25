@@ -3,12 +3,14 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/authContext";
 
-import { DateSelectProvider } from "@/contexts/dateSelect";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { GradeModalProvider } from "@/contexts/gradeModalContext";
+import { DateSelectProvider } from "@/contexts/dateSelect";
 import { CurrencyProvider } from "@/contexts/currencyContext";
 
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
 import LayoutNav from "@/components/commons/layout/LayoutNav";
+import GradeDialog from "@/components/commons/gradeDialog";
 
 import "./globals.css";
 import type { Metadata } from "next";
@@ -38,17 +40,20 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <SidebarProvider>
-            <DateSelectProvider>
-              <CurrencyProvider>
-                <LayoutNav />
-                <div className="flex-1 overflow-x-hidden">
-                  {/* Nav 외에 유동적으로 크기 맞춤 */}
-                  <LayoutHeader />
-                  <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
-                  <Toaster position="top-center" />
-                </div>
-              </CurrencyProvider>
-            </DateSelectProvider>
+            <GradeModalProvider>
+              <DateSelectProvider>
+                <CurrencyProvider>
+                  <LayoutNav />
+                  <div className="flex-1 overflow-x-hidden">
+                    {/* Nav 외에 유동적으로 크기 맞춤 */}
+                    <LayoutHeader />
+                    <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
+                    <Toaster position="top-center" />
+                    <GradeDialog />
+                  </div>
+                </CurrencyProvider>
+              </DateSelectProvider>
+            </GradeModalProvider>
           </SidebarProvider>
         </AuthProvider>
       </body>

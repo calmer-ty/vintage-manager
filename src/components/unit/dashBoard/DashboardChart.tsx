@@ -1,16 +1,17 @@
 import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
+import { useGradeDialog } from "@/contexts/gradeModalContext";
 
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
+import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
+
 import type { ISalesProduct, IUserData } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
-import { Button } from "@/components/ui/button";
-import GradeDialog from "@/components/commons/gradeDialog";
 interface IDashBoardChartProps {
   userData: IUserData | undefined;
   upgradeGrade: () => Promise<void>;
@@ -34,22 +35,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({
-  userData,
-  upgradeGrade,
-  downgradeGrade,
-  products,
-  selectedYear,
-  selectedMonth,
-}: IDashBoardChartProps) {
+export default function DashBoardChart({ userData, products, selectedYear, selectedMonth }: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
 
-  // 프로 업그레이드 상태
-  const [isProOpen, setIsProOpen] = useState(false);
-  const onClickUpgrade = () => {
-    setIsProOpen(true);
-  };
+  const { openGrade } = useGradeDialog();
 
   // 판매/판매완료 된 상품들의 날짜를 추출
   const costDays = products
@@ -100,7 +90,7 @@ export default function DashBoardChart({
   return (
     <div className="relative">
       {userData?.grade === "free" && (
-        <Button className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10" onClick={onClickUpgrade}>
+        <Button className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10" onClick={openGrade}>
           업그레이드 필요
         </Button>
       )}
@@ -182,16 +172,6 @@ export default function DashBoardChart({
           </ChartContainer>
         </CardContent>
       </MotionCard>
-
-      {userData && (
-        <GradeDialog
-          isProOpen={isProOpen}
-          setIsProOpen={setIsProOpen}
-          userData={userData}
-          upgradeGrade={upgradeGrade}
-          downgradeGrade={downgradeGrade}
-        />
-      )}
     </div>
   );
 }

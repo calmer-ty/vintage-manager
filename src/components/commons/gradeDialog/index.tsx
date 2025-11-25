@@ -1,25 +1,25 @@
+"use client";
+
 import { useState } from "react";
+
+import { useAuth } from "@/contexts/authContext";
+import { useGradeDialog } from "@/contexts/gradeModalContext";
+import { useUserData } from "@/hooks/useUserData";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import GradeSelect from "./SelectContent";
 import GradeConfirm from "./CofirmContent";
 
-import type { IUserData } from "@/types";
-
-interface IGradeDialogProps {
-  isProOpen: boolean;
-  setIsProOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  userData: IUserData;
-  upgradeGrade: () => Promise<void>;
-  downgradeGrade: () => Promise<void>;
-}
-
-export default function GradeDialog({ isProOpen, setIsProOpen, userData, upgradeGrade, downgradeGrade }: IGradeDialogProps) {
+export default function GradeDialog() {
   const [step, setStep] = useState<"select" | "confirm">("select");
   const [selectGrade, setSelectGrade] = useState<"free" | "pro" | null>(null);
 
+  const { uid } = useAuth();
+  const { isOpenGrade, setIsOpenGrade, closeGrade } = useGradeDialog();
+  const { userData, upgradeGrade, downgradeGrade } = useUserData(uid);
+
   return (
-    <Dialog open={isProOpen} onOpenChange={setIsProOpen}>
+    <Dialog open={isOpenGrade} onOpenChange={setIsOpenGrade}>
       <DialogContent className="overflow-auto w-full sm:max-w-2xl max-h-2xl sm:px-16 sm:py-10">
         <DialogHeader className="items-center px-10">
           <DialogTitle className="mb-2 text-xl">
@@ -30,6 +30,7 @@ export default function GradeDialog({ isProOpen, setIsProOpen, userData, upgrade
         {step === "select" && <GradeSelect userData={userData} setStep={setStep} setSelectGrade={setSelectGrade} />}
         {step === "confirm" && (
           <GradeConfirm
+            closeGrade={closeGrade}
             setStep={setStep}
             selectGrade={selectGrade}
             setSelectGrade={setSelectGrade}

@@ -5,7 +5,7 @@ import { getNowDate } from "@/lib/date";
 
 import type { ReactNode } from "react";
 
-interface DateSelectContextType {
+interface IDateSelectContextType {
   selectedYear: number;
   selectedMonth: number;
   setSelectedYear: React.Dispatch<React.SetStateAction<number>>;
@@ -13,7 +13,7 @@ interface DateSelectContextType {
 }
 
 const { year, month } = getNowDate();
-const DateSelectorContext = createContext<DateSelectContextType>({
+const DateSelectorContext = createContext<IDateSelectContextType>({
   selectedYear: year,
   selectedMonth: month,
   setSelectedYear: () => {
