@@ -3,8 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/authContext";
 
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { UserDataProvider } from "@/contexts/userDataContext";
 import { GradeModalProvider } from "@/contexts/gradeModalContext";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { DateSelectProvider } from "@/contexts/dateSelect";
 import { CurrencyProvider } from "@/contexts/currencyContext";
 
@@ -39,22 +40,24 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
-          <SidebarProvider>
-            <GradeModalProvider>
-              <DateSelectProvider>
-                <CurrencyProvider>
-                  <LayoutNav />
-                  <div className="flex-1 overflow-x-hidden">
-                    {/* Nav 외에 유동적으로 크기 맞춤 */}
-                    <LayoutHeader />
-                    <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
-                    <Toaster position="top-center" />
-                    <GradeDialog />
-                  </div>
-                </CurrencyProvider>
-              </DateSelectProvider>
-            </GradeModalProvider>
-          </SidebarProvider>
+          <UserDataProvider>
+            <SidebarProvider>
+              <GradeModalProvider>
+                <DateSelectProvider>
+                  <CurrencyProvider>
+                    <LayoutNav />
+                    <div className="flex-1 overflow-x-hidden">
+                      {/* Nav 외에 유동적으로 크기 맞춤 */}
+                      <LayoutHeader />
+                      <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
+                      <Toaster position="top-center" />
+                      <GradeDialog />
+                    </div>
+                  </CurrencyProvider>
+                </DateSelectProvider>
+              </GradeModalProvider>
+            </SidebarProvider>
+          </UserDataProvider>
         </AuthProvider>
       </body>
     </html>

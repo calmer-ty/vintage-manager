@@ -1,6 +1,6 @@
-import { useProducts } from "@/hooks/useProducts";
 import { useDateSelect } from "@/contexts/dateSelect";
-
+import { useUserData } from "@/contexts/userDataContext";
+import { useProducts } from "@/hooks/useProducts";
 import { usePackages } from "@/hooks/usePackages";
 
 import YearMonthSelect from "@/components/commons/YearMonthSelect";
@@ -8,13 +8,12 @@ import DashboardChart from "./DashboardChart";
 import DashboardStatus from "./DashboardStatus";
 
 import type { IUserID } from "@/types";
-import { useUserData } from "@/hooks/useUserData";
 
 export default function DashBoardUI({ uid }: IUserID) {
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
   const { packages } = usePackages({ uid, selectedYear, selectedMonth });
   const { products } = useProducts({ uid, selectedYear, selectedMonth });
-  const { userData, upgradeGrade, downgradeGrade } = useUserData(uid);
+  const { userData, upgradeGrade, downgradeGrade } = useUserData();
 
   return (
     <article className="px-10 py-6">

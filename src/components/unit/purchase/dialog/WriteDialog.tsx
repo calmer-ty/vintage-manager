@@ -2,8 +2,8 @@ import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
 import { useGradeDialog } from "@/contexts/gradeModalContext";
+import { useUserData } from "@/contexts/userDataContext";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
-import { useUserData } from "@/hooks/useUserData";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,6 @@ import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
 interface IWriteDialogProps {
-  uid: string;
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isWriteOpen: boolean;
@@ -30,7 +29,6 @@ interface IWriteDialogProps {
 }
 
 export default function WriteDialog({
-  uid,
   form,
   setRowSelection,
   isWriteOpen,
@@ -41,7 +39,7 @@ export default function WriteDialog({
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
-  const { userData } = useUserData(uid);
+  const { userData } = useUserData();
   const { setIsOpenGrade } = useGradeDialog();
 
   // 등록 함수
