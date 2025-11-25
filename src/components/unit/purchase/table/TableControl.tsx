@@ -31,21 +31,15 @@ export default function TableControl({
   const columnLabelMap = Object.fromEntries(columnConfig.map(({ key, label }) => [key, label]));
 
   return (
-    <div className="flex justify-between items-center gap-2 w-full py-3">
+    <div className="flex justify-between items-center gap-2 flex-wrap py-3">
       <div className="flex items-center gap-2">
         <Button variant="default" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToMerge(selectedData)}>
-          <span className="hidden sm:block">패키지 통합</span>
-          <Trash
-            className="w-4 h-4 
-              block sm:hidden"
-          />
+          <span className="hidden md:block">패키지 통합</span>
+          <Trash className="block md:hidden w-4 h-4" />
         </Button>
         <Button variant="destructive" size="sm" disabled={selectedIds.length === 0} onClick={() => onClickMoveToDelete(selectedIds)}>
-          <span className="hidden sm:block">패키지 폐기</span>
-          <Trash
-            className="w-4 h-4 
-              block sm:hidden"
-          />
+          <span className="hidden md:block">패키지 폐기</span>
+          <Trash className="block md:hidden w-4 h-4" />
         </Button>
         {/* <Input
           placeholder="상품명을 입력해주세요."
@@ -55,16 +49,13 @@ export default function TableControl({
         /> */}
       </div>
 
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <DropdownMenu>
           <CurrencySelect />
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
-              <span className="hidden sm:block">보기 설정</span>
-              <Settings
-                className="w-4 h-4 
-              block sm:hidden"
-              />
+              <span className="hidden md:block">보기 설정</span>
+              <Settings className="block md:hidden w-4 h-4" />
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
@@ -88,11 +79,8 @@ export default function TableControl({
         </DropdownMenu>
 
         <Button variant="default" onClick={onClickMoveToCreate}>
-          <span className="hidden sm:block">패키지 등록</span>
-          <Pencil
-            className="w-4 h-4 
-              block sm:hidden"
-          />
+          <span className="hidden md:block">패키지 등록</span>
+          <Pencil className="block md:hidden w-4 h-4" />
         </Button>
       </div>
     </div>

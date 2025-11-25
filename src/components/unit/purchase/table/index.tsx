@@ -184,7 +184,7 @@ export default function PurchaseTable({
 
   return (
     <>
-      <div className="overflow-auto px-6 border bg-white rounded-lg shadow-sm">
+      <div className="px-6 border bg-white rounded-lg shadow-sm">
         <TableControl
           table={table}
           columnConfig={columnConfig}

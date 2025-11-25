@@ -46,7 +46,7 @@ export default function RootLayout({
                 <DateSelectProvider>
                   <CurrencyProvider>
                     <LayoutNav />
-                    <div className="flex-1 overflow-x-hidden">
+                    <div className="flex-1 overflow-auto">
                       {/* Nav 외에 유동적으로 크기 맞춤 */}
                       <LayoutHeader />
                       <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
