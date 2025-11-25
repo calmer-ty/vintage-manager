@@ -7,7 +7,7 @@ import { useUserData } from "@/contexts/userDataContext";
 
 import { Rocket } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
+// import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 import { pages } from "@/lib/link";
@@ -31,8 +31,7 @@ export default function LayoutHeader() {
             <h2 className="font-medium shrink-0">{currentPage}</h2>
 
             <div className="flex justify-end items-center w-full">
-              <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" />
-
+              {/* <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" /> */}
               {userData?.grade === "free" && (
                 <Button variant="default" onClick={openGrade}>
                   Pro로 업그레이드
