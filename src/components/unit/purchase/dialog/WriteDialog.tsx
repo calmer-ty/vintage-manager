@@ -11,7 +11,7 @@ import { Form, FormField } from "@/components/ui/form";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
-import ProDialog from "@/components/commons/ProDialog";
+import GradeDialog from "@/components/commons/gradeDialog";
 import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
@@ -208,13 +208,15 @@ export default function WriteDialog({
         </DialogContent>
       </Dialog>
 
-      <ProDialog
-        isProOpen={isProOpen}
-        setIsProOpen={setIsProOpen}
-        userData={userData}
-        upgradeGrade={upgradeGrade}
-        downgradeGrade={downgradeGrade}
-      />
+      {userData && (
+        <GradeDialog
+          isProOpen={isProOpen}
+          setIsProOpen={setIsProOpen}
+          userData={userData}
+          upgradeGrade={upgradeGrade}
+          downgradeGrade={downgradeGrade}
+        />
+      )}
     </>
   );
 }

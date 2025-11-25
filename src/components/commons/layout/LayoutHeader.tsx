@@ -9,7 +9,7 @@ import { Rocket } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import ProDialog from "../ProDialog";
+import GradeDialog from "../gradeDialog";
 
 import { pages } from "@/lib/link";
 import { useUserData } from "@/hooks/useUserData";
@@ -54,13 +54,15 @@ export default function Header() {
         )}
       </header>
 
-      <ProDialog
-        isProOpen={isProOpen}
-        setIsProOpen={setIsProOpen}
-        userData={userData}
-        upgradeGrade={upgradeGrade}
-        downgradeGrade={downgradeGrade}
-      />
+      {userData && (
+        <GradeDialog
+          isProOpen={isProOpen}
+          setIsProOpen={setIsProOpen}
+          userData={userData}
+          upgradeGrade={upgradeGrade}
+          downgradeGrade={downgradeGrade}
+        />
+      )}
     </>
   );
 }
