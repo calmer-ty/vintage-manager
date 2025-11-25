@@ -8,11 +8,13 @@ import DashboardChart from "./DashboardChart";
 import DashboardStatus from "./DashboardStatus";
 
 import type { IUserID } from "@/types";
+import { useUserData } from "@/hooks/useUserData";
 
 export default function DashBoardUI({ uid }: IUserID) {
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
   const { packages } = usePackages({ uid, selectedYear, selectedMonth });
   const { products } = useProducts({ uid, selectedYear, selectedMonth });
+  const { userData, upgradeGrade, downgradeGrade } = useUserData(uid);
 
   return (
     <article className="px-10 py-6">
@@ -25,7 +27,14 @@ export default function DashBoardUI({ uid }: IUserID) {
         />
       </header>
       <DashboardStatus products={products} packages={packages} />
-      <DashboardChart products={products} selectedYear={selectedYear} selectedMonth={selectedMonth} />
+      <DashboardChart
+        userData={userData}
+        upgradeGrade={upgradeGrade}
+        downgradeGrade={downgradeGrade}
+        products={products}
+        selectedYear={selectedYear}
+        selectedMonth={selectedMonth}
+      />
     </article>
   );
 }

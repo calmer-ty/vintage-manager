@@ -1,18 +1,20 @@
-// 라이브러리
 import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-// 유틸 함수
 import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
 
-// 외부 요소
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
-import type { ISalesProduct } from "@/types";
+import type { ISalesProduct, IUserData } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
+import { Button } from "@/components/ui/button";
+import GradeDialog from "@/components/commons/gradeDialog";
 interface IDashBoardChartProps {
+  userData: IUserData | undefined;
+  upgradeGrade: () => Promise<void>;
+  downgradeGrade: () => Promise<void>;
   products: ISalesProduct[];
   selectedYear: number;
   selectedMonth: number;
@@ -32,10 +34,22 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({ products, selectedYear, selectedMonth }: IDashBoardChartProps) {
+export default function DashBoardChart({
+  userData,
+  upgradeGrade,
+  downgradeGrade,
+  products,
+  selectedYear,
+  selectedMonth,
+}: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
-
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
+
+  // 프로 업그레이드 상태
+  const [isProOpen, setIsProOpen] = useState(false);
+  const onClickUpgrade = () => {
+    setIsProOpen(true);
+  };
 
   // 판매/판매완료 된 상품들의 날짜를 추출
   const costDays = products
@@ -84,83 +98,100 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
   const hasAnimatedRef = useRef(false);
 
   return (
-    <MotionCard
-      className="w-full py-0 mt-7"
-      initial={!hasAnimatedRef.current ? { opacity: 0, y: 20 } : {}}
-      animate={!hasAnimatedRef.current ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: 0.7, duration: 0.4 }}
-      onAnimationComplete={() => {
-        hasAnimatedRef.current = true;
-      }}
-    >
-      <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
-        <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
-          <CardTitle>
-            {selectedYear}년 {selectedMonth}월 거래 요약
-          </CardTitle>
-          <CardDescription>총 매입 및 매출 금액을 요약합니다.</CardDescription>
-        </div>
-        <div className="flex">
-          {["cost", "sold"].map((key) => {
-            const chart = key as keyof typeof chartConfig;
-            return (
-              <button
-                key={chart}
-                data-active={activeChart === chart}
-                className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
-                onClick={() => setActiveChart(chart)}
-              >
-                <span className="text-muted-foreground text-xs">{chartConfig[chart].label}</span>
-                <span className="text-lg leading-none font-bold sm:text-3xl">{total[key as keyof typeof total].toLocaleString()}</span>
-              </button>
-            );
-          })}
-        </div>
-      </CardHeader>
-      <CardContent className="px-2 sm:p-6">
-        <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
-          <BarChart
-            accessibilityLayer
-            data={dailyStats}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              minTickGap={32}
-              tickFormatter={(value) => {
-                const date = new Date(value);
-                return date.toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
-                });
+    <div className="relative">
+      {userData?.grade === "free" && (
+        <Button className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10" onClick={onClickUpgrade}>
+          업그레이드 필요
+        </Button>
+      )}
+      <MotionCard
+        className={`w-full py-0 mt-7 ${userData?.grade === "free" && "blur-sm pointer-events-none"}`}
+        initial={!hasAnimatedRef.current ? { opacity: 0, y: 20 } : {}}
+        animate={!hasAnimatedRef.current ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: 0.7, duration: 0.4 }}
+        onAnimationComplete={() => {
+          hasAnimatedRef.current = true;
+        }}
+      >
+        <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
+          <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
+            <CardTitle>
+              {selectedYear}년 {selectedMonth}월 거래 요약
+            </CardTitle>
+            <CardDescription>총 매입 및 매출 금액을 요약합니다.</CardDescription>
+          </div>
+          <div className="flex">
+            {["cost", "sold"].map((key) => {
+              const chart = key as keyof typeof chartConfig;
+              return (
+                <button
+                  key={chart}
+                  data-active={activeChart === chart}
+                  className="data-[active=true]:bg-muted/50 relative z-30 flex flex-1 flex-col justify-center gap-1 border-t px-6 py-4 text-left even:border-l sm:border-t-0 sm:border-l sm:px-8 sm:py-6"
+                  onClick={() => setActiveChart(chart)}
+                >
+                  <span className="text-muted-foreground text-xs">{chartConfig[chart].label}</span>
+                  <span className="text-lg leading-none font-bold sm:text-3xl">{total[key as keyof typeof total].toLocaleString()}</span>
+                </button>
+              );
+            })}
+          </div>
+        </CardHeader>
+        <CardContent className="px-2 sm:p-6">
+          <ChartContainer config={chartConfig} className="aspect-auto h-[250px] w-full">
+            <BarChart
+              accessibilityLayer
+              data={dailyStats}
+              margin={{
+                left: 12,
+                right: 12,
               }}
-            />
-            <ChartTooltip
-              content={
-                <ChartTooltipContent
-                  className="w-[150px]"
-                  nameKey="views"
-                  labelFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    });
-                  }}
-                />
-              }
-            />
-            <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </MotionCard>
+            >
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                minTickGap={32}
+                tickFormatter={(value) => {
+                  const date = new Date(value);
+                  return date.toLocaleDateString("en-US", {
+                    month: "short",
+                    day: "numeric",
+                  });
+                }}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    className="w-[150px]"
+                    nameKey="views"
+                    labelFormatter={(value) => {
+                      return new Date(value).toLocaleDateString("en-US", {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      });
+                    }}
+                  />
+                }
+              />
+              <Bar dataKey={activeChart} fill={`var(--color-${activeChart})`} />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </MotionCard>
+
+      {userData && (
+        <GradeDialog
+          isProOpen={isProOpen}
+          setIsProOpen={setIsProOpen}
+          userData={userData}
+          upgradeGrade={upgradeGrade}
+          downgradeGrade={downgradeGrade}
+        />
+      )}
+    </div>
   );
 }
