@@ -114,7 +114,7 @@ export default function GradeConfirm({
               setTimeout(() => {
                 setStep("select");
                 setSelectGrade(null);
-              }, 1000);
+              }, 500);
             }}
           >
             {selectGrade === "pro" ? "업그레이드 확정하기" : "변경 확정하기"}

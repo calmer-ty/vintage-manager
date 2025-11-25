@@ -1,7 +1,9 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+
 import { useGradeDialog } from "@/contexts/gradeModalContext";
+import { useUserData } from "@/contexts/userDataContext";
 
 import { Rocket } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -12,9 +14,10 @@ import { pages } from "@/lib/link";
 
 export default function LayoutHeader() {
   const pathname = usePathname();
-  const { openGrade } = useGradeDialog();
-
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
+
+  const { userData } = useUserData();
+  const { openGrade } = useGradeDialog();
 
   return (
     <>
@@ -29,9 +32,12 @@ export default function LayoutHeader() {
 
             <div className="flex justify-end items-center w-full">
               <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" />
-              <Button variant="default" onClick={openGrade}>
-                Pro 업그레이드
-              </Button>
+
+              {userData?.grade === "free" && (
+                <Button variant="default" onClick={openGrade}>
+                  Pro로 업그레이드
+                </Button>
+              )}
             </div>
           </>
         ) : (

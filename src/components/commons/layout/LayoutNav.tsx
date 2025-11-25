@@ -1,7 +1,10 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+
 import { useAuth } from "@/contexts/authContext";
+import { useUserData } from "@/contexts/userDataContext";
+import { useGradeDialog } from "@/contexts/gradeModalContext";
 
 import {
   Sidebar,
@@ -24,6 +27,8 @@ import { pages } from "@/lib/link";
 export default function Nav() {
   const pathname = usePathname();
   const { user, handleLogout } = useAuth();
+  const { userData } = useUserData();
+  const { openGrade } = useGradeDialog();
 
   return (
     <>
@@ -57,13 +62,26 @@ export default function Nav() {
               <SidebarMenuItem>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <SidebarMenuButton>
-                      <User2 /> {user?.displayName}
+                    <SidebarMenuButton className="h-full">
+                      <div className="flex items-center gap-2">
+                        <i className="flex justify-center items-center w-8 h-8 bg-gray-200 rounded-full">
+                          <User2 color="gray" />
+                        </i>
+                        <div>
+                          <p>{userData?.name}</p>
+                          <p className="capitalize">{userData?.grade}</p>
+                        </div>
+                      </div>
                       <ChevronUp className="ml-auto" />
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                    <DropdownMenuItem onClick={handleLogout}>로그아웃</DropdownMenuItem>
+                    <DropdownMenuItem onClick={openGrade} className="cursor-pointer">
+                      요금제 변경
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                      로그아웃
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuItem>
