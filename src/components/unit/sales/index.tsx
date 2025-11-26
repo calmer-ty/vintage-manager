@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useDateSelect } from "@/contexts/dateSelect";
+import { useDateSelect } from "@/contexts/dateSelectContext";
 import { useProducts } from "@/hooks/useProducts";
 
 import TableUI from "./table";

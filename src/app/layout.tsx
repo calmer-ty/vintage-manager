@@ -6,7 +6,7 @@ import { AuthProvider } from "@/contexts/authContext";
 import { UserDataProvider } from "@/contexts/userDataContext";
 import { GradeModalProvider } from "@/contexts/gradeModalContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { DateSelectProvider } from "@/contexts/dateSelect";
+import { DateSelectProvider } from "@/contexts/dateSelectContext";
 import { CurrencyProvider } from "@/contexts/currencyContext";
 
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";

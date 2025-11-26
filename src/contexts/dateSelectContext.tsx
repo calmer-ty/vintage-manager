@@ -13,7 +13,7 @@ interface IDateSelectContextType {
 }
 
 const { year, month } = getNowDate();
-const DateSelectorContext = createContext<IDateSelectContextType>({
+const DateSelectContext = createContext<IDateSelectContextType>({
   selectedYear: year,
   selectedMonth: month,
   setSelectedYear: () => {
@@ -29,11 +29,11 @@ export const DateSelectProvider = ({ children }: { children: ReactNode }) => {
   const [selectedMonth, setSelectedMonth] = useState(month);
 
   return (
-    <DateSelectorContext.Provider value={{ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }}>
+    <DateSelectContext.Provider value={{ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }}>
       {children}
-    </DateSelectorContext.Provider>
+    </DateSelectContext.Provider>
   );
 };
 
 // 커스텀 훅으로 간편하게 사용 가능
-export const useDateSelect = () => useContext(DateSelectorContext);
+export const useDateSelect = () => useContext(DateSelectContext);
