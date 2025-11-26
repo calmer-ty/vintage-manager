@@ -33,10 +33,7 @@ export default function TableControl({ table, columnConfig }: ITableControlProps
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
               <span className="hidden sm:block">보기 설정</span>
-              <Settings
-                className="w-4 h-4 
-              block sm:hidden"
-              />
+              <Settings className="block sm:hidden w-4 h-4" />
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>

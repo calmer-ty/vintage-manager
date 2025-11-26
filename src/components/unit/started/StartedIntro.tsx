@@ -16,18 +16,23 @@ export default function StartedIntro() {
       {/* 배경 장식 이미지 */}
       <img
         src="/images/started02.png"
-        className="absolute left-10 top-8 w-170 opacity-10 pointer-events-none
-          hidden lg:block"
+        className="hidden lg:block absolute left-10 top-8 w-170 opacity-10 pointer-events-none
+          "
         alt="왼쪽 이미지"
       />
       <img
         src="/images/started01.png"
-        className="absolute right-12 bottom-6 w-90 opacity-40 pointer-events-none
-          hidden lg:block"
+        className="hidden lg:block absolute right-12 bottom-6 w-90 opacity-40 pointer-events-none
+          "
         alt="오른쪽 이미지"
       />
 
-      <motion.div className="relative z-10 max-w-4xl mx-auto px-6" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+      <motion.div
+        className="relative z-10 max-w-4xl mx-auto px-6"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
         <div className="mb-14">
           <h2 className="text-5xl font-bold mb-16">빈티지 노트</h2>
           <p className="text-xl mb-10">다양한 국가에서 사입한 상품들의 예상 수익을 간편하게 확인하세요.</p>

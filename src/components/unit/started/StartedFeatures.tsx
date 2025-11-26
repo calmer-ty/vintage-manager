@@ -43,10 +43,7 @@ export default function StartedFeatures() {
       >
         <strong className="text-stone-700 text-4xl">빈티지 노트</strong>의 주요 기능
       </motion.h3>
-      <div
-        className="grid gap-10
-            grid-cols-1 sm:grid-cols-2 xl:grid-cols-4"
-      >
+      <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         {points.map((el, idx) => (
           <MotionCard
             key={`${el.title}_${idx}`}
@@ -58,7 +55,10 @@ export default function StartedFeatures() {
             group transition-shadow duration-300 ease-in-out hover:shadow-xl"
           >
             <CardContent className="flex flex-col items-center">
-              <div className="mb-6 p-2 rounded-lg transition-bg duration-300 ease-in-out bg-gray-100 group-hover:bg-gray-200 shadow-md">
+              <div
+                className="mb-6 p-2 rounded-lg 
+                transition-bg duration-300 ease-in-out bg-gray-100 group-hover:bg-gray-200 shadow-md"
+              >
                 {el.icon}
               </div>
               <CardTitle className="mb-4 text-xl">{el.title}</CardTitle>
