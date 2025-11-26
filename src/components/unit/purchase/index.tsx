@@ -76,7 +76,7 @@ export default function PurchaseUI({ uid }: IUserID) {
   };
 
   return (
-    <article className="px-10 py-6">
+    <article className="px-6 py-6 sm:px-10">
       <header className="flex justify-end mb-6">
         <YearMonthSelect
           selectedYear={selectedYear}

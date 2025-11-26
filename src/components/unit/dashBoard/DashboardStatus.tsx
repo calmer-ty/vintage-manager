@@ -1,14 +1,12 @@
-// 라이브러리
 import { motion } from "framer-motion";
 
 import { getDisplayPrice } from "@/lib/price";
 
-// 외부 요소
+import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
 import { Card, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
 import { Boxes, DollarSign, ShoppingCart, TrendingUp, BarChart, Truck, Receipt } from "lucide-react";
 
 import type { ISalesProduct, IPackage } from "@/types";
-import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
 interface IDashBoardStatusProps {
   packages: IPackage[];
   products: ISalesProduct[];
@@ -89,28 +87,20 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
   const MotionCard = motion(Card);
 
   return (
-    <div
-      className="grid gap-5 w-full 
-        grid-cols-2 2xl:grid-cols-3"
-    >
+    <div className="grid grid-cols-2 2xl:grid-cols-4 gap-5 w-full">
       {infoStatus.map((el, idx) => (
         <MotionCard
           key={el.title}
-          className="w-full group
-            transition-shadow duration-300 ease-in-out hover:shadow-md 
-            py-4 lg:py-6"
+          className="w-full group py-4 lg:py-6
+          transition-shadow duration-300 ease-in-out hover:shadow-md"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: idx * 0.1, duration: 0.4 }}
         >
           <ChildrenTooltip content={el.tooltip}>
-            <CardContent
-              className="flex items-center gap-x-6 gap-y-2 
-              flex-col lg:flex-row"
-            >
+            <CardContent className="flex flex-col lg:flex-row items-center gap-x-6 gap-y-2">
               <div
-                className="rounded-lg
-                p-2 lg:p-3
+                className="p-2 lg:p-3 rounded-lg
                 transition-bg duration-300 ease-in-out bg-gray-100 group-hover:bg-gray-200 shadow-md"
               >
                 {el.icon}

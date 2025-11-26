@@ -15,9 +15,8 @@ import { getDisplayPrice, getPriceInKRW } from "@/lib/price";
 // 외부 요소
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Loader2, MoreHorizontal, PackageOpen } from "lucide-react";
+import { Loader2, PackageOpen, Pencil } from "lucide-react";
 
 // 내부 요소
 import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
@@ -131,32 +130,25 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, sold
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        return <TableItemState product={row.original} soldProduct={soldProduct} fetchProducts={fetchProducts} />;
+        return (
+          <div className="flex justify-center">
+            <TableItemState product={row.original} soldProduct={soldProduct} fetchProducts={fetchProducts} />
+          </div>
+        );
       },
     },
     {
       id: "actions",
-      header: "설정",
+      header: "판매 설정",
       enableHiding: false,
       cell: ({ row }) => {
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <ChildrenTooltip content={row.original.soldAt ? "상품이 판매되어 판매가를 지정할 수 없습니다." : undefined}>
-                <div className="w-full">
-                  <DropdownMenuItem onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.soldAt}>
-                    상품 판매 정보 등록
-                  </DropdownMenuItem>
-                </div>
-              </ChildrenTooltip>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex justify-center">
+            <Button onClick={() => onClickMoveToUpdate(row.original._id)} disabled={!!row.original.soldAt} variant="default">
+              <span className="hidden sm:block">판매가 등록</span>
+              <Pencil className="block sm:hidden" />
+            </Button>
+          </div>
         );
       },
     },

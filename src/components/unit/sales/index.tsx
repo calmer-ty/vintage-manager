@@ -18,7 +18,7 @@ export default function SalesUI({ uid }: IUserID) {
   const [updateTarget, setUpdateTarget] = useState<ISalesProduct | undefined>(undefined);
 
   return (
-    <article className="flex-1 px-10 py-6">
+    <article className="flex-1 px-6 py-6 sm:px-10">
       <header className="flex justify-end mb-6">
         <YearMonthSelect
           selectedYear={selectedYear}
