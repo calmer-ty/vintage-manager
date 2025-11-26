@@ -2,7 +2,6 @@ import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
 import { useGradeDialog } from "@/contexts/gradeModalContext";
-import { useUserData } from "@/contexts/userDataContext";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
@@ -19,6 +18,7 @@ import type { ICreatePackageDoc, ICreatePackageParams } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
+import { useUserData } from "@/contexts/userDataContext";
 interface IWriteDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
@@ -40,7 +40,7 @@ export default function WriteDialog({
   const { exchangeOptions } = useExchangeRate();
 
   const { userData } = useUserData();
-  const { setIsOpenGrade } = useGradeDialog();
+  const { openGrade } = useGradeDialog();
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
@@ -102,7 +102,7 @@ export default function WriteDialog({
                         onChange={(code) => {
                           // grade 체크
                           if (userData?.grade === "free" && (code === "USD" || code === "JPY")) {
-                            setIsOpenGrade(true); // ProDialog 열기
+                            openGrade();
                             return; // 선택 변경 막기
                           }
 

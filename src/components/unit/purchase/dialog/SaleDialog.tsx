@@ -4,6 +4,8 @@ import { toast } from "sonner";
 
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { getDisplayPrice } from "@/lib/price";
+import { useUserData } from "@/contexts/userDataContext";
+import { useGradeDialog } from "@/contexts/gradeModalContext";
 
 // 외부 요소
 import { Button } from "@/components/ui/button";
@@ -43,6 +45,9 @@ export default function SaleDialog({
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
   const krwExchange = exchangeOptions.find((opt) => opt.code === "KRW");
+
+  const { userData } = useUserData();
+  const { openGrade } = useGradeDialog();
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof SalesSchema>>({
@@ -132,7 +137,14 @@ export default function SaleDialog({
                         />
                       </FormInputWrap>
                       <PurchaseSelect
+                        userData={userData}
                         onChange={(code) => {
+                          // grade 체크
+                          if (userData?.grade === "free" && (code === "USD" || code === "JPY")) {
+                            openGrade(); // ProDialog 열기
+                            return; // 선택 변경 막기
+                          }
+
                           const selected = exchangeOptions.find((opt) => opt.code === code);
                           if (selected) {
                             field.onChange({ ...field.value, exchange: selected });

@@ -10,12 +10,10 @@ import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
 
-import type { ISalesProduct, IUserData } from "@/types";
+import type { ISalesProduct } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
+import { useUserData } from "@/contexts/userDataContext";
 interface IDashBoardChartProps {
-  userData: IUserData | undefined;
-  upgradeGrade: () => Promise<void>;
-  downgradeGrade: () => Promise<void>;
   products: ISalesProduct[];
   selectedYear: number;
   selectedMonth: number;
@@ -35,10 +33,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({ userData, products, selectedYear, selectedMonth }: IDashBoardChartProps) {
+export default function DashBoardChart({ products, selectedYear, selectedMonth }: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
 
+  const { userData } = useUserData();
   const { openGrade } = useGradeDialog();
 
   // 판매/판매완료 된 상품들의 날짜를 추출

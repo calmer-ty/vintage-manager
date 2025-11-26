@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useProducts } from "@/hooks/useProducts";
 import { useDateSelect } from "@/contexts/dateSelectContext";
+import { useProducts } from "@/hooks/useProducts";
 import { usePackages } from "@/hooks/usePackages";
 
 import YearMonthSelect from "@/components/commons/YearMonthSelect";
@@ -29,20 +29,6 @@ export default function PurchaseUI({ uid }: IUserID) {
 
   const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
 
-  // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof PurchaseSchema>>({
-    resolver: zodResolver(PurchaseSchema),
-    defaultValues: {
-      products: [
-        {
-          name: "",
-          brand: "",
-          cost: { price: 0, shipping: 0, fee: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
-        },
-      ],
-    },
-  });
-
   // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -57,6 +43,20 @@ export default function PurchaseUI({ uid }: IUserID) {
 
   // 테이블 스테이트
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  // ✍️ 폼 설정
+  const form = useForm<z.infer<typeof PurchaseSchema>>({
+    resolver: zodResolver(PurchaseSchema),
+    defaultValues: {
+      products: [
+        {
+          name: "",
+          brand: "",
+          cost: { price: 0, shipping: 0, fee: 0, exchange: { code: "", label: "", rate: 0, krw: 0 } },
+        },
+      ],
+    },
+  });
 
   const onClickMoveToCreate = () => {
     setIsWriteOpen(true);
