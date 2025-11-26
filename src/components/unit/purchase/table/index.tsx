@@ -78,11 +78,12 @@ export default function PurchaseTable({
       }
       if (key === "shipping" && row.original.shipping != null) {
         const s = row.original.shipping;
+
         return (
-          <span>
-            {getDisplayPrice(s.exchange.code, s.amount)}
-            <em className="text-xs not-italic text-gray-500">({getExchangeDisplayPrice(viewCurrency, s.amount, s.exchange)})</em>
-          </span>
+          <>
+            <span>{getDisplayPrice(s.exchange.code, s.amount)}</span>
+            <span className="text-xs text-gray-500">({getExchangeDisplayPrice(viewCurrency, s.amount, s.exchange)})</span>
+          </>
         );
       }
       // products 일 때, 각 각 상품 정보 표시

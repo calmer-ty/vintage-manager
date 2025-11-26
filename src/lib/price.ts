@@ -24,7 +24,11 @@ export const getExchangeDisplayPrice = (viewCurrency: string, price: number, exc
       convertedAmount = price * exchange.krw;
       break;
     case "USD":
-      convertedAmount = price / exchange.rate;
+      if (exchange.rate === 0 || price === 0) {
+        convertedAmount = 0; // 0/0 방지
+      } else {
+        convertedAmount = price / exchange.rate;
+      }
       break;
     default:
       return "작업중";
