@@ -11,7 +11,7 @@ import type { ISalesProduct, IUserID } from "@/types";
 
 export default function SalesUI({ uid }: IUserID) {
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
-  const { products, salesProduct, fetchProducts, loading } = useProducts({ uid, selectedYear, selectedMonth });
+  const { products, salesProduct, fetchProducts, soldProduct, loading } = useProducts({ uid, selectedYear, selectedMonth });
 
   // 수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -42,6 +42,7 @@ export default function SalesUI({ uid }: IUserID) {
         data={products}
         setIsWriteOpen={setIsWriteOpen}
         setUpdateTarget={setUpdateTarget}
+        soldProduct={soldProduct}
         fetchProducts={fetchProducts}
         loading={loading}
       />

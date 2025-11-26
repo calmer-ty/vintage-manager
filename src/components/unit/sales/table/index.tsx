@@ -26,11 +26,12 @@ import TableItemState from "./TableItemState";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ISalesProduct } from "@/types";
+import type { ISalesProduct, ISoldProductParams } from "@/types";
 interface ISalesTableProps {
   data: ISalesProduct[];
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
   setUpdateTarget: Dispatch<SetStateAction<ISalesProduct | undefined>>;
+  soldProduct: ({ id, value }: ISoldProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
   loading: boolean;
 }
@@ -43,7 +44,7 @@ const columnConfig = [
   { key: "sales", label: "판매 정보" },
 ];
 
-export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetchProducts, loading }: ISalesTableProps) {
+export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, soldProduct, fetchProducts, loading }: ISalesTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -130,7 +131,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, fetc
       header: "상태",
       enableHiding: false,
       cell: ({ row }) => {
-        return <TableItemState product={row.original} refetch={fetchProducts} />;
+        return <TableItemState product={row.original} soldProduct={soldProduct} fetchProducts={fetchProducts} />;
       },
     },
     {

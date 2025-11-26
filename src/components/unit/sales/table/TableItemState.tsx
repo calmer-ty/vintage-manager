@@ -1,32 +1,25 @@
-// 라이브러리
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase/firebaseApp";
 import { toast } from "sonner";
 
 // 외부 요소
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import type { ISalesProduct } from "@/types";
+import type { ISalesProduct, ISoldProductParams } from "@/types";
 interface ITableItemStateProps {
   product: ISalesProduct;
-  refetch: () => Promise<void>;
+  soldProduct: ({ id, value }: ISoldProductParams) => Promise<void>;
+  fetchProducts: () => Promise<void>;
 }
 
-export default function TableItemState({ product, refetch }: ITableItemStateProps) {
-  const onUpdate = async (id: string, value: boolean) => {
+export default function TableItemState({ product, soldProduct, fetchProducts }: ITableItemStateProps) {
+  const onClickUpdate = async (id: string, value: boolean) => {
     // 판매가 지정해야함
     if (!product.sales.price) {
       toast("⛔ 판매가를 지정해주세요.");
       return;
     }
     try {
-      const docRef = doc(db, "products", id);
-
-      // 문서 ID를 포함한 데이터로 업데이트
-      await updateDoc(docRef, {
-        soldAt: value ? new Date() : null,
-      });
-      refetch();
+      await soldProduct({ id, value });
+      await fetchProducts();
     } catch (error) {
       console.error("문서 추가 실패:", error);
     }
@@ -38,9 +31,9 @@ export default function TableItemState({ product, refetch }: ITableItemStateProp
       onValueChange={(value) => {
         // 선택된 값이 'false'면 판매완료니까 업데이트 실행
         if (value === "sold") {
-          onUpdate(product._id, true);
+          onClickUpdate(product._id, true);
         } else {
-          onUpdate(product._id, false);
+          onClickUpdate(product._id, false);
         }
       }}
     >

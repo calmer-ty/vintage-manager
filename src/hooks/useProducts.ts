@@ -5,7 +5,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDo
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductParams, ISalesProduct, ISalesProductParams } from "@/types";
+import type { ICreateProductParams, ISalesProduct, ISalesProductParams, ISoldProductParams } from "@/types";
 interface IUseProductsParams {
   uid: string;
   selectedYear: number;
@@ -57,6 +57,21 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
       console.error(err);
     }
   };
+  const soldProduct = async ({ id, value }: ISoldProductParams) => {
+    if (!uid) return;
+
+    try {
+      const docRef = doc(db, "products", id);
+
+      // 문서 ID를 포함한 데이터로 업데이트
+      await updateDoc(docRef, {
+        soldAt: value ? new Date() : null,
+      });
+      // refetch();
+    } catch (error) {
+      console.error("문서 추가 실패:", error);
+    }
+  };
 
   // [삭제]
   const deleteProduct = async (packageIds: string[]) => {
@@ -104,5 +119,5 @@ export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsPa
     fetchProducts();
   }, [fetchProducts]);
 
-  return { products, loading, createProduct, salesProduct, deleteProduct, fetchProducts };
+  return { products, loading, createProduct, salesProduct, soldProduct, deleteProduct, fetchProducts };
 };
