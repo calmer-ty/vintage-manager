@@ -88,10 +88,6 @@ export default function WriteDialog({
               </DialogHeader>
 
               <div className="flex-1 overflow-y-auto max-h-100">
-                <h3 className="flex justify-between items-center mb-4 px-3 py-1 border-t bg-gray-200">
-                  <span className="text-sm font-bold">매입 상품</span>
-                </h3>
-
                 <fieldset className="flex flex-col gap-4 px-2">
                   <FormField
                     control={form.control}
