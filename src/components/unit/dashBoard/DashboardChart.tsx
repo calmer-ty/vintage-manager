@@ -1,5 +1,4 @@
-import { useMemo, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useMemo, useState } from "react";
 
 import { useGradeDialog } from "@/contexts/gradeModalContext";
 
@@ -83,25 +82,14 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
   }),[dailyStats]
 );
 
-  const MotionCard = motion(Card);
-  const hasAnimatedRef = useRef(false);
-
   return (
-    <div className="relative">
+    <div className="relative mt-6">
       {userData?.grade === "free" && (
-        <Button className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10" onClick={openGrade}>
+        <Button className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-100" onClick={openGrade}>
           업그레이드 필요
         </Button>
       )}
-      <MotionCard
-        className={`w-full py-0 mt-7 ${userData?.grade === "free" && "blur-sm pointer-events-none"}`}
-        initial={!hasAnimatedRef.current ? { opacity: 0, y: 20 } : {}}
-        animate={!hasAnimatedRef.current ? { opacity: 1, y: 0 } : {}}
-        transition={{ delay: 0.7, duration: 0.4 }}
-        onAnimationComplete={() => {
-          hasAnimatedRef.current = true;
-        }}
-      >
+      <Card className={`pt-0 ${userData?.grade === "free" && "blur-sm pointer-events-none"}`}>
         <CardHeader className="flex flex-col items-stretch border-b !p-0 sm:flex-row">
           <div className="flex flex-1 flex-col justify-center gap-1 px-6 pt-4 pb-3 sm:!py-0">
             <CardTitle>
@@ -170,7 +158,7 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
             </BarChart>
           </ChartContainer>
         </CardContent>
-      </MotionCard>
+      </Card>
     </div>
   );
 }

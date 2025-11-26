@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-
 import { getDisplayPrice } from "@/lib/price";
 
 import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
@@ -84,18 +82,13 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
     },
   ];
 
-  const MotionCard = motion(Card);
-
   return (
     <div className="grid grid-cols-2 2xl:grid-cols-4 gap-5 w-full">
-      {infoStatus.map((el, idx) => (
-        <MotionCard
+      {infoStatus.map((el) => (
+        <Card
           key={el.title}
           className="w-full group py-4 lg:py-6
           transition-shadow duration-300 ease-in-out hover:shadow-md"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: idx * 0.1, duration: 0.4 }}
         >
           <ChildrenTooltip content={el.tooltip}>
             <CardContent className="flex flex-col lg:flex-row items-center gap-x-6 gap-y-2">
@@ -111,7 +104,7 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
               </div>
             </CardContent>
           </ChildrenTooltip>
-        </MotionCard>
+        </Card>
       ))}
     </div>
   );
