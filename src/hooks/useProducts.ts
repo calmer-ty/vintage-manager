@@ -6,7 +6,7 @@ import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, up
 import { useAuth } from "@/contexts/authContext";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreateProductDoc, ISalesProduct, ISalesProductParams, ISoldProductParams } from "@/types";
+import type { IProduct, ISalesProduct, ISalesProductParams, ISoldProductParams } from "@/types";
 interface IUseProductsParams {
   selectedYear: number;
   selectedMonth: number;
@@ -20,7 +20,7 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
-  const createProduct = async (productDocs: ICreateProductDoc[]) => {
+  const createProduct = async (productDocs: IProduct[]) => {
     if (!uid) return;
 
     try {

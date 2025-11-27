@@ -26,7 +26,7 @@ import TableControl from "./TableControl";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, RowSelectionState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { ICreateProductDoc, IPackage } from "@/types";
+import type { IProduct, IPackage } from "@/types";
 interface IReceivingTableProps {
   data: IPackage[];
   rowSelection: RowSelectionState;
@@ -35,7 +35,7 @@ interface IReceivingTableProps {
   onClickMoveToMerge: (rowData: IPackage[]) => void;
   onClickMoveToSale: (rowData: IPackage) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
-  createProduct: (productDocs: ICreateProductDoc[]) => Promise<void>;
+  createProduct: (productDocs: IProduct[]) => Promise<void>;
   fetchLoading: boolean;
 }
 

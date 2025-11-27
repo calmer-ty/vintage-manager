@@ -19,7 +19,7 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import { SalesSchema } from "../schema";
 
-import type { ICreateProductDoc, ICreateProductParams, IPackage, ISalesPackageDoc, ISalesPackageParams } from "@/types";
+import type { IProduct, IPackage, ISalesPackageParams, IShipping } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";
@@ -30,7 +30,7 @@ interface ISaleDialogProps {
   salesTarget: IPackage | undefined;
   fetchPackages: () => Promise<void>;
   salesPackage: ({ salesTarget, salesDoc }: ISalesPackageParams) => Promise<void>;
-  createProduct: ({ productDocs }: ICreateProductParams) => Promise<void>;
+  createProduct: (productDocs: IProduct[]) => Promise<void>;
 }
 
 export default function SaleDialog({
@@ -62,18 +62,16 @@ export default function SaleDialog({
     }
 
     try {
-      const salesDoc: ISalesPackageDoc = {
-        shipping: {
-          amount: data.cost.shipping ?? 0,
-          exchange: data.cost.exchange,
-        },
+      const salesDoc: IShipping = {
+        amount: data.cost.shipping ?? 0,
+        exchange: data.cost.exchange,
       };
-      const productDocs: ICreateProductDoc[] = salesTarget.products.map((p) => ({
+      const productDocs: IProduct[] = salesTarget.products.map((p) => ({
         ...p,
       }));
 
       await salesPackage({ salesTarget: salesTarget._id, salesDoc });
-      await createProduct({ productDocs });
+      await createProduct(productDocs);
       await fetchPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
       setIsSaleOpen(false);

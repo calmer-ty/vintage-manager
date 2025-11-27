@@ -42,7 +42,7 @@ export interface ISalesType {
   shipping: number;
   profit: number;
 }
-export interface IPurchaseProduct {
+export interface IProduct {
   _id: string;
   uid: string;
   name: string;
@@ -50,17 +50,17 @@ export interface IPurchaseProduct {
   cost: ICostType;
 }
 // 상품 Hook으로 들어가는 인자값 타입
-export interface ICreateProductDoc {
-  _id: string;
-  uid: string;
-  name: string;
-  brand: string;
-  cost: ICostType;
-}
+// export interface ICreateProductDoc {
+//   _id: string;
+//   uid: string;
+//   name: string;
+//   brand: string;
+//   cost: ICostType;
+// }
 export interface IPackage {
   _id: string;
   uid: string;
-  products: IPurchaseProduct[];
+  products: IProduct[];
   createdAt: FieldValue;
   addSaleAt: FieldValue | null;
   shipping?: IShipping;
@@ -85,13 +85,13 @@ export interface ICreatePackageDoc {
     brand: string;
     cost: ICostType;
   }[];
-  // products: IPurchaseProduct[];
+  // products: IProduct[];
 }
 
 // Hooks Params 패키지
 export interface IMergePackageParams {
   deleteTargets: string[];
-  packageDoc: IPurchaseProduct[];
+  packageDoc: IProduct[];
 }
 export interface ISalesPackageParams {
   salesTarget: string;
