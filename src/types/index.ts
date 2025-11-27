@@ -1,4 +1,4 @@
-import type { FieldValue, Timestamp } from "firebase/firestore";
+import type { FieldValue } from "firebase/firestore";
 
 // API 타입
 export interface IExchangeRate {
@@ -46,8 +46,8 @@ export interface IPackage {
   _id: string;
   uid: string;
   products: IPurchaseProduct[];
-  createdAt: Timestamp;
-  addSaleAt: Timestamp | null;
+  createdAt: FieldValue;
+  addSaleAt: FieldValue | null;
   shipping?: IShipping;
 }
 
@@ -68,8 +68,8 @@ export interface ISalesProduct {
     shipping: number;
     profit: number;
   };
-  soldAt: Timestamp | null;
-  createdAt: Timestamp;
+  createdAt: FieldValue;
+  soldAt: FieldValue | null;
 }
 
 // 패키지 Hook으로 들어가는 인자값 타입
@@ -146,6 +146,8 @@ export interface ISoldProductParams {
 
 // 유저 데이터
 export interface IUserData {
+  _id: string;
+  uid: string;
   name: string;
   email: string;
   grade: "free" | "pro";

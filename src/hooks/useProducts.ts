@@ -67,7 +67,7 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
 
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
-        soldAt: value ? new Date() : null,
+        soldAt: value ? serverTimestamp() : null,
       });
       // refetch();
     } catch (error) {

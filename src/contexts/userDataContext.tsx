@@ -27,8 +27,11 @@ const UserDataContext = createContext<IUserDataContextType>({
 
 export const UserDataProvider = ({ children }: { children: ReactNode }) => {
   const { uid } = useAuth();
+
   const [userData, setUserData] = useState<IUserData>();
   const [loading, setLoading] = useState(true);
+
+  console.log("userData: ", userData);
 
   // 조회 함수
   useEffect(() => {
