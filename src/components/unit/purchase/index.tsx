@@ -13,7 +13,7 @@ import DeleteDialog from "./dialog/DeleteDialog";
 import SaleDialog from "./dialog/SaleDialog";
 import MergeDialog from "./dialog/MergeDialog";
 
-import { PurchaseSchema } from "./schema";
+import { ProductsSchema } from "./schema";
 
 import type { IPackage } from "@/types";
 import type { z } from "zod";
@@ -44,8 +44,8 @@ export default function PurchaseUI() {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   // ✍️ 폼 설정
-  const form = useForm<z.infer<typeof PurchaseSchema>>({
-    resolver: zodResolver(PurchaseSchema),
+  const form = useForm<z.infer<typeof ProductsSchema>>({
+    resolver: zodResolver(ProductsSchema),
     defaultValues: {
       products: [
         {

@@ -13,7 +13,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
 
-import type { ISalesProduct, ISalesProductParams, ISalesType } from "@/types";
+import type { ISalesProduct, ISalesProductParams, ISales } from "@/types";
 
 const SalesSchema = z.object({
   name: z.string().optional(),
@@ -59,7 +59,7 @@ export default function WriteDialog({ isOpen, setIsOpen, updateTarget, setUpdate
     if (!uid || !updateTarget) return;
 
     try {
-      const salesDoc: ISalesType = {
+      const salesDoc: ISales = {
         ...data.sales,
         profit: data.sales.price - data.sales.fee - data.sales.shipping, // 이익 = 판매가 - 판매 수수료 - 판매 배송료
       };

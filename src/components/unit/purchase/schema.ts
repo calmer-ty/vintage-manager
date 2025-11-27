@@ -19,7 +19,7 @@ const ProductSchema = z.object({
     exchange: exchangeSchema,
   }),
 });
-export const PurchaseSchema = z.object({
+export const ProductsSchema = z.object({
   products: z.array(ProductSchema),
 });
 // export const SalesSchema = z.object({

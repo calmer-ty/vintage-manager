@@ -14,49 +14,38 @@ export interface IExchangeRate {
   time_last_update_utc: string;
 }
 
-// 기본 타입
-export interface IUserID {
-  uid: string;
-}
+// 중복되는게 많은 객체 키 타입
 export interface IExchange {
   code: string;
   label: string;
   rate: number;
   krw: number;
 }
-
-// 해당 아이템의 타입
 export interface IShipping {
   amount: number;
   exchange: IExchange;
 }
-export interface ICostType {
+export interface ICost {
   price: number;
   shipping: number;
   fee: number;
   exchange: IExchange;
 }
-export interface ISalesType {
+export interface ISales {
   price: number;
   fee: number;
   shipping: number;
   profit: number;
 }
+
+//
 export interface IProduct {
   _id: string;
   uid: string;
   name: string;
   brand: string;
-  cost: ICostType;
+  cost: ICost;
 }
-// 상품 Hook으로 들어가는 인자값 타입
-// export interface ICreateProductDoc {
-//   _id: string;
-//   uid: string;
-//   name: string;
-//   brand: string;
-//   cost: ICostType;
-// }
 export interface IPackage {
   _id: string;
   uid: string;
@@ -71,21 +60,10 @@ export interface ISalesProduct {
   _id: string;
   name: string;
   brand: string;
-  cost: ICostType;
-  sales: ISalesType;
+  cost: ICost;
+  sales: ISales;
   createdAt: FieldValue;
   soldAt: FieldValue | null;
-}
-
-// 패키지 Hook으로 들어가는 인자값 타입
-export interface ICreatePackageDoc {
-  products: {
-    _id: string;
-    name: string;
-    brand: string;
-    cost: ICostType;
-  }[];
-  // products: IProduct[];
 }
 
 // Hooks Params 패키지
@@ -99,7 +77,7 @@ export interface ISalesPackageParams {
 }
 export interface ISalesProductParams {
   salesTarget: string;
-  salesDoc: ISalesType;
+  salesDoc: ISales;
 }
 export interface ISoldProductParams {
   id: string;

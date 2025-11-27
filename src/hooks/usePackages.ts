@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/authContext";
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreatePackageDoc, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
+import type { IMergePackageParams, IPackage, IProduct, ISalesPackageParams } from "@/types";
 interface IUsePackagesParams {
   selectedYear: number;
   selectedMonth: number;
@@ -19,14 +19,14 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
   const [fetchLoading, setFetchLoading] = useState(false);
 
   // [등록]
-  const createPackage = async (packageDoc: ICreatePackageDoc) => {
+  const createPackage = async (packageDoc: IProduct[]) => {
     if (!uid) return;
 
     try {
       const docRef = await addDoc(collection(db, "packages"), {
-        ...packageDoc,
         uid,
         _id: "",
+        products: packageDoc,
         createdAt: serverTimestamp(),
         shipping: null,
         addSaleAt: null,

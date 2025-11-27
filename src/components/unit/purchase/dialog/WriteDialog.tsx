@@ -14,17 +14,18 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreatePackageDoc } from "@/types";
+import type { IProduct } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
-import type { PurchaseSchema } from "../schema";
+import type { ProductsSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
 import { useUserData } from "@/contexts/userDataContext";
+import { useAuth } from "@/contexts/authContext";
 interface IWriteDialogProps {
-  form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
+  form: UseFormReturn<z.infer<typeof ProductsSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  createPackage: (packageDoc: ICreatePackageDoc) => Promise<void>;
+  createPackage: (packageDoc: IProduct[]) => Promise<void>;
   fetchPackages: () => Promise<void>;
 }
 
@@ -36,6 +37,8 @@ export default function WriteDialog({
   createPackage,
   fetchPackages,
 }: IWriteDialogProps) {
+  const { uid } = useAuth();
+
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
@@ -43,15 +46,19 @@ export default function WriteDialog({
   const { openGrade } = useGradeDialog();
 
   // 등록 함수
-  const onClickCreate = async (data: z.infer<typeof PurchaseSchema>) => {
-    try {
-      const packageDoc: ICreatePackageDoc = {
-        products: data.products.map((p) => ({
-          _id: uuid(),
-          ...p,
-        })),
-      };
+  const onClickCreate = async (data: z.infer<typeof ProductsSchema>) => {
+    if (!uid) {
+      toast("⛔ 로그인이 되어 있지 않습니다.");
+      return;
+    }
 
+    try {
+      // 굳이 배열로 넣는 이유는 추후 상품들이 머지가 되면서 products가 배열 형태가 되므로 타입을 맞추기 위해 처음부터 배열값으로 넣어 설정합니다
+      const packageDoc: IProduct[] = data.products.map((p) => ({
+        uid,
+        _id: uuid(),
+        ...p,
+      }));
       // 데이터 생성 및 리패치
       await createPackage(packageDoc);
       await fetchPackages();
