@@ -11,17 +11,13 @@ import type { IUserData } from "@/types";
 interface IUserDataContextType {
   userData?: IUserData;
   loading: boolean;
-  upgradeGrade: () => Promise<void>;
-  downgradeGrade: () => Promise<void>;
+  setGrade: (grade: "free" | "pro") => Promise<void>;
 }
 const UserDataContext = createContext<IUserDataContextType>({
   userData: undefined,
   loading: true,
-  upgradeGrade: async () => {
-    throw new Error("upgradeGrade not implemented");
-  },
-  downgradeGrade: async () => {
-    throw new Error("downgradeGrade not implemented");
+  setGrade: async () => {
+    throw new Error("setGrade not implemented");
   },
 });
 
@@ -31,13 +27,12 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
   const [userData, setUserData] = useState<IUserData>();
   const [loading, setLoading] = useState(true);
 
-  console.log("userData: ", userData);
-
   // 조회 함수
   useEffect(() => {
     if (!uid) return;
 
     const docRef = doc(db, "users", uid);
+
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
         setUserData(docSnap.data() as IUserData);
@@ -48,35 +43,18 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     return () => unsubscribe(); // 메모리 누수 방지
   }, [uid]);
 
-  const upgradeGrade = async () => {
+  const setGrade = async (grade: "free" | "pro") => {
     if (!uid || !userData) return;
 
     try {
       const docRef = doc(db, "users", uid);
-      await updateDoc(docRef, {
-        ...userData,
-        grade: "pro",
-      });
+      await updateDoc(docRef, { grade });
     } catch (err) {
       console.error(err);
     }
   };
 
-  const downgradeGrade = async () => {
-    if (!uid || !userData) return;
-
-    try {
-      const docRef = doc(db, "users", uid);
-      await updateDoc(docRef, {
-        ...userData,
-        grade: "free",
-      });
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  return <UserDataContext.Provider value={{ userData, loading, upgradeGrade, downgradeGrade }}>{children}</UserDataContext.Provider>;
+  return <UserDataContext.Provider value={{ userData, loading, setGrade }}>{children}</UserDataContext.Provider>;
 };
 
 export const useUserData = () => useContext(UserDataContext);

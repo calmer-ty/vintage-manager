@@ -14,7 +14,7 @@ export default function GradeDialog() {
   const [selectGrade, setSelectGrade] = useState<"free" | "pro" | null>(null);
 
   const { isOpenGrade, setIsOpenGrade, closeGrade } = useGradeDialog();
-  const { userData, upgradeGrade, downgradeGrade } = useUserData();
+  const { userData, setGrade } = useUserData();
 
   return (
     <Dialog
@@ -43,8 +43,7 @@ export default function GradeDialog() {
             setStep={setStep}
             selectGrade={selectGrade}
             setSelectGrade={setSelectGrade}
-            upgradeGrade={upgradeGrade}
-            downgradeGrade={downgradeGrade}
+            setGrade={setGrade}
           />
         )}
       </DialogContent>

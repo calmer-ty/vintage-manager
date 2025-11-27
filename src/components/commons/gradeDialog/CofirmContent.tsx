@@ -13,8 +13,7 @@ interface IGradeConfirmProps {
   selectGrade: "free" | "pro" | null;
   setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
   closeGrade: () => void;
-  upgradeGrade: () => Promise<void>;
-  downgradeGrade: () => Promise<void>;
+  setGrade: (grade: "free" | "pro") => Promise<void>;
 }
 const features = [
   {
@@ -51,14 +50,7 @@ const features = [
   },
 ];
 
-export default function GradeConfirm({
-  setStep,
-  selectGrade,
-  setSelectGrade,
-  closeGrade,
-  upgradeGrade,
-  downgradeGrade,
-}: IGradeConfirmProps) {
+export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, closeGrade, setGrade }: IGradeConfirmProps) {
   return (
     <>
       <Button variant="outline" className="absolute left-4 top-4 border-none shadow-none" onClick={() => setStep("select")}>
@@ -101,8 +93,8 @@ export default function GradeConfirm({
             size="lg"
             variant="confirm"
             onClick={() => {
-              if (selectGrade === "pro") upgradeGrade();
-              else downgradeGrade();
+              if (selectGrade === "pro") setGrade("pro");
+              else setGrade("free");
 
               closeGrade();
               toast(
