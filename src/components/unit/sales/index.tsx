@@ -4,7 +4,7 @@ import { useDateSelect } from "@/contexts/dateSelectContext";
 import { useProducts } from "@/hooks/useProducts";
 
 import TableUI from "./table";
-import WriteDialog from "./dialog/WriteDialog";
+import WriteDialog from "./WriteDialog";
 import YearMonthSelect from "@/components/commons/YearMonthSelect";
 
 import type { ISalesProduct } from "@/types";

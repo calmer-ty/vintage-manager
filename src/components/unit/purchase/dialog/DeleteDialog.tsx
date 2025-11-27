@@ -7,10 +7,10 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import type { PurchaseSchema } from "../schema";
+import type { ProductsSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
 interface IDeleteDialogProps {
-  form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
+  form: UseFormReturn<z.infer<typeof ProductsSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;

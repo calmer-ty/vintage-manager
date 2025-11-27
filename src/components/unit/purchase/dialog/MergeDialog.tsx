@@ -10,11 +10,11 @@ import { Item, ItemContent } from "@/components/ui/item";
 import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import type { PurchaseSchema } from "../schema";
+import type { ProductsSchema } from "../schema";
 import type { IMergePackageParams, IPackage } from "@/types";
 import type { RowSelectionState } from "@tanstack/react-table";
 interface IMergeDialogProps {
-  form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
+  form: UseFormReturn<z.infer<typeof ProductsSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isMergeOpen: boolean;
   setIsMergeOpen: Dispatch<SetStateAction<boolean>>;

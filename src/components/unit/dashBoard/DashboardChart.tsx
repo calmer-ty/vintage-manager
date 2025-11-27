@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { useGradeDialog } from "@/contexts/gradeModalContext";
+import { useUserData } from "@/contexts/userDataContext";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,7 @@ import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
 
 import type { ISalesProduct } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
-import { useUserData } from "@/contexts/userDataContext";
+import type { Timestamp } from "firebase/firestore";
 interface IDashBoardChartProps {
   products: ISalesProduct[];
   selectedYear: number;
@@ -42,16 +43,11 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
   // 판매/판매완료 된 상품들의 날짜를 추출
   const costDays = products
     .filter((product) => product.soldAt === null)
-    .map((product) => {
-      const convertedDate = product.createdAt!.toDate();
-      return getDateString(convertedDate);
-    });
+    .map((product) => getDateString((product.createdAt as Timestamp).toDate()));
+
   const soldDays = products
     .filter((product) => product.soldAt !== null)
-    .map((product) => {
-      const convertedDate = product.soldAt!.toDate();
-      return getDateString(convertedDate);
-    });
+    .map((product) => getDateString((product.soldAt as Timestamp).toDate()));
 
   // 날짜를 키값으로 하여 그 날짜에 팔린/판매중인 상품이 몇 개가 해당되는지 카운트하는 함수
   const countByDate = (days: string[]) =>
