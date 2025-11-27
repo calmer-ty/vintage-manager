@@ -91,7 +91,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, sold
                     매입 서비스 비용<em className="text-red-700 cursor-help">*</em>
                   </span>
                 </ChildrenTooltip>
-                <span>- {getDisplayPrice("KRW", c.shipping + c.fee)}</span>
+                <span>- {getDisplayPrice("KRW", c.shipping * c.exchange.krw + c.fee * c.exchange.krw)}</span>
               </div>
               <div className="flex justify-between gap-2 ml-3 text-gray-500">
                 <ChildrenTooltip content="판매 배송료 + 판매 수수료">
@@ -99,7 +99,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, sold
                     판매 서비스 비용<em className="text-red-700 cursor-help">*</em>
                   </span>
                 </ChildrenTooltip>
-                <span>- {getDisplayPrice("KRW", s.fee + s.shipping)}</span>
+                <span>- {getDisplayPrice("KRW", s.shipping + s.fee)}</span>
               </div>
 
               {/* 순이익 */}

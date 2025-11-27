@@ -14,7 +14,7 @@ import PurchaseSelect from "../PurchaseSelect";
 
 import type { z } from "zod";
 import type { Dispatch, SetStateAction } from "react";
-import type { ICreatePackageDoc, ICreatePackageParams } from "@/types";
+import type { ICreatePackageDoc } from "@/types";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
@@ -24,7 +24,7 @@ interface IWriteDialogProps {
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isWriteOpen: boolean;
   setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
-  createPackage: ({ packageDoc }: ICreatePackageParams) => Promise<void>;
+  createPackage: (packageDoc: ICreatePackageDoc) => Promise<void>;
   fetchPackages: () => Promise<void>;
 }
 
@@ -53,7 +53,7 @@ export default function WriteDialog({
       };
 
       // 데이터 생성 및 리패치
-      await createPackage({ packageDoc });
+      await createPackage(packageDoc);
       await fetchPackages();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기

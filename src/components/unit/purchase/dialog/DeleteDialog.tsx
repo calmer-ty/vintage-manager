@@ -9,14 +9,13 @@ import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
 import type { RowSelectionState } from "@tanstack/react-table";
-import type { IDeletePackageParams } from "@/types";
 interface IDeleteDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   isDeleteOpen: boolean;
   setIsDeleteOpen: Dispatch<SetStateAction<boolean>>;
   deleteTargets: string[];
-  deletePackage: ({ deleteTargets }: IDeletePackageParams) => Promise<void>;
+  deletePackage: (deleteTargets: string[]) => Promise<void>;
 }
 
 export default function DeleteDialog({
@@ -28,7 +27,7 @@ export default function DeleteDialog({
   deletePackage,
 }: IDeleteDialogProps) {
   const onClickDelete = async () => {
-    await deletePackage({ deleteTargets });
+    await deletePackage(deleteTargets);
 
     toast("🗑️ 선택한 항목이 삭제되었습니다.");
     setIsDeleteOpen(false);

@@ -13,7 +13,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 
 import FormInputWrap from "@/components/commons/FormInputWrap";
 
-import type { ISalesProduct, ISalesProductParams, IUpdateProductDoc } from "@/types";
+import type { ISalesProduct, ISalesProductParams, ISalesType } from "@/types";
 
 const SalesSchema = z.object({
   name: z.string().optional(),
@@ -30,7 +30,7 @@ interface IWriteDialogProps {
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   updateTarget: ISalesProduct | undefined;
   setUpdateTarget: React.Dispatch<React.SetStateAction<ISalesProduct | undefined>>;
-  salesProduct: ({ salesTarget, productDoc }: ISalesProductParams) => Promise<void>;
+  salesProduct: ({ salesTarget, salesDoc }: ISalesProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
 }
 
@@ -59,15 +59,13 @@ export default function WriteDialog({ isOpen, setIsOpen, updateTarget, setUpdate
     if (!uid || !updateTarget) return;
 
     try {
-      const productDoc: IUpdateProductDoc = {
-        sales: {
-          ...data.sales,
-          profit: data.sales.price - data.sales.fee - data.sales.shipping, // 이익 = 판매가 - 판매 수수료 - 판매 배송료
-        },
+      const salesDoc: ISalesType = {
+        ...data.sales,
+        profit: data.sales.price - data.sales.fee - data.sales.shipping, // 이익 = 판매가 - 판매 수수료 - 판매 배송료
       };
 
       // 데이터 수정 및 리패치
-      await salesProduct({ salesTarget: updateTarget?._id, productDoc });
+      await salesProduct({ salesTarget: updateTarget?._id, salesDoc });
       await fetchProducts();
 
       toast("🔄 상품 판매 정보가 변경되었습니다.");

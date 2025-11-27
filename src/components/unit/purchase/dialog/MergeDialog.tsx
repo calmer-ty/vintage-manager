@@ -11,7 +11,7 @@ import type z from "zod";
 import type { Dispatch, SetStateAction } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import type { PurchaseSchema } from "../schema";
-import type { IMargePackageDoc, IMergePackageParams, IPackage } from "@/types";
+import type { IMergePackageParams, IPackage } from "@/types";
 import type { RowSelectionState } from "@tanstack/react-table";
 interface IMergeDialogProps {
   form: UseFormReturn<z.infer<typeof PurchaseSchema>>;
@@ -19,7 +19,7 @@ interface IMergeDialogProps {
   isMergeOpen: boolean;
   setIsMergeOpen: Dispatch<SetStateAction<boolean>>;
   mergeTargets: IPackage[];
-  mergePackage: ({ packageDoc }: IMergePackageParams) => Promise<void>;
+  mergePackage: ({ deleteTargets, packageDoc }: IMergePackageParams) => Promise<void>;
   fetchPackages: () => Promise<void>;
 }
 
@@ -54,12 +54,8 @@ export default function MergeDialog({
     }
 
     try {
-      const packageDoc: IMargePackageDoc = {
-        products: mergeTargetProducts,
-      };
-
       // 데이터 생성 및 리패치
-      await mergePackage({ deleteTargets: mergeTargetIds, packageDoc });
+      await mergePackage({ deleteTargets: mergeTargetIds, packageDoc: mergeTargetProducts });
       await fetchPackages();
 
       // 등록 성공 후 폼 초기화 및 토스트 띄우기

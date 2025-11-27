@@ -30,17 +30,32 @@ export interface IShipping {
   amount: number;
   exchange: IExchange;
 }
+export interface ICostType {
+  price: number;
+  shipping: number;
+  fee: number;
+  exchange: IExchange;
+}
+export interface ISalesType {
+  price: number;
+  fee: number;
+  shipping: number;
+  profit: number;
+}
 export interface IPurchaseProduct {
   _id: string;
   uid: string;
   name: string;
   brand: string;
-  cost: {
-    price: number;
-    shipping: number;
-    fee: number;
-    exchange: IExchange;
-  };
+  cost: ICostType;
+}
+// 상품 Hook으로 들어가는 인자값 타입
+export interface ICreateProductDoc {
+  _id: string;
+  uid: string;
+  name: string;
+  brand: string;
+  cost: ICostType;
 }
 export interface IPackage {
   _id: string;
@@ -56,18 +71,8 @@ export interface ISalesProduct {
   _id: string;
   name: string;
   brand: string;
-  cost: {
-    price: number;
-    shipping: number;
-    fee: number;
-    exchange: IExchange;
-  };
-  sales: {
-    price: number;
-    fee: number;
-    shipping: number;
-    profit: number;
-  };
+  cost: ICostType;
+  sales: ISalesType;
   createdAt: FieldValue;
   soldAt: FieldValue | null;
 }
@@ -78,66 +83,23 @@ export interface ICreatePackageDoc {
     _id: string;
     name: string;
     brand: string;
-    cost: {
-      price: number;
-      shipping: number;
-      fee: number;
-      exchange: IExchange;
-    };
+    cost: ICostType;
   }[];
-}
-export interface IMargePackageDoc {
-  products: IPurchaseProduct[];
-}
-export interface ISalesPackageDoc {
-  shipping?: IShipping;
-}
-
-// 상품 Hook으로 들어가는 인자값 타입
-export interface ICreateProductDoc {
-  uid: string;
-  _id: string;
-  name: string;
-  brand: string;
-  cost: {
-    price: number;
-    shipping: number;
-    fee: number;
-    exchange: IExchange;
-  };
-}
-export interface IUpdateProductDoc {
-  sales: {
-    price: number;
-    fee: number;
-    shipping: number;
-    profit: number;
-  };
+  // products: IPurchaseProduct[];
 }
 
 // Hooks Params 패키지
-export interface ICreatePackageParams {
-  packageDoc: ICreatePackageDoc;
-}
 export interface IMergePackageParams {
   deleteTargets: string[];
-  packageDoc: IMargePackageDoc;
+  packageDoc: IPurchaseProduct[];
 }
 export interface ISalesPackageParams {
   salesTarget: string;
-  salesDoc: ISalesPackageDoc;
-}
-export interface IDeletePackageParams {
-  deleteTargets: string[];
-}
-
-// Hooks Params 상품
-export interface ICreateProductParams {
-  productDocs: ICreateProductDoc[];
+  salesDoc: IShipping;
 }
 export interface ISalesProductParams {
   salesTarget: string;
-  productDoc: IUpdateProductDoc;
+  salesDoc: ISalesType;
 }
 export interface ISoldProductParams {
   id: string;

@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/authContext";
 
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
-import type { ICreatePackageParams, IDeletePackageParams, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
+import type { ICreatePackageDoc, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
 interface IUsePackagesParams {
   selectedYear: number;
   selectedMonth: number;
@@ -19,7 +19,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
   const [fetchLoading, setFetchLoading] = useState(false);
 
   // [등록]
-  const createPackage = async ({ packageDoc }: ICreatePackageParams) => {
+  const createPackage = async (packageDoc: ICreatePackageDoc) => {
     if (!uid) return;
 
     try {
@@ -45,7 +45,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc, uid, createdAt: serverTimestamp() });
+      const docRef = await addDoc(collection(db, "packages"), { products: packageDoc, uid, createdAt: serverTimestamp() });
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
         _id: docRef.id,
@@ -64,21 +64,21 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     }
   };
 
-  // [수정] - 상품 패키지의 배송료 추가
+  // [수정] - 상품 패키지의 판매등록, 국제 배송료 추가 입력이 됨
   const salesPackage = async ({ salesTarget, salesDoc }: ISalesPackageParams) => {
     if (!uid) return;
 
     try {
       const docRef = doc(db, "packages", salesTarget);
 
-      await updateDoc(docRef, { ...salesDoc, addSaleAt: serverTimestamp() });
+      await updateDoc(docRef, { shipping: salesDoc, addSaleAt: serverTimestamp() });
     } catch (err) {
       console.error(err);
     }
   };
 
   // [삭제]
-  const deletePackage = async ({ deleteTargets }: IDeletePackageParams) => {
+  const deletePackage = async (deleteTargets: string[]) => {
     if (!uid) return;
 
     for (const id of deleteTargets) {
