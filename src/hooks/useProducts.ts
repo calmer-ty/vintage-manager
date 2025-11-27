@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 
 import { useAuth } from "@/contexts/authContext";
 import { getUserDateQuery } from "@/lib/firebase/utils";
@@ -34,7 +34,7 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
             shipping: 0,
             profit: 0,
           },
-          createdAt: Timestamp.fromDate(new Date()),
+          createdAt: serverTimestamp(),
           soldAt: null,
         });
 

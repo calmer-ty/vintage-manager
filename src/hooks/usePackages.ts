@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
-import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 
 import { useAuth } from "@/contexts/authContext";
 
@@ -27,7 +27,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
         ...packageDoc,
         uid,
         _id: "",
-        createdAt: Timestamp.fromDate(new Date()),
+        createdAt: serverTimestamp(),
         shipping: null,
         addSaleAt: null,
       });
@@ -45,7 +45,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     if (!uid) return;
 
     try {
-      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc, uid, createdAt: Timestamp.fromDate(new Date()) });
+      const docRef = await addDoc(collection(db, "packages"), { ...packageDoc, uid, createdAt: serverTimestamp() });
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
         _id: docRef.id,
@@ -64,33 +64,6 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     }
   };
 
-  // [번들 변경]
-  // const updateSingleToBundled = async ({ updateTargetIds }: IupdateSingleToBundledParams) => {
-  //   if (!uid) return;
-
-  //   try {
-  //     for (const id of updateTargetIds) {
-  //       const docRef = doc(db, "packages", id);
-  //       await updateDoc(docRef, { isBundled: true });
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-  // [수정] - 상품 데이터를 수정
-  // const updatePurchase = async ({ updateTargetId, products }: IUpdatePackageParams) => {
-  //   if (!uid) return;
-
-  //   try {
-  //     const docRef = doc(db, "purchase", updateTargetId);
-  //     await updateDoc(docRef, {
-  //       ...products,
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
-
   // [수정] - 상품 패키지의 배송료 추가
   const salesPackage = async ({ salesTarget, salesDoc }: ISalesPackageParams) => {
     if (!uid) return;
@@ -98,7 +71,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     try {
       const docRef = doc(db, "packages", salesTarget);
 
-      await updateDoc(docRef, { ...salesDoc, addSaleAt: Timestamp.fromDate(new Date()) });
+      await updateDoc(docRef, { ...salesDoc, addSaleAt: serverTimestamp() });
     } catch (err) {
       console.error(err);
     }
