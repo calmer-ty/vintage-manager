@@ -8,8 +8,6 @@ import YearMonthSelect from "@/components/commons/YearMonthSelect";
 import DashboardChart from "./DashboardChart";
 import DashboardStatus from "./DashboardStatus";
 
-import type { IUserID } from "@/types";
-
 const containerVariants = {
   hidden: {},
   show: {
@@ -25,10 +23,10 @@ const sectionVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-export default function DashBoardUI({ uid }: IUserID) {
+export default function DashBoardUI() {
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
-  const { packages } = usePackages({ uid, selectedYear, selectedMonth });
-  const { products } = useProducts({ uid, selectedYear, selectedMonth });
+  const { packages } = usePackages({ selectedYear, selectedMonth });
+  const { products } = useProducts({ selectedYear, selectedMonth });
 
   return (
     <motion.article className="px-6 py-6 sm:px-10" variants={containerVariants} initial="hidden" animate="show">

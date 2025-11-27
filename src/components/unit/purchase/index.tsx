@@ -15,19 +15,18 @@ import MergeDialog from "./dialog/MergeDialog";
 
 import { PurchaseSchema } from "./schema";
 
-import type { IPackage, IUserID } from "@/types";
+import type { IPackage } from "@/types";
 import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";
 
-export default function PurchaseUI({ uid }: IUserID) {
+export default function PurchaseUI() {
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
   const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackages({
-    uid,
     selectedYear,
     selectedMonth,
   });
 
-  const { createProduct } = useProducts({ uid, selectedYear, selectedMonth });
+  const { createProduct } = useProducts({ selectedYear, selectedMonth });
 
   // 등록/수정/삭제 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);

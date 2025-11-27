@@ -23,5 +23,5 @@ export default function SalesPage() {
     return <div>로그인이 필요합니다.</div>;
   }
 
-  return <SalesUI uid={uid} />;
+  return <SalesUI />;
 }

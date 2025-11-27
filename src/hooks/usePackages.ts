@@ -2,16 +2,19 @@ import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 
+import { useAuth } from "@/contexts/authContext";
+
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { ICreatePackageParams, IDeletePackageParams, IMergePackageParams, IPackage, ISalesPackageParams } from "@/types";
 interface IUsePackagesParams {
-  uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
-export const usePackages = ({ uid, selectedYear, selectedMonth }: IUsePackagesParams) => {
+export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams) => {
+  const { uid } = useAuth();
+
   const [packages, setPackages] = useState<IPackage[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
 

@@ -22,5 +22,5 @@ export default function PurchasePage() {
     return <div>로그인이 필요합니다.</div>;
   }
 
-  return <PurchaseUI uid={uid} />;
+  return <PurchaseUI />;
 }

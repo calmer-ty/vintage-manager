@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-// import { getPriceInKRW } from "@/lib/price";
+import { useAuth } from "@/contexts/authContext";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,7 +26,6 @@ const SalesSchema = z.object({
 });
 
 interface IWriteDialogProps {
-  uid: string;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   updateTarget: ISalesProduct | undefined;
@@ -35,15 +34,9 @@ interface IWriteDialogProps {
   fetchProducts: () => Promise<void>;
 }
 
-export default function WriteDialog({
-  uid,
-  isOpen,
-  setIsOpen,
-  updateTarget,
-  setUpdateTarget,
-  salesProduct,
-  fetchProducts,
-}: IWriteDialogProps) {
+export default function WriteDialog({ isOpen, setIsOpen, updateTarget, setUpdateTarget, salesProduct, fetchProducts }: IWriteDialogProps) {
+  const { uid } = useAuth();
+
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof SalesSchema>>({
     resolver: zodResolver(SalesSchema),

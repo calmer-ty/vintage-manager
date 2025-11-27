@@ -3,17 +3,19 @@ import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
 
+import { useAuth } from "@/contexts/authContext";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { ICreateProductParams, ISalesProduct, ISalesProductParams, ISoldProductParams } from "@/types";
 interface IUseProductsParams {
-  uid: string;
   selectedYear: number;
   selectedMonth: number;
 }
 
 // 패키지 상태에 따라 종속적으로 데이터 처리
-export const useProducts = ({ uid, selectedYear, selectedMonth }: IUseProductsParams) => {
+export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams) => {
+  const { uid } = useAuth();
+
   const [products, setProducts] = useState<ISalesProduct[]>([]);
   const [loading, setLoading] = useState(false);
 

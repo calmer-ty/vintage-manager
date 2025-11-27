@@ -7,11 +7,11 @@ import TableUI from "./table";
 import WriteDialog from "./dialog/WriteDialog";
 import YearMonthSelect from "@/components/commons/YearMonthSelect";
 
-import type { ISalesProduct, IUserID } from "@/types";
+import type { ISalesProduct } from "@/types";
 
-export default function SalesUI({ uid }: IUserID) {
+export default function SalesUI() {
   const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
-  const { products, salesProduct, fetchProducts, soldProduct, loading } = useProducts({ uid, selectedYear, selectedMonth });
+  const { products, salesProduct, fetchProducts, soldProduct, loading } = useProducts({ selectedYear, selectedMonth });
 
   // 수정 스테이트
   const [isWriteOpen, setIsWriteOpen] = useState(false);
@@ -29,7 +29,6 @@ export default function SalesUI({ uid }: IUserID) {
       </header>
       {/* 판매가 수정 모달창 */}
       <WriteDialog
-        uid={uid}
         isOpen={isWriteOpen}
         setIsOpen={setIsWriteOpen}
         updateTarget={updateTarget}
