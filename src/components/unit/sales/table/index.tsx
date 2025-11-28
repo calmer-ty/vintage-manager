@@ -12,13 +12,10 @@ import {
 
 import { getDisplayPrice, getPriceInKRW } from "@/lib/price";
 
-// 외부 요소
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Loader2, PackageOpen, Pencil } from "lucide-react";
-
-// 내부 요소
 import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
 import TableControl from "./TableControl";
 import TableItemState from "./TableItemState";

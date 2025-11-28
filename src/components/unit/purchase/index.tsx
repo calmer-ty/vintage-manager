@@ -14,7 +14,6 @@ import SaleDialog from "./dialog/SaleDialog";
 import MergeDialog from "./dialog/MergeDialog";
 
 import { ProductsSchema } from "./schema";
-
 import type { IPackage } from "@/types";
 import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";

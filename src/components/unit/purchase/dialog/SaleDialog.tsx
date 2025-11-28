@@ -7,7 +7,6 @@ import { getDisplayPrice } from "@/lib/price";
 import { useUserData } from "@/contexts/userDataContext";
 import { useGradeDialog } from "@/contexts/gradeModalContext";
 
-// 외부 요소
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -18,7 +17,6 @@ import FormInputWrap from "@/components/commons/FormInputWrap";
 import PurchaseSelect from "../PurchaseSelect";
 
 import { SalesSchema } from "../schema";
-
 import type { IProduct, IPackage, ISalesPackageParams, IShipping } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";

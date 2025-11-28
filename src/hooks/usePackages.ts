@@ -3,7 +3,6 @@ import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 
 import { useAuth } from "@/contexts/authContext";
-
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { IMergePackageParams, IPackage, IProduct, ISalesPackageParams } from "@/types";

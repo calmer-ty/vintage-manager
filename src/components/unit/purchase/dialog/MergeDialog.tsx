@@ -2,7 +2,6 @@ import { toast } from "sonner";
 
 import { getDisplayPrice } from "@/lib/price";
 
-// 외부 요소
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Item, ItemContent } from "@/components/ui/item";

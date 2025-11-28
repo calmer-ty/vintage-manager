@@ -1,10 +1,8 @@
+import { Lock } from "lucide-react";
 import { FormControl, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-import { Lock } from "lucide-react";
-
 import type { IUserData } from "@/types";
-
 interface IPurchaseSelectProps {
   userData: IUserData | undefined;
   onChange: (code: string) => void;

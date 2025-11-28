@@ -1,6 +1,5 @@
 import { toast } from "sonner";
 
-// 외부 요소
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 import type { ISalesProduct, ISoldProductParams } from "@/types";

@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Pencil, Trash, Settings } from "lucide-react";
-
 import CurrencySelect from "@/components/commons/CurrencySelect";
 
 import type { IPackage } from "@/types";

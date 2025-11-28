@@ -7,7 +7,6 @@ import { useAuth } from "./authContext";
 
 import type { ReactNode } from "react";
 import type { IUserData } from "@/types";
-
 interface IUserDataContextType {
   userData?: IUserData;
   loading: boolean;

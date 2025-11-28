@@ -5,7 +5,6 @@ import { BarChart, CreditCard, DollarSign, Layout } from "lucide-react";
 
 import type { IUserData } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
-
 interface IGradeSelectProps {
   userData: IUserData | undefined;
   setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;

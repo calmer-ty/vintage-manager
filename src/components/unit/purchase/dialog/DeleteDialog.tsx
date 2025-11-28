@@ -1,6 +1,5 @@
 import { toast } from "sonner";
 
-// 외부 요소
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 

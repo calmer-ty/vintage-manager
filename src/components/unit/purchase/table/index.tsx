@@ -13,7 +13,6 @@ import {
 import { useCurrency } from "@/contexts/currencyContext";
 import { getDisplayPrice, getExchangeDisplayPrice } from "@/lib/price";
 
-// 외부 요소
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
