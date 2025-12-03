@@ -2,18 +2,17 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Calendar } from "lucide-react";
 
-import type { Dispatch, SetStateAction } from "react";
 interface IDashboardSelectProps {
   selectedYear: number;
-  setSelectedYear: Dispatch<SetStateAction<number>>;
   selectedMonth: number;
-  setSelectedMonth: Dispatch<SetStateAction<number>>;
+  setSelectedYear: (year: number) => void;
+  setSelectedMonth: (month: number) => void;
 }
 
 const years = ["2025", "2024", "2023"];
 const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
 
-export default function YearMonthSelect({ selectedYear, setSelectedYear, selectedMonth, setSelectedMonth }: IDashboardSelectProps) {
+export default function YearMonthSelect({ selectedYear, selectedMonth, setSelectedYear, setSelectedMonth }: IDashboardSelectProps) {
   return (
     <div className="flex items-center gap-2">
       <Tooltip>

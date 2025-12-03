@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useDateSelect } from "@/contexts/dateSelectContext";
+import { useDateSelectStore } from "@/store/useDateSelectStore";
 import { useProducts } from "@/hooks/useProducts";
 import { usePackages } from "@/hooks/usePackages";
 
@@ -19,7 +19,7 @@ import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";
 
 export default function PurchaseUI() {
-  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
+  const { selectedYear, selectedMonth, setSelectedYear, setSelectedMonth } = useDateSelectStore();
   const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackages({
     selectedYear,
     selectedMonth,
@@ -78,8 +78,8 @@ export default function PurchaseUI() {
       <header className="flex justify-end mb-6">
         <YearMonthSelect
           selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
           selectedMonth={selectedMonth}
+          setSelectedYear={setSelectedYear}
           setSelectedMonth={setSelectedMonth}
         />
       </header>

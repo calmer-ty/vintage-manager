@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useDateSelect } from "@/contexts/dateSelectContext";
+import { useDateSelectStore } from "@/store/useDateSelectStore";
 import { useProducts } from "@/hooks/useProducts";
 
 import TableUI from "./table";
@@ -10,7 +10,7 @@ import YearMonthSelect from "@/components/commons/YearMonthSelect";
 import type { ISalesProduct } from "@/types";
 
 export default function SalesUI() {
-  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
+  const { selectedYear, selectedMonth, setSelectedYear, setSelectedMonth } = useDateSelectStore();
   const { products, salesProduct, fetchProducts, soldProduct, loading } = useProducts({ selectedYear, selectedMonth });
 
   // 수정 스테이트
@@ -22,8 +22,8 @@ export default function SalesUI() {
       <header className="flex justify-end mb-6">
         <YearMonthSelect
           selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
           selectedMonth={selectedMonth}
+          setSelectedYear={setSelectedYear}
           setSelectedMonth={setSelectedMonth}
         />
       </header>

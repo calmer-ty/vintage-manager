@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import { useDateSelect } from "@/contexts/dateSelectContext";
+import { useDateSelectStore } from "@/store/useDateSelectStore";
 import { useProducts } from "@/hooks/useProducts";
 import { usePackages } from "@/hooks/usePackages";
 
@@ -24,7 +24,7 @@ const sectionVariants = {
 };
 
 export default function DashBoardUI() {
-  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelect();
+  const { selectedYear, setSelectedYear, selectedMonth, setSelectedMonth } = useDateSelectStore();
   const { packages } = usePackages({ selectedYear, selectedMonth });
   const { products } = useProducts({ selectedYear, selectedMonth });
 
@@ -33,8 +33,8 @@ export default function DashBoardUI() {
       <motion.header variants={sectionVariants} className="flex justify-end mb-6">
         <YearMonthSelect
           selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
           selectedMonth={selectedMonth}
+          setSelectedYear={setSelectedYear}
           setSelectedMonth={setSelectedMonth}
         />
       </motion.header>
