@@ -8,6 +8,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
 import LayoutNav from "@/components/commons/layout/LayoutNav";
 import GradeDialog from "@/components/commons/gradeDialog";
+import Wrapper from "@/components/commons/layout/Wrapper";
 
 import "./globals.css";
 import type { Metadata } from "next";
@@ -41,7 +42,8 @@ export default function RootLayout({
           <div className="flex-1 overflow-auto">
             {/* Nav 외에 유동적으로 크기 맞춤 */}
             <LayoutHeader />
-            <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
+            {/* <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main> */}
+            <Wrapper>{children}</Wrapper>
             <Toaster position="top-center" />
             <GradeDialog />
           </div>
