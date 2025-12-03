@@ -47,11 +47,11 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
   };
 
   // [수정]
-  const salesProduct = async ({ salesTarget, salesDoc }: ISalesProductParams) => {
+  const salesProduct = async ({ target, salesDoc }: ISalesProductParams) => {
     if (!user) return;
 
     try {
-      const docRef = doc(db, "products", salesTarget);
+      const docRef = doc(db, "products", target);
 
       await updateDoc(docRef, {
         sales: salesDoc,

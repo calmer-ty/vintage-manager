@@ -75,6 +75,10 @@ export interface ISalesPackageParams {
   target: string;
   salesDoc: IShipping;
 }
+export interface ISalesProductParams {
+  target: string;
+  salesDoc: ISales;
+}
 export interface ISoldProductParams {
   id: string;
   value: boolean;

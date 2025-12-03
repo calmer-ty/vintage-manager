@@ -29,7 +29,7 @@ interface IWriteDialogProps {
   updateTarget: ISalesProduct | undefined;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setUpdateTarget: React.Dispatch<React.SetStateAction<ISalesProduct | undefined>>;
-  salesProduct: ({ salesTarget, salesDoc }: ISalesProductParams) => Promise<void>;
+  salesProduct: ({ target, salesDoc }: ISalesProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
 }
 
@@ -64,7 +64,7 @@ export default function WriteDialog({ isOpen, updateTarget, setIsOpen, setUpdate
       };
 
       // 데이터 수정 및 리패치
-      await salesProduct({ salesTarget: updateTarget?._id, salesDoc });
+      await salesProduct({ target: updateTarget?._id, salesDoc });
       await fetchProducts();
 
       toast("🔄 상품 판매 정보가 변경되었습니다.");
