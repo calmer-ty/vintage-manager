@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
 import { useGradeDialogStore } from "@/store/useGradeDialogStore";
-import { useUserData } from "@/contexts/userDataContext";
+import { useUserDataStore } from "@/store/useUserDataStore";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { getDisplayPrice } from "@/lib/price";
 
@@ -44,7 +44,7 @@ export default function SaleDialog({
   const { exchangeOptions } = useExchangeRate();
   const krwExchange = exchangeOptions.find((opt) => opt.code === "KRW");
 
-  const { userData } = useUserData();
+  const { userData } = useUserDataStore();
   const { openGrade } = useGradeDialogStore();
 
   // ✍️ 폼 설정

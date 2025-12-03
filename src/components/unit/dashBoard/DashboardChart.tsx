@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 
 import { useGradeDialogStore } from "@/store/useGradeDialogStore";
-import { useUserData } from "@/contexts/userDataContext";
+import { useUserDataStore } from "@/store/useUserDataStore";
 import { getDateString, getDaysOfCurrentMonth } from "@/lib/date";
 
 import { Button } from "@/components/ui/button";
@@ -36,7 +36,7 @@ export default function DashBoardChart({ products, selectedYear, selectedMonth }
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
 
-  const { userData } = useUserData();
+  const { userData } = useUserDataStore();
   const { openGrade } = useGradeDialogStore();
 
   // 판매/판매완료 된 상품들의 날짜를 추출

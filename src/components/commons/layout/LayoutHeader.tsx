@@ -3,11 +3,10 @@
 import { usePathname } from "next/navigation";
 
 import { useGradeDialogStore } from "@/store/useGradeDialogStore";
-import { useUserData } from "@/contexts/userDataContext";
+import { useUserDataStore } from "@/store/useUserDataStore";
 
 import { Rocket } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-// import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 import { pages } from "@/lib/link";
@@ -16,7 +15,7 @@ export default function LayoutHeader() {
   const pathname = usePathname();
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
 
-  const { userData } = useUserData();
+  const { userData } = useUserDataStore();
   const { openGrade } = useGradeDialogStore();
 
   return (

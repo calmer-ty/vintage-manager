@@ -4,15 +4,15 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 
 import type { IUserData } from "@/types";
 interface IPurchaseSelectProps {
-  userData: IUserData | undefined;
-  onChange: (code: string) => void;
   value: string;
   disabled?: boolean;
   label?: string;
   messageStyles?: string;
+  onChange: (code: string) => void;
+  userData: IUserData | null;
 }
 
-export default function PurchaseSelect({ userData, onChange, value, label, messageStyles, disabled }: IPurchaseSelectProps) {
+export default function PurchaseSelect({ value, label, messageStyles, onChange, disabled, userData }: IPurchaseSelectProps) {
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>

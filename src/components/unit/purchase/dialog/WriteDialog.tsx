@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
 import { useGradeDialogStore } from "@/store/useGradeDialogStore";
-import { useUserData } from "@/contexts/userDataContext";
+import { useUserDataStore } from "@/store/useUserDataStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
@@ -42,7 +42,7 @@ export default function WriteDialog({
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
 
-  const { userData } = useUserData();
+  const { userData } = useUserDataStore();
   const { openGrade } = useGradeDialogStore();
 
   // 등록 함수
