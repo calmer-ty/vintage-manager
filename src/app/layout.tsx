@@ -4,7 +4,6 @@ import { Toaster } from "@/components/ui/sonner";
 // import { AuthProvider } from "@/contexts/authContext";
 
 import { UserDataProvider } from "@/contexts/userDataContext";
-import { GradeModalProvider } from "@/contexts/gradeModalContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
@@ -40,16 +39,14 @@ export default function RootLayout({
         {/* <AuthProvider> */}
         <UserDataProvider>
           <SidebarProvider>
-            <GradeModalProvider>
-              <LayoutNav />
-              <div className="flex-1 overflow-auto">
-                {/* Nav 외에 유동적으로 크기 맞춤 */}
-                <LayoutHeader />
-                <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
-                <Toaster position="top-center" />
-                <GradeDialog />
-              </div>
-            </GradeModalProvider>
+            <LayoutNav />
+            <div className="flex-1 overflow-auto">
+              {/* Nav 외에 유동적으로 크기 맞춤 */}
+              <LayoutHeader />
+              <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
+              <Toaster position="top-center" />
+              <GradeDialog />
+            </div>
           </SidebarProvider>
         </UserDataProvider>
         {/* </AuthProvider> */}

@@ -6,12 +6,12 @@ import { BarChart, CreditCard, DollarSign, Layout } from "lucide-react";
 import type { IUserData } from "@/types";
 import type { Dispatch, SetStateAction } from "react";
 interface IGradeSelectProps {
-  userData: IUserData | undefined;
-  setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
   setStep: Dispatch<SetStateAction<"select" | "confirm">>;
+  setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
+  userData: IUserData | undefined;
 }
 
-export default function GradeSelect({ userData, setSelectGrade, setStep }: IGradeSelectProps) {
+export default function GradeSelect({ setStep, setSelectGrade, userData }: IGradeSelectProps) {
   return (
     <div className="flex flex-col gap-6 sm:flex-row">
       {/* Free Plan */}

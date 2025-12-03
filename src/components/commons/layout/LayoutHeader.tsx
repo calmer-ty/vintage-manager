@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-import { useGradeDialog } from "@/contexts/gradeModalContext";
+import { useGradeDialogStore } from "@/store/useGradeDialogStore";
 import { useUserData } from "@/contexts/userDataContext";
 
 import { Rocket } from "lucide-react";
@@ -17,7 +17,7 @@ export default function LayoutHeader() {
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
 
   const { userData } = useUserData();
-  const { openGrade } = useGradeDialog();
+  const { openGrade } = useGradeDialogStore();
 
   return (
     <>

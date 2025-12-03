@@ -1,7 +1,7 @@
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 
-import { useGradeDialog } from "@/contexts/gradeModalContext";
+import { useGradeDialogStore } from "@/store/useGradeDialogStore";
 import { useUserData } from "@/contexts/userDataContext";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
@@ -43,7 +43,7 @@ export default function WriteDialog({
   const { exchangeOptions } = useExchangeRate();
 
   const { userData } = useUserData();
-  const { openGrade } = useGradeDialog();
+  const { openGrade } = useGradeDialogStore();
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof ProductsSchema>) => {

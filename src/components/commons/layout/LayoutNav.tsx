@@ -3,8 +3,8 @@
 import { usePathname, useRouter } from "next/navigation";
 
 import { useAuthStore } from "@/store/useAuthStore";
+import { useGradeDialogStore } from "@/store/useGradeDialogStore";
 import { useUserData } from "@/contexts/userDataContext";
-import { useGradeDialog } from "@/contexts/gradeModalContext";
 
 import {
   Sidebar,
@@ -42,7 +42,7 @@ export default function Nav() {
   // - 괄호가 있으면 즉시 실행 → 클릭과 무관
   // - 인자가 필요하면 화살표 함수로 감싸서 클릭 시점까지 지연
   const { userData } = useUserData();
-  const { openGrade } = useGradeDialog();
+  const { openGrade } = useGradeDialogStore();
 
   return (
     <>

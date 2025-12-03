@@ -2,10 +2,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
+import { useGradeDialogStore } from "@/store/useGradeDialogStore";
+import { useUserData } from "@/contexts/userDataContext";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 import { getDisplayPrice } from "@/lib/price";
-import { useUserData } from "@/contexts/userDataContext";
-import { useGradeDialog } from "@/contexts/gradeModalContext";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,7 +45,7 @@ export default function SaleDialog({
   const krwExchange = exchangeOptions.find((opt) => opt.code === "KRW");
 
   const { userData } = useUserData();
-  const { openGrade } = useGradeDialog();
+  const { openGrade } = useGradeDialogStore();
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof SalesSchema>>({
