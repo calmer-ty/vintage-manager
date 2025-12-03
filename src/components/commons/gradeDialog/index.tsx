@@ -14,14 +14,14 @@ export default function GradeDialog() {
   const [step, setStep] = useState<"select" | "confirm">("select");
   const [selectGrade, setSelectGrade] = useState<"free" | "pro" | null>(null);
 
-  const { isOpenGrade, setIsOpenGrade, closeGrade } = useGradeDialogStore();
+  const { isOpen, setIsOpen, closeDialog } = useGradeDialogStore();
   const { userData, setGrade } = useUserDataStore();
 
   return (
     <Dialog
-      open={isOpenGrade}
+      open={isOpen}
       onOpenChange={(open) => {
-        setIsOpenGrade(open); // open = 모달이 열려있는지 boolean
+        setIsOpen(open); // open = 모달이 열려있는지 boolean
 
         if (!open) {
           setTimeout(() => {
@@ -44,7 +44,7 @@ export default function GradeDialog() {
             setStep={setStep}
             setGrade={setGrade}
             setSelectGrade={setSelectGrade}
-            closeGrade={closeGrade}
+            closeDialog={closeDialog}
           />
         )}
       </DialogContent>

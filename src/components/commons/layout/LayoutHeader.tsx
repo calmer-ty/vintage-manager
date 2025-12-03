@@ -16,7 +16,7 @@ export default function LayoutHeader() {
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
 
   const { userData } = useUserDataStore();
-  const { openGrade } = useGradeDialogStore();
+  const { openDialog } = useGradeDialogStore();
 
   return (
     <>
@@ -32,7 +32,7 @@ export default function LayoutHeader() {
             <div className="flex justify-end items-center w-full">
               {/* <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" /> */}
               {userData?.grade === "free" && (
-                <Button variant="default" onClick={openGrade}>
+                <Button variant="default" onClick={openDialog}>
                   Pro로 업그레이드
                 </Button>
               )}

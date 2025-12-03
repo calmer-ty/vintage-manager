@@ -37,7 +37,7 @@ export default function DashBoardChart({ selectedYear, selectedMonth, products }
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
 
   const { userData } = useUserDataStore();
-  const { openGrade } = useGradeDialogStore();
+  const { openDialog } = useGradeDialogStore();
 
   // 판매/판매완료 된 상품들의 날짜를 추출
   const costDays = products
@@ -80,7 +80,7 @@ export default function DashBoardChart({ selectedYear, selectedMonth, products }
   return (
     <div className="relative mt-6">
       {userData?.grade === "free" && (
-        <Button className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-100" onClick={openGrade}>
+        <Button className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-100" onClick={openDialog}>
           업그레이드 필요
         </Button>
       )}

@@ -45,7 +45,7 @@ export default function SaleDialog({
   const krwExchange = exchangeOptions.find((opt) => opt.code === "KRW");
 
   const { userData } = useUserDataStore();
-  const { openGrade } = useGradeDialogStore();
+  const { openDialog } = useGradeDialogStore();
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof SalesSchema>>({
@@ -137,7 +137,7 @@ export default function SaleDialog({
                         onChange={(code) => {
                           // grade 체크
                           if (userData?.grade === "free" && (code === "USD" || code === "JPY")) {
-                            openGrade(); // ProDialog 열기
+                            openDialog(); // ProDialog 열기
                             return; // 선택 변경 막기
                           }
 

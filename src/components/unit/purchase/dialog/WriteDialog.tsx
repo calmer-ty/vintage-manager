@@ -36,7 +36,7 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
   const { exchangeOptions } = useExchangeRate();
 
   const { userData } = useUserDataStore();
-  const { openGrade } = useGradeDialogStore();
+  const { openDialog } = useGradeDialogStore();
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof ProductsSchema>) => {
@@ -97,7 +97,7 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
                       onChange={(code) => {
                         // grade 체크
                         if (userData?.grade === "free" && (code === "USD" || code === "JPY")) {
-                          openGrade();
+                          openDialog();
                           return; // 선택 변경 막기
                         }
 

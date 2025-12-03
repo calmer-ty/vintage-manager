@@ -42,7 +42,7 @@ export default function Nav() {
   // - 괄호가 있으면 즉시 실행 → 클릭과 무관
   // - 인자가 필요하면 화살표 함수로 감싸서 클릭 시점까지 지연
   const { userData } = useUserDataStore();
-  const { openGrade } = useGradeDialogStore();
+  const { openDialog } = useGradeDialogStore();
 
   return (
     <>
@@ -90,7 +90,7 @@ export default function Nav() {
                     </SidebarMenuButton>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent side="top" className="w-[--radix-popper-anchor-width]">
-                    <DropdownMenuItem onClick={openGrade} className="cursor-pointer">
+                    <DropdownMenuItem onClick={openDialog} className="cursor-pointer">
                       요금제 변경
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => handleLogout(router)} className="cursor-pointer">

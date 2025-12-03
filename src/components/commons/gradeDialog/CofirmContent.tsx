@@ -15,7 +15,7 @@ interface IGradeConfirmProps {
   setStep: Dispatch<SetStateAction<"select" | "confirm">>;
   setGrade: (user: User, grade: "free" | "pro") => Promise<void>;
   setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
-  closeGrade: () => void;
+  closeDialog: () => void;
 }
 const features = [
   {
@@ -52,7 +52,7 @@ const features = [
   },
 ];
 
-export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, closeGrade, setGrade }: IGradeConfirmProps) {
+export default function GradeConfirm({ selectGrade, setStep, setSelectGrade, closeDialog, setGrade }: IGradeConfirmProps) {
   const { user } = useAuthStore();
 
   return (
@@ -104,7 +104,7 @@ export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, clo
                 toast.error("로그인이 필요합니다.");
                 return;
               }
-              closeGrade();
+              closeDialog();
               toast(
                 <span>
                   ✅ <strong className="capitalize">{selectGrade}</strong> 요금제가 성공적으로 변경되었습니다.
