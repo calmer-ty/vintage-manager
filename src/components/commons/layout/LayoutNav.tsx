@@ -1,8 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useUserData } from "@/contexts/userDataContext";
 import { useGradeDialog } from "@/contexts/gradeModalContext";
 
@@ -25,8 +25,22 @@ import Link from "next/link";
 import { pages } from "@/lib/link";
 
 export default function Nav() {
+  const router = useRouter();
   const pathname = usePathname();
-  const { user, handleLogout } = useAuth();
+
+  const { user, handleLogout } = useAuthStore();
+  // ⚡️ handleLogin(router) 호출 시점 주의
+  // 1. onClick={handleLogin(router)} → 렌더링 시 즉시 실행됨
+  //    클릭 이벤트와 무관하게 바로 함수가 호출됨 → 원치 않는 동작 발생
+  //
+  // 2. onClick={() => handleLogin(router)} → 클릭 시 실행
+  //    화살표 함수로 감싸서 이벤트 발생 시점까지 실행 지연
+  //    router 인자를 안전하게 전달하면서 클릭 시 동작하도록 보장
+  //
+  // 요약:
+  // - 괄호가 없으면 함수 참조만 전달 → 클릭 시 실행
+  // - 괄호가 있으면 즉시 실행 → 클릭과 무관
+  // - 인자가 필요하면 화살표 함수로 감싸서 클릭 시점까지 지연
   const { userData } = useUserData();
   const { openGrade } = useGradeDialog();
 
@@ -79,7 +93,7 @@ export default function Nav() {
                     <DropdownMenuItem onClick={openGrade} className="cursor-pointer">
                       요금제 변경
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+                    <DropdownMenuItem onClick={() => handleLogout(router)} className="cursor-pointer">
                       로그아웃
                     </DropdownMenuItem>
                   </DropdownMenuContent>

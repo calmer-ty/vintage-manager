@@ -2,12 +2,12 @@
 
 import { Loader } from "lucide-react";
 
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 
 import SalesUI from "@/components/unit/sales";
 
 export default function SalesPage() {
-  const { uid, loading } = useAuth();
+  const { user, loading } = useAuthStore();
 
   if (loading) {
     return (
@@ -18,7 +18,7 @@ export default function SalesPage() {
     );
   }
 
-  if (!uid) {
+  if (!user) {
     // 로그인 안 된 상태 처리 (로그인 페이지 리다이렉트 또는 안내 UI)
     return <div>로그인이 필요합니다.</div>;
   }

@@ -1,13 +1,13 @@
 "use client";
 
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 
 import DashboardUI from "@/components/unit/dashboard";
 
 import { Loader } from "lucide-react";
 
 export default function NewPage() {
-  const { uid, loading } = useAuth();
+  const { user, loading } = useAuthStore();
 
   if (loading) {
     return (
@@ -18,7 +18,7 @@ export default function NewPage() {
     );
   }
 
-  if (!uid) {
+  if (!user) {
     // 로그인 안 된 상태 처리 (로그인 페이지 리다이렉트 또는 안내 UI)
     return <div>로그인이 필요합니다.</div>;
   }

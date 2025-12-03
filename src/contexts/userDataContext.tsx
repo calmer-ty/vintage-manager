@@ -3,7 +3,8 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase/firebaseApp";
-import { useAuth } from "./authContext";
+
+import { useAuthStore } from "@/store/useAuthStore";
 
 import type { ReactNode } from "react";
 import type { IUserData } from "@/types";
@@ -21,16 +22,16 @@ const UserDataContext = createContext<IUserDataContextType>({
 });
 
 export const UserDataProvider = ({ children }: { children: ReactNode }) => {
-  const { uid } = useAuth();
+  const { user } = useAuthStore();
 
   const [userData, setUserData] = useState<IUserData>();
   const [loading, setLoading] = useState(true);
 
   // 조회 함수
   useEffect(() => {
-    if (!uid) return;
+    if (!user) return;
 
-    const docRef = doc(db, "users", uid);
+    const docRef = doc(db, "users", user.uid);
 
     const unsubscribe = onSnapshot(docRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -40,13 +41,13 @@ export const UserDataProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => unsubscribe(); // 메모리 누수 방지
-  }, [uid]);
+  }, [user]);
 
   const setGrade = async (grade: "free" | "pro") => {
-    if (!uid || !userData) return;
+    if (!user || !userData) return;
 
     try {
-      const docRef = doc(db, "users", uid);
+      const docRef = doc(db, "users", user.uid);
       await updateDoc(docRef, { grade });
     } catch (err) {
       console.error(err);

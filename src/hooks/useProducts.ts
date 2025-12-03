@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, query, serverTimestamp, updateDoc, where } from "firebase/firestore";
 
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { IProduct, ISalesProduct, ISalesProductParams, ISoldProductParams } from "@/types";
@@ -13,20 +13,20 @@ interface IUseProductsParams {
 
 // 패키지 상태에 따라 종속적으로 데이터 처리
 export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams) => {
-  const { uid } = useAuth();
+  const { user } = useAuthStore();
 
   const [products, setProducts] = useState<ISalesProduct[]>([]);
   const [loading, setLoading] = useState(false);
 
   // 등록 함수
   const createProduct = async (productDocs: IProduct[]) => {
-    if (!uid) return;
+    if (!user) return;
 
     try {
       for (const product of productDocs) {
         const docRef = await addDoc(collection(db, "products"), {
           ...product,
-          uid,
+          uid: user.uid,
           sales: {
             price: 0,
             fee: 0,
@@ -48,7 +48,7 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
 
   // [수정]
   const salesProduct = async ({ salesTarget, salesDoc }: ISalesProductParams) => {
-    if (!uid) return;
+    if (!user) return;
 
     try {
       const docRef = doc(db, "products", salesTarget);
@@ -61,7 +61,7 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
     }
   };
   const soldProduct = async ({ id, value }: ISoldProductParams) => {
-    if (!uid) return;
+    if (!user) return;
 
     try {
       const docRef = doc(db, "products", id);
@@ -78,7 +78,7 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
 
   // [삭제]
   const deleteProduct = async (packageIds: string[]) => {
-    if (!uid) return;
+    if (!user) return;
 
     for (const packageId of packageIds) {
       const q = query(collection(db, "products"), where("packageId", "==", packageId));
@@ -97,7 +97,9 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
 
   // 조회 함수
   const fetchProducts = useCallback(async () => {
-    if (!uid) return;
+    if (!user) return;
+
+    const uid = user.uid;
     setLoading(true);
 
     try {
@@ -116,7 +118,7 @@ export const useProducts = ({ selectedYear, selectedMonth }: IUseProductsParams)
     } finally {
       setLoading(false);
     }
-  }, [uid, selectedYear, selectedMonth]);
+  }, [user, selectedYear, selectedMonth]);
 
   useEffect(() => {
     fetchProducts();

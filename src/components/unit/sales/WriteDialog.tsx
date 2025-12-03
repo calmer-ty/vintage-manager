@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ interface IWriteDialogProps {
 }
 
 export default function WriteDialog({ isOpen, setIsOpen, updateTarget, setUpdateTarget, salesProduct, fetchProducts }: IWriteDialogProps) {
-  const { uid } = useAuth();
+  const { user } = useAuthStore();
 
   // ✍️ 폼 설정
   const form = useForm<z.infer<typeof SalesSchema>>({
@@ -55,7 +55,7 @@ export default function WriteDialog({ isOpen, setIsOpen, updateTarget, setUpdate
 
   // 수정 함수
   const onClickUpdate = async (data: z.infer<typeof SalesSchema>) => {
-    if (!uid || !updateTarget) return;
+    if (!user || !updateTarget) return;
 
     try {
       const salesDoc: ISales = {

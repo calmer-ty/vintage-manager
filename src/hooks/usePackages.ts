@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { db } from "@/lib/firebase/firebaseApp";
 import { addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { getUserDateQuery } from "@/lib/firebase/utils";
 
 import type { IMergePackageParams, IPackage, IProduct, ISalesPackageParams } from "@/types";
@@ -12,18 +12,18 @@ interface IUsePackagesParams {
 }
 
 export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams) => {
-  const { uid } = useAuth();
+  const { user } = useAuthStore();
 
   const [packages, setPackages] = useState<IPackage[]>([]);
   const [fetchLoading, setFetchLoading] = useState(false);
 
   // [등록]
   const createPackage = async (packageDoc: IProduct[]) => {
-    if (!uid) return;
+    if (!user) return;
 
     try {
       const docRef = await addDoc(collection(db, "packages"), {
-        uid,
+        uid: user.uid,
         _id: "",
         products: packageDoc,
         createdAt: serverTimestamp(),
@@ -41,10 +41,10 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
   };
   // [번들 등록]
   const mergePackage = async ({ deleteTargets, packageDoc }: IMergePackageParams) => {
-    if (!uid) return;
+    if (!user) return;
 
     try {
-      const docRef = await addDoc(collection(db, "packages"), { products: packageDoc, uid, createdAt: serverTimestamp() });
+      const docRef = await addDoc(collection(db, "packages"), { products: packageDoc, uid: user.uid, createdAt: serverTimestamp() });
       // 문서 ID를 포함한 데이터로 업데이트
       await updateDoc(docRef, {
         _id: docRef.id,
@@ -65,7 +65,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
 
   // [수정] - 상품 패키지의 판매등록, 국제 배송료 추가 입력이 됨
   const salesPackage = async ({ salesTarget, salesDoc }: ISalesPackageParams) => {
-    if (!uid) return;
+    if (!user) return;
 
     try {
       const docRef = doc(db, "packages", salesTarget);
@@ -78,7 +78,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
 
   // [삭제]
   const deletePackage = async (deleteTargets: string[]) => {
-    if (!uid) return;
+    if (!user) return;
 
     for (const id of deleteTargets) {
       try {
@@ -92,7 +92,9 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
 
   // 조회 함수
   const fetchPackages = useCallback(async () => {
-    if (!uid) return;
+    if (!user) return;
+
+    const uid = user.uid;
     setFetchLoading(true);
 
     try {
@@ -111,7 +113,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     } finally {
       setFetchLoading(false);
     }
-  }, [uid, selectedYear, selectedMonth]);
+  }, [user, selectedYear, selectedMonth]);
 
   useEffect(() => {
     fetchPackages();

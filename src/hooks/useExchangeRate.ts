@@ -20,16 +20,17 @@ export const useExchangeRate = () => {
     [USD, KRW, JPY]
   );
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/exchange-rate");
+      setRates(response.data);
+    } catch (err) {
+      console.error("환율 정보 불러오기 실패:", err);
+    }
+  };
+
   useEffect(() => {
-    const fetchExchangeRate = async () => {
-      try {
-        const response = await axios.get("/api/exchange-rate");
-        setRates(response.data);
-      } catch (err) {
-        console.error("환율 정보 불러오기 실패:", err);
-      }
-    };
-    fetchExchangeRate();
+    fetchData();
   }, []);
 
   return {

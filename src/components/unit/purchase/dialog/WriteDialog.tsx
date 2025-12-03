@@ -3,7 +3,7 @@ import { v4 as uuid } from "uuid";
 
 import { useGradeDialog } from "@/contexts/gradeModalContext";
 import { useUserData } from "@/contexts/userDataContext";
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useExchangeRate } from "@/hooks/useExchangeRate";
 
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,7 @@ export default function WriteDialog({
   createPackage,
   fetchPackages,
 }: IWriteDialogProps) {
-  const { uid } = useAuth();
+  const { user } = useAuthStore();
 
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
@@ -47,7 +47,7 @@ export default function WriteDialog({
 
   // 등록 함수
   const onClickCreate = async (data: z.infer<typeof ProductsSchema>) => {
-    if (!uid) {
+    if (!user) {
       toast("⛔ 로그인이 되어 있지 않습니다.");
       return;
     }
@@ -55,7 +55,7 @@ export default function WriteDialog({
     try {
       // 굳이 배열로 넣는 이유는 추후 상품들이 머지가 되면서 products가 배열 형태가 되므로 타입을 맞추기 위해 처음부터 배열값으로 넣어 설정합니다
       const packageDoc: IProduct[] = data.products.map((p) => ({
-        uid,
+        uid: user.uid,
         _id: uuid(),
         ...p,
       }));

@@ -1,7 +1,7 @@
-// 훅
-import { useAuth } from "@/contexts/authContext";
+import { useRouter } from "next/navigation";
 
-// 외부 요소
+import { useAuthStore } from "@/store/useAuthStore";
+
 import { FcGoogle } from "react-icons/fc";
 import { FlagIcon } from "react-flag-kit";
 import { motion } from "framer-motion";
@@ -9,7 +9,8 @@ import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function StartedIntro() {
-  const { handleLogin } = useAuth();
+  const router = useRouter();
+  const { handleLogin } = useAuthStore();
 
   return (
     <section className="relative py-40 text-center bg-stone-800 text-white overflow-hidden">
@@ -61,7 +62,7 @@ export default function StartedIntro() {
 
         {/* 로그인 버튼 */}
         <div className="flex justify-center gap-4">
-          <Button variant="default" className="flex items-center justify-center gap-2" onClick={handleLogin}>
+          <Button variant="default" className="flex items-center justify-center gap-2" onClick={() => handleLogin(router)}>
             <FcGoogle size={20} />
             구글 로그인 하고 시작하기
           </Button>

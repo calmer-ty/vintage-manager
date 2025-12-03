@@ -1,12 +1,12 @@
 "use client";
 
-import { useAuth } from "@/contexts/authContext";
+import { useAuthStore } from "@/store/useAuthStore";
 
 import { Loader } from "lucide-react";
 import PurchaseUI from "@/components/unit/purchase";
 
 export default function PurchasePage() {
-  const { uid, loading } = useAuth();
+  const { user, loading } = useAuthStore();
 
   if (loading) {
     return (
@@ -17,7 +17,7 @@ export default function PurchasePage() {
     );
   }
 
-  if (!uid) {
+  if (!user) {
     // 로그인 안 된 상태 처리 (로그인 페이지 리다이렉트 또는 안내 UI)
     return <div>로그인이 필요합니다.</div>;
   }
