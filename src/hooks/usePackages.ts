@@ -15,7 +15,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
   const { user } = useAuthStore();
 
   const [packages, setPackages] = useState<IPackage[]>([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   // [등록]
   const createPackage = async (packageDoc: IProduct[]) => {
@@ -40,7 +40,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     }
   };
   // [번들 등록]
-  const mergePackage = async ({ deleteTargets, packageDoc }: IMergePackageParams) => {
+  const mergePackage = async ({ targets, packageDoc }: IMergePackageParams) => {
     if (!user) return;
 
     try {
@@ -51,7 +51,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
       });
 
       // 머지된 데이터는 삭제
-      for (const id of deleteTargets) {
+      for (const id of targets) {
         try {
           await deleteDoc(doc(db, "packages", id));
         } catch (error) {
@@ -64,11 +64,11 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
   };
 
   // [수정] - 상품 패키지의 판매등록, 국제 배송료 추가 입력이 됨
-  const salesPackage = async ({ salesTarget, salesDoc }: ISalesPackageParams) => {
+  const salesPackage = async ({ target, salesDoc }: ISalesPackageParams) => {
     if (!user) return;
 
     try {
-      const docRef = doc(db, "packages", salesTarget);
+      const docRef = doc(db, "packages", target);
 
       await updateDoc(docRef, { shipping: salesDoc, addSaleAt: serverTimestamp() });
     } catch (err) {
@@ -77,10 +77,10 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
   };
 
   // [삭제]
-  const deletePackage = async (deleteTargets: string[]) => {
+  const deletePackage = async (targets: string[]) => {
     if (!user) return;
 
-    for (const id of deleteTargets) {
+    for (const id of targets) {
       try {
         await deleteDoc(doc(db, "packages", id));
       } catch (error) {
@@ -95,7 +95,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     if (!user) return;
 
     const uid = user.uid;
-    setFetchLoading(true);
+    setLoading(true);
 
     try {
       // 년/월 데이터를 제한하여 한정적으로 데이터 쿼리
@@ -111,7 +111,7 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     } catch (err) {
       console.error(err);
     } finally {
-      setFetchLoading(false);
+      setLoading(false);
     }
   }, [user, selectedYear, selectedMonth]);
 
@@ -126,6 +126,6 @@ export const usePackages = ({ selectedYear, selectedMonth }: IUsePackagesParams)
     salesPackage,
     deletePackage,
     fetchPackages,
-    fetchLoading,
+    loading,
   };
 };

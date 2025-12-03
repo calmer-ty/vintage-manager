@@ -25,17 +25,16 @@ import TableControl from "./TableControl";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { ColumnDef, ColumnFiltersState, RowSelectionState, SortingState, VisibilityState } from "@tanstack/react-table";
-import type { IProduct, IPackage } from "@/types";
+import type { IPackage } from "@/types";
 interface IReceivingTableProps {
   data: IPackage[];
+  loading: boolean;
   rowSelection: RowSelectionState;
-  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
   onClickMoveToCreate: () => void;
   onClickMoveToMerge: (rowData: IPackage[]) => void;
   onClickMoveToSale: (rowData: IPackage) => void;
   onClickMoveToDelete: (rowIds: string[]) => void;
-  createProduct: (productDocs: IProduct[]) => Promise<void>;
-  fetchLoading: boolean;
+  setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
 }
 
 const columnConfig = [
@@ -46,13 +45,13 @@ const columnConfig = [
 
 export default function PurchaseTable({
   data,
+  loading,
   rowSelection,
-  setRowSelection,
   onClickMoveToCreate,
-  onClickMoveToDelete,
   onClickMoveToMerge,
+  onClickMoveToDelete,
   onClickMoveToSale,
-  fetchLoading,
+  setRowSelection,
 }: IReceivingTableProps) {
   const { viewCurrency } = useCurrencyStore();
 
@@ -210,7 +209,7 @@ export default function PurchaseTable({
             <TableBody>
               {
                 // 로딩 중일 때
-                fetchLoading ? (
+                loading ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="text-center h-50">
                       <Loader2

@@ -20,7 +20,7 @@ import type { RowSelectionState } from "@tanstack/react-table";
 
 export default function PurchaseUI() {
   const { selectedYear, selectedMonth, setSelectedYear, setSelectedMonth } = useDateSelectStore();
-  const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, fetchLoading } = usePackages({
+  const { packages, createPackage, mergePackage, salesPackage, deletePackage, fetchPackages, loading } = usePackages({
     selectedYear,
     selectedMonth,
   });
@@ -86,50 +86,48 @@ export default function PurchaseUI() {
       {/* 테이블 */}
       <TableUI
         data={packages}
+        loading={loading}
         rowSelection={rowSelection}
-        setRowSelection={setRowSelection}
         onClickMoveToCreate={onClickMoveToCreate}
         onClickMoveToMerge={onClickMoveToMerge}
         onClickMoveToSale={onClickMoveToSale}
         onClickMoveToDelete={onClickMoveToDelete}
-        createProduct={createProduct}
-        fetchLoading={fetchLoading}
+        setRowSelection={setRowSelection}
       />
-
       {/* 모달 */}
       <WriteDialog
         form={form}
+        isOpen={isWriteOpen}
+        setIsOpen={setIsWriteOpen}
         setRowSelection={setRowSelection}
-        isWriteOpen={isWriteOpen}
-        setIsWriteOpen={setIsWriteOpen}
         createPackage={createPackage}
         fetchPackages={fetchPackages}
       />
       <DeleteDialog
         form={form}
+        isOpen={isDeleteOpen}
+        targets={deleteTargets}
+        setIsOpen={setIsDeleteOpen}
         setRowSelection={setRowSelection}
-        isDeleteOpen={isDeleteOpen}
-        setIsDeleteOpen={setIsDeleteOpen}
-        deleteTargets={deleteTargets}
         deletePackage={deletePackage}
       />
       <MergeDialog
         form={form}
+        isOpen={isMergeOpen}
+        targets={mergeTargets}
+        setIsOpen={setIsMergeOpen}
         setRowSelection={setRowSelection}
-        isMergeOpen={isMergeOpen}
-        setIsMergeOpen={setIsMergeOpen}
-        mergeTargets={mergeTargets}
         mergePackage={mergePackage}
         fetchPackages={fetchPackages}
       />
       <SaleDialog
-        isSaleOpen={isSaleOpen}
+        isOpen={isSaleOpen}
+        target={salesTarget}
+        setIsOpen={setIsSaleOpen}
         setRowSelection={setRowSelection}
-        setIsSaleOpen={setIsSaleOpen}
-        salesTarget={salesTarget}
+        createProduct={createProduct}
         salesPackage={salesPackage}
         fetchPackages={fetchPackages}
-        createProduct={createProduct}
       />
     </article>
   );

@@ -22,23 +22,23 @@ import type { Dispatch, SetStateAction } from "react";
 import type { z } from "zod";
 import type { RowSelectionState } from "@tanstack/react-table";
 interface ISaleDialogProps {
+  isOpen: boolean;
+  target: IPackage | undefined;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   setRowSelection: Dispatch<SetStateAction<RowSelectionState>>;
-  isSaleOpen: boolean;
-  setIsSaleOpen: Dispatch<SetStateAction<boolean>>;
-  salesTarget: IPackage | undefined;
-  fetchPackages: () => Promise<void>;
-  salesPackage: ({ salesTarget, salesDoc }: ISalesPackageParams) => Promise<void>;
   createProduct: (productDocs: IProduct[]) => Promise<void>;
+  salesPackage: ({ target, salesDoc }: ISalesPackageParams) => Promise<void>;
+  fetchPackages: () => Promise<void>;
 }
 
 export default function SaleDialog({
+  isOpen,
+  target,
+  setIsOpen,
   setRowSelection,
-  isSaleOpen,
-  setIsSaleOpen,
-  salesTarget,
+  createProduct,
   salesPackage,
   fetchPackages,
-  createProduct,
 }: ISaleDialogProps) {
   // 환율 데이터
   const { exchangeOptions } = useExchangeRate();
@@ -54,7 +54,7 @@ export default function SaleDialog({
   });
 
   const onClickSales = async (data: z.infer<typeof SalesSchema>) => {
-    if (!salesTarget) {
+    if (!target) {
       toast("⛔ 판매 등록할 패키지를 찾을 수 없습니다.");
       return;
     }
@@ -64,15 +64,15 @@ export default function SaleDialog({
         amount: data.cost.shipping ?? 0,
         exchange: data.cost.exchange,
       };
-      const productDocs: IProduct[] = salesTarget.products.map((p) => ({
+      const productDocs: IProduct[] = target.products.map((p) => ({
         ...p,
       }));
 
-      await salesPackage({ salesTarget: salesTarget._id, salesDoc });
+      await salesPackage({ target: target._id, salesDoc });
       await createProduct(productDocs);
       await fetchPackages();
       toast("✅ 선택한 패키지가 판매 등록되었습니다.");
-      setIsSaleOpen(false);
+      setIsOpen(false);
       setRowSelection({});
       form.reset();
     } catch (error) {
@@ -83,12 +83,12 @@ export default function SaleDialog({
   return (
     <>
       <Dialog
-        open={isSaleOpen}
+        open={isOpen}
         onOpenChange={(open) => {
           if (!open) {
-            setIsSaleOpen(false);
+            setIsOpen(false);
           } else {
-            setIsSaleOpen(true);
+            setIsOpen(true);
           }
         }}
       >
@@ -100,7 +100,7 @@ export default function SaleDialog({
           <div className="flex flex-col gap-2">
             <Item variant="outline">
               <ItemContent className="w-full">
-                {salesTarget?.products.map((p) => (
+                {target?.products.map((p) => (
                   <div key={p._id} className="p-2 rounded-md bg-gray-100">
                     <div>
                       <span className="font-semibold">상품명:</span> {p.name}({p.brand || "브랜드 없음"})

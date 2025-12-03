@@ -68,16 +68,12 @@ export interface ISalesProduct {
 
 // Hooks Params 패키지
 export interface IMergePackageParams {
-  deleteTargets: string[];
+  targets: string[];
   packageDoc: IProduct[];
 }
 export interface ISalesPackageParams {
-  salesTarget: string;
+  target: string;
   salesDoc: IShipping;
-}
-export interface ISalesProductParams {
-  salesTarget: string;
-  salesDoc: ISales;
 }
 export interface ISoldProductParams {
   id: string;

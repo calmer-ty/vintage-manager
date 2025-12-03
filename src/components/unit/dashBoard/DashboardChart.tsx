@@ -13,9 +13,9 @@ import type { ISalesProduct } from "@/types";
 import type { ChartConfig } from "@/components/ui/chart";
 import type { Timestamp } from "firebase/firestore";
 interface IDashBoardChartProps {
-  products: ISalesProduct[];
   selectedYear: number;
   selectedMonth: number;
+  products: ISalesProduct[];
 }
 
 const chartConfig = {
@@ -32,7 +32,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export default function DashBoardChart({ products, selectedYear, selectedMonth }: IDashBoardChartProps) {
+export default function DashBoardChart({ selectedYear, selectedMonth, products }: IDashBoardChartProps) {
   const [activeChart, setActiveChart] = useState<keyof typeof chartConfig>("cost");
   const daysOfCurrentMonth = getDaysOfCurrentMonth(selectedYear, selectedMonth);
 

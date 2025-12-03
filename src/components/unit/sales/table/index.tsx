@@ -16,6 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Loader2, PackageOpen, Pencil } from "lucide-react";
+
 import ChildrenTooltip from "@/components/commons/ChildrenTooltip";
 import TableControl from "./TableControl";
 import TableItemState from "./TableItemState";
@@ -25,11 +26,11 @@ import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } fro
 import type { ISalesProduct, ISoldProductParams } from "@/types";
 interface ISalesTableProps {
   data: ISalesProduct[];
-  setIsWriteOpen: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   setUpdateTarget: Dispatch<SetStateAction<ISalesProduct | undefined>>;
   soldProduct: ({ id, value }: ISoldProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
-  loading: boolean;
 }
 
 const columnConfig = [
@@ -40,7 +41,7 @@ const columnConfig = [
   { key: "sales", label: "판매 정보" },
 ];
 
-export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, soldProduct, fetchProducts, loading }: ISalesTableProps) {
+export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, soldProduct, fetchProducts }: ISalesTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
@@ -172,7 +173,7 @@ export default function SalesTable({ data, setIsWriteOpen, setUpdateTarget, sold
   // 수정 함수
   const onClickMoveToUpdate = async (selectedItemId: string) => {
     const selectedItem = data.find((el) => el._id === selectedItemId);
-    setIsWriteOpen(true);
+    setIsOpen(true);
     setUpdateTarget(selectedItem);
   };
 

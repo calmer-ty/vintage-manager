@@ -30,8 +30,8 @@ export default function SalesUI() {
       {/* 판매가 수정 모달창 */}
       <WriteDialog
         isOpen={isWriteOpen}
-        setIsOpen={setIsWriteOpen}
         updateTarget={updateTarget}
+        setIsOpen={setIsWriteOpen}
         setUpdateTarget={setUpdateTarget}
         salesProduct={salesProduct}
         fetchProducts={fetchProducts}
@@ -39,11 +39,11 @@ export default function SalesUI() {
       {/* 테이블 */}
       <TableUI
         data={products}
-        setIsWriteOpen={setIsWriteOpen}
+        loading={loading}
+        setIsOpen={setIsWriteOpen}
         setUpdateTarget={setUpdateTarget}
         soldProduct={soldProduct}
         fetchProducts={fetchProducts}
-        loading={loading}
       />
     </article>
   );

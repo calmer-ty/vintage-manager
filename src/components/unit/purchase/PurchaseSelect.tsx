@@ -12,7 +12,7 @@ interface IPurchaseSelectProps {
   userData: IUserData | null;
 }
 
-export default function PurchaseSelect({ value, label, messageStyles, onChange, disabled, userData }: IPurchaseSelectProps) {
+export default function PurchaseSelect({ value, label, messageStyles, disabled, onChange, userData }: IPurchaseSelectProps) {
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>

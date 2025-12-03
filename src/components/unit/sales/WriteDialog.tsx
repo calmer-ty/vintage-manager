@@ -26,14 +26,14 @@ const SalesSchema = z.object({
 
 interface IWriteDialogProps {
   isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   updateTarget: ISalesProduct | undefined;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setUpdateTarget: React.Dispatch<React.SetStateAction<ISalesProduct | undefined>>;
   salesProduct: ({ salesTarget, salesDoc }: ISalesProductParams) => Promise<void>;
   fetchProducts: () => Promise<void>;
 }
 
-export default function WriteDialog({ isOpen, setIsOpen, updateTarget, setUpdateTarget, salesProduct, fetchProducts }: IWriteDialogProps) {
+export default function WriteDialog({ isOpen, updateTarget, setIsOpen, setUpdateTarget, salesProduct, fetchProducts }: IWriteDialogProps) {
   const { user } = useAuthStore();
 
   // ✍️ 폼 설정

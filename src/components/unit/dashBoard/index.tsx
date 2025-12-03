@@ -39,11 +39,11 @@ export default function DashBoardUI() {
         />
       </motion.header>
       <motion.div variants={sectionVariants}>
-        <DashboardStatus products={products} packages={packages} />
+        <DashboardStatus packages={packages} products={products} />
       </motion.div>
 
       <motion.div variants={sectionVariants}>
-        <DashboardChart products={products} selectedYear={selectedYear} selectedMonth={selectedMonth} />
+        <DashboardChart selectedYear={selectedYear} selectedMonth={selectedMonth} products={products} />
       </motion.div>
     </motion.article>
   );
