@@ -7,7 +7,6 @@ import { UserDataProvider } from "@/contexts/userDataContext";
 import { GradeModalProvider } from "@/contexts/gradeModalContext";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { DateSelectProvider } from "@/contexts/dateSelectContext";
-import { CurrencyProvider } from "@/contexts/currencyContext";
 
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
 import LayoutNav from "@/components/commons/layout/LayoutNav";
@@ -44,16 +43,14 @@ export default function RootLayout({
           <SidebarProvider>
             <GradeModalProvider>
               <DateSelectProvider>
-                <CurrencyProvider>
-                  <LayoutNav />
-                  <div className="flex-1 overflow-auto">
-                    {/* Nav 외에 유동적으로 크기 맞춤 */}
-                    <LayoutHeader />
-                    <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
-                    <Toaster position="top-center" />
-                    <GradeDialog />
-                  </div>
-                </CurrencyProvider>
+                <LayoutNav />
+                <div className="flex-1 overflow-auto">
+                  {/* Nav 외에 유동적으로 크기 맞춤 */}
+                  <LayoutHeader />
+                  <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main>
+                  <Toaster position="top-center" />
+                  <GradeDialog />
+                </div>
               </DateSelectProvider>
             </GradeModalProvider>
           </SidebarProvider>

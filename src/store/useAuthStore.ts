@@ -6,7 +6,7 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import type { User } from "firebase/auth";
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
-interface AuthState {
+interface IAuthState {
   user: User | null;
   loading: boolean;
   setUser: (user: User | null) => void;
@@ -14,7 +14,7 @@ interface AuthState {
   handleLogout: (router: AppRouterInstance) => Promise<void>;
 }
 
-export const useAuthStore = create<AuthState>((set) => {
+export const useAuthStore = create<IAuthState>((set) => {
   // 여기 안의 코드는 "스토어가 생성되는 순간" 한 번 실행
 
   // onAuthStateChanged 구독

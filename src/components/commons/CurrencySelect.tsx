@@ -1,11 +1,11 @@
-import { useCurrency } from "@/contexts/currencyContext";
+import { useCurrencyStore } from "@/store/useCurrencyStore";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Coins } from "lucide-react";
 
 export default function CurrencySelect() {
-  const { viewCurrency, setViewCurrency } = useCurrency();
+  const { viewCurrency, setViewCurrency } = useCurrencyStore();
 
   return (
     <div className="flex items-center gap-2">

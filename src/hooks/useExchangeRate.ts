@@ -9,7 +9,6 @@ export const useExchangeRate = () => {
   const USD = 1;
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
   const JPY = rates?.data.conversion_rates.JPY ?? 0;
-  // console.log("rates: ", rates);
 
   const exchangeOptions = useMemo(
     () => [

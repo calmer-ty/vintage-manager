@@ -10,7 +10,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { useCurrency } from "@/contexts/currencyContext";
+import { useCurrencyStore } from "@/store/useCurrencyStore";
 import { getDisplayPrice, getExchangeDisplayPrice } from "@/lib/price";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -54,7 +54,7 @@ export default function PurchaseTable({
   onClickMoveToSale,
   fetchLoading,
 }: IReceivingTableProps) {
-  const { viewCurrency } = useCurrency();
+  const { viewCurrency } = useCurrencyStore();
 
   // const [sorting, setSorting] = useState<SortingState>([{ id: "shippingSort", desc: false }]);
   const [sorting, setSorting] = useState<SortingState>([]);
