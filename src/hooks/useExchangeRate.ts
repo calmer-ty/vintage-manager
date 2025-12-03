@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 
 import type { IExchangeRate } from "@/types";
@@ -10,6 +9,7 @@ export const useExchangeRate = () => {
   const USD = 1;
   const KRW = rates?.data.conversion_rates.KRW ?? 0;
   const JPY = rates?.data.conversion_rates.JPY ?? 0;
+  // console.log("rates: ", rates);
 
   const exchangeOptions = useMemo(
     () => [
@@ -22,8 +22,10 @@ export const useExchangeRate = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/exchange-rate");
-      setRates(response.data);
+      const res = await fetch("/api/exchangeRate");
+      const data = await res.json();
+
+      setRates(data);
     } catch (err) {
       console.error("환율 정보 불러오기 실패:", err);
     }
