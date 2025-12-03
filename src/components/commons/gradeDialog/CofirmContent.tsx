@@ -7,13 +7,15 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 import type { Dispatch, SetStateAction } from "react";
+import type { User } from "firebase/auth";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface IGradeConfirmProps {
-  setStep: Dispatch<SetStateAction<"select" | "confirm">>;
   selectGrade: "free" | "pro" | null;
+  setStep: Dispatch<SetStateAction<"select" | "confirm">>;
+  setGrade: (user: User, grade: "free" | "pro") => Promise<void>;
   setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
   closeGrade: () => void;
-  setGrade: (grade: "free" | "pro") => Promise<void>;
 }
 const features = [
   {
@@ -51,6 +53,8 @@ const features = [
 ];
 
 export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, closeGrade, setGrade }: IGradeConfirmProps) {
+  const { user } = useAuthStore();
+
   return (
     <>
       <Button variant="outline" className="absolute left-4 top-4 border-none shadow-none" onClick={() => setStep("select")}>
@@ -93,9 +97,13 @@ export default function GradeConfirm({ setStep, selectGrade, setSelectGrade, clo
             size="lg"
             variant="confirm"
             onClick={() => {
-              if (selectGrade === "pro") setGrade("pro");
-              else setGrade("free");
-
+              if (user) {
+                if (selectGrade === "pro") setGrade(user, "pro");
+                else setGrade(user, "free");
+              } else {
+                toast.error("로그인이 필요합니다.");
+                return;
+              }
               closeGrade();
               toast(
                 <span>

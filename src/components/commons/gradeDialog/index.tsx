@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { useGradeDialogStore } from "@/store/useGradeDialogStore";
-import { useUserData } from "@/contexts/userDataContext";
+import { useUserDataStore } from "@/store/useUserDataStore";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -15,7 +15,7 @@ export default function GradeDialog() {
   const [selectGrade, setSelectGrade] = useState<"free" | "pro" | null>(null);
 
   const { isOpenGrade, setIsOpenGrade, closeGrade } = useGradeDialogStore();
-  const { userData, setGrade } = useUserData();
+  const { userData, setGrade } = useUserDataStore();
 
   return (
     <Dialog
@@ -43,8 +43,8 @@ export default function GradeDialog() {
             selectGrade={selectGrade}
             setStep={setStep}
             setGrade={setGrade}
-            closeGrade={closeGrade}
             setSelectGrade={setSelectGrade}
+            closeGrade={closeGrade}
           />
         )}
       </DialogContent>

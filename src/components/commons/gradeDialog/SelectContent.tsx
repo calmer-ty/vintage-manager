@@ -8,7 +8,7 @@ import type { Dispatch, SetStateAction } from "react";
 interface IGradeSelectProps {
   setStep: Dispatch<SetStateAction<"select" | "confirm">>;
   setSelectGrade: Dispatch<SetStateAction<"free" | "pro" | null>>;
-  userData: IUserData | undefined;
+  userData: IUserData | null;
 }
 
 export default function GradeSelect({ setStep, setSelectGrade, userData }: IGradeSelectProps) {
