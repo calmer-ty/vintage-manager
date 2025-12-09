@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { useGradeDialogStore } from "@/store/useGradeDialogStore";
 import { useUserDataStore } from "@/store/useUserDataStore";
 
-import { Rocket } from "lucide-react";
+import { Moon, Rocket, Sun } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 
@@ -16,7 +16,8 @@ export default function LayoutHeader() {
   const pathname = usePathname();
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
 
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  console.log("theme", theme);
 
   const { userData } = useUserDataStore();
   const { openDialog } = useGradeDialogStore();
@@ -29,15 +30,23 @@ export default function LayoutHeader() {
             <SidebarTrigger className="-ml-1" />
             <h2 className="font-medium shrink-0">{currentPage}</h2>
 
-            <div className="flex justify-end items-center w-full">
-              {/* <Separator orientation="vertical" className="mx-4 data-[orientation=vertical]:h-4" /> */}
+            <div className="flex justify-end items-center gap-2 w-full">
               {userData?.grade === "free" && (
                 <Button variant="default" onClick={openDialog}>
                   Pro로 업그레이드
                 </Button>
               )}
-              <Button onClick={() => setTheme("light")}>Light</Button>
-              <Button onClick={() => setTheme("dark")}>Dark</Button>
+              <div>
+                {theme === "dark" ? (
+                  <Button onClick={() => setTheme("light")}>
+                    <Sun className="h-6 w-6" />
+                  </Button>
+                ) : (
+                  <Button onClick={() => setTheme("dark")}>
+                    <Moon className="h-6 w-6" />
+                  </Button>
+                )}
+              </div>
             </div>
           </>
         ) : (
