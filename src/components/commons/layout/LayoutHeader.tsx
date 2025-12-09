@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 
 import { pages } from "@/lib/link";
 import { useTheme } from "next-themes";
+import ChildrenTooltip from "../ChildrenTooltip";
 
 export default function LayoutHeader() {
   const pathname = usePathname();
@@ -37,9 +38,11 @@ export default function LayoutHeader() {
                 </Button>
               )}
 
-              <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                {theme === "dark" ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-              </Button>
+              <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
+                <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                  {theme === "dark" ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+                </Button>
+              </ChildrenTooltip>
             </div>
           </>
         ) : (
