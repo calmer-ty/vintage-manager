@@ -36,17 +36,10 @@ export default function LayoutHeader() {
                   Pro로 업그레이드
                 </Button>
               )}
-              <div>
-                {theme === "dark" ? (
-                  <Button onClick={() => setTheme("light")}>
-                    <Sun className="h-6 w-6" />
-                  </Button>
-                ) : (
-                  <Button onClick={() => setTheme("dark")}>
-                    <Moon className="h-6 w-6" />
-                  </Button>
-                )}
-              </div>
+
+              <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                {theme === "dark" ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+              </Button>
             </div>
           </>
         ) : (
