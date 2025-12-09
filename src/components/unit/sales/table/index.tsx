@@ -178,7 +178,7 @@ export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, 
   };
 
   return (
-    <div className="w-full overflow-auto px-6 border bg-white rounded-lg shadow-sm">
+    <div className="w-full overflow-auto px-6 border rounded-lg shadow-sm">
       <TableControl table={table} columnConfig={columnConfig} />
       <div className="border rounded-md w-full overflow-x-auto">
         <Table className="w-full min-w-0">
@@ -220,7 +220,7 @@ export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, 
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={row.original.soldAt ? "bg-green-50 text-green-700" : ""}
+                  className={row.original.soldAt ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300" : ""}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">

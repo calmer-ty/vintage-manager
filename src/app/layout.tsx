@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 
 // import { AuthProvider } from "@/contexts/authContext";
+import { ThemeProvider } from "next-themes";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 import LayoutHeader from "@/components/commons/layout/LayoutHeader";
@@ -34,22 +35,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* <AuthProvider> */}
         <SidebarProvider>
-          <LayoutNav />
-          <div className="flex-1 overflow-auto">
-            {/* Nav 외에 유동적으로 크기 맞춤 */}
-            <LayoutHeader />
-            {/* <main className="h-[calc(100vh - 4rem)] flex-1 bg-gray-50">{children}</main> */}
-            <Wrapper>{children}</Wrapper>
-            <Toaster position="top-center" />
-            <GradeDialog />
-          </div>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            <LayoutNav />
+            <div className="flex-1 overflow-auto">
+              {/* Nav 외에 유동적으로 크기 맞춤 */}
+              <LayoutHeader />
+              <Wrapper>{children}</Wrapper>
+              <Toaster position="top-center" />
+              <GradeDialog />
+            </div>
+          </ThemeProvider>
         </SidebarProvider>
         {/* </AuthProvider> */}
       </body>
     </html>
   );
 }
+
+// import { ThemeProvider } from "@/components/theme-provider"
+
+// export default function RootLayout({ children }: RootLayoutProps) {
+//   return (
+//     <>
+//       <html lang="en" suppressHydrationWarning>
+//         <head />
+//         <body>
+
+//         </body>
+//       </html>
+//     </>
+//   )
+// }

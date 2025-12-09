@@ -18,7 +18,7 @@ export default function PurchaseSelect({ value, label, messageStyles, disabled, 
       <FormLabel>{label}</FormLabel>
       <Select onValueChange={onChange} value={value} disabled={disabled}>
         <FormControl>
-          <SelectTrigger className="bg-white min-w-32">
+          <SelectTrigger className="min-w-32">
             <SelectValue placeholder="사용한 통화" />
           </SelectTrigger>
         </FormControl>

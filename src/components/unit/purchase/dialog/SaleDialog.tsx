@@ -125,7 +125,6 @@ export default function SaleDialog({
                       <FormInputWrap title="국제 배송료" tooltip="국제 배송료 발생 시 입력하세요.">
                         <Input
                           type="number"
-                          className="bg-white"
                           placeholder="사용한 통화 기준으로 작성"
                           value={field.value.shipping}
                           onChange={(e) => field.onChange({ ...field.value, shipping: Number(e.target.value) })}

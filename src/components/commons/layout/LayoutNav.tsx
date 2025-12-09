@@ -58,7 +58,10 @@ export default function Nav() {
                     return (
                       <SidebarMenuItem key={page.title}>
                         <SidebarMenuButton asChild>
-                          <Link href={page.url} className={isActive ? "!bg-blue-100" : ""}>
+                          <Link
+                            href={page.url}
+                            className={isActive ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" : ""}
+                          >
                             <page.icon className="text-blue-600" />
                             <span className={isActive ? "font-bold" : ""}>{page.title}</span>
                           </Link>

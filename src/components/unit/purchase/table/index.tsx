@@ -183,7 +183,7 @@ export default function PurchaseTable({
 
   return (
     <>
-      <div className="px-6 border bg-white rounded-lg shadow-sm">
+      <div className="px-6 border rounded-lg shadow-sm">
         <TableControl
           table={table}
           columnConfig={columnConfig}
@@ -235,7 +235,7 @@ export default function PurchaseTable({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className={row.original.addSaleAt ? "bg-red-50" : ""}
+                      className={row.original.addSaleAt ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300" : ""}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">

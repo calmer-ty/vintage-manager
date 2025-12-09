@@ -102,7 +102,7 @@ export default function WriteDialog({ isOpen, updateTarget, setIsOpen, setUpdate
                   name="name"
                   render={({ field }) => (
                     <FormInputWrap title="제품명">
-                      <Input {...field} className="bg-white" disabled />
+                      <Input {...field} disabled />
                     </FormInputWrap>
                   )}
                 />
@@ -111,7 +111,7 @@ export default function WriteDialog({ isOpen, updateTarget, setIsOpen, setUpdate
                   name="brand"
                   render={({ field }) => (
                     <FormInputWrap title="브랜드명">
-                      <Input {...field} className="bg-white" disabled />
+                      <Input {...field} disabled />
                     </FormInputWrap>
                   )}
                 />
@@ -126,7 +126,6 @@ export default function WriteDialog({ isOpen, updateTarget, setIsOpen, setUpdate
                       type="number"
                       placeholder="예) 1000"
                       {...field}
-                      className="bg-white"
                       onChange={(e) => field.onChange(Number(e.target.value))}
                       onWheel={(e) => e.currentTarget.blur()}
                       value={field.value}
@@ -143,7 +142,6 @@ export default function WriteDialog({ isOpen, updateTarget, setIsOpen, setUpdate
                       type="number"
                       placeholder="예) 1000"
                       {...field}
-                      className="bg-white"
                       onChange={(e) => field.onChange(Number(e.target.value))}
                       onWheel={(e) => e.currentTarget.blur()}
                       value={field.value}
@@ -160,7 +158,6 @@ export default function WriteDialog({ isOpen, updateTarget, setIsOpen, setUpdate
                       type="number"
                       placeholder="예) 1000"
                       {...field}
-                      className="bg-white"
                       onChange={(e) => field.onChange(Number(e.target.value))}
                       onWheel={(e) => e.currentTarget.blur()}
                       value={field.value}

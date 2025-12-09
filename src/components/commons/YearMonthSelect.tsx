@@ -26,7 +26,7 @@ export default function YearMonthSelect({ selectedYear, selectedMonth, setSelect
       </Tooltip>
       <div className="flex gap-2">
         <Select value={String(selectedYear)} onValueChange={(value) => setSelectedYear(Number(value))}>
-          <SelectTrigger className="bg-white">
+          <SelectTrigger>
             <SelectValue placeholder="년" />
           </SelectTrigger>
           <SelectContent>
@@ -41,7 +41,7 @@ export default function YearMonthSelect({ selectedYear, selectedMonth, setSelect
           </SelectContent>
         </Select>
         <Select value={String(selectedMonth).padStart(2, "0")} onValueChange={(value) => setSelectedMonth(Number(value))}>
-          <SelectTrigger className="bg-white">
+          <SelectTrigger>
             <SelectValue placeholder="월" />
           </SelectTrigger>
           <SelectContent>

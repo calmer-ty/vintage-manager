@@ -10,20 +10,20 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 
 import { pages } from "@/lib/link";
+import { useTheme } from "next-themes";
 
 export default function LayoutHeader() {
   const pathname = usePathname();
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
+
+  const { setTheme } = useTheme();
 
   const { userData } = useUserDataStore();
   const { openDialog } = useGradeDialogStore();
 
   return (
     <>
-      <header
-        className="sticky t-0 z-50 flex items-center gap-1 w-full h-16 border-b px-6 bg-white
-        lg:gap-2"
-      >
+      <header className="sticky t-0 z-50 flex items-center gap-1 lg:gap-2 w-full h-16 border-b px-6">
         {pathname !== "/" ? (
           <>
             <SidebarTrigger className="-ml-1" />
@@ -36,6 +36,8 @@ export default function LayoutHeader() {
                   Pro로 업그레이드
                 </Button>
               )}
+              <Button onClick={() => setTheme("light")}>Light</Button>
+              <Button onClick={() => setTheme("dark")}>Dark</Button>
             </div>
           </>
         ) : (

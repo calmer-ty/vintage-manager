@@ -38,7 +38,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
           {rest.length !== 0 ? (
             // products가 n개일 경우
             <>
-              <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
+              <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm">
                 <span>
                   {first.name} ({first.brand || "브랜드 없음"})
                 </span>
@@ -61,7 +61,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                     return (
                       <div
                         key={`${p.name}_${p.brand}_${idx}`}
-                        className="flex justify-between gap-4 py-2 border-t border-dotted border-gray-300 text-sm text-black"
+                        className="flex justify-between gap-4 py-2 border-t border-dotted border-gray-300 text-sm"
                       >
                         <span>
                           {p.name}({p.brand || "브랜드 없음"})
@@ -75,7 +75,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                       </div>
                     );
                   })}
-                  <div className="pt-2 pb-1 border-t-1 border-gray-300 text-right text-black">
+                  <div className="pt-2 pb-1 border-t-1 border-gray-300 text-right">
                     <span className="mr-1 font-bold">총 매입가:</span>
                     <span>
                       {getDisplayPrice(products[0].cost.exchange.code, priceSum)}
@@ -96,7 +96,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
             </>
           ) : (
             // products가 한개일 경우
-            <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm text-black">
+            <div key={`${first.name}_${first.brand}`} className="flex justify-between gap-4 py-2 text-sm">
               <span>
                 {first.name}({first.brand || "브랜드 없음"})
               </span>
@@ -119,7 +119,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
           }}
           className="flex w-full flex-col border-t"
         >
-          <div className="flex gap-2 justify-end px-4 py-1 bg-gray-200">
+          <div className="flex gap-2 justify-end px-4 py-1">
             <Button
               variant={isDetailsOpen === "shipping" ? "secondary" : "ghost"}
               size="icon"
@@ -151,7 +151,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                 return (
                   <div
                     key={`${p.name}_${p.brand}_${idx}`}
-                    className="flex justify-between gap-4 py-2 border-b border-dotted border-gray-300 text-sm text-black"
+                    className="flex justify-between gap-4 py-2 border-b border-dotted border-gray-300 text-sm"
                   >
                     <span>
                       {p.name} - {p.brand}

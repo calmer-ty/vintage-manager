@@ -117,7 +117,7 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
                   name="products.0.name"
                   render={({ field }) => (
                     <FormInputWrap title="제품명">
-                      <Input placeholder="예) 럭비 셔츠" {...field} className="bg-white" autoComplete="off" />
+                      <Input placeholder="예) 럭비 셔츠" {...field} autoComplete="off" />
                     </FormInputWrap>
                   )}
                 />
@@ -126,7 +126,7 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
                   name="products.0.brand"
                   render={({ field }) => (
                     <FormInputWrap title="브랜드명">
-                      <Input placeholder="예) 엘엘빈" {...field} className="bg-white" autoComplete="off" />
+                      <Input placeholder="예) 엘엘빈" {...field} autoComplete="off" />
                     </FormInputWrap>
                   )}
                 />
@@ -140,7 +140,6 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
                         <Input
                           type="number"
                           placeholder="예) 1000"
-                          className="bg-white"
                           value={field.value}
                           onChange={(e) => field.onChange(Number(e.target.value))}
                           onWheel={(e) => e.currentTarget.blur()}
@@ -158,7 +157,6 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
                         <Input
                           type="number"
                           placeholder="예) 1000"
-                          className="bg-white"
                           value={field.value}
                           onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))}
                           onWheel={(e) => e.currentTarget.blur()}
@@ -176,7 +174,6 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
                         <Input
                           type="number"
                           placeholder="예) 1000"
-                          className="bg-white"
                           value={field.value}
                           onChange={(e) => field.onChange(Number(e.target.valueAsNumber ?? 0))}
                           onWheel={(e) => e.currentTarget.blur()}
