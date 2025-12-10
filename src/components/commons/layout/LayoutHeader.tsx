@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 
 import { useGradeDialogStore } from "@/store/useGradeDialogStore";
 import { useUserDataStore } from "@/store/useUserDataStore";
@@ -9,16 +10,18 @@ import { Moon, Rocket, Sun } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 
-import { pages } from "@/lib/link";
-import { useTheme } from "next-themes";
 import ChildrenTooltip from "../ChildrenTooltip";
+
+import { pages } from "@/lib/link";
+import { useEffect, useState } from "react";
 
 export default function LayoutHeader() {
   const pathname = usePathname();
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
 
   const { theme, setTheme } = useTheme();
-  console.log("theme", theme);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const { userData } = useUserDataStore();
   const { openDialog } = useGradeDialogStore();
@@ -39,9 +42,11 @@ export default function LayoutHeader() {
               )}
 
               <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-                <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                  {theme === "dark" ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
-                </Button>
+                {mounted && (
+                  <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                    {theme === "dark" ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+                  </Button>
+                )}
               </ChildrenTooltip>
             </div>
           </>

@@ -2,7 +2,7 @@
 
 import { useUserData } from "@/hooks/useUserData";
 
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 
 export default function Wrapper({ children }: { children: ReactNode }) {
   // ⚡ 설명 정리:
@@ -11,5 +11,10 @@ export default function Wrapper({ children }: { children: ReactNode }) {
   // 예: 사용자 데이터 구독, 실시간 업데이트 구독 등
 
   useUserData();
+
+  useEffect(() => {
+    localStorage.removeItem("theme"); // 또는 clear()
+  }, []);
+
   return <div id="wrapper">{children}</div>;
 }

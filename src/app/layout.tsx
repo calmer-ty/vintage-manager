@@ -44,7 +44,9 @@ export default function RootLayout({
             <div className="flex-1 overflow-auto">
               {/* Nav 외에 유동적으로 크기 맞춤 */}
               <LayoutHeader />
-              <Wrapper>{children}</Wrapper>
+              <Wrapper>
+                <main>{children}</main>
+              </Wrapper>
               <Toaster position="top-center" />
               <GradeDialog />
             </div>
@@ -55,18 +57,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-// import { ThemeProvider } from "@/components/theme-provider"
-
-// export default function RootLayout({ children }: RootLayoutProps) {
-//   return (
-//     <>
-//       <html lang="en" suppressHydrationWarning>
-//         <head />
-//         <body>
-
-//         </body>
-//       </html>
-//     </>
-//   )
-// }
