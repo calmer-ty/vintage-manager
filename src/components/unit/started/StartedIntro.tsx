@@ -13,7 +13,7 @@ export default function StartedIntro() {
   const { handleLogin } = useAuthStore();
 
   return (
-    <section className="relative py-40 text-center bg-stone-800 text-white overflow-hidden">
+    <section className="relative h-screen text-center bg-stone-700 dark:bg-stone-900 overflow-hidden">
       {/* 배경 장식 이미지 */}
       <img
         src="/images/started02.png"
@@ -29,32 +29,32 @@ export default function StartedIntro() {
       />
 
       <motion.div
-        className="relative z-10 max-w-4xl mx-auto px-6"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 max-w-4xl mt-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="mb-14">
+        <div className="mb-14 text-white">
           <h2 className="text-5xl font-bold mb-16">빈티지 노트</h2>
           <p className="text-xl mb-10">다양한 국가에서 사입한 상품들의 예상 수익을 간편하게 확인하세요.</p>
           <p className="text-lg">상품 관리와 대시보드로 매입가·판매가·재고를 정리하고 전체 흐름을 쉽게 파악할 수 있습니다.</p>
         </div>
 
         {/* 지원 국가 */}
-        <div className="mb-10">
+        <div className="mb-10 text-white">
           <h3 className="text-lg font-medium mb-6">지원 가능 국가</h3>
           <ul className="flex justify-center gap-4">
             <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="US" size={32} />
-              <span className="text-sm text-muted-foreground">미국</span>
+              <span className="text-sm">미국</span>
             </li>
             <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="JP" size={32} />
-              <span className="text-sm text-muted-foreground">일본</span>
+              <span className="text-sm">일본</span>
             </li>
             <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="KR" size={32} />
-              <span className="text-sm text-muted-foreground">대한민국</span>
+              <span className="text-sm">대한민국</span>
             </li>
           </ul>
         </div>

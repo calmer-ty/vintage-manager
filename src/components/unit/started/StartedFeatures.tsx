@@ -32,7 +32,7 @@ export default function StartedFeatures() {
   const MotionCard = motion(Card);
 
   return (
-    <section id="points" className="relative px-10 sm:px-18 py-20 sm:py-30 xl:py-52 text-center bg-stone-50">
+    <section id="points" className="relative px-10 sm:px-18 py-20 sm:py-30 xl:py-52 text-center">
       <motion.h3
         className=" text-3xl font-bold
             mb-12 sm:mb-24"
@@ -41,7 +41,7 @@ export default function StartedFeatures() {
         viewport={{ once: true, amount: 0.6 }}
         transition={{ delay: 0.2, duration: 0.4 }}
       >
-        <strong className="text-stone-700 text-4xl">빈티지 노트</strong>의 주요 기능
+        빈티지 노트의 주요 기능
       </motion.h3>
       <div className="grid gap-10 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
         {points.map((el, idx) => (
@@ -56,8 +56,8 @@ export default function StartedFeatures() {
           >
             <CardContent className="flex flex-col items-center">
               <div
-                className="mb-6 p-2 rounded-lg 
-                transition-bg duration-300 ease-in-out bg-gray-100 group-hover:bg-gray-200 shadow-md"
+                className="mb-6 p-2 rounded-lg bg-gray-100 group-hover:bg-gray-200 dark:bg-gray-700 dark:group-hover:bg-gray-600 shadow-md
+                transition-bg duration-300 ease-in-out"
               >
                 {el.icon}
               </div>
