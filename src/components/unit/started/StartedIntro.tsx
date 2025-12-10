@@ -45,16 +45,16 @@ export default function StartedIntro() {
           <h3 className="text-lg font-medium mb-6">지원 가능 국가</h3>
           <ul className="flex justify-center gap-4">
             <li className="flex flex-col items-center gap-1 w-14">
+              <FlagIcon code="KR" size={32} />
+              <span className="text-sm">대한민국</span>
+            </li>
+            <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="US" size={32} />
               <span className="text-sm">미국</span>
             </li>
             <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="JP" size={32} />
               <span className="text-sm">일본</span>
-            </li>
-            <li className="flex flex-col items-center gap-1 w-14">
-              <FlagIcon code="KR" size={32} />
-              <span className="text-sm">대한민국</span>
             </li>
           </ul>
         </div>
