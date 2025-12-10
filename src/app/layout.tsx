@@ -37,10 +37,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Wrapper>
-          {/* <AuthProvider> */}
-          <SidebarProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Wrapper>
+            {/* <AuthProvider> */}
+            <SidebarProvider>
               <LayoutNav />
               <div className="w-full">
                 {/* Nav 외에 유동적으로 크기 맞춤 */}
@@ -49,10 +49,10 @@ export default function RootLayout({
                 <Toaster position="top-center" />
                 <GradeDialog />
               </div>
-            </ThemeProvider>
-          </SidebarProvider>
-          {/* </AuthProvider> */}
-        </Wrapper>
+            </SidebarProvider>
+            {/* </AuthProvider> */}
+          </Wrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -47,7 +47,9 @@ export default function LayoutHeader() {
               )}
 
               <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-                <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
+                <Button size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                  {theme === "dark" ? <Sun /> : <Moon />}
+                </Button>
               </ChildrenTooltip>
             </div>
           )}
@@ -65,7 +67,9 @@ export default function LayoutHeader() {
           </div>
           <div className="flex justify-end items-center gap-2 w-full">
             <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-              <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
+              <Button size="icon" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+                {theme === "dark" ? <Sun /> : <Moon />}
+              </Button>
             </ChildrenTooltip>
           </div>
         </motion.header>
