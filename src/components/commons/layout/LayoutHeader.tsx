@@ -13,15 +13,12 @@ import { Button } from "@/components/ui/button";
 import ChildrenTooltip from "../ChildrenTooltip";
 
 import { pages } from "@/lib/link";
-import { useEffect, useState } from "react";
 
 export default function LayoutHeader() {
   const pathname = usePathname();
   const currentPage = [...pages.product].find((el) => pathname === el.url)?.title;
 
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
 
   const { userData } = useUserDataStore();
   const { openDialog } = useGradeDialogStore();
@@ -42,9 +39,13 @@ export default function LayoutHeader() {
               )}
 
               <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-                {mounted && (
-                  <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-                    {theme === "dark" ? <Sun className="h-6 w-6" /> : <Moon className="h-6 w-6" />}
+                {theme === "dark" ? (
+                  <Button onClick={() => setTheme("light")}>
+                    <Sun className="h-6 w-6" />
+                  </Button>
+                ) : (
+                  <Button onClick={() => setTheme("dark")}>
+                    <Moon className="h-6 w-6" />
                   </Button>
                 )}
               </ChildrenTooltip>
