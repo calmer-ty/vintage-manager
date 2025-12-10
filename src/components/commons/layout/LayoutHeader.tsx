@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
@@ -32,33 +33,43 @@ export default function LayoutHeader() {
 
   return (
     <>
-      <header className="sticky t-0 z-50 flex items-center gap-1 lg:gap-2 w-full h-16 border-b px-6">
-        {pathname !== "/" ? (
-          <>
-            <SidebarTrigger className="-ml-1" />
-            <h2 className="font-medium shrink-0">{currentPage}</h2>
+      {pathname !== "/" ? (
+        <header className="sticky t-0 z-20 flex items-center gap-1 lg:gap-2 w-full h-16 border-b px-6">
+          <SidebarTrigger className="-ml-1" />
+          <h2 className="font-medium shrink-0">{currentPage}</h2>
 
-            {mount && userData && (
-              <div className="flex justify-end items-center gap-2 w-full">
-                {userData?.grade === "free" && (
-                  <Button variant="default" onClick={openDialog}>
-                    Pro로 업그레이드
-                  </Button>
-                )}
+          {mount && userData && (
+            <div className="flex justify-end items-center gap-2 w-full">
+              {userData?.grade === "free" && (
+                <Button variant="default" onClick={openDialog}>
+                  Pro로 업그레이드
+                </Button>
+              )}
 
-                <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-                  <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
-                </ChildrenTooltip>
-              </div>
-            )}
-          </>
-        ) : (
-          <>
-            <Rocket className="mx-2 text-amber-500" />
+              <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
+                <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
+              </ChildrenTooltip>
+            </div>
+          )}
+        </header>
+      ) : (
+        <motion.header
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="fixed z-20 flex justify-between items-center w-full h-16 px-8 bg-white dark:bg-black shadow-lg"
+        >
+          <div className="flex items-center gap-2 shrink-0">
+            <Rocket className="text-amber-500" />
             <h2 className="font-medium">시작하기</h2>
-          </>
-        )}
-      </header>
+          </div>
+          <div className="flex justify-end items-center gap-2 w-full">
+            <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
+              <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
+            </ChildrenTooltip>
+          </div>
+        </motion.header>
+      )}
     </>
   );
 }

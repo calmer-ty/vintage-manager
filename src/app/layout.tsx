@@ -42,7 +42,7 @@ export default function RootLayout({
           <SidebarProvider>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
               <LayoutNav />
-              <div className="flex-1">
+              <div className="w-full">
                 {/* Nav 외에 유동적으로 크기 맞춤 */}
                 <LayoutHeader />
                 <main>{children}</main>
