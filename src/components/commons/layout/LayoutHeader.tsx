@@ -38,17 +38,19 @@ export default function LayoutHeader() {
             <SidebarTrigger className="-ml-1" />
             <h2 className="font-medium shrink-0">{currentPage}</h2>
 
-            <div className="flex justify-end items-center gap-2 w-full">
-              {userData?.grade === "free" && (
-                <Button variant="default" onClick={openDialog}>
-                  Pro로 업그레이드
-                </Button>
-              )}
+            {mount && userData && (
+              <div className="flex justify-end items-center gap-2 w-full">
+                {userData?.grade === "free" && (
+                  <Button variant="default" onClick={openDialog}>
+                    Pro로 업그레이드
+                  </Button>
+                )}
 
-              <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-                <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
-              </ChildrenTooltip>
-            </div>
+                <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
+                  <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
+                </ChildrenTooltip>
+              </div>
+            )}
           </>
         ) : (
           <>
