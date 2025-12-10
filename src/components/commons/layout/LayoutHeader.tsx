@@ -41,11 +41,11 @@ export default function LayoutHeader() {
               <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
                 {theme === "dark" ? (
                   <Button onClick={() => setTheme("light")}>
-                    <Sun className="h-6 w-6" />
+                    <Sun />
                   </Button>
                 ) : (
                   <Button onClick={() => setTheme("dark")}>
-                    <Moon className="h-6 w-6" />
+                    <Moon />
                   </Button>
                 )}
               </ChildrenTooltip>
