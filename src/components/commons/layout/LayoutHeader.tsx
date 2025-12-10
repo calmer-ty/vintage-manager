@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 
@@ -20,6 +21,10 @@ export default function LayoutHeader() {
 
   const { theme, setTheme } = useTheme();
 
+  // 마운트 후 동작 컨트롤
+  const [mount, setMount] = useState(false);
+  useEffect(() => setMount(true), []);
+
   const { userData } = useUserDataStore();
   const { openDialog } = useGradeDialogStore();
 
@@ -38,17 +43,11 @@ export default function LayoutHeader() {
                 </Button>
               )}
 
-              <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-                {theme === "dark" ? (
-                  <Button onClick={() => setTheme("light")}>
-                    <Sun />
-                  </Button>
-                ) : (
-                  <Button onClick={() => setTheme("dark")}>
-                    <Moon />
-                  </Button>
-                )}
-              </ChildrenTooltip>
+              {mount && (
+                <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
+                  <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
+                </ChildrenTooltip>
+              )}
             </div>
           </>
         ) : (

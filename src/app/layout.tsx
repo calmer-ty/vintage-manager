@@ -37,22 +37,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* <AuthProvider> */}
-        <SidebarProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <LayoutNav />
-            <div className="flex-1 overflow-auto">
-              {/* Nav 외에 유동적으로 크기 맞춤 */}
-              <LayoutHeader />
-              <Wrapper>
+        <Wrapper>
+          {/* <AuthProvider> */}
+          <SidebarProvider>
+            <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+              <LayoutNav />
+              <div className="flex-1 overflow-auto">
+                {/* Nav 외에 유동적으로 크기 맞춤 */}
+                <LayoutHeader />
                 <main>{children}</main>
-              </Wrapper>
-              <Toaster position="top-center" />
-              <GradeDialog />
-            </div>
-          </ThemeProvider>
-        </SidebarProvider>
-        {/* </AuthProvider> */}
+                <Toaster position="top-center" />
+                <GradeDialog />
+              </div>
+            </ThemeProvider>
+          </SidebarProvider>
+          {/* </AuthProvider> */}
+        </Wrapper>
       </body>
     </html>
   );

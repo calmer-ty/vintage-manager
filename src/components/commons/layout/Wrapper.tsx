@@ -1,8 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { useUserData } from "@/hooks/useUserData";
 
-import { useEffect, type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export default function Wrapper({ children }: { children: ReactNode }) {
   // ⚡ 설명 정리:
@@ -13,7 +14,7 @@ export default function Wrapper({ children }: { children: ReactNode }) {
   useUserData();
 
   useEffect(() => {
-    localStorage.removeItem("theme"); // 또는 clear()
+    localStorage.removeItem("theme");
   }, []);
 
   return <div id="wrapper">{children}</div>;
