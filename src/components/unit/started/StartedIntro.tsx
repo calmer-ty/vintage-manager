@@ -37,9 +37,7 @@ export default function StartedIntro() {
         <div className="mb-14">
           <h2 className="text-5xl font-bold mb-16">빈티지 노트</h2>
           <p className="text-xl mb-10">다양한 국가에서 사입한 상품들의 예상 수익을 간편하게 확인하세요.</p>
-          <p className="text-lg text-muted-foreground">
-            상품 관리와 대시보드로 매입가·판매가·재고를 정리하고 전체 흐름을 쉽게 파악할 수 있습니다.
-          </p>
+          <p className="text-lg">상품 관리와 대시보드로 매입가·판매가·재고를 정리하고 전체 흐름을 쉽게 파악할 수 있습니다.</p>
         </div>
 
         {/* 지원 국가 */}

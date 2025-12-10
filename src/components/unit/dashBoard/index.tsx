@@ -38,13 +38,13 @@ export default function DashBoardUI() {
           setSelectedMonth={setSelectedMonth}
         />
       </motion.header>
-      <motion.div variants={sectionVariants}>
+      <motion.section variants={sectionVariants}>
         <DashboardStatus packages={packages} products={products} />
-      </motion.div>
+      </motion.section>
 
-      <motion.div variants={sectionVariants}>
+      <motion.section variants={sectionVariants}>
         <DashboardChart selectedYear={selectedYear} selectedMonth={selectedMonth} products={products} />
-      </motion.div>
+      </motion.section>
     </motion.article>
   );
 }

@@ -57,7 +57,7 @@ export default function GradeConfirm({ selectGrade, setStep, setSelectGrade, clo
 
   return (
     <>
-      <Button variant="outline" className="absolute left-4 top-4 border-none shadow-none" onClick={() => setStep("select")}>
+      <Button variant="outline" size="icon" className="absolute left-4 top-4 border-none shadow-none" onClick={() => setStep("select")}>
         <ArrowLeft />
       </Button>
       <Card className="mt-6 px-8 py-8">
@@ -68,22 +68,25 @@ export default function GradeConfirm({ selectGrade, setStep, setSelectGrade, clo
 
         <CardContent className="px-0 pb-6 border-b border-muted-foreground/20 text-left">
           <Table>
-            {/* <TableCaption>현재 요금제와 선택 요금제의 기능을 비교한 표입니다.</TableCaption> */}
             <TableHeader>
               <TableRow>
                 <TableHead>기능</TableHead>
-                <TableHead className={selectGrade === "free" ? "bg-blue-100 text-center" : "text-center"}>Free</TableHead>
-                <TableHead className={selectGrade === "pro" ? "bg-blue-100 text-center" : "text-center"}>Pro</TableHead>
+                <TableHead className={selectGrade === "free" ? "bg-blue-100 dark:bg-blue-900/40 text-center" : "text-center"}>
+                  Free
+                </TableHead>
+                <TableHead className={selectGrade === "pro" ? "bg-blue-100 dark:bg-blue-900/40 text-center" : "text-center"}>Pro</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {features.map((feature) => (
                 <TableRow key={feature.head} className="border-none">
                   <TableCell>{feature.head}</TableCell>
-                  <TableCell className={clsx("text-center", feature.freeColor, selectGrade === "free" && "bg-blue-100")}>
+                  <TableCell
+                    className={clsx("text-center", feature.freeColor, selectGrade === "free" && "bg-blue-100 dark:bg-blue-900/40")}
+                  >
                     {feature.freeIcon}
                   </TableCell>
-                  <TableCell className={clsx("text-center", feature.proColor, selectGrade === "pro" && "bg-blue-100")}>
+                  <TableCell className={clsx("text-center", feature.proColor, selectGrade === "pro" && "bg-blue-100 dark:bg-blue-900/40")}>
                     {feature.proIcon}
                   </TableCell>
                 </TableRow>
@@ -106,9 +109,9 @@ export default function GradeConfirm({ selectGrade, setStep, setSelectGrade, clo
               }
               closeDialog();
               toast(
-                <span>
+                <p>
                   ✅ <strong className="capitalize">{selectGrade}</strong> 요금제가 성공적으로 변경되었습니다.
-                </span>
+                </p>
               );
 
               setTimeout(() => {
@@ -116,6 +119,7 @@ export default function GradeConfirm({ selectGrade, setStep, setSelectGrade, clo
                 setSelectGrade(null);
               }, 500);
             }}
+            className="text-white"
           >
             {selectGrade === "pro" ? "업그레이드 확정하기" : "변경 확정하기"}
           </Button>

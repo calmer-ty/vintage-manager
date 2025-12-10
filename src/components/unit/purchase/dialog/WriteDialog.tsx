@@ -107,7 +107,7 @@ export default function WriteDialog({ form, isOpen, setIsOpen, setRowSelection, 
                         }
                       }}
                       value={field.value.code}
-                      label="당신이 사용한 통화를 선택해주세요."
+                      label="사용한 통화를 선택해주세요."
                     />
                   )}
                 />

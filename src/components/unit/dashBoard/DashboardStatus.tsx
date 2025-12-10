@@ -93,8 +93,8 @@ export default function DashBoardStatus({ packages, products }: IDashBoardStatus
           <ChildrenTooltip content={el.tooltip}>
             <CardContent className="flex flex-col lg:flex-row items-center gap-x-6 gap-y-2">
               <div
-                className="p-2 lg:p-3 rounded-lg
-                transition-bg duration-300 ease-in-out bg-gray-100 group-hover:bg-gray-200 shadow-md"
+                className="p-2 lg:p-3 rounded-lg bg-gray-100 dark:bg-gray-700 shadow-md
+                transition-bg duration-300 ease-in-out"
               >
                 {el.icon}
               </div>
