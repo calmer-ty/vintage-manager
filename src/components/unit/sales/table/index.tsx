@@ -79,11 +79,11 @@ export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, 
               </div>
 
               {/* 비용 항목들 */}
-              <div className="flex justify-between gap-2 ml-3 text-gray-500">
+              <div className="flex justify-between gap-2 ml-3 text-muted-foreground">
                 <span>매입가</span>
                 <span>- {getDisplayPrice("KRW", c.price * c.exchange.krw)}</span>
               </div>
-              <div className="flex justify-between gap-2 ml-3 text-gray-500">
+              <div className="flex justify-between gap-2 ml-3 text-muted-foreground">
                 <ChildrenTooltip content="매입 배송료 + 매입 수수료">
                   <span>
                     매입 서비스 비용<em className="text-red-700 cursor-help">*</em>
@@ -91,7 +91,7 @@ export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, 
                 </ChildrenTooltip>
                 <span>- {getDisplayPrice("KRW", c.shipping * c.exchange.krw + c.fee * c.exchange.krw)}</span>
               </div>
-              <div className="flex justify-between gap-2 ml-3 text-gray-500">
+              <div className="flex justify-between gap-2 ml-3 text-muted-foreground">
                 <ChildrenTooltip content="판매 배송료 + 판매 수수료">
                   <span>
                     판매 서비스 비용<em className="text-red-700 cursor-help">*</em>
@@ -101,7 +101,7 @@ export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, 
               </div>
 
               {/* 순이익 */}
-              <div className="flex justify-between font-semibold text-green-600 border-t border-gray-200 mt-1 pt-1">
+              <div className="flex justify-between font-semibold text-green-600 dark:text-green-400/60 border-t border-gray-200 mt-1 pt-1">
                 <span>예상 순이익</span>
                 <span>
                   {getDisplayPrice(
@@ -208,10 +208,10 @@ export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, 
             ) : table.getRowModel().rows?.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={columns.length} className="text-center">
-                  <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                  <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                     <PackageOpen className="w-8 h-8 mb-4" />
                     <p className="text-lg font-medium">검색 조건에 맞지 않거나 판매 등록된 상품이 없습니다.</p>
-                    <p className="text-sm text-gray-400">검색 조건을 변경하거나 입고된 패키지를 확인해보세요.</p>
+                    <p className="text-sm text-muted-foreground">검색 조건을 변경하거나 입고된 패키지를 확인해보세요.</p>
                   </div>
                 </TableCell>
               </TableRow>
@@ -220,7 +220,7 @@ export default function SalesTable({ data, loading, setIsOpen, setUpdateTarget, 
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  className={row.original.soldAt ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300" : ""}
+                  className={row.original.soldAt ? "bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-300/80" : ""}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-center">

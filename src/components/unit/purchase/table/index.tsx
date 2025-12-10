@@ -80,7 +80,7 @@ export default function PurchaseTable({
         return (
           <>
             <span>{getDisplayPrice(s.exchange.code, s.amount)}</span>
-            <span className="text-xs text-gray-500">({getExchangeDisplayPrice(viewCurrency, s.amount, s.exchange)})</span>
+            <span className="text-xs text-muted-foreground">({getExchangeDisplayPrice(viewCurrency, s.amount, s.exchange)})</span>
           </>
         );
       }
@@ -222,10 +222,10 @@ export default function PurchaseTable({
                 table.getRowModel().rows.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={columns.length} className="text-center">
-                      <div className="flex flex-col items-center justify-center py-10 text-gray-500">
+                      <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
                         <PackageOpen className="w-8 h-8 mb-4" />
                         <p className="text-lg font-medium">등록된 상품이 없습니다.</p>
-                        <p className="text-sm text-gray-400">패키지를 추가하면 이곳에 표시됩니다.</p>
+                        <p className="text-sm text-muted-foreground">패키지를 추가하면 이곳에 표시됩니다.</p>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -235,7 +235,7 @@ export default function PurchaseTable({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
-                      className={row.original.addSaleAt ? "bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300" : ""}
+                      className={row.original.addSaleAt ? "bg-green-50 text-green-700 dark:bg-green-900/40 dark:text-green-300/80" : ""}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id} className="text-center">

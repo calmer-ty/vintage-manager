@@ -34,7 +34,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
       <CardContent className="p-0">
         {/* 패키지 기본 정보 */}
         <Collapsible open={isBasicOpen} onOpenChange={setIsBasicOpen} className="flex flex-col px-4 py-2">
-          <h3 className="pb-1 border-b border-dotted border-gray-300 font-bold text-left">상품 목록</h3>
+          <h3 className="pb-1 border-b border-dotted border-gray-300 font-semibold text-left">상품 목록</h3>
           {rest.length !== 0 ? (
             // products가 n개일 경우
             <>
@@ -44,7 +44,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                 </span>
                 <span className="flex items-center gap-1">
                   {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
-                  <em className="text-xs not-italic text-gray-500">
+                  <em className="text-xs not-italic text-muted-foreground">
                     ({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})
                   </em>
                 </span>
@@ -68,7 +68,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                         </span>
                         <span className="">
                           {getDisplayPrice(p.cost.exchange.code, p.cost.price)}
-                          <em className="ml-1 text-xs not-italic text-gray-500">
+                          <em className="ml-1 text-xs not-italic text-muted-foreground">
                             ({getExchangeDisplayPrice(viewCurrency, p.cost.price, p.cost.exchange)})
                           </em>
                         </span>
@@ -79,7 +79,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                     <span className="mr-1 font-bold">총 매입가:</span>
                     <span>
                       {getDisplayPrice(products[0].cost.exchange.code, priceSum)}
-                      <em className="ml-1 text-xs not-italic text-gray-500">
+                      <em className="ml-1 text-xs not-italic text-muted-foreground">
                         ({getExchangeDisplayPrice(viewCurrency, priceSum, products[0].cost.exchange)})
                       </em>
                     </span>
@@ -103,7 +103,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
               <div className="flex flex-col gap-0.5 text-left">
                 <span>
                   {getDisplayPrice(first.cost.exchange.code, first.cost.price)}
-                  <em className="text-xs not-italic text-gray-500 ml-1">
+                  <em className="text-xs not-italic text-muted-foreground ml-1">
                     ({getExchangeDisplayPrice(viewCurrency, first.cost.price, first.cost.exchange)})
                   </em>
                 </span>
@@ -162,7 +162,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                         : isDetailsOpen === "fee"
                         ? getDisplayPrice(p.cost.exchange.code, p.cost.fee)
                         : "정보 없음"}
-                      <em className="text-xs not-italic text-gray-500 ml-1">
+                      <em className="text-xs not-italic text-muted-foreground ml-1">
                         (
                         {isDetailsOpen === "shipping"
                           ? getExchangeDisplayPrice(viewCurrency, p.cost.shipping, p.cost.exchange)
@@ -185,7 +185,7 @@ export default function TableItem({ products, viewCurrency }: ITableItemProps) {
                     : isDetailsOpen === "fee"
                     ? getDisplayPrice(products[0].cost.exchange.code, feeSum)
                     : "정보 없음"}
-                  <em className="text-xs not-italic text-gray-500 ml-1">
+                  <em className="text-xs not-italic text-muted-foreground ml-1">
                     (
                     {isDetailsOpen === "shipping"
                       ? getExchangeDisplayPrice(viewCurrency, shippingSum, products[0].cost.exchange)

@@ -37,7 +37,9 @@ export default function StartedIntro() {
         <div className="mb-14">
           <h2 className="text-5xl font-bold mb-16">빈티지 노트</h2>
           <p className="text-xl mb-10">다양한 국가에서 사입한 상품들의 예상 수익을 간편하게 확인하세요.</p>
-          <p className="text-lg text-gray-300">상품 관리와 대시보드로 매입가·판매가·재고를 정리하고 전체 흐름을 쉽게 파악할 수 있습니다.</p>
+          <p className="text-lg text-muted-foreground">
+            상품 관리와 대시보드로 매입가·판매가·재고를 정리하고 전체 흐름을 쉽게 파악할 수 있습니다.
+          </p>
         </div>
 
         {/* 지원 국가 */}
@@ -46,18 +48,17 @@ export default function StartedIntro() {
           <ul className="flex justify-center gap-4">
             <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="US" size={32} />
-              <span className="text-sm text-gray-300">미국</span>
+              <span className="text-sm text-muted-foreground">미국</span>
             </li>
             <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="JP" size={32} />
-              <span className="text-sm text-gray-300">일본</span>
+              <span className="text-sm text-muted-foreground">일본</span>
             </li>
             <li className="flex flex-col items-center gap-1 w-14">
               <FlagIcon code="KR" size={32} />
-              <span className="text-sm text-gray-300">대한민국</span>
+              <span className="text-sm text-muted-foreground">대한민국</span>
             </li>
           </ul>
-          {/* <p className="mt-2 text-sm text-gray-400">그 외 모든 국가 지원</p> */}
         </div>
 
         {/* 로그인 버튼 */}
