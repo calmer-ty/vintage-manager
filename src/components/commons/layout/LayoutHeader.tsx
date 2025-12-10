@@ -28,6 +28,8 @@ export default function LayoutHeader() {
   const { userData } = useUserDataStore();
   const { openDialog } = useGradeDialogStore();
 
+  if (!mount) return null;
+
   return (
     <>
       <header className="sticky t-0 z-50 flex items-center gap-1 lg:gap-2 w-full h-16 border-b px-6">
@@ -43,11 +45,9 @@ export default function LayoutHeader() {
                 </Button>
               )}
 
-              {mount && (
-                <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
-                  <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
-                </ChildrenTooltip>
-              )}
+              <ChildrenTooltip content={theme === "dark" ? "라이트 모드로 변경" : "다크 모드로 변경"}>
+                <Button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? <Sun /> : <Moon />}</Button>
+              </ChildrenTooltip>
             </div>
           </>
         ) : (
