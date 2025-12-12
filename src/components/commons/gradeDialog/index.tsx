@@ -8,7 +8,7 @@ import { useUserDataStore } from "@/store/useUserDataStore";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 import GradeSelect from "./SelectContent";
-import GradeConfirm from "./CofirmContent";
+import GradeConfirm from "./ConfirmContent";
 
 export default function GradeDialog() {
   const [step, setStep] = useState<"select" | "confirm">("select");
@@ -30,7 +30,7 @@ export default function GradeDialog() {
         }
       }}
     >
-      <DialogContent className="overflow-auto w-full sm:max-w-2xl sm:px-16 sm:py-10">
+      <DialogContent className="overflow-auto w-full sm:max-w-2xl max-h-180 sm:px-16 sm:py-10">
         <DialogHeader className="items-center px-10">
           <DialogTitle className="mb-2 text-xl">
             {selectGrade === "pro" ? "빈티지 노트 업그레이드" : selectGrade === "free" ? "빈티지 노트 다운그레이드" : "빈티지 노트 요금제"}

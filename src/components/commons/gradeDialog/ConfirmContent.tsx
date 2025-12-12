@@ -1,6 +1,8 @@
 import { toast } from "sonner";
 import clsx from "clsx";
 
+import { useAuthStore } from "@/store/useAuthStore";
+
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +10,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 import type { Dispatch, SetStateAction } from "react";
 import type { User } from "firebase/auth";
-import { useAuthStore } from "@/store/useAuthStore";
 
 interface IGradeConfirmProps {
   selectGrade: "free" | "pro" | null;
