@@ -18,7 +18,7 @@ export async function GET() {
   }
 
   try {
-    const res = await fetch(`https://v6.exchangerate-api.com/v6/${process.env.NEXT_PUBLIC_EXCHANGERATE_API_KEY}/latest/USD`);
+    const res = await fetch(`https://v6.exchangerate-api.com/v6/${process.env.EXCHANGERATE_API_KEY}/latest/USD`);
     const data = await res.json();
 
     cachedRate = data;

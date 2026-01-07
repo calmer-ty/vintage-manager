@@ -2,11 +2,11 @@
 
 import { useAuthStore } from "@/store/useAuthStore";
 
-import DashboardUI from "@/components/unit/dashboard";
+import DashBoardUI from "@/components/unit/dashboard";
 
 import { Loader } from "lucide-react";
 
-export default function NewPage() {
+export default function DashboardPage() {
   const { user, loading } = useAuthStore();
 
   if (loading) {
@@ -23,5 +23,5 @@ export default function NewPage() {
     return <div>로그인이 필요합니다.</div>;
   }
 
-  return <DashboardUI />;
+  return <DashBoardUI />;
 }
