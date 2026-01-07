@@ -32,7 +32,7 @@
     "framer-motion": "^12.15.0",
     "global": "^4.4.0",
     "lucide-react": "^0.525.0",
-    "next": "15.2.4",
+    "next": "^16.1.1",
     "next-themes": "^0.4.6",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
