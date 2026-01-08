@@ -9,7 +9,8 @@ interface IDashboardSelectProps {
   setSelectedMonth: (month: number) => void;
 }
 
-const years = ["2025", "2024", "2023"];
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 3 }, (_, i) => String(currentYear - i));
 const months = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
 
 export default function YearMonthSelect({ selectedYear, selectedMonth, setSelectedYear, setSelectedMonth }: IDashboardSelectProps) {
