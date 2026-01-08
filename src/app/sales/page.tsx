@@ -1,9 +1,8 @@
 "use client";
 
-import { Loader } from "lucide-react";
-
 import { useAuthStore } from "@/store/useAuthStore";
 
+import { Loader } from "lucide-react";
 import SalesUI from "@/components/unit/sales";
 
 export default function SalesPage() {

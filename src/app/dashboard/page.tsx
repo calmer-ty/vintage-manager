@@ -2,9 +2,8 @@
 
 import { useAuthStore } from "@/store/useAuthStore";
 
-import DashBoardUI from "@/components/unit/dashboard";
-
 import { Loader } from "lucide-react";
+import DashBoardUI from "@/components/unit/dashboard";
 
 export default function DashboardPage() {
   const { user, loading } = useAuthStore();
